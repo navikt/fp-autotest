@@ -27,8 +27,8 @@
         <vtp.versjon>2.1.1</vtp.versjon>
         <fp-felles.versjon>7.6.8</fp-felles.versjon>
         <fp-prosesstask.version>5.2.1</fp-prosesstask.version>
-        <fp-kontrakter.version>9.4.3</fp-kontrakter.version>
-        <fpsoknad-felles.version>3.3.4</fpsoknad-felles.version>
+        <fp-kontrakter.version>9.4.4</fp-kontrakter.version>
+        <fpsoknad-felles.version>3.3.4</fpsoknad-felles.version> <!-- TODO: Fjern fpsoknad-felles (innsyn dto i fpoversikt) ligger der nå -->
         <ftberegning.version>6.1.6</ftberegning.version>
 
         <slf4j.version>2.0.17</slf4j.version>
@@ -114,6 +114,11 @@
             <artifactId>inntektsmelding-v1</artifactId>
             <version>${fp-kontrakter.version}</version>
         </dependency>
+        <dependency>
+            <groupId>no.nav.foreldrepenger.kontrakter</groupId>
+            <artifactId>fp-soknad-v1</artifactId>
+            <version>${fp-kontrakter.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>no.nav.foreldrepenger</groupId>
@@ -180,6 +185,12 @@
 
 
         <!-- Testavhengigheter (brukes også i scr) -->
+        <dependency>
+            <groupId>no.nav.foreldrepenger.kontrakter</groupId>
+            <artifactId>fp-soknad-v1</artifactId>
+            <version>${fp-kontrakter.version}</version>
+            <type>test-jar</type>
+        </dependency>
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>

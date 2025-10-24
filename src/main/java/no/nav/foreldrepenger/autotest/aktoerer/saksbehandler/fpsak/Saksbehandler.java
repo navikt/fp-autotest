@@ -66,8 +66,8 @@ import no.nav.foreldrepenger.autotest.klienter.vtp.saf.SafKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
 import no.nav.foreldrepenger.autotest.util.vent.Lazy;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
-import no.nav.foreldrepenger.common.domain.ArbeidsgiverIdentifikator;
-import no.nav.foreldrepenger.common.domain.Saksnummer;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.Orgnummer;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.Saksnummer;
 import no.nav.foreldrepenger.kontrakter.risk.kodeverk.RisikoklasseType;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskDataDto;
 
@@ -484,12 +484,12 @@ public class Saksbehandler {
     /*
      * Henting av Beregningsresultat
      */
-    public List<BeregningsresultatPeriodeAndel> hentBeregningsresultatPerioderMedAndelIArbeidsforhold(ArbeidsgiverIdentifikator arbeidsgiverIdentifikator) {
+    public List<BeregningsresultatPeriodeAndel> hentBeregningsresultatPerioderMedAndelIArbeidsforhold(String arbeidsgiverIdentifikator) {
         return valgtBehandling.getBeregningResultatForeldrepenger()
                 .getPerioder()
                 .stream()
                 .flatMap(beregningsresultatPeriode -> beregningsresultatPeriode.getAndeler().stream())
-                .filter(andeler -> arbeidsgiverIdentifikator.value().equalsIgnoreCase(andeler.getArbeidsgiverReferanse()))
+                .filter(andeler -> arbeidsgiverIdentifikator.equalsIgnoreCase(andeler.getArbeidsgiverReferanse()))
                 .sorted(Comparator.comparing(BeregningsresultatPeriodeAndel::getSisteUtbetalingsdato))
                 .toList();
     }
@@ -684,7 +684,7 @@ public class Saksbehandler {
 
     public void ventTilHistorikkinnslag(HistorikkType... type) {
         Vent.på(() -> harHistorikkinnslagPåBehandling(type),
-                () -> "Saken hadde ikke historikkinslag " + type + "\nHistorikkInnslag:" + String.join("\t\n",
+                () -> "Saken hadde ikke historikkinslag " + Arrays.stream(type).map(Enum::name).toList() + "\nHistorikkInnslag:" + String.join("\t\n",
                         String.valueOf(hentHistorikkinnslagPåBehandling())), 35);
     }
 
@@ -776,18 +776,18 @@ public class Saksbehandler {
         return utbetaltTilSøkerForAndeler.stream().mapToInt(Integer::intValue).sum() == forventetUtbetaltDagsatsTilSøker;
     }
 
-    private String hentInternArbeidsforholdId(ArbeidsgiverIdentifikator arbeidsgiverIdentifikator) {
+    private String hentInternArbeidsforholdId(String arbeidsgiverIdentifikator) {
         return valgtBehandling.getArbeidOgInntektsmeldingDto()
                 .arbeidsforhold()
                 .stream()
-                .filter(arbeidsforhold -> arbeidsgiverIdentifikator.value().equals(arbeidsforhold.arbeidsgiverIdent()))
+                .filter(arbeidsforhold -> arbeidsgiverIdentifikator.equals(arbeidsforhold.arbeidsgiverIdent()))
                 .map(ArbeidsforholdDto::internArbeidsforholdId)
                 .findFirst()
                 .orElseThrow(
                         () -> new RuntimeException("Fant ingen interne arbeidforhold med orgnummer " + arbeidsgiverIdentifikator));
     }
 
-    public boolean verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForAllePeriode(ArbeidsgiverIdentifikator arbeidsgiverIdentifikator,
+    public boolean verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForAllePeriode(Orgnummer arbeidsgiverIdentifikator,
                                                                                        double prosentAvDagsatsTilArbeidsgiver) {
         var prosentfaktor = prosentAvDagsatsTilArbeidsgiver / 100;
         //var internArbeidsforholdID = hentInternArbeidsforholdId(arbeidsgiverIdentifikator);

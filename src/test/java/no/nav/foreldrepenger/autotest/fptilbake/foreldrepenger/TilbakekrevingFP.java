@@ -29,9 +29,9 @@ import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjon
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.FattVedtakTilbakekreving;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.Kravgrunnlag;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
-import no.nav.foreldrepenger.common.domain.BrukerRolle;
-import no.nav.foreldrepenger.common.domain.Saksnummer;
-import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.BrukerRolle;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.Saksnummer;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.foreldrepenger.uttaksplan.KontoType;
 import no.nav.foreldrepenger.generator.familie.Familie;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
@@ -72,7 +72,7 @@ class TilbakekrevingFP extends FptilbakeTestBase {
         AllureHelper.debugFritekst("Ferdig med førstegangsbehandling");
 
         var fordeling = fordeling(
-                uttaksperiode(StønadskontoType.FELLESPERIODE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1))
+                uttaksperiode(KontoType.FELLESPERIODE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1))
         );
         var søknadE = lagEndringssøknad(søknad.build(), saksnummer, fordeling);
         mor.søk(søknadE);
@@ -181,7 +181,7 @@ class TilbakekrevingFP extends FptilbakeTestBase {
         tbksaksbehandler.leggTilVerge();
         tbksaksbehandler.ventTilBehandlingHarAktivtAksjonspunkt(5030);
         var vergeFakta = (ApVerge) tbksaksbehandler.hentAksjonspunktbehandling(5030);
-        vergeFakta.setVerge(familie.far().arbeidsgiver().arbeidsgiverIdentifikator().value());
+        vergeFakta.setVerge(familie.far().arbeidsgiver().arbeidsgiverIdentifikator());
         tbksaksbehandler.behandleAksjonspunkt(vergeFakta);
         tbksaksbehandler.ventTilBehandlingHarAktivtAksjonspunkt(7003);
 

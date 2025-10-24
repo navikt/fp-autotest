@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.autotest.fpsak.foreldrepenger;
 
-import static no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType.SEND_DOKUMENTER_UTEN_SELVBETJENING;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
 import static no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler.lagSøknadForeldrepengerFødsel;
@@ -13,23 +12,23 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import io.qameta.allure.Description;
-import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
+import no.nav.foreldrepenger.autotest.base.VerdikjedeTestBase;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Inntektskategori;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderBeregnetInntektsAvvikBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderFaktaOmBeregningBekreftelse;
-import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.BrukerRolle;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.GrunnlagDto;
 
 @Tag("fpsak")
 @Tag("foreldrepenger")
-class Ytelser extends FpsakTestBase {
+class Ytelser extends VerdikjedeTestBase {
 
     @Test
     @DisplayName("Mor søker fødsel og mottar sykepenger")
@@ -45,7 +44,7 @@ class Ytelser extends FpsakTestBase {
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
                 .barn(fødselsdatoBarn)
-                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
+                .build();
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
@@ -95,7 +94,7 @@ class Ytelser extends FpsakTestBase {
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
                 .barn(fødselsdatoBarn)
-                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
+                .build();
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var startDatoForeldrepenger = fødselsdato.minusWeeks(3);
@@ -104,6 +103,7 @@ class Ytelser extends FpsakTestBase {
         var saksnummer = mor.søk(søknad);
 
         var arbeidsgiver = mor.arbeidsgiver();
+        ventPåInntektsmeldingForespørsel(saksnummer);
         arbeidsgiver.sendInntektsmeldingerFP(saksnummer, startDatoForeldrepenger);
 
         saksbehandler.hentFagsak(saksnummer);

@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.autotest.fpsak.engangsstonad;
 
-import static no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType.SEND_DOKUMENTER_UTEN_SELVBETJENING;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.utenlandskAdresse;
@@ -19,7 +18,7 @@ import org.slf4j.LoggerFactory;
 import com.neovisionaries.i18n.CountryCode;
 
 import io.qameta.allure.Description;
-import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
+import no.nav.foreldrepenger.autotest.base.VerdikjedeTestBase;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Avslagsårsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
@@ -37,7 +36,7 @@ import no.nav.foreldrepenger.vtp.kontrakter.v2.PersonstatusDto;
 
 @Tag("fpsak")
 @Tag("engangsstonad")
-class Medlemskap extends FpsakTestBase {
+class Medlemskap extends VerdikjedeTestBase {
 
     private static final Logger logger = LoggerFactory.getLogger(Medlemskap.class);
 
@@ -58,7 +57,7 @@ class Medlemskap extends FpsakTestBase {
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusMonths(1))
-                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
+                .build();
 
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
@@ -102,7 +101,7 @@ class Medlemskap extends FpsakTestBase {
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusMonths(1))
-                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
+                .build();
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var søknad = lagEngangstønadFødsel(fødselsdato);
@@ -135,7 +134,7 @@ class Medlemskap extends FpsakTestBase {
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusMonths(1))
-                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
+                .build();
 
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();

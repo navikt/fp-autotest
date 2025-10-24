@@ -14,9 +14,8 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
-import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.LukketPeriodeMedVedlegg;
-import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.foreldrepenger.uttaksplan.Uttaksplanperiode;
-import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.ÅpenPeriodeDto;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.foreldrepenger.uttaksplan.Uttaksplanperiode;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.vedlegg.ÅpenPeriodeDto;
 
 public class VurderUttakDokumentasjonBekreftelse extends AksjonspunktBekreftelse {
 
@@ -31,7 +30,7 @@ public class VurderUttakDokumentasjonBekreftelse extends AksjonspunktBekreftelse
     }
 
     public VurderUttakDokumentasjonBekreftelse godkjenn() {
-        vurder(GODKJENT, null, null);
+        vurder(GODKJENT, null);
         return this;
     }
 
@@ -49,18 +48,8 @@ public class VurderUttakDokumentasjonBekreftelse extends AksjonspunktBekreftelse
         return this;
     }
 
-    public VurderUttakDokumentasjonBekreftelse godkjenn(LukketPeriodeMedVedlegg periode) {
-        vurder(GODKJENT, null, periode);
-        return this;
-    }
-
     public VurderUttakDokumentasjonBekreftelse ikkeGodkjenn(Uttaksplanperiode periode) {
         return ikkeGodkjenn(new ÅpenPeriodeDto(periode.fom(), periode.tom()));
-    }
-
-    public VurderUttakDokumentasjonBekreftelse ikkeGodkjenn(LukketPeriodeMedVedlegg periode) {
-        vurder(IKKE_GODKJENT, null, periode);
-        return this;
     }
 
     public VurderUttakDokumentasjonBekreftelse ikkeGodkjenn(ÅpenPeriodeDto periode) {
@@ -74,12 +63,7 @@ public class VurderUttakDokumentasjonBekreftelse extends AksjonspunktBekreftelse
     }
 
     public VurderUttakDokumentasjonBekreftelse godkjennMorsAktivitet(Behov.Årsak årsak) {
-        vurder(GODKJENT, årsak, null);
-        return this;
-    }
-
-    public VurderUttakDokumentasjonBekreftelse ikkeDokumentert(LukketPeriodeMedVedlegg periode) {
-        vurder(IKKE_DOKUMENTERT, null, periode);
+        vurder(GODKJENT, årsak);
         return this;
     }
 
@@ -94,12 +78,8 @@ public class VurderUttakDokumentasjonBekreftelse extends AksjonspunktBekreftelse
         return this;
     }
 
-    private void vurder(Vurdering vurdering, Behov.Årsak årsak, LukketPeriodeMedVedlegg periode) {
-        if (periode == null) {
-            vurder(vurdering, årsak, null, null, null);
-        } else {
-            vurder(vurdering, årsak, null, periode.getFom(), periode.getTom());
-        }
+    private void vurder(Vurdering vurdering, Behov.Årsak årsak) {
+        vurder(vurdering, årsak, null, null, null);
     }
 
     private void vurder(Vurdering vurdering, Behov.Årsak årsak, BigDecimal stillingsprosent, LocalDate fom, LocalDate tom) {

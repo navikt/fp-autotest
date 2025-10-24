@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.autotest.fpsak.engangsstonad;
 
-import static no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType.SEND_DOKUMENTER_UTEN_SELVBETJENING;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
 import static no.nav.foreldrepenger.generator.soknad.maler.SøknadEngangsstønadMaler.lagEngangstønadTermin;
@@ -14,7 +13,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import io.qameta.allure.Description;
-import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
+import no.nav.foreldrepenger.autotest.base.VerdikjedeTestBase;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Avslagsårsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingStatus;
@@ -32,7 +31,7 @@ import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 
 @Tag("fpsak")
 @Tag("engangsstonad")
-class Termin extends FpsakTestBase {
+class Termin extends VerdikjedeTestBase {
 
     @Test
     @DisplayName("Mor søker termin - godkjent")
@@ -49,7 +48,7 @@ class Termin extends FpsakTestBase {
                         .build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
-                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
+                .build();
         var mor = familie.mor();
         var termindato = LocalDate.now().plusWeeks(3);
         var søknad = lagEngangstønadTermin(termindato);
@@ -91,7 +90,7 @@ class Termin extends FpsakTestBase {
                         .build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
-                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
+                .build();
         var mor = familie.mor();
         var termindato = LocalDate.now().plusWeeks(3);
         var søknad = lagEngangstønadTermin(termindato);
@@ -140,7 +139,7 @@ class Termin extends FpsakTestBase {
                         .build())
                 .forelder(mor().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
-                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
+                .build();
         var far = familie.far();
         var termindato = LocalDate.now().plusWeeks(3);
         var søknad = lagEngangstønadTermin(termindato);
@@ -173,7 +172,7 @@ class Termin extends FpsakTestBase {
                         .build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
-                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
+                .build();
         var mor = familie.mor();
         var termindato = LocalDate.now().plusWeeks(3);
         var søknad = lagEngangstønadTermin(termindato);
@@ -215,7 +214,7 @@ class Termin extends FpsakTestBase {
                         .build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
-                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
+                .build();
         var mor = familie.mor();
         var termindato = LocalDate.now().minusDays(26);
         var søknad = lagEngangstønadTermin(termindato)

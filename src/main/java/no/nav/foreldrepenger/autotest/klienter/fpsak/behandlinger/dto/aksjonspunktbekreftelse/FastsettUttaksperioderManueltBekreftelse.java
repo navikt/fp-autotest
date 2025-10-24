@@ -20,8 +20,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriodeAktivitet;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.autotest.util.localdate.Virkedager;
-import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.LukketPeriodeMedVedlegg;
-import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.foreldrepenger.uttaksplan.KontoType;
 
 public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekreftelse {
 
@@ -86,10 +85,6 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
         return this;
     }
 
-    public List<UttakResultatPeriode> splitPeriode(LukketPeriodeMedVedlegg periode, LocalDate tomAvFørstePeriodeEtterSplitting) {
-        return splitPeriode(periode.getFom(), periode.getTom(), tomAvFørstePeriodeEtterSplitting);
-    }
-
     public List<UttakResultatPeriode> splitPeriode(LocalDate fom, LocalDate tom, LocalDate tomAvFørstePeriodeEtterSplitting) {
         UttakResultatPeriode periode1 = finnPeriode(fom, tom);
 
@@ -119,12 +114,12 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
         innvilgPeriode(periode, PeriodeResultatÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER);
     }
 
-    public void innvilgPeriode(UttakResultatPeriode periode, PeriodeResultatÅrsak periodeResultatÅrsak, StønadskontoType stønadskonto) {
+    public void innvilgPeriode(UttakResultatPeriode periode, PeriodeResultatÅrsak periodeResultatÅrsak, KontoType stønadskonto) {
         periode.setPeriodeResultatType(PeriodeResultatType.INNVILGET);
         periode.setPeriodeResultatÅrsak(periodeResultatÅrsak);
         periode.setBegrunnelse("Perioden er innvilget av Autotest.");
         for (UttakResultatPeriodeAktivitet aktivitet : periode.getAktiviteter()) {
-            aktivitet.setStønadskontoType(stønadskonto);
+            aktivitet.setKontotype(stønadskonto);
             innvilgAktivitetForPeriode(periode, aktivitet);
         }
     }
@@ -191,9 +186,8 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
         }
         aktivitet.setUtbetalingsgrad(BigDecimal.ZERO);
         // HACK for manglende aktivitet i periode (set aktivitet til å trekke fra mødrekvoten)
-        if ((aktivitet.getStønadskontoType() == null) || aktivitet.getStønadskontoType()
-                .equals(StønadskontoType.IKKE_SATT)) {
-            aktivitet.setStønadskontoType(StønadskontoType.MØDREKVOTE);
+        if (aktivitet.getKontoType() == null) {
+            aktivitet.setKontotype(KontoType.MØDREKVOTE);
         }
     }
 

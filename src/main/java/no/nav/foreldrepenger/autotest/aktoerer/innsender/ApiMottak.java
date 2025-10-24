@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.autotest.aktoerer.innsender;
 import static no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Mottakskanal.SKAN_IM;
 import static org.assertj.core.api.Assertions.fail;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -10,18 +11,18 @@ import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.klienter.fpinntektsmelding.InntektsmeldingKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpinntektsmelding.dto.SendInntektsmeldingDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsoknad.FpsoknadKlient;
-import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.EndringssøknadForeldrepengerDto;
-import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.SøknadDto;
-import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.VedleggDto;
-import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.ettersendelse.YtelseType;
 import no.nav.foreldrepenger.autotest.klienter.vtp.pdl.PdlLeesahKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
-import no.nav.foreldrepenger.common.domain.AktørId;
-import no.nav.foreldrepenger.common.domain.Fødselsnummer;
-import no.nav.foreldrepenger.common.domain.Saksnummer;
+import no.nav.foreldrepenger.generator.familie.AktørId;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.Inntektsmelding;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.navno.InntektsmeldingPortalMapper;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.EndringssøknadForeldrepengerDto;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.Fødselsnummer;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.Saksnummer;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.SøknadDto;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.ettersendelse.YtelseType;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.vedlegg.VedleggDto;
 import no.nav.foreldrepenger.vtp.kontrakter.PersonhendelseDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.DokumentModell;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.DokumentVariantInnhold;
@@ -90,6 +91,19 @@ public class ApiMottak extends DokumentInnsendingHjelper {
         return sendInnInntektsmelding(inntektsmeldinger.getFirst(), aktørId, fnr, saksnummer);
     }
 
+    @Override
+    public Saksnummer sendInnInntektsmeldingUtenForespørsel(Inntektsmelding inntektsmelding,
+                                                        LocalDate startDato,
+                                                        AktørId aktørId,
+                                                        Fødselsnummer fødselsnummer,
+                                                        Saksnummer saksnummer,
+                                                        boolean registrertIAareg) {
+        var request = InntektsmeldingPortalMapper.mapUtenForespørsel(inntektsmelding, aktørId, startDato, registrertIAareg);
+        return sendInnInntektsmelding(request, fødselsnummer, saksnummer);
+    }
+
+
+
     @Step("Sender inn IM for bruker {fnr}")
     private Saksnummer sendInnInntektsmelding(SendInntektsmeldingDto request, Fødselsnummer fnr, Saksnummer saksnummer) {
         var antallGamleInntekstmeldinger = antallInntektsmeldingerMottattPåSak(saksnummer);
@@ -115,7 +129,7 @@ public class ApiMottak extends DokumentInnsendingHjelper {
         return sendInnSøknad(fnr, søknad);
     }
 
-    @Step("[{søknad.rolle}]: Sender inn søknad: {fnr}")
+    @Step("[Sender inn søknad: {fnr}")
     private Saksnummer sendInnSøknad(Fødselsnummer fnr, SøknadDto søknad) {
         AllureHelper.tilJsonOgPubliserIAllureRapport(søknad);
         var skjæringsTidspunktForNyBehandling = LocalDateTime.now();
@@ -125,7 +139,7 @@ public class ApiMottak extends DokumentInnsendingHjelper {
         return ventTilFagsakOgBehandlingErOpprettet(fnr, skjæringsTidspunktForNyBehandling, antallEksistrendeFagsakerPåSøker);
     }
 
-    @Step("[{søknad.rolle}]: Sender inn endrignssøknad: {fnr}")
+    @Step("[Sender inn endrignssøknad: {fnr}")
     private Saksnummer sendInnSøknad(Fødselsnummer fnr, EndringssøknadForeldrepengerDto søknad) {
         AllureHelper.tilJsonOgPubliserIAllureRapport(søknad);
         var skjæringsTidspunktForNyBehandling = LocalDateTime.now();

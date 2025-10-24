@@ -7,17 +7,16 @@ import java.time.LocalDate;
 import java.util.List;
 
 import no.nav.foreldrepenger.autotest.aktoerer.innsender.Innsender;
-import no.nav.foreldrepenger.common.domain.ArbeidsgiverIdentifikator;
-import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.InntektsmeldingBuilder;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.Fødselsnummer;
 
 class PersonArbeidsgiver extends Arbeidsgiver {
 
     private final Fødselsnummer fnrArbeidsgiver;
 
-    public PersonArbeidsgiver(ArbeidsgiverIdentifikator arbeidsgiverIdentifikator, Arbeidstaker arbeidstaker,
+    public PersonArbeidsgiver(AktørId aktørId, Arbeidstaker arbeidstaker,
                               List<Arbeidsforhold> arbeidsforhold, Innsender innsender, Fødselsnummer fnrArbeidsgiver) {
-        super(arbeidsgiverIdentifikator, arbeidstaker, arbeidsforhold, innsender);
+        super(aktørId.value(), arbeidstaker, arbeidsforhold, innsender);
         this.fnrArbeidsgiver = fnrArbeidsgiver;
     }
 

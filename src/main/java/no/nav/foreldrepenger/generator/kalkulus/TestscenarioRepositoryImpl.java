@@ -11,7 +11,7 @@ import no.nav.folketrygdloven.kalkulus.felles.v1.Saksnummer;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningSteg;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.detaljert.BeregningsgrunnlagGrunnlagDto;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.BeregningsgrunnlagDto;
-import no.nav.foreldrepenger.common.domain.AktørId;
+import no.nav.foreldrepenger.generator.familie.AktørId;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import org.junit.jupiter.api.TestInfo;
 

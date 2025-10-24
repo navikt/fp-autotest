@@ -3,9 +3,9 @@ package no.nav.foreldrepenger.generator.soknad.maler;
 import java.time.LocalDate;
 import java.util.List;
 
-import no.nav.foreldrepenger.common.oppslag.dkif.Målform;
-import no.nav.foreldrepenger.generator.soknad.builder.BarnBuilder;
-import no.nav.foreldrepenger.generator.soknad.builder.EngangsstønadBuilder;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.Målform;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.builder.BarnBuilder;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.builder.EngangsstønadBuilder;
 
 public final class SøknadEngangsstønadMaler {
 

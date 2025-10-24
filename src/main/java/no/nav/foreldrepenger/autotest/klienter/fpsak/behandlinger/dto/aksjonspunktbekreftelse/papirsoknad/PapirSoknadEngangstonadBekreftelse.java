@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.AnnenForelderDto;
-import no.nav.foreldrepenger.common.domain.BrukerRolle;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.BrukerRolle;
 
 public class PapirSoknadEngangstonadBekreftelse extends AksjonspunktBekreftelse {
     protected String tema = "OMSRGO";

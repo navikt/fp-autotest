@@ -17,8 +17,8 @@ import no.nav.foreldrepenger.autotest.klienter.fpinntektsmelding.dto.Arbeidsgive
 import no.nav.foreldrepenger.autotest.klienter.fpinntektsmelding.dto.SendInntektsmeldingDto;
 import no.nav.foreldrepenger.autotest.klienter.fpinntektsmelding.dto.YtelseType;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
-import no.nav.foreldrepenger.common.domain.Fødselsnummer;
-import no.nav.foreldrepenger.common.domain.Saksnummer;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.Fødselsnummer;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.Saksnummer;
 
 public class InntektsmeldingKlient {
 

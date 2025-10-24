@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotNull;
 
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType;
-import no.nav.foreldrepenger.common.domain.Saksnummer;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.Saksnummer;
 
 public record BehandlingNy(@NotNull Saksnummer saksnummer,
                            @NotNull BehandlingType behandlingType,

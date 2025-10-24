@@ -3,11 +3,11 @@ package no.nav.foreldrepenger.generator.soknad.maler;
 import java.time.LocalDate;
 import java.util.List;
 
-import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.VedleggDto;
-import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.VedleggInnsendingType;
-import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.svangerskapspenger.TilretteleggingbehovDto;
-import no.nav.foreldrepenger.generator.soknad.builder.BarnBuilder;
-import no.nav.foreldrepenger.generator.soknad.builder.SvangerskapspengerBuilder;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.vedlegg.VedleggDto;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.vedlegg.InnsendingType;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.svangerskapspenger.TilretteleggingbehovDto;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.builder.BarnBuilder;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.builder.SvangerskapspengerBuilder;
 
 public final class SøknadSvangerskapspengerMaler {
 
@@ -25,6 +25,6 @@ public final class SøknadSvangerskapspengerMaler {
     }
 
     private static VedleggDto påkrevdVedleggFor(TilretteleggingbehovDto tilretteleggingbehov) {
-        return VedleggMaler.dokumenterTilrettelegging(tilretteleggingbehov, VedleggInnsendingType.LASTET_OPP);
+        return VedleggMaler.dokumenterTilrettelegging(tilretteleggingbehov, InnsendingType.LASTET_OPP);
     }
 }

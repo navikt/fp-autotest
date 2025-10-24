@@ -5,23 +5,24 @@ import static no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.autotest.aktoerer.innsender.Innsender;
-import no.nav.foreldrepenger.common.domain.ArbeidsgiverIdentifikator;
-import no.nav.foreldrepenger.common.domain.Saksnummer;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.Inntektsmelding;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.InntektsmeldingBuilder;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.Saksnummer;
 
 public abstract class Arbeidsgiver {
+    private static final Logger LOG = LoggerFactory.getLogger(Arbeidsgiver.class);
 
-    protected final ArbeidsgiverIdentifikator arbeidsgiverIdentifikator;
+    protected final String arbeidsgiverIdentifikator;
     protected final Arbeidstaker arbeidstaker;
     protected final List<Arbeidsforhold> arbeidsforhold;
     private final Innsender innsender;
 
-    Arbeidsgiver(ArbeidsgiverIdentifikator arbeidsgiverIdentifikator, Arbeidstaker arbeidstaker,
-                               List<Arbeidsforhold> arbeidsforhold, Innsender innsender) {
+    Arbeidsgiver(String arbeidsgiverIdentifikator, Arbeidstaker arbeidstaker, List<Arbeidsforhold> arbeidsforhold, Innsender innsender) {
         this.arbeidsgiverIdentifikator = arbeidsgiverIdentifikator;
         this.arbeidstaker = arbeidstaker;
         this.arbeidsforhold = arbeidsforhold;
@@ -31,7 +32,7 @@ public abstract class Arbeidsgiver {
     protected abstract InntektsmeldingBuilder lagInntektsmeldingFP(Integer månedsinntekt, ArbeidsforholdId arbeidsforholdId, LocalDate startdatoForeldrepenger);
     protected abstract InntektsmeldingBuilder lagInntektsmeldingSVP(Integer månedsinntekt, ArbeidsforholdId arbeidsforholdId);
 
-    public ArbeidsgiverIdentifikator arbeidsgiverIdentifikator() {
+    public String arbeidsgiverIdentifikator() {
         return arbeidsgiverIdentifikator;
     }
 
@@ -55,34 +56,37 @@ public abstract class Arbeidsgiver {
     }
 
     public List<InntektsmeldingBuilder> lagInntektsmeldingerFP(LocalDate startdatoForeldrepenger, boolean slåSammenFlereArbeidsforhold) {
-        var im = new ArrayList<InntektsmeldingBuilder>();
-        if (arbeidsforhold.size() == 1 && erAktivtArbeidsforhold(arbeidsforhold.getFirst(), startdatoForeldrepenger)) {
-            im.add(lagInntektsmeldingFP(startdatoForeldrepenger));
-        } else {
-            var stillingsprosentSamlet = arbeidsforhold.stream()
+        if (arbeidsforhold.isEmpty() || arbeidsforhold.stream().noneMatch(a -> erAktivtArbeidsforhold(a, startdatoForeldrepenger))) {
+            LOG.info("Arbeidsgiver {} har ingen aktive arbeidsforhold for dato {}. Sender ingen IM.", arbeidsgiverIdentifikator, startdatoForeldrepenger);
+            return List.of();
+        }
+
+        if (arbeidsforhold.size() == 1) {
+            return List.of(lagInntektsmeldingFP(startdatoForeldrepenger));
+        }
+
+        var stillingsprosentSamlet = arbeidsforhold.stream()
+                .filter(a -> erAktivtArbeidsforhold(a, startdatoForeldrepenger))
+                .map(Arbeidsforhold::stillingsprosent)
+                .mapToInt(Integer::intValue)
+                .sum();
+
+        if (slåSammenFlereArbeidsforhold) {
+            var aktiveInntekter = arbeidsforhold.stream()
                     .filter(a -> erAktivtArbeidsforhold(a, startdatoForeldrepenger))
-                    .map(Arbeidsforhold::stillingsprosent)
+                    .map(a -> arbeidstaker.månedsinntekt() * a.stillingsprosent() / stillingsprosentSamlet)
                     .mapToInt(Integer::intValue)
                     .sum();
-
-            if (slåSammenFlereArbeidsforhold) {
-                var aktiveInntekter = arbeidsforhold.stream()
-                        .filter(a -> erAktivtArbeidsforhold(a, startdatoForeldrepenger))
-                        .map(a -> arbeidstaker.månedsinntekt() * a.stillingsprosent() / stillingsprosentSamlet)
-                        .mapToInt(Integer::intValue)
-                        .sum();
-
-                im.add(lagInntektsmeldingFP(aktiveInntekter, null, startdatoForeldrepenger));
-            } else {
-                arbeidsforhold.stream()
-                        .filter(a -> erAktivtArbeidsforhold(a, startdatoForeldrepenger))
-                        .forEach(a -> im.add(lagInntektsmeldingFP(
-                                arbeidstaker.månedsinntekt() * a.stillingsprosent() / stillingsprosentSamlet,
-                                a.arbeidsforholdId(),
-                                startdatoForeldrepenger)));
-            }
+            return List.of(lagInntektsmeldingFP(aktiveInntekter, null, startdatoForeldrepenger));
         }
-        return im;
+
+        return arbeidsforhold.stream()
+                .filter(a -> erAktivtArbeidsforhold(a, startdatoForeldrepenger))
+                .map(a -> lagInntektsmeldingFP(
+                        arbeidstaker.månedsinntekt() * a.stillingsprosent() / stillingsprosentSamlet,
+                        a.arbeidsforholdId(),
+                        startdatoForeldrepenger))
+                .toList();
     }
 
     public InntektsmeldingBuilder lagInntektsmeldingTilkommendeArbeidsforholdEtterFPstartdato(LocalDate startdatoForeldrepenger) {
@@ -123,19 +127,33 @@ public abstract class Arbeidsgiver {
     }
 
     public Saksnummer sendInntektsmeldingerSVP(Saksnummer saksnummer) {
-        return innsender.sendInnInntektsmelding(buildInntektsmeldinger(lagInntektsmeldingerSVP().stream()), arbeidstaker.aktørId(), arbeidstaker.fødselsnummer(), saksnummer);
+        var im = lagInntektsmeldingerSVP();
+        if (im.isEmpty()) {
+            LOG.info("Ingen inntektsmeldinger å sende for arbeidsgiver {}", arbeidsgiverIdentifikator);
+            return saksnummer;
+        }
+        return innsender.sendInnInntektsmelding(buildInntektsmeldinger(im), arbeidstaker.aktørId(), arbeidstaker.fødselsnummer(), saksnummer);
     }
 
     public Saksnummer sendInntektsmeldingerFP(Saksnummer saksnummer, LocalDate startdatoForeldrepenger) {
-        return innsender.sendInnInntektsmelding(buildInntektsmeldinger(lagInntektsmeldingerFP(startdatoForeldrepenger).stream()), arbeidstaker.aktørId(), arbeidstaker.fødselsnummer(), saksnummer);
+        var im = lagInntektsmeldingerFP(startdatoForeldrepenger);
+        if (im.isEmpty()) {
+            LOG.info("Ingen inntektsmeldinger å sende for arbeidsgiver {} for FP-startdato {}.", arbeidsgiverIdentifikator, startdatoForeldrepenger);
+            return saksnummer;
+        }
+        return innsender.sendInnInntektsmelding(buildInntektsmeldinger(im), arbeidstaker.aktørId(), arbeidstaker.fødselsnummer(), saksnummer);
+    }
+
+    public Saksnummer sendInnInntektsmeldingUtenForespørsel(Saksnummer saksnummer, InntektsmeldingBuilder im, LocalDate startdato, boolean registrertIAareg) {
+        return innsender.sendInnInntektsmeldingUtenForespørsel(im.build(), startdato, arbeidstaker.aktørId(), arbeidstaker.fødselsnummer(), saksnummer, registrertIAareg);
     }
 
     public Saksnummer sendInntektsmelding(Saksnummer saksnummer, InntektsmeldingBuilder inntektsmelding) {
         return innsender.sendInnInntektsmelding(inntektsmelding.build(), arbeidstaker.aktørId(), arbeidstaker.fødselsnummer(), saksnummer);
     }
 
-    private List<Inntektsmelding> buildInntektsmeldinger(Stream<InntektsmeldingBuilder> inntektsmeldingStream) {
-        return inntektsmeldingStream.map(InntektsmeldingBuilder::build).toList();
+    private List<Inntektsmelding> buildInntektsmeldinger(List<InntektsmeldingBuilder> inntektsmeldingStream) {
+        return inntektsmeldingStream.stream().map(InntektsmeldingBuilder::build).toList();
     }
 
     protected void guardFlereEllerIngenArbeidsforhold() {

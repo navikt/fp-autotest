@@ -2,8 +2,8 @@ package no.nav.foreldrepenger.generator.familie;
 
 import java.util.Comparator;
 
-import no.nav.foreldrepenger.common.domain.ArbeidsgiverIdentifikator;
-import no.nav.foreldrepenger.common.domain.Fødselsnummer;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.Fødselsnummer;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.Orgnummer;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.inntektkomponent.InntektskomponentModell;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.inntektkomponent.Inntektsperiode;
 
@@ -19,20 +19,28 @@ final class Inntektskomponenten {
                 .orElse(0);
     }
 
-    static int månedsinntekt(InntektskomponentModell inntektskomponenten, ArbeidsgiverIdentifikator arbeidsgiverIdentifikator) {
+    static int månedsinntekt(InntektskomponentModell inntektskomponenten, Orgnummer identifikator) {
         return inntektskomponenten.inntektsperioder().stream()
-                .filter(p -> erArbeidsgiver(arbeidsgiverIdentifikator, p))
+                .filter(p -> erArbeidsgiver(identifikator.value(), p))
                 .max(Comparator.comparing(Inntektsperiode::tom))
                 .map(Inntektsperiode::beløp)
                 .orElse(0);
     }
 
-    private static boolean erArbeidsgiver(ArbeidsgiverIdentifikator arbeidsgiverIdentifikator, Inntektsperiode p) {
+    static int månedsinntekt(InntektskomponentModell inntektskomponenten, String identifikator) {
+        return inntektskomponenten.inntektsperioder().stream()
+                .filter(p -> erArbeidsgiver(identifikator, p))
+                .max(Comparator.comparing(Inntektsperiode::tom))
+                .map(Inntektsperiode::beløp)
+                .orElse(0);
+    }
+
+    private static boolean erArbeidsgiver(String identifikator, Inntektsperiode p) {
         if (p.orgnr() != null) {
-            return arbeidsgiverIdentifikator.value().equalsIgnoreCase(p.orgnr());
+            return identifikator.equalsIgnoreCase(p.orgnr());
         }
         if (p.arbeidsgiver() != null) {
-            return arbeidsgiverIdentifikator.value().equalsIgnoreCase(p.arbeidsgiver().getAktørIdent());
+            return identifikator.equalsIgnoreCase(p.arbeidsgiver().getAktørIdent());
         }
         return false;
     }

@@ -1,17 +1,16 @@
 package no.nav.foreldrepenger.autotest.fpsak.foreldrepenger;
 
-import static no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType.SEND_DOKUMENTER_UTEN_SELVBETJENING;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak.DEN_ANDRE_PART_SYK_SKADET_IKKE_OPPFYLT;
-import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.MorsAktivitet.ARBEID;
-import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.MorsAktivitet.INNLAGT;
-import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.MorsAktivitet.TRENGER_HJELP;
-import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.MorsAktivitet.UFØRE;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
 import static no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler.lagSøknadForeldrepengerFødsel;
 import static no.nav.foreldrepenger.generator.soknad.maler.UttakMaler.fordeling;
 import static no.nav.foreldrepenger.generator.soknad.maler.UttaksperioderMaler.utsettelsesperiode;
 import static no.nav.foreldrepenger.generator.soknad.maler.UttaksperioderMaler.uttaksperiode;
+import static no.nav.foreldrepenger.kontrakter.fpsoknad.foreldrepenger.uttaksplan.MorsAktivitet.ARBEID;
+import static no.nav.foreldrepenger.kontrakter.fpsoknad.foreldrepenger.uttaksplan.MorsAktivitet.INNLAGT;
+import static no.nav.foreldrepenger.kontrakter.fpsoknad.foreldrepenger.uttaksplan.MorsAktivitet.TRENGER_HJELP;
+import static no.nav.foreldrepenger.kontrakter.fpsoknad.foreldrepenger.uttaksplan.MorsAktivitet.UFØRE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
@@ -22,7 +21,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import io.qameta.allure.Description;
-import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
+import no.nav.foreldrepenger.autotest.base.VerdikjedeTestBase;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsettUttaksperioderManueltBekreftelse;
@@ -31,18 +30,18 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaAnnenForeldreHarRett;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.VurderUttakDokumentasjonBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer;
-import no.nav.foreldrepenger.common.domain.BrukerRolle;
-import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType;
-import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.UtsettelsesÅrsak;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.BrukerRolle;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.foreldrepenger.uttaksplan.KontoType;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.foreldrepenger.uttaksplan.UtsettelsesÅrsak;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 
 @Tag("fpsak")
 @Tag("foreldrepenger")
-class RegresjonPreWLB extends FpsakTestBase {
+class RegresjonPreWLB extends VerdikjedeTestBase {
 
 
     @Test
@@ -66,7 +65,7 @@ class RegresjonPreWLB extends FpsakTestBase {
                         .build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
                 .barn(LocalDate.of(2021, 10, 15))
-                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
+                .build();
         var far = familie.far();
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdatoFar = fødselsdato.plusWeeks(6);
@@ -78,11 +77,11 @@ class RegresjonPreWLB extends FpsakTestBase {
         * Han skal få innvilge totalt 12 av 15 uker med foreldrepenger uten aktivitetskrav, men får avslag på de siste 3 fordi
         *   disse dagene må tas ut innen uke 46 (+ eventuelle innvilgede utsettelserList).
         * */
-        var uttaksperiode1 = uttaksperiode(StønadskontoType.FORELDREPENGER, fpStartdatoFar, fpStartdatoFar.plusWeeks(5).minusDays(1), ARBEID);
+        var uttaksperiode1 = uttaksperiode(KontoType.FORELDREPENGER, fpStartdatoFar, fpStartdatoFar.plusWeeks(5).minusDays(1), ARBEID);
         var utsettelsesperiode1 = utsettelsesperiode(UtsettelsesÅrsak.FRI, fpStartdatoFar.plusWeeks(5), fpStartdatoFar.plusWeeks(10).minusDays(1), TRENGER_HJELP);
-        var uttaksperiode2 = uttaksperiode(StønadskontoType.FORELDREPENGER, fpStartdatoFar.plusWeeks(10), fpStartdatoFar.plusWeeks(15).minusDays(1), ARBEID);
+        var uttaksperiode2 = uttaksperiode(KontoType.FORELDREPENGER, fpStartdatoFar.plusWeeks(10), fpStartdatoFar.plusWeeks(15).minusDays(1), ARBEID);
         var utsettelsesperiode2 = utsettelsesperiode(UtsettelsesÅrsak.FRI, fpStartdatoFar.plusWeeks(15), fpStartdatoFar.plusWeeks(38).minusDays(1), TRENGER_HJELP);
-        var uttaksperiode3 = uttaksperiode(StønadskontoType.FORELDREPENGER, fpStartdatoFar.plusWeeks(38), fpStartdatoFar.plusWeeks(43).minusDays(1), UFØRE);
+        var uttaksperiode3 = uttaksperiode(KontoType.FORELDREPENGER, fpStartdatoFar.plusWeeks(38), fpStartdatoFar.plusWeeks(43).minusDays(1), UFØRE);
         var fordeling = fordeling(
                 uttaksperiode1,
                 utsettelsesperiode1,
@@ -97,6 +96,7 @@ class RegresjonPreWLB extends FpsakTestBase {
         var saksnummer = far.søk(søknad);
 
         var arbeidsgiver = far.arbeidsgiver();
+        ventPåInntektsmeldingForespørsel(saksnummer);
         arbeidsgiver.sendInntektsmeldingerFP(saksnummer, fpStartdatoFar);
 
         // Må bekrefte at mor er ufør inntil det kommer mock + modell
@@ -188,14 +188,14 @@ class RegresjonPreWLB extends FpsakTestBase {
                         .build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
                 .barn(LocalDate.of(2021, 10, 15))
-                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
+                .build();
         var far = familie.far();
         var fødselsdato = familie.barn().fødselsdato();
-        var uttaksperiodeIfmFødsel = uttaksperiode(StønadskontoType.FEDREKVOTE, fødselsdato, fødselsdato.plusWeeks(1).minusDays(1), INNLAGT);
+        var uttaksperiodeIfmFødsel = uttaksperiode(KontoType.FEDREKVOTE, fødselsdato, fødselsdato.plusWeeks(1).minusDays(1), INNLAGT);
         var fordeling = fordeling(
                 uttaksperiodeIfmFødsel,
-                uttaksperiode(StønadskontoType.FEDREKVOTE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(20).minusDays(1)),
-                uttaksperiode(StønadskontoType.FELLESPERIODE, fødselsdato.plusWeeks(20), fødselsdato.plusWeeks(26).minusDays(1), ARBEID)
+                uttaksperiode(KontoType.FEDREKVOTE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(20).minusDays(1)),
+                uttaksperiode(KontoType.FELLESPERIODE, fødselsdato.plusWeeks(20), fødselsdato.plusWeeks(26).minusDays(1), ARBEID)
         );
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.FAR)
                 .medUttaksplan(fordeling)
@@ -203,6 +203,7 @@ class RegresjonPreWLB extends FpsakTestBase {
                 .medMottattdato(fødselsdato);
         var saksnummer = far.søk(søknad);
         var arbeidsgiver = far.arbeidsgiver();
+        ventPåInntektsmeldingForespørsel(saksnummer);
         arbeidsgiver.sendInntektsmeldingerFP(saksnummer, fødselsdato);
 
         saksbehandler.hentFagsak(saksnummer);

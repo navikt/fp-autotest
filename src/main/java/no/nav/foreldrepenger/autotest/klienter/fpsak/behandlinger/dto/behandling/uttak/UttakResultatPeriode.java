@@ -12,7 +12,7 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.OppholdÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakresultatUtsettelseÅrsak;
-import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.foreldrepenger.uttaksplan.KontoType;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, isGetterVisibility = JsonAutoDetect.Visibility.NONE, creatorVisibility = JsonAutoDetect.Visibility.NONE)
@@ -123,9 +123,9 @@ public class UttakResultatPeriode implements Serializable {
         this.periodeType = periodeType;
     }
 
-    public void setStønadskonto(StønadskontoType stønadskonto) {
+    public void setStønadskonto(KontoType stønadskonto) {
         for (UttakResultatPeriodeAktivitet aktivitet : aktiviteter) {
-            aktivitet.setStønadskontoType(stønadskonto);
+            aktivitet.setKontotype(stønadskonto);
         }
     }
 

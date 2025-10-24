@@ -1,6 +1,0 @@
-package no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.ettersendelse;
-
-import no.nav.foreldrepenger.common.domain.Saksnummer;
-
-public record TilbakebetalingUttalelseDto(YtelseType type, Saksnummer saksnummer, String dialogId, BrukerTekstDto brukerTekst) {
-}

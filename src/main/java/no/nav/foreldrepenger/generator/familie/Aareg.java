@@ -1,12 +1,11 @@
 package no.nav.foreldrepenger.generator.familie;
 
-import static no.nav.foreldrepenger.common.util.StreamUtil.safeStream;
+
+import static no.nav.foreldrepenger.autotest.util.StreamUtils.safeStream;
 
 import java.util.List;
 
-import no.nav.foreldrepenger.common.domain.AktørId;
-import no.nav.foreldrepenger.common.domain.ArbeidsgiverIdentifikator;
-import no.nav.foreldrepenger.common.domain.Orgnummer;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.Orgnummer;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.ArbeidsforholdModell;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforholdstype;
 
@@ -21,9 +20,17 @@ final class Aareg {
                 .toList();
     }
 
-    static List<Arbeidsforhold> arbeidsforholdene(ArbeidsforholdModell aareg, ArbeidsgiverIdentifikator arbeidsgiverIdentifikator) {
+    static List<Arbeidsforhold> arbeidsforholdene(ArbeidsforholdModell aareg, Orgnummer orgnummer) {
+        return arbeidsforholdene(aareg, orgnummer.value());
+    }
+
+    static List<Arbeidsforhold> arbeidsforholdene(ArbeidsforholdModell aareg, AktørId aktørId) {
+        return arbeidsforholdene(aareg, aktørId.value());
+    }
+
+    static List<Arbeidsforhold> arbeidsforholdene(ArbeidsforholdModell aareg, String identifikator) {
         return safeStream(aareg.arbeidsforhold())
-                .filter(a -> erArbeidsgiver(arbeidsgiverIdentifikator, a))
+                .filter(a -> erArbeidsgiver(identifikator, a))
                 .map(Aareg::mapTilArbeidsforhold)
                 .toList();
     }
@@ -38,23 +45,23 @@ final class Aareg {
 
     private static Arbeidsforhold mapTilArbeidsforhold(no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforhold a) {
         return new Arbeidsforhold(
-                a.arbeidsgiverOrgnr() != null ? new Orgnummer(a.arbeidsgiverOrgnr()) : new AktørId(a.arbeidsgiverAktorId()),
+                a.arbeidsgiverOrgnr() != null ? a.arbeidsgiverOrgnr() : a.arbeidsgiverAktorId(),
                 new ArbeidsforholdId(a.arbeidsforholdId()), a.ansettelsesperiodeFom(), a.ansettelsesperiodeTom(),
                 a.arbeidsforholdstype(), a.arbeidsavtaler().getFirst().stillingsprosent());
     }
 
-    private static boolean erArbeidsgiver(ArbeidsgiverIdentifikator arbeidsgiverIdentifikator, no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforhold a) {
-        if (arbeidsgiverIdentifikator == null) {
+    private static boolean erArbeidsgiver(String identifikator, no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforhold a) {
+        if (identifikator == null) {
             return false;
         }
         if (a.arbeidsgiverOrgnr() != null) {
-             return arbeidsgiverIdentifikator.value().equalsIgnoreCase(a.arbeidsgiverOrgnr());
+             return identifikator.equalsIgnoreCase(a.arbeidsgiverOrgnr());
         }
         if (a.arbeidsgiverAktorId() != null) {
-            return arbeidsgiverIdentifikator.value().equalsIgnoreCase(a.arbeidsgiverAktorId());
+            return identifikator.equalsIgnoreCase(a.arbeidsgiverAktorId());
         }
         if (a.personArbeidsgiver() != null) {
-            return arbeidsgiverIdentifikator.value().equalsIgnoreCase(a.personArbeidsgiver().getAktørIdent());
+            return identifikator.equalsIgnoreCase(a.personArbeidsgiver().getAktørIdent());
         }
         return false;
     }
