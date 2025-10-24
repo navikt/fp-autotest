@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Objects;
 
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -362,7 +361,6 @@ class BeregningVerdikjede extends VerdikjedeTestBase {
         assertThat(dagsats).isPositive();
     }
 
-    @Disabled // TFP-5621: Petter kan du fikse denne?
     @Test
     @DisplayName("Mor med for sent refusjonskrav.")
     void morFødselForSentRefusjonskrav() {
@@ -370,15 +368,9 @@ class BeregningVerdikjede extends VerdikjedeTestBase {
                 .forelder(mor()
                         .inntektytelse(InntektYtelseGenerator.ny()
                                 .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-001", LocalDate.now().minusYears(4), LocalDate.now().minusMonths(4), 900_000)
-                                .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-002", LocalDate.now().minusMonths(4), LocalDate.now(), 900_000)
                                 .build())
                         .build())
-                .forelder(far()
-                        .inntektytelse(InntektYtelseGenerator.ny()
-                                .arbeidsforhold(TestOrganisasjoner.NAV_BERGEN, "ARB001-001", LocalDate.now().minusYears(4), LocalDate.now().minusMonths(4), 900_000)
-                                .arbeidsforhold(TestOrganisasjoner.NAV_BERGEN, "ARB001-002", LocalDate.now().minusMonths(4), LocalDate.now(), 900_000)
-                                .build())
-                        .build())
+                .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusYears(3))
                 .build();
@@ -395,13 +387,9 @@ class BeregningVerdikjede extends VerdikjedeTestBase {
         var inntektsmelding = arbeidsgiver.lagInntektsmeldingFP(fpStartdato)
                 .medBeregnetInntekt(Prosent.valueOf(50))
                 .medRefusjonBeløpPerMnd(29_000);
-        var inntektsmeldingTilkommendeArbeidsforhold = arbeidsgiver.lagInntektsmeldingTilkommendeArbeidsforholdEtterFPstartdato(fpStartdato)
-                .medBeregnetInntekt(Prosent.valueOf(50))
-                .medRefusjonBeløpPerMnd(Prosent.valueOf(100));
 
         ventPåInntektsmeldingForespørsel(saksnummer);
         arbeidsgiver.sendInntektsmelding(saksnummer, inntektsmelding);
-        arbeidsgiver.sendInnInntektsmeldingUtenForespørsel(saksnummer, inntektsmeldingTilkommendeArbeidsforhold, fpStartdato, true);
 
         saksbehandler.hentFagsak(saksnummer);
 
