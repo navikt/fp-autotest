@@ -27,7 +27,7 @@
         <vtp.versjon>2.1.1</vtp.versjon>
         <fp-felles.versjon>7.6.8</fp-felles.versjon>
         <fp-prosesstask.version>5.2.1</fp-prosesstask.version>
-        <fp-kontrakter.version>9.4.4</fp-kontrakter.version>
+        <fp-kontrakter.version>9.4.6</fp-kontrakter.version>
         <fpsoknad-felles.version>3.3.4</fpsoknad-felles.version> <!-- TODO: Fjern fpsoknad-felles (innsyn dto i fpoversikt) ligger der nå -->
         <ftberegning.version>6.1.6</ftberegning.version>
 

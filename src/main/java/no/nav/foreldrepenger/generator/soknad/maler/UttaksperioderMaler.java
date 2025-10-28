@@ -23,13 +23,16 @@ public final class UttaksperioderMaler {
 
     public static Uttaksplanperiode uttaksperiode(KontoType stønadskontoType, LocalDate fom, LocalDate tom) {
         var periode = justerPeriodeHelg(fom, tom);
-        return UttakplanPeriodeBuilder.uttak(stønadskontoType, periode.fom, periode.tom).build();
+        return UttakplanPeriodeBuilder.uttak(stønadskontoType, periode.fom, periode.tom)
+                .medØnskerGradering(false)
+                .build();
     }
 
     public static Uttaksplanperiode uttaksperiode(KontoType stønadskonto, LocalDate fom, LocalDate tom, MorsAktivitet morsAktivitet) {
         var periode = justerPeriodeHelg(fom, tom);
         return UttakplanPeriodeBuilder.uttak(stønadskonto, periode.fom, periode.tom)
                 .medMorsAktivitetIPerioden(morsAktivitet)
+                .medØnskerGradering(false)
                 .build();
     }
 
@@ -43,6 +46,7 @@ public final class UttaksperioderMaler {
         var periode = justerPeriodeHelg(fom, tom);
         var periodetype = Set.of(uttaksperiodeTyper);
         return UttakplanPeriodeBuilder.uttak(stønadskontoType, periode.fom, periode.tom)
+                .medØnskerGradering(false)
                 .medSamtidigUttakProsent(Double.valueOf(uttaksprosent))
                 .medØnskerFlerbarnsdager(periodetype.contains(UttaksperiodeType.FLERBARNSDAGER))
                 .medØnskerSamtidigUttak(periodetype.contains(UttaksperiodeType.SAMTIDIGUTTAK))
@@ -65,6 +69,7 @@ public final class UttaksperioderMaler {
                                                                      MorsAktivitet morsAktivitet) {
         var periode = justerPeriodeHelg(fom, tom);
         return UttakplanPeriodeBuilder.gradert(stønadskontoType, periode.fom, periode.tom, Double.valueOf(arbeidstidsprosentIOrgnr))
+                .medØnskerGradering(true)
                 .medErArbeidstaker(true)
                 .medOrgnumre(List.of(arbeidsgiverIdentifikator))
                 .medMorsAktivitetIPerioden(morsAktivitet)
@@ -76,6 +81,7 @@ public final class UttaksperioderMaler {
                                                            Integer arbeidstidsprosent) {
         var periode = justerPeriodeHelg(fom, tom);
         return UttakplanPeriodeBuilder.gradert(stønadskontoType, periode.fom, periode.tom, Double.valueOf(arbeidstidsprosent))
+                .medØnskerGradering(true)
                 .medErFrilanser(true)
                 .build();
     }
@@ -85,6 +91,7 @@ public final class UttaksperioderMaler {
                                                            Integer arbeidstidsprosent) {
         var periode = justerPeriodeHelg(fom, tom);
         return UttakplanPeriodeBuilder.gradert(stønadskontoType, periode.fom, periode.tom, Double.valueOf(arbeidstidsprosent))
+                .medØnskerGradering(true)
                 .medErSelvstendig(true)
                 .build();
     }
