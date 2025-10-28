@@ -680,6 +680,8 @@ services:
     environment:
       DOKGEN_REST_BASE_URL: http://fpdokgen:8080
       KRYPTERING_PASSWORD: testnokkelforvtp
+      API_BASE_URL: http://foreldrepengesoknad-api:8080
+      API_SCOPES: api://vtp.teamforeldrepenger.vtp/.default
     env_file:
       - *common-properties
       - fpsoknad_datasource.env
