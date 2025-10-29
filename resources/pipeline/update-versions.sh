@@ -34,7 +34,6 @@ echo FPABONNENT_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-managem
 echo FPFORDEL_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fpfordel")" >> .env
 echo FPLOS_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fplos")" >> .env
 echo FPSOKNAD_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fp-soknad")" >> .env
-echo FORELDREPENGESOKNADAPI_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/foreldrepengesoknad-api")" >> .env
 echo FORELDREPENGESOKNAD_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/foreldrepengesoknad/foreldrepengesoknad")" >> .env
 echo FORELDREPENGEOVERSIKT_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/foreldrepengesoknad/foreldrepengeoversikt")" >> .env
 echo SVANGERSKAPSPENGESOKNAD_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/foreldrepengesoknad/svangerskapspengesoknad")" >> .env

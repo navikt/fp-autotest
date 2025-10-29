@@ -70,7 +70,7 @@ class LoggTest {
     );
 
     private static final List<String> ignoreContainersFeil = List.of("vtp", "audit.nais", "postgres", "oracle", "authserver", "fptilgang", "fager-api", "fpcache");
-    private static final List<String> ignoreContainersSensitiveInfo = List.of("vtp", "audit.nais", "postgres", "oracle", "authserver", "fpsoknad-mottak", "foreldrepengesoknad-api", "fager-api", "fpcache");
+    private static final List<String> ignoreContainersSensitiveInfo = List.of("vtp", "audit.nais", "postgres", "oracle", "authserver", "fager-api", "fpcache");
     private static String IKKE_SJEKK_LENGDE_AV_CONTAINERE;
 
     private static String toNumericPattern(String s) {

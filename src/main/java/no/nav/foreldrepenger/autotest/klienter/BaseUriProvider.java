@@ -13,6 +13,6 @@ public class BaseUriProvider {
     public static final URI KALKULUS_BASE = URI.create(LOCALHOST + ":8016/fpkalkulus/api/kalkulus/v1");
     public static final URI FPINNTEKTSMELDING_BASE = URI.create(LOCALHOST + ":8040/fpinntektsmelding");
     public static final URI FPSOKNAD = URI.create(LOCALHOST + ":8999/fpsoknad");
-    public static final URI FPOVERSIKT_BASE = URI.create(LOCALHOST + ":8889");
+    public static final URI FPOVERSIKT_BASE = URI.create(LOCALHOST + ":8889/fpoversikt");
 
 }

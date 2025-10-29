@@ -645,33 +645,6 @@ services:
         condition: service_healthy
       fptilbake:
         condition: service_healthy
-  foreldrepengesoknad-api:
-    <<: *default-konfigurasjon
-    image: $FORELDREPENGESOKNADAPI_IMAGE
-    container_name: foreldrepengesoknad-api
-    mem_limit: 512mb
-    environment:
-      SPRING_PROFILES_ACTIVE: test
-      NAIS_CLUSTER_NAME: test
-      FPSOKNAD_MOTTAK_OVERRIDE_URL: http://fpsoknad-mottak:9001/api
-      FORELDREPENGESOKNAD_API_OVERRIDE_URL: http://fpsoknad-mottak:9002/api
-      IDPORTEN_WELL_KNOWN_URL: http://vtp:8060/rest/idporten/.well-known/openid-configuration
-      IDPORTEN_CLIENT_ID: vtp
-      TOKEN_X_PRIVATE_JWK: /tokenx/jwk.json
-    env_file:
-      - *common-properties
-    volumes:
-      - *sertifikat-volum
-      - ./tokenx:/tokenx
-    ports:
-      - "127.0.0.1:9002:9002"
-    healthcheck:
-      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:9002/internal/actuator" ]
-      interval: 5s
-      timeout: 10s
-      retries: 20
-    depends_on:
-      - fpoversikt
   fpsoknad:
     <<: *default-konfigurasjon
     image: $FPSOKNAD_IMAGE
@@ -680,8 +653,6 @@ services:
     environment:
       DOKGEN_REST_BASE_URL: http://fpdokgen:8080
       KRYPTERING_PASSWORD: testnokkelforvtp
-      API_BASE_URL: http://foreldrepengesoknad-api:8080
-      API_SCOPES: api://vtp.teamforeldrepenger.vtp/.default
     env_file:
       - *common-properties
       - fpsoknad_datasource.env
