@@ -185,7 +185,7 @@
         <!-- Testavhengigheter (brukes også i scr) -->
         <dependency>
             <groupId>no.nav.foreldrepenger.kontrakter</groupId>
-            <artifactId>fp-soknad-v1</artifactId>
+            <artifactId>fp-soknad</artifactId>
             <version>${fp-kontrakter.version}</version>
             <type>test-jar</type>
         </dependency>
