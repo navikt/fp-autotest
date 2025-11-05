@@ -899,16 +899,22 @@ services:
                     "name": "fp-abonnent"
                 },
                 {
-                    "path": "/fpinntektsmelding/forvaltning/api",
-                    "scopes": "api://vtp.teamforeldrepenger.fpinntektsmelding/swagger",
-                    "url": "http://fpinntektsmelding:8080",
-                    "name": "fp-inntektsmelding"
+                  "path": "/fpoversikt/api",
+                  "url": "http://fpoversikt:8080",
+                  "scopes": "api://vtp.teamforeldrepenger.fpoversikt/swagger",
+                  "name": "fp-oversikt"
                 },
                 {
-                    "path": "/api",
-                    "scopes": "api://vtp.teamforeldrepenger.fpoversikt/swagger",
-                    "url": "http://fpoversikt:8080",
-                    "name": "fp-oversikt"
+                  "path": "/fpsoknad/forvaltning/api",
+                  "url": "http://host.docker.internal:8999",
+                  "scopes": "api://vtp.teamforeldrepenger.fpsoknad/swagger",
+                  "name": "fp-soknad"
+                },
+                {
+                  "path": "/fpinntektsmelding/forvaltning/api",
+                  "url": "http://fpinntektsmelding:8080",
+                  "scopes": "api://vtp.teamforeldrepenger.fpinntektsmelding/swagger",
+                  "name": "fp-inntektsmelding"
                 }
             ]
         }

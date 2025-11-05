@@ -5,7 +5,8 @@ import static no.nav.foreldrepenger.autotest.util.StreamUtils.safeStream;
 
 import java.util.List;
 
-import no.nav.foreldrepenger.kontrakter.fpsoknad.Orgnummer;
+import no.nav.foreldrepenger.kontrakter.felles.typer.AktørId;
+import no.nav.foreldrepenger.kontrakter.felles.typer.Orgnummer;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.ArbeidsforholdModell;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforholdstype;
 

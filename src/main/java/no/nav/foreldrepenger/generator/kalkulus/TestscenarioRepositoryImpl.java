@@ -1,19 +1,6 @@
 package no.nav.foreldrepenger.generator.kalkulus;
 
-import no.nav.folketrygdloven.kalkulus.kodeverk.FagsakYtelseType;
-import no.nav.folketrygdloven.kalkulus.request.v1.enkel.EnkelBeregnRequestDto;
-import no.nav.folketrygdloven.kalkulus.beregning.v1.ForeldrepengerGrunnlag;
-import no.nav.folketrygdloven.kalkulus.beregning.v1.SvangerskapspengerGrunnlag;
-import no.nav.folketrygdloven.kalkulus.beregning.v1.YtelsespesifiktGrunnlagDto;
-import no.nav.folketrygdloven.kalkulus.felles.v1.AktørIdPersonident;
-import no.nav.folketrygdloven.kalkulus.felles.v1.KalkulatorInputDto;
-import no.nav.folketrygdloven.kalkulus.felles.v1.Saksnummer;
-import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningSteg;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.detaljert.BeregningsgrunnlagGrunnlagDto;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.BeregningsgrunnlagDto;
-import no.nav.foreldrepenger.generator.familie.AktørId;
-import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
-import org.junit.jupiter.api.TestInfo;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -23,8 +10,22 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
 
-import static no.nav.foreldrepenger.common.mapper.DefaultJsonMapper.MAPPER;
-import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
+import org.junit.jupiter.api.TestInfo;
+
+import no.nav.folketrygdloven.kalkulus.beregning.v1.ForeldrepengerGrunnlag;
+import no.nav.folketrygdloven.kalkulus.beregning.v1.SvangerskapspengerGrunnlag;
+import no.nav.folketrygdloven.kalkulus.beregning.v1.YtelsespesifiktGrunnlagDto;
+import no.nav.folketrygdloven.kalkulus.felles.v1.AktørIdPersonident;
+import no.nav.folketrygdloven.kalkulus.felles.v1.KalkulatorInputDto;
+import no.nav.folketrygdloven.kalkulus.felles.v1.Saksnummer;
+import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningSteg;
+import no.nav.folketrygdloven.kalkulus.kodeverk.FagsakYtelseType;
+import no.nav.folketrygdloven.kalkulus.request.v1.enkel.EnkelBeregnRequestDto;
+import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.detaljert.BeregningsgrunnlagGrunnlagDto;
+import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.BeregningsgrunnlagDto;
+import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
+import no.nav.foreldrepenger.kontrakter.felles.typer.AktørId;
+import no.nav.vedtak.mapper.json.DefaultJsonMapper;
 
 public class TestscenarioRepositoryImpl {
     public static final String KALKULATOR_INPUT_JSON_FIL_NAVN = "kalkulator-input.json";
@@ -74,7 +75,7 @@ public class TestscenarioRepositoryImpl {
             var fil = hentFilSomMatcherStreng(scenarioFiles, filnavn);
             if (fil != null) {
                 var fileReader = new FileReader(fil);
-                return MAPPER.readValue(fileReader, BeregningsgrunnlagDto.class);
+                return DefaultJsonMapper.getObjectMapper().readValue(fileReader, BeregningsgrunnlagDto.class);
             }
         } catch (IOException e) {
             throw new IllegalArgumentException("Kunne ikke startBeregningRequest vars for scenario", e);
@@ -93,7 +94,7 @@ public class TestscenarioRepositoryImpl {
             var fil = hentFilSomMatcherStreng(resultFiles, forventetResultatJsonFilNavn);
             if (fil != null) {
                 var fileReader = new FileReader(fil);
-                return MAPPER.readValue(fileReader, klasse);
+                return DefaultJsonMapper.getObjectMapper().readValue(fileReader, klasse);
             }
         } catch (IOException e) {
             throw new IllegalArgumentException("Kunne lese forventet resultat", e);
@@ -135,7 +136,7 @@ public class TestscenarioRepositoryImpl {
             File kalkulatorInputFil = hentFilSomMatcherStreng(scenarioFiles, inputNavn);
             if (kalkulatorInputFil != null) {
                 var fileReader = new FileReader(kalkulatorInputFil);
-                return MAPPER.readValue(fileReader, KalkulatorInputDto.class);
+                return DefaultJsonMapper.getObjectMapper().readValue(fileReader, KalkulatorInputDto.class);
             }
         } catch (IOException e) {
             throw new IllegalArgumentException("Kunne ikke finne kalkulatorinput for scenario", e);

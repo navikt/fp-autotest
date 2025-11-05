@@ -7,7 +7,7 @@ import no.nav.foreldrepenger.autotest.aktoerer.innsender.Innsender;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.generator.inntektsmelding.erketyper.InntektsmeldingForeldrepengeErketyper;
 import no.nav.foreldrepenger.generator.inntektsmelding.erketyper.InntektsmeldingSvangerskapspengerErketyper;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.Orgnummer;
+import no.nav.foreldrepenger.kontrakter.felles.typer.Orgnummer;
 
 
 public class Virksomhet extends Arbeidsgiver {

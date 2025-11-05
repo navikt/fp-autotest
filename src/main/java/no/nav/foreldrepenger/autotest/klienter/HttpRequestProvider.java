@@ -14,7 +14,7 @@ import java.util.Optional;
 import jakarta.ws.rs.core.MediaType;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.AzureTokenProvider;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.Fødselsnummer;
+import no.nav.foreldrepenger.kontrakter.felles.typer.Fødselsnummer;
 import no.nav.vedtak.log.mdc.MDCOperations;
 
 public final class HttpRequestProvider {

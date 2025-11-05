@@ -5,8 +5,8 @@ import java.time.LocalDate;
 
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.Inntektsmelding;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.InntektsmeldingBuilder;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.Fødselsnummer;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.Orgnummer;
+import no.nav.foreldrepenger.kontrakter.felles.typer.Fødselsnummer;
+import no.nav.foreldrepenger.kontrakter.felles.typer.Orgnummer;
 
 public class InntektsmeldingForeldrepengeErketyper {
 

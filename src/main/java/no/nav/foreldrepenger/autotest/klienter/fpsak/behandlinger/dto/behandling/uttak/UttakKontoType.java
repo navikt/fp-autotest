@@ -2,7 +2,7 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandlin
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import no.nav.foreldrepenger.kontrakter.fpsoknad.foreldrepenger.uttaksplan.KontoType;
+import no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType;
 
 public enum UttakKontoType {
     @JsonProperty("-")

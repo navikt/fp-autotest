@@ -7,7 +7,7 @@ import java.util.List;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.RefusjonTilVurderingAndelDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.Orgnummer;
+import no.nav.foreldrepenger.kontrakter.felles.typer.Orgnummer;
 
 public class VurderRefusjonBeregningsgrunnlagBekreftelse extends AksjonspunktBekreftelse {
 

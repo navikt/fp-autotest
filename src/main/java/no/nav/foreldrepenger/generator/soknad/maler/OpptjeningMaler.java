@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 import com.neovisionaries.i18n.CountryCode;
 
-import no.nav.foreldrepenger.kontrakter.fpsoknad.Orgnummer;
+import no.nav.foreldrepenger.kontrakter.felles.typer.Orgnummer;
 import no.nav.foreldrepenger.kontrakter.fpsoknad.opptjening.AnnenInntektDto;
 import no.nav.foreldrepenger.kontrakter.fpsoknad.opptjening.FrilansDto;
 import no.nav.foreldrepenger.kontrakter.fpsoknad.opptjening.NæringDto;

@@ -11,7 +11,7 @@ import no.nav.foreldrepenger.autotest.internal.SerializationTestBase;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.FagsakStatus;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Sok;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.Saksnummer;
+import no.nav.foreldrepenger.kontrakter.felles.typer.Saksnummer;
 
 @Execution(ExecutionMode.SAME_THREAD)
 @Tag("internal")

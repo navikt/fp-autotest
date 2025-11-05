@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import no.nav.foreldrepenger.autotest.aktoerer.innsender.Innsender;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.Inntektsmelding;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.InntektsmeldingBuilder;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.Saksnummer;
+import no.nav.foreldrepenger.kontrakter.felles.typer.Saksnummer;
 
 public abstract class Arbeidsgiver {
     private static final Logger LOG = LoggerFactory.getLogger(Arbeidsgiver.class);

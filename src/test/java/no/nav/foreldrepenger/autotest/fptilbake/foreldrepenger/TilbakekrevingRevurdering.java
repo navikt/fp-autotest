@@ -24,7 +24,7 @@ import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjon
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.Kravgrunnlag;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.kontrakter.fpsoknad.BrukerRolle;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.foreldrepenger.uttaksplan.KontoType;
+import no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import no.nav.foreldrepenger.kontrakter.fpsoknad.Saksnummer;
+import no.nav.foreldrepenger.kontrakter.felles.typer.Saksnummer;
 
 public class KravgrunnlagDetaljert {
 

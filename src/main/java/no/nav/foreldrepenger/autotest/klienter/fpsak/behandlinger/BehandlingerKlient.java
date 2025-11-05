@@ -9,7 +9,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.SettBehand
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftedeAksjonspunkter;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Aksjonspunkt;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.Saksnummer;
+import no.nav.foreldrepenger.kontrakter.felles.typer.Saksnummer;
 
 public interface BehandlingerKlient {
     Behandling getBehandling(UUID behandlingUuid);

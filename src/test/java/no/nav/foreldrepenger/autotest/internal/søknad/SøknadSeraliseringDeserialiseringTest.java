@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.autotest.internal.SerializationTestBase;
 import no.nav.foreldrepenger.kontrakter.fpsoknad.SøknadDto;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.Fødselsnummer;
+import no.nav.foreldrepenger.kontrakter.felles.typer.Fødselsnummer;
 import no.nav.foreldrepenger.kontrakter.fpsoknad.builder.TilretteleggingBehovBuilder;
 import no.nav.foreldrepenger.generator.soknad.maler.ArbeidsforholdMaler;
 import no.nav.foreldrepenger.generator.soknad.maler.OpptjeningMaler;

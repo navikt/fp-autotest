@@ -3,9 +3,9 @@ package no.nav.foreldrepenger.generator.familie;
 import java.time.LocalDate;
 import java.util.List;
 
-import no.nav.foreldrepenger.kontrakter.fpsoknad.Fødselsnummer;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.Orgnummer;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.Saksnummer;
+import no.nav.foreldrepenger.kontrakter.felles.typer.Fødselsnummer;
+import no.nav.foreldrepenger.kontrakter.felles.typer.Orgnummer;
+import no.nav.foreldrepenger.kontrakter.felles.typer.Saksnummer;
 
 public class Arbeidsgivere {
 

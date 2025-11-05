@@ -66,8 +66,8 @@ import no.nav.foreldrepenger.autotest.klienter.vtp.saf.SafKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
 import no.nav.foreldrepenger.autotest.util.vent.Lazy;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.Orgnummer;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.Saksnummer;
+import no.nav.foreldrepenger.kontrakter.felles.typer.Orgnummer;
+import no.nav.foreldrepenger.kontrakter.felles.typer.Saksnummer;
 import no.nav.foreldrepenger.kontrakter.risk.kodeverk.RisikoklasseType;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskDataDto;
 

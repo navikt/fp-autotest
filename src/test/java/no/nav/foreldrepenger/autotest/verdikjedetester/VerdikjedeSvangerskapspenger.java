@@ -30,18 +30,18 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.svangerskapspenger.Tilretteleggingsdato;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.DokumentTag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkType;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.svangerskapspenger.AvtaltFerieDto;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.Fødselsnummer;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.Orgnummer;
-import no.nav.foreldrepenger.common.innsyn.BehandlingTilstand;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.Prosent;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.builder.TilretteleggingBehovBuilder;
 import no.nav.foreldrepenger.generator.soknad.maler.ArbeidsforholdMaler;
 import no.nav.foreldrepenger.generator.soknad.maler.OpptjeningMaler;
 import no.nav.foreldrepenger.generator.soknad.maler.SøknadSvangerskapspengerMaler;
+import no.nav.foreldrepenger.kontrakter.felles.typer.Fødselsnummer;
+import no.nav.foreldrepenger.kontrakter.felles.typer.Orgnummer;
+import no.nav.foreldrepenger.kontrakter.fpoversikt.BehandlingTilstand;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.builder.TilretteleggingBehovBuilder;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.svangerskapspenger.AvtaltFerieDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 
 @Tag("verdikjede")

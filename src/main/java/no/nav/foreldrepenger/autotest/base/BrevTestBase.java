@@ -20,8 +20,8 @@ import org.assertj.core.api.SoftAssertions;
 
 import no.nav.foreldrepenger.autotest.brev.BrevAssertionBuilder;
 import no.nav.foreldrepenger.autotest.brev.BrevFormateringUtils;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.Fødselsnummer;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.Saksnummer;
+import no.nav.foreldrepenger.kontrakter.felles.typer.Fødselsnummer;
+import no.nav.foreldrepenger.kontrakter.felles.typer.Saksnummer;
 
 public class BrevTestBase {
 

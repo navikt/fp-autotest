@@ -2,16 +2,16 @@ package no.nav.foreldrepenger.generator.soknad.maler;
 
 import static no.nav.foreldrepenger.generator.soknad.maler.UttaksperioderMaler.graderingsperiodeArbeidstaker;
 import static no.nav.foreldrepenger.generator.soknad.maler.UttaksperioderMaler.uttaksperiode;
-import static no.nav.foreldrepenger.kontrakter.fpsoknad.foreldrepenger.uttaksplan.KontoType.FELLESPERIODE;
-import static no.nav.foreldrepenger.kontrakter.fpsoknad.foreldrepenger.uttaksplan.KontoType.FORELDREPENGER;
-import static no.nav.foreldrepenger.kontrakter.fpsoknad.foreldrepenger.uttaksplan.KontoType.FORELDREPENGER_FØR_FØDSEL;
-import static no.nav.foreldrepenger.kontrakter.fpsoknad.foreldrepenger.uttaksplan.KontoType.MØDREKVOTE;
+import static no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType.FELLESPERIODE;
+import static no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType.FORELDREPENGER;
+import static no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType.FORELDREPENGER_FØR_FØDSEL;
+import static no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType.MØDREKVOTE;
 
 import java.time.LocalDate;
 import java.util.List;
 
 import no.nav.foreldrepenger.kontrakter.fpsoknad.BrukerRolle;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.foreldrepenger.uttaksplan.KontoType;
+import no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType;
 import no.nav.foreldrepenger.kontrakter.fpsoknad.foreldrepenger.uttaksplan.UttaksplanDto;
 import no.nav.foreldrepenger.kontrakter.fpsoknad.foreldrepenger.uttaksplan.Uttaksplanperiode;
 

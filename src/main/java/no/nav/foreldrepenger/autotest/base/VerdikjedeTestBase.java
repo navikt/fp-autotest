@@ -23,8 +23,8 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.DokumentTag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkType;
 import no.nav.foreldrepenger.autotest.util.pdf.Pdf;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.Fødselsnummer;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.Saksnummer;
+import no.nav.foreldrepenger.kontrakter.felles.typer.Fødselsnummer;
+import no.nav.foreldrepenger.kontrakter.felles.typer.Saksnummer;
 import no.nav.foreldrepenger.kontrakter.risk.kodeverk.RisikoklasseType;
 
 public abstract class VerdikjedeTestBase extends BrevTestBase {

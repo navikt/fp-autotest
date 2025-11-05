@@ -20,7 +20,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.VurderMedlemskapsvilkårForutgåendeBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.DokumentTag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkType;
-import no.nav.foreldrepenger.common.innsyn.BehandlingTilstand;
+import no.nav.foreldrepenger.kontrakter.fpoversikt.BehandlingTilstand;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 import no.nav.foreldrepenger.generator.soknad.maler.SøknadEngangsstønadMaler;

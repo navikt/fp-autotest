@@ -1,7 +1,7 @@
 package no.nav.foreldrepenger.autotest.klienter;
 
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.tokenx.TokenXVekslingKlient;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.Fødselsnummer;
+import no.nav.foreldrepenger.kontrakter.felles.typer.Fødselsnummer;
 
 /**
  * Denne klassen skal tilby følgende token:

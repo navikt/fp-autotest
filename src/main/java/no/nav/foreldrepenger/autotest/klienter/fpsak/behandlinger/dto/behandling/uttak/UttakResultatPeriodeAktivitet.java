@@ -6,7 +6,8 @@ import java.math.BigDecimal;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import no.nav.foreldrepenger.kontrakter.fpsoknad.foreldrepenger.uttaksplan.KontoType;
+import no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType;
+
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UttakResultatPeriodeAktivitet implements Serializable {

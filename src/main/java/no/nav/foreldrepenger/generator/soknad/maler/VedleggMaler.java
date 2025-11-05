@@ -3,7 +3,7 @@ package no.nav.foreldrepenger.generator.soknad.maler;
 import java.util.List;
 import java.util.UUID;
 
-import no.nav.foreldrepenger.kontrakter.fpsoknad.foreldrepenger.uttaksplan.MorsAktivitet;
+import no.nav.foreldrepenger.kontrakter.felles.kodeverk.MorsAktivitet;
 import no.nav.foreldrepenger.kontrakter.fpsoknad.foreldrepenger.uttaksplan.UtsettelsesPeriodeDto;
 import no.nav.foreldrepenger.kontrakter.fpsoknad.foreldrepenger.uttaksplan.UttaksPeriodeDto;
 import no.nav.foreldrepenger.kontrakter.fpsoknad.foreldrepenger.uttaksplan.UttaksplanDto;
