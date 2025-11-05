@@ -36,7 +36,7 @@ import no.nav.foreldrepenger.generator.soknad.maler.SøknadEngangsstønadMaler;
 import no.nav.foreldrepenger.kontrakter.fpsoknad.BrukerRolle;
 import no.nav.foreldrepenger.kontrakter.fpsoknad.barn.AdopsjonDto;
 import no.nav.foreldrepenger.kontrakter.fpsoknad.builder.BarnBuilder;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.foreldrepenger.uttaksplan.KontoType;
+import no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.ArenaSakerDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.GrunnlagDto;

@@ -27,8 +27,7 @@
         <vtp.versjon>2.1.1</vtp.versjon>
         <fp-felles.versjon>7.6.8</fp-felles.versjon>
         <fp-prosesstask.version>5.2.1</fp-prosesstask.version>
-        <fp-kontrakter.version>9.4.6</fp-kontrakter.version>
-        <fpsoknad-felles.version>3.3.4</fpsoknad-felles.version> <!-- TODO: Fjern fpsoknad-felles (innsyn dto i fpoversikt) ligger der nå -->
+        <fp-kontrakter.version>9.4.8</fp-kontrakter.version>
         <ftberegning.version>6.1.6</ftberegning.version>
 
         <slf4j.version>2.0.17</slf4j.version>
@@ -116,14 +115,13 @@
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.kontrakter</groupId>
-            <artifactId>fp-soknad-v1</artifactId>
+            <artifactId>fp-soknad</artifactId>
             <version>${fp-kontrakter.version}</version>
         </dependency>
-
         <dependency>
-            <groupId>no.nav.foreldrepenger</groupId>
-            <artifactId>fpsoknad-felles</artifactId>
-            <version>${fpsoknad-felles.version}</version>
+            <groupId>no.nav.foreldrepenger.kontrakter</groupId>
+            <artifactId>fp-oversikt</artifactId>
+            <version>${fp-kontrakter.version}</version>
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.vtp</groupId>
@@ -187,7 +185,7 @@
         <!-- Testavhengigheter (brukes også i scr) -->
         <dependency>
             <groupId>no.nav.foreldrepenger.kontrakter</groupId>
-            <artifactId>fp-soknad-v1</artifactId>
+            <artifactId>fp-soknad</artifactId>
             <version>${fp-kontrakter.version}</version>
             <type>test-jar</type>
         </dependency>

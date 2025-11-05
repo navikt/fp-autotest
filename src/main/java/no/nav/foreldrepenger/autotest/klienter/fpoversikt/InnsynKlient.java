@@ -10,9 +10,9 @@ import java.time.Duration;
 import java.time.LocalDate;
 
 import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.Fødselsnummer;
-import no.nav.foreldrepenger.common.innsyn.AnnenPartSak;
-import no.nav.foreldrepenger.common.innsyn.Saker;
+import no.nav.foreldrepenger.kontrakter.felles.typer.Fødselsnummer;
+import no.nav.foreldrepenger.kontrakter.fpoversikt.AnnenPartSak;
+import no.nav.foreldrepenger.kontrakter.fpoversikt.Saker;
 
 public class InnsynKlient {
 

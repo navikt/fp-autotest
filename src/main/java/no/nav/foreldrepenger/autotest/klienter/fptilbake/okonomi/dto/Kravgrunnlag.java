@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto;
 
-import no.nav.foreldrepenger.kontrakter.fpsoknad.Saksnummer;
+import no.nav.foreldrepenger.kontrakter.felles.typer.Saksnummer;
 
 public class Kravgrunnlag {
 

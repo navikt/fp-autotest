@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.TokenResponse;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.Fødselsnummer;
+import no.nav.foreldrepenger.kontrakter.felles.typer.Fødselsnummer;
 
 public class TokenXVekslingKlient {
 

@@ -293,7 +293,7 @@ services:
     env_file:
       - *common-properties
 
-# Frontend for avdelingsledere
+  # Frontend for avdelingsledere
   fpavdelingsleder:
     <<: *default-konfigurasjon
     image: $AVDELINGSLEDER_IMAGE
@@ -905,10 +905,16 @@ services:
                     "name": "fp-inntektsmelding"
                 },
                 {
-                    "path": "/api",
+                    "path": "/fpoversikt/forvaltning/api",
                     "scopes": "api://vtp.teamforeldrepenger.fpoversikt/swagger",
                     "url": "http://fpoversikt:8080",
                     "name": "fp-oversikt"
+                },
+                {
+                    "path": "/fpsoknad/forvaltning/api",
+                    "scopes": "api://vtp.teamforeldrepenger.fpsoknad/swagger",
+                    "url": "http://fpsoknad:8080",
+                    "name": "fp-soknad"
                 }
             ]
         }

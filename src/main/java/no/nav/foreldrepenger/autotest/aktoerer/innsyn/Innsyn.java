@@ -7,14 +7,14 @@ import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.autotest.klienter.fpoversikt.InnsynKlient;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.Fødselsnummer;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.Saksnummer;
-import no.nav.foreldrepenger.common.innsyn.AnnenPartSak;
-import no.nav.foreldrepenger.common.innsyn.BehandlingTilstand;
-import no.nav.foreldrepenger.common.innsyn.EsSak;
-import no.nav.foreldrepenger.common.innsyn.FpSak;
-import no.nav.foreldrepenger.common.innsyn.Saker;
-import no.nav.foreldrepenger.common.innsyn.svp.SvpSak;
+import no.nav.foreldrepenger.kontrakter.fpoversikt.AnnenPartSak;
+import no.nav.foreldrepenger.kontrakter.fpoversikt.BehandlingTilstand;
+import no.nav.foreldrepenger.kontrakter.fpoversikt.EsSak;
+import no.nav.foreldrepenger.kontrakter.fpoversikt.FpSak;
+import no.nav.foreldrepenger.kontrakter.fpoversikt.Saker;
+import no.nav.foreldrepenger.kontrakter.felles.typer.Fødselsnummer;
+import no.nav.foreldrepenger.kontrakter.felles.typer.Saksnummer;
+import no.nav.foreldrepenger.kontrakter.fpoversikt.svp.SvpSak;
 
 public class Innsyn {
     private static final Logger LOG = LoggerFactory.getLogger(Innsyn.class);

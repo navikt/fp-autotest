@@ -7,11 +7,11 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
+import no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType;
+import no.nav.foreldrepenger.kontrakter.felles.kodeverk.MorsAktivitet;
+import no.nav.foreldrepenger.kontrakter.felles.kodeverk.Overføringsårsak;
 import no.nav.foreldrepenger.kontrakter.fpsoknad.builder.UttakplanPeriodeBuilder;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.foreldrepenger.uttaksplan.KontoType;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.foreldrepenger.uttaksplan.MorsAktivitet;
 import no.nav.foreldrepenger.kontrakter.fpsoknad.foreldrepenger.uttaksplan.Oppholdsårsak;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.foreldrepenger.uttaksplan.Overføringsårsak;
 import no.nav.foreldrepenger.kontrakter.fpsoknad.foreldrepenger.uttaksplan.UtsettelsesÅrsak;
 import no.nav.foreldrepenger.kontrakter.fpsoknad.foreldrepenger.uttaksplan.Uttaksplanperiode;
 
@@ -115,7 +115,7 @@ public final class UttaksperioderMaler {
 
     public static Uttaksplanperiode overføringsperiode(Overføringsårsak overføringÅrsak,
                                                        KontoType stønadskontoType,
-                                                        LocalDate fom, LocalDate tom) {
+                                                       LocalDate fom, LocalDate tom) {
         var periode = justerPeriodeHelg(fom, tom);
         return UttakplanPeriodeBuilder.overføring(overføringÅrsak, stønadskontoType, periode.fom, periode.tom)
                 .build();

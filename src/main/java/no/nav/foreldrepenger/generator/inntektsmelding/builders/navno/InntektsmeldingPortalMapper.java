@@ -13,7 +13,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpinntektsmelding.dto.Naturalytel
 import no.nav.foreldrepenger.autotest.klienter.fpinntektsmelding.dto.SendInntektsmeldingDto;
 import no.nav.foreldrepenger.autotest.klienter.fpinntektsmelding.dto.YtelseType;
 import no.nav.foreldrepenger.autotest.util.CollectionUtils;
-import no.nav.foreldrepenger.generator.familie.AktørId;
+import no.nav.foreldrepenger.kontrakter.felles.typer.AktørId;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.Inntektsmelding;
 
 public class InntektsmeldingPortalMapper {

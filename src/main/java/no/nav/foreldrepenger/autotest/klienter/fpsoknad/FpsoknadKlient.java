@@ -21,8 +21,8 @@ import no.nav.foreldrepenger.kontrakter.fpsoknad.vedlegg.VedleggDto;
 import no.nav.foreldrepenger.kontrakter.fpsoknad.vedlegg.InnsendingType;
 import no.nav.foreldrepenger.kontrakter.fpsoknad.ettersendelse.EttersendelseDto;
 import no.nav.foreldrepenger.kontrakter.fpsoknad.ettersendelse.YtelseType;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.Fødselsnummer;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.Saksnummer;
+import no.nav.foreldrepenger.kontrakter.felles.typer.Fødselsnummer;
+import no.nav.foreldrepenger.kontrakter.felles.typer.Saksnummer;
 
 public class FpsoknadKlient {
 
