@@ -421,6 +421,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         saksbehandler.bekreftAksjonspunkt(papirSoknadForeldrepengerBekreftelse);
 
         var sjekkTerminbekreftelse = saksbehandler.hentAksjonspunktbekreftelse(new SjekkTerminbekreftelseBekreftelse())
+                .setTermindato(termindato)
                 .setUtstedtdato(termindato.minusWeeks(10))
                 .setBegrunnelse("Begrunnelse fra autotest");
         saksbehandler.bekreftAksjonspunkt(sjekkTerminbekreftelse);
