@@ -409,7 +409,6 @@ public class Saksbehandler {
             behandling.setMedlem(new Lazy<>(() -> behandlingerKlient.behandlingMedlemskap(behandling.uuid)));
             behandling.setOpptjening(new Lazy<>(() -> behandlingerKlient.behandlingOpptjening(behandling.uuid)));
             behandling.setSaldoer(new Lazy<>(() -> behandlingerKlient.behandlingUttakStonadskontoer(behandling.uuid)));
-            behandling.setSoknad(new Lazy<>(() -> behandlingerKlient.behandlingSøknad(behandling.uuid)));
             behandling.setTilrettelegging(new Lazy<>(() -> behandlingerKlient.behandlingTilrettelegging(behandling.uuid)));
             behandling.setArbeidInntektsmelding(new Lazy<>(() -> behandlingerKlient.behandlingArbeidInntektsmelding(behandling.uuid)));
             behandling.setUttakResultatPerioder(new Lazy<>(() -> behandlingerKlient.behandlingUttakResultatPerioder(behandling.uuid)));

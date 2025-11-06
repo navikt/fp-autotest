@@ -48,6 +48,8 @@ class VerdikjedeEngangsstonad extends VerdikjedeTestBase {
         saksbehandler.hentFagsak(saksnummer);
 
         var sjekkTerminbekreftelse = saksbehandler.hentAksjonspunktbekreftelse(new SjekkTerminbekreftelseBekreftelse())
+                .setUtstedtdato(termindato.minusMonths(3))
+                .setTermindato(termindato)
                 .setBegrunnelse("Informasjon er hentet fra søknadden og godkjennes av autotest.");
         saksbehandler.bekreftAksjonspunkt(sjekkTerminbekreftelse);
 
@@ -95,6 +97,8 @@ class VerdikjedeEngangsstonad extends VerdikjedeTestBase {
         saksbehandler.hentFagsak(saksnummer);
 
         var sjekkTerminbekreftelse = saksbehandler.hentAksjonspunktbekreftelse(new SjekkTerminbekreftelseBekreftelse())
+                .setUtstedtdato(termindato.minusMonths(3))
+                .setTermindato(termindato)
                 .setBegrunnelse("Informasjon er hentet fra søknadden og godkjennes av autotest.");
         saksbehandler.bekreftAksjonspunkt(sjekkTerminbekreftelse);
 

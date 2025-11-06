@@ -63,7 +63,6 @@ public class Behandling {
     private Lazy<BeregningsresultatMedUttaksplan> beregningResultatForeldrepenger;
     private Lazy<UttakResultatPerioder> uttakResultatPerioder;
     private Lazy<Feriepengegrunnlag> feriepengegrunnlag;
-    private Lazy<Soknad> soknad;
     private Lazy<Opptjening> opptjening;
     private Lazy<Medlem> medlem;
     private Lazy<KlageInfo> klagevurdering;
@@ -163,14 +162,6 @@ public class Behandling {
 
     public void setUttakResultatPerioder(Lazy<UttakResultatPerioder> dUttakResultatPerioder) {
         this.uttakResultatPerioder = dUttakResultatPerioder;
-    }
-
-    public Soknad getSoknad() {
-        return get(soknad);
-    }
-
-    public void setSoknad(Lazy<Soknad> dSoknad) {
-        this.soknad = dSoknad;
     }
 
     public Opptjening getOpptjening() {

@@ -29,7 +29,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Aksjonspunkt;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.KlageInfo;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Soknad;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeidInntektsmelding.ArbeidOgInntektsmeldingDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeidInntektsmelding.ManglendeOpplysningerVurderingDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeidInntektsmelding.ManueltArbeidsforholdDto;
@@ -57,10 +56,8 @@ public class BehandlingFpsakKlient implements BehandlingerKlient {
     private static final String BEHANDLING_FORELDREPENGER_URL = BEHANDLING_URL + "/beregningsresultat/dagytelse";
     private static final String BEHANDLING_FERIEPENGER_URL = BEHANDLING_URL + "/feriepengegrunnlag";
     private static final String BEHANDLING_BEREGNINGSGRUNNALG_URL = BEHANDLING_URL + "/beregningsgrunnlag";
-    private static final String BEHANDLING_VILKAAR_URL = BEHANDLING_URL + "/vilkar-v2";
     private static final String BEHANDLING_AKSJONSPUNKT_GET_FPSAK_URL = BEHANDLING_URL + "/aksjonspunkt-v2";
     private static final String BEHANDLING_AKSJONSPUNKT_OVERSTYR_URL = BEHANDLING_AKSJONSPUNKT_URL + "/overstyr";
-    private static final String BEHANDLING_SOKNAD_URL = BEHANDLING_URL + "/soknad";
     private static final String BEHANDLING_OPPTJENING_URL = BEHANDLING_URL + "/opptjening";
     private static final String BEHANDLING_KLAGE_URL = BEHANDLING_URL + "/klage-v2";
     private static final String BEHANDLING_KLAGE_MELLOMLAGRE_URL = BEHANDLING_URL + "/klage/mellomlagre-klage";
@@ -221,17 +218,6 @@ public class BehandlingFpsakKlient implements BehandlingerKlient {
                 .POST(HttpRequest.BodyPublishers.ofString(toJson(aksjonspunkter)));
         send(request.build());
     }
-
-    public Soknad behandlingSøknad(UUID behandlingUuid) {
-        var request = requestMedInnloggetSaksbehandler(this.saksbehandlerRolle, API_NAME)
-                .uri(fromUri(FPSAK_BASE)
-                        .path(BEHANDLING_SOKNAD_URL)
-                        .queryParam(UUID_NAME, behandlingUuid)
-                        .build())
-                .GET();
-        return send(request.build(), Soknad.class);
-    }
-
 
     public Opptjening behandlingOpptjening(UUID behandlingUuid) {
         var request = requestMedInnloggetSaksbehandler(this.saksbehandlerRolle, API_NAME)
