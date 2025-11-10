@@ -52,7 +52,7 @@ abstract class DokumentInnsendingHjelper implements Innsender {
         } else {
             saksnummer = ventTilFagsakErOpprettetPåFnr(fnr);
         }
-        LOG.info("Inntektsmeldingene er sendt inn og mottatt!");
+        LOG.debug("Inntektsmeldingene er sendt inn og mottatt!");
         return saksnummer;
     }
 
@@ -87,7 +87,7 @@ abstract class DokumentInnsendingHjelper implements Innsender {
      */
     protected Saksnummer ventTilFagsakOgBehandlingErOpprettet(Fødselsnummer fnr, LocalDateTime skjæringsTidspunktForNyBehandling,
                                                               int antallEksistrendeFagsakerPåSøker) {
-        LOG.info("Venter på at det opprettes fagsak og/eller ny(e) behandling(er) på eksisterende fagsak...");
+        LOG.debug("Venter på at det opprettes fagsak og/eller ny(e) behandling(er) på eksisterende fagsak...");
 
         // CASE 1: Det eksistere ingen fagsaker på søker. Venter til det er opprettet og en behandling er tilgjenglig
         if (antallEksistrendeFagsakerPåSøker == 0) {

@@ -57,7 +57,7 @@ public abstract class Arbeidsgiver {
 
     public List<InntektsmeldingBuilder> lagInntektsmeldingerFP(LocalDate startdatoForeldrepenger, boolean slåSammenFlereArbeidsforhold) {
         if (arbeidsforhold.isEmpty() || arbeidsforhold.stream().noneMatch(a -> erAktivtArbeidsforhold(a, startdatoForeldrepenger))) {
-            LOG.info("Arbeidsgiver {} har ingen aktive arbeidsforhold for dato {}. Sender ingen IM.", arbeidsgiverIdentifikator, startdatoForeldrepenger);
+            LOG.debug("Arbeidsgiver {} har ingen aktive arbeidsforhold for dato {}. Sender ingen IM.", arbeidsgiverIdentifikator, startdatoForeldrepenger);
             return List.of();
         }
 
@@ -129,7 +129,7 @@ public abstract class Arbeidsgiver {
     public Saksnummer sendInntektsmeldingerSVP(Saksnummer saksnummer) {
         var im = lagInntektsmeldingerSVP();
         if (im.isEmpty()) {
-            LOG.info("Ingen inntektsmeldinger å sende for arbeidsgiver {}", arbeidsgiverIdentifikator);
+            LOG.debug("Ingen inntektsmeldinger å sende for arbeidsgiver {}", arbeidsgiverIdentifikator);
             return saksnummer;
         }
         return innsender.sendInnInntektsmelding(buildInntektsmeldinger(im), arbeidstaker.aktørId(), arbeidstaker.fødselsnummer(), saksnummer);
@@ -138,7 +138,7 @@ public abstract class Arbeidsgiver {
     public Saksnummer sendInntektsmeldingerFP(Saksnummer saksnummer, LocalDate startdatoForeldrepenger) {
         var im = lagInntektsmeldingerFP(startdatoForeldrepenger);
         if (im.isEmpty()) {
-            LOG.info("Ingen inntektsmeldinger å sende for arbeidsgiver {} for FP-startdato {}.", arbeidsgiverIdentifikator, startdatoForeldrepenger);
+            LOG.debug("Ingen inntektsmeldinger å sende for arbeidsgiver {} for FP-startdato {}.", arbeidsgiverIdentifikator, startdatoForeldrepenger);
             return saksnummer;
         }
         return innsender.sendInnInntektsmelding(buildInntektsmeldinger(im), arbeidstaker.aktørId(), arbeidstaker.fødselsnummer(), saksnummer);

@@ -252,7 +252,7 @@ public class Saksbehandler {
                                              BehandlingÅrsakType behandlingÅrsakType,
                                              Boolean åpenStatus,
                                              Integer antallBehandlingerSomMatcherType) {
-        LOG.info("Venter til fagsak {} har behandling av type {} {} ...", valgtFagsak.saksnummer().value(), behandlingstype,
+        LOG.debug("Venter til fagsak {} har behandling av type {} {} ...", valgtFagsak.saksnummer().value(), behandlingstype,
                 Optional.ofNullable(behandlingÅrsakType).map(Objects::toString).orElse(""));
         Objects.requireNonNull(valgtFagsak);
 
@@ -282,7 +282,7 @@ public class Saksbehandler {
 
         // 3) Venter til enten behandling avsluttet eller det har oppstått et aksjonspunkt
         venterPåFerdigProssesseringOgOppdaterBehandling(behandling);
-        LOG.info("Behandling opprettet og oppdatert!");
+        LOG.debug("Behandling opprettet og oppdatert!");
     }
 
     private boolean erBehandlingKøetOgIkkeGjenopptatt(UUID behandlingsuuid) {
@@ -550,7 +550,6 @@ public class Saksbehandler {
 
     public void bekreftAksjonspunkt(AksjonspunktBekreftelse bekreftelse) {
         bekreftAksjonspunktbekreftelserer(List.of(bekreftelse));
-        LOG.info("Aksjonspunktbekreftelse for {} er sendt inn og AP er løst", bekreftelse.aksjonspunktKode());
     }
 
     public void bekreftAksjonspunktbekreftelserer(List<AksjonspunktBekreftelse> bekreftelser) {
@@ -560,7 +559,7 @@ public class Saksbehandler {
         behandlingerKlient.postBehandlingAksjonspunkt(aksjonspunkter);
         refreshBehandling();
         verifsierAPErHåndtert(bekreftelser);
-        LOG.info("Aksjonspunkt {} er løst", bekreftelser);
+        LOG.debug("Aksjonspunkt {} er løst", bekreftelser);
     }
 
     private void verifsierAPErHåndtert(List<AksjonspunktBekreftelse> bekreftelser) {
@@ -604,10 +603,10 @@ public class Saksbehandler {
     }
 
     public void ventTilAvsluttetBehandling() {
-        LOG.info("Venter til behandling er avsluttet ...");
+        LOG.debug("Venter til behandling er avsluttet ...");
 
         ventTilBehandlingsstatus(BehandlingStatus.AVSLUTTET);
-        LOG.info("Alle manuelle aksjonspunkt er løst og behandlingen har status AVSLUTTET");
+        LOG.debug("Alle manuelle aksjonspunkt er løst og behandlingen har status AVSLUTTET");
     }
 
     public void ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet() {

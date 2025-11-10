@@ -32,7 +32,7 @@ public class TestscenarioKlient {
                 .POST(HttpRequest.BodyPublishers.ofString(personerJson));
         var testscenarioDto = send(request.build(), TestscenarioDto.class, TestscenarioObjectMapper.DEFAULT_MAPPER_VTP);
         debugJson(personerJson);
-        LOG.info("Testscenario opprettet med hovedsøker: {} annenpart: {}", testscenarioDto.personopplysninger().søkerIdent(), testscenarioDto.personopplysninger().annenpartIdent());
+        LOG.info("Testscenario opprettet med mor: {} far: {}", testscenarioDto.personopplysninger().søkerIdent(), testscenarioDto.personopplysninger().annenpartIdent());
         return testscenarioDto;
     }
 

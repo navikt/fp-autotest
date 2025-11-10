@@ -206,7 +206,7 @@ public abstract class Søker {
         LOG.info("Sender inn søknad for {} ...", fødselsnummer.value());
         this.førstegangssøknad = søknad;
         this.saksnummer = innsender.sendInnSøknad(søknad, aktørId, fødselsnummer, aktørIdAnnenpart, null);
-        LOG.info("Søknad sendt inn og behandling opprettet på {}", this.saksnummer.value());
+        LOG.debug("Søknad sendt inn og behandling opprettet på {}", this.saksnummer.value());
         return this.saksnummer;
     }
 
@@ -218,7 +218,7 @@ public abstract class Søker {
         LOG.info("Sender inn søknad for {} med saksnummer {} ...", fødselsnummer.value(), saksnummer.value());
         this.førstegangssøknad = søknad;
         this.saksnummer = innsender.sendInnSøknad(søknad, aktørId, fødselsnummer, aktørIdAnnenpart, saksnummer);
-        LOG.info("Søknad sendt inn og behandling opprettet på fagsak {}", saksnummer.value());
+        LOG.debug("Søknad sendt inn og behandling opprettet på fagsak {}", saksnummer.value());
         return this.saksnummer;
     }
 
@@ -228,9 +228,9 @@ public abstract class Søker {
                 .build();
         genererUniktNavConsumerIdForDokument();
         this.saksnummer = søknad.saksnummer();
-        LOG.info("Sender inn endringssøknadsøknad for {} med saksnummer {} ...", fødselsnummer.value(), this.saksnummer);
+        LOG.info("Sender inn endringssøknadsøknad for {} med saksnummer {} ...", fødselsnummer.value(), this.saksnummer.value());
         innsender.sendInnSøknad(søknad, aktørId, fødselsnummer, aktørIdAnnenpart, saksnummer);
-        LOG.info("Endringssøknad sendt inn og fagsak {} er oppdatert", saksnummer.value());
+        LOG.debug("Endringssøknad sendt inn og fagsak {} er oppdatert", saksnummer.value());
         return saksnummer;
     }
 
@@ -238,7 +238,7 @@ public abstract class Søker {
         genererUniktNavConsumerIdForDokument();
         LOG.info("Sender inn papirsøknadd for {} ..", fødselsnummer.value());
         this.saksnummer = innsender.sendInnPapirsøknadForeldrepenger(aktørId, fødselsnummer, aktørIdAnnenpart);
-        LOG.info("Papirsøknad sendt inn og behandling opprettet på {}", saksnummer.value());
+        LOG.debug("Papirsøknad sendt inn og behandling opprettet på {}", saksnummer.value());
         return this.saksnummer;
     }
 
@@ -247,7 +247,7 @@ public abstract class Søker {
         genererUniktNavConsumerIdForDokument();
         LOG.info("Sender inn endringssøknad på papirsøknadd for {} ..", fødselsnummer.value());
         this.saksnummer = innsender.sendInnPapirsøknadEEndringForeldrepenger(aktørId, fødselsnummer, aktørIdAnnenpart, saksnummer);
-        LOG.info("Endringssøknad sendt inn og fagsak {} er oppdatert", saksnummer.value());
+        LOG.debug("Endringssøknad sendt inn og fagsak {} er oppdatert", saksnummer.value());
         return this.saksnummer;
     }
 
@@ -267,7 +267,7 @@ public abstract class Søker {
         LOG.info("Ettersender vedlegg {} for {} med saksnummer {} ...", skjemanummer, fnr.value(), this.saksnummer.value());
         var vedlegg = new VedleggDto(UUID.randomUUID(), skjemanummer, InnsendingType.LASTET_OPP, null, dokumenterer);
         innsender.ettersendVedlegg(fnr, saksnummer, ytelseType, vedlegg);
-        LOG.info("Vedlegg er ettersendt.");
+        LOG.debug("Vedlegg er ettersendt.");
     }
 
     // Brukes bare i tilfelle hvor en ønsker å sende IM uten registret arbeidsforhold i Aareg!
