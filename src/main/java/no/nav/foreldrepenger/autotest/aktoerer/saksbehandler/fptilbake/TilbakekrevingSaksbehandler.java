@@ -1,5 +1,18 @@
 package no.nav.foreldrepenger.autotest.aktoerer.saksbehandler.fptilbake;
 
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingType.REVURDERING_TILBAKEKREVING;
+import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling.get;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingType;
@@ -32,18 +45,6 @@ import no.nav.foreldrepenger.autotest.util.vent.Vent;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Saksnummer;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskDataDto;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskOpprettInputDto;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingType.REVURDERING_TILBAKEKREVING;
-import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling.get;
 
 // TODO: Se på hva som kan være felles på tvers av Saksbhenalder for fpska og fptiblaek
 public class TilbakekrevingSaksbehandler {
@@ -134,7 +135,7 @@ public class TilbakekrevingSaksbehandler {
 
         // 3) Venter til enten behandling avsluttet eller det har oppstått et aksjonspunkt
         venterPåFerdigProssesseringOgOppdaterBehandling(behandling.uuid);
-        LOG.info("Behandling opprettet og oppdatert!");
+        LOG.debug("Behandling opprettet og oppdatert!");
     }
 
     private Set<Behandling> hentAlleBehandlingerAvTypen(BehandlingType behandlingstype) {

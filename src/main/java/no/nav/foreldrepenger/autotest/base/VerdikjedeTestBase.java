@@ -75,9 +75,9 @@ public abstract class VerdikjedeTestBase extends BrevTestBase {
         assertThat(Pdf.is_pdf(pdf)).as("Sjekker om byte array er av typen PDF").isTrue();
 
         var assertions = brevAssertions.build();
-        LOG.info("Sjekker {} assertions i {} brevet...", assertions.size(), dokumentTag.tag());
+        LOG.debug("Sjekker {} assertions i {} brevet...", assertions.size(), dokumentTag.tag());
         validerBrevetInneholderForventedeTekstavsnitt(pdf, assertions);
-        LOG.info("Brevet {} er validering OK", dokumentTag.tag());
+        LOG.debug("Brevet {} er validering OK", dokumentTag.tag());
     }
 
     protected void validerInnsendtInntektsmeldingForeldrepenger(Fødselsnummer fødselsnummer,
@@ -176,7 +176,7 @@ public abstract class VerdikjedeTestBase extends BrevTestBase {
 
     protected void ventPåInntektsmeldingForespørsel(Saksnummer saksnummer) {
         saksbehandler.hentFagsak(saksnummer);
-        LOG.info("Venter på inntektsmelding forespørsel for saksnummer {}...", saksnummer.value());
+        LOG.debug("Venter på inntektsmelding forespørsel for saksnummer {}...", saksnummer.value());
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.MIN_SIDE_ARBEIDSGIVER);
     }
 

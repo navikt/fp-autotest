@@ -87,7 +87,7 @@ public class ApiMottak extends DokumentInnsendingHjelper {
             fail("Forventer at det sendes kun 1 inntektsmelding per arbeidsgiver for %s", saksnummer);
             return null;
         }
-        LOG.info("Sender inn inntektsmelding for sak {} og arbeidsgiver {}", saksnummer, inntektsmeldinger.getFirst().arbeidsgiver().arbeidsgiverIdentifikator());
+        LOG.debug("Sender inn inntektsmelding for sak {} og arbeidsgiver {}", saksnummer, inntektsmeldinger.getFirst().arbeidsgiver().arbeidsgiverIdentifikator());
         return sendInnInntektsmelding(inntektsmeldinger.getFirst(), aktørId, fnr, saksnummer);
     }
 

@@ -116,7 +116,7 @@ public class FamilieGenerator {
 
     public Familie build() {
         MDCOperations.putCallId();
-        LOG.info("Testcase: {}", LoggFormater.navnPåTestCaseSomKjører());
+        LOG.debug("Testcase: {}", LoggFormater.navnPåTestCaseSomKjører());
         guardMinstEnPart();
         guardForeldresammensetning();
         opprettFamilieRelasjonForFødteBarn();
