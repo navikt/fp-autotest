@@ -229,12 +229,12 @@ public class TilbakekrevingSaksbehandler {
 
     // Vent actions
     public void ventTilBehandlingErPåVent() {
-        if (Boolean.TRUE.equals(valgtBehandling.behandlingPaaVent)) {
+        if (Boolean.TRUE.equals(valgtBehandling.behandlingPåVent)) {
             return;
         }
         Vent.på(() -> {
             refreshBehandling();
-            return valgtBehandling.behandlingPaaVent;
+            return valgtBehandling.behandlingPåVent;
         }, "Behandling kom aldri på vent");
     }
 
