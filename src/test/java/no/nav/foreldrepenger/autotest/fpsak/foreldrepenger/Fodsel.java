@@ -977,9 +977,9 @@ class Fodsel extends VerdikjedeTestBase {
         assertThat(saksbehandler.valgtBehandling.erSattPåVent())
                 .as("Behandling er satt på vent (Har ventet til 2. uke)")
                 .isTrue();
-        logger.debug("{}", saksbehandler.valgtBehandling.fristBehandlingPaaVent);
+        logger.debug("{}", saksbehandler.valgtBehandling.fristBehandlingPåVent);
         logger.debug("{}", fødselsdato.plusWeeks(2));
-        assertThat(saksbehandler.valgtBehandling.fristBehandlingPaaVent)
+        assertThat(saksbehandler.valgtBehandling.fristBehandlingPåVent)
                 .as("Frist behandling på vent")
                 .isEqualTo(fødselsdato.plusWeeks(1).plusDays(1));
     }

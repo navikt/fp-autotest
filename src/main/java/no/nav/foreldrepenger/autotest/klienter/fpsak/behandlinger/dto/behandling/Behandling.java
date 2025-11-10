@@ -44,15 +44,15 @@ public class Behandling {
 
     public LocalDateTime avsluttet;
     public LocalDateTime opprettet;
-    public LocalDate fristBehandlingPaaVent;
+    public LocalDate fristBehandlingPåVent;
 
     public Boolean behandlingHenlagt;
-    public Boolean behandlingPaaVent;
-    public String venteArsakKode;
+    public Boolean behandlingPåVent;
     public Behandlingsresultat behandlingsresultat;
     public List<BehandlingÅrsak> behandlingÅrsaker;
 
-    // TODO: Spesifikk for fptilbake
+    // TODO: Spesifikke for fptilbake
+    public String venteArsakKode;
     public boolean harVerge;
 
     private List<Vilkar> vilkår;
@@ -81,7 +81,7 @@ public class Behandling {
     }
 
     public boolean erSattPåVent() {
-        return behandlingPaaVent;
+        return behandlingPåVent;
     }
 
     public boolean erHenlagt() {
