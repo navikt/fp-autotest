@@ -645,6 +645,22 @@ services:
         condition: service_healthy
       fptilbake:
         condition: service_healthy
+  fpgrunndata:
+    <<: *default-konfigurasjon
+    image: $FPGRUNNDATA_IMAGE
+    container_name: fpgrunndata
+    mem_limit: 256mb
+    environment:
+      NAIS_APP_NAME: fpgrunndata
+    env_file:
+      - *common-properties
+    ports:
+      - "127.0.0.1:9191:8080"
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/fpgrunndata/internal/health/isReady" ]
+      interval: 5s
+      timeout: 10s
+      retries: 10
   fpsoknad:
     <<: *default-konfigurasjon
     image: $FPSOKNAD_IMAGE
@@ -782,6 +798,7 @@ services:
       PUBLIC_PATH: /foreldrepenger/oversikt
     depends_on:
       - fpoversikt
+      - fpgrunndata
       - wonderwall-foreldrepengeoversikt
   foreldrepengesoknad:
     <<: *default-konfigurasjon
@@ -798,6 +815,7 @@ services:
       PORT: 9067
     depends_on:
       - fpsoknad
+      - fpgrunndata
       - wonderwall-foreldrepengesoknad
   svangerskapspengesoknad:
     <<: *default-konfigurasjon
@@ -814,6 +832,7 @@ services:
       PORT: 9068
     depends_on:
       - fpsoknad
+      - fpgrunndata
       - wonderwall-svangerskapspengesoknad
   engangsstonad:
     <<: *default-konfigurasjon
@@ -830,6 +849,7 @@ services:
       PORT: 9069
     depends_on:
       - fpsoknad
+      - fpgrunndata
       - wonderwall-engangsstonad
   ## Swagger
   fpswagger:
