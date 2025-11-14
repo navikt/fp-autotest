@@ -1,0 +1,4 @@
+navikt/foreldrepengesoknad
+navikt/fp-frontend
+navikt/fp-inntektsmelding-frontend
+navikt/fp-swagger
