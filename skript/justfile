@@ -1,0 +1,49 @@
+# https://just.systems
+
+default:
+    @just --list --unsorted
+
+# Installerer avhengigheter
+bootstrap:
+    @just --version > /dev/null 2>&1  || brew install just
+    @/opt/homebrew/bin/bash --version > /dev/null 2>&1  || brew install bash
+    @uv --version > /dev/null 2>&1  || brew install uv
+    @fd --version > /dev/null 2>&1  || brew install fd
+    @rg --version > /dev/null 2>&1  || brew install ripgrep
+
+# Finner logback.xml-filer uten team-logs
+logback_uten_team_logs mappe: bootstrap
+    ./logback_uten_teamlogs.sh {{mappe}}
+
+
+# Finner postgres-versjoner
+hvilken_postgres mappe: bootstrap
+    ./versions_postgres.sh {{mappe}}
+
+# Finner versjoner av docker images
+hvilken_docker mappe: bootstrap
+    ./versions_docker.sh {{mappe}}
+
+# Finner versjoner av fp-parent brukt
+hvilken_bom mappe: bootstrap
+    ./versions_bom.sh {{mappe}}
+
+# Finner dependabot-filer og hvilke økosystemer som er satt opp
+dependabot mappe: bootstrap
+    ./dependabot.sh {{mappe}}
+
+# Sjekker om repoer er konfigurert riktig
+repo_sjekk mappe: bootstrap
+    ./repo_config.sh {{mappe}}
+
+# Oppdaterer repos.txt
+repoliste_oppdater: bootstrap
+    ./repos.py
+
+# Kloner repoer i parallell
+repoliste_pull mappe repoliste: bootstrap
+    ./pull_repoliste.sh {{mappe}} {{repoliste}}
+
+# Lister pull requests i repoer
+pull_requests repoliste: bootstrap
+    ./pull_requests.sh {{repoliste}}
