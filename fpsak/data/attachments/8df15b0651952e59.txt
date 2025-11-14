@@ -1,0 +1,1 @@
+{"termindato":"2025-12-25","bekreftetSvpArbeidsforholdList":[{"avklarteOppholdPerioder":[],"tilretteleggingId":999951,"tilretteleggingBehovFom":"2025-09-25","tilretteleggingDatoer":[{"fom":"2025-09-25","type":"DELVIS_TILRETTELEGGING","stillingsprosent":50}],"skalBrukes":true}],"@type":"5091"}

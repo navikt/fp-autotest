@@ -1,0 +1,1 @@
+{"delvilkår":"FP_VK_16","omsorgsovertakelseDato":"2025-10-17","barn":[{"fødselsdato":"2015-11-14","barnNummer":1}],"ektefellesBarn":false,"@type":"5018"}

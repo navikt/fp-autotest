@@ -1,0 +1,1 @@
+{"begrunnelse":"Mor gar rett!","annenforelderHarRett":true,"@type":"5086"}

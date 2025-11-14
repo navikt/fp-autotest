@@ -1,0 +1,1 @@
+{"begrunnelse":"Begrunnelse","termindato":"2026-02-14","bekreftetSvpArbeidsforholdList":[{"avklarteOppholdPerioder":[],"tilretteleggingId":999955,"tilretteleggingBehovFom":"2025-11-14","tilretteleggingDatoer":[{"fom":"2025-11-14","type":"INGEN_TILRETTELEGGING"}],"skalBrukes":true}],"@type":"5091"}

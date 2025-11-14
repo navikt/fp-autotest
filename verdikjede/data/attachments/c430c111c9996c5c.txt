@@ -1,0 +1,1 @@
+{"begrunnelse":"Fordi autotest sier det!","fastsatteAndeler":[{"arbeidsgiverOrgnr":"992260432","fastsattRefusjonFom":"2025-08-14"}],"@type":"5059"}
