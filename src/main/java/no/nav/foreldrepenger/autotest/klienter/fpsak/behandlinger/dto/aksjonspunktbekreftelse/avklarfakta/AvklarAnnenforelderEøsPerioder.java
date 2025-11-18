@@ -28,7 +28,7 @@ public class AvklarAnnenforelderEøsPerioder extends AksjonspunktBekreftelse {
     public record EøsUttakPeriodeDto(@NotNull LocalDate fom,
                                      @NotNull LocalDate tom,
                                      @NotNull @Min(0) @Max(1000) @Digits(integer = 3, fraction = 1) BigDecimal trekkdager,
-                                     @NotNull KontoType kontoType) {
+                                     @NotNull KontoType trekkonto) {
     }
 
     public AvklarAnnenforelderEøsPerioder setPerioder(List<EøsUttakPeriodeDto> perioder) {
