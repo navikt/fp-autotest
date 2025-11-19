@@ -127,7 +127,7 @@ class Klage extends VerdikjedeTestBase {
         assertThat(klagebehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.KLAGE_MEDHOLD);
-        assertThat(klagebehandler.valgtBehandling.getKlagevurdering().klageVurderingResultatNFP().klageVurderingOmgjoer())
+        assertThat(klagebehandler.valgtBehandling.getKlagevurdering().klageVurderingResultatNFP().klageVurderingOmgjør())
                 .as("Klagevurderingsresultat")
                 .isEqualTo("GUNST_MEDHOLD_I_KLAGE");
 
@@ -174,8 +174,8 @@ class Klage extends VerdikjedeTestBase {
         assertThat(beslutter.valgtBehandling.getKlagevurdering().klageVurderingResultatNFP().begrunnelse())
                 .as("begrunnelse2")
                 .isEqualTo(begrunnelse1);
-        assertThat(beslutter.valgtBehandling.getKlagevurdering().klageVurderingResultatNFP().klageVurderingOmgjoer())
-                .as("KlageVurderingOmgjoer")
+        assertThat(beslutter.valgtBehandling.getKlagevurdering().klageVurderingResultatNFP().klageVurderingOmgjør())
+                .as("KlageVurderingOmgjør")
                 .isEqualTo("DELVIS_MEDHOLD_I_KLAGE");
     }
 

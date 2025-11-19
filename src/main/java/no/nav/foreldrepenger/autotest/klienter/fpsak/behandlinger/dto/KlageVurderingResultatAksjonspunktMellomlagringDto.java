@@ -7,16 +7,18 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.KlageVurderingResultat;
 
 public record KlageVurderingResultatAksjonspunktMellomlagringDto(String kode,
-                                                                String begrunnelse,
-                                                                UUID behandlingUuid,
-                                                                String fritekstTilBrev,
-                                                                String klageMedholdArsak,
-                                                                String klageVurdering,
-                                                                String klageVurderingOmgjoer) {
+                                                                 String begrunnelse,
+                                                                 UUID behandlingUuid,
+                                                                 String fritekstTilBrev,
+                                                                 String klageMedholdÅrsak,
+                                                                 String klageVurdering,
+                                                                 String klageVurderingOmgjør) {
 
-    public KlageVurderingResultatAksjonspunktMellomlagringDto(UUID behandlingUuid, KlageVurderingResultat resultat, Aksjonspunkt aksjonspunkt) {
+    public KlageVurderingResultatAksjonspunktMellomlagringDto(UUID behandlingUuid,
+                                                              KlageVurderingResultat resultat,
+                                                              Aksjonspunkt aksjonspunkt) {
         this(aksjonspunkt.getDefinisjon(), resultat.begrunnelse(), behandlingUuid, resultat.fritekstTilBrev(),
-                resultat.klageMedholdArsak(), resultat.klageVurdering(), resultat.klageVurderingOmgjoer());
+                resultat.klageMedholdÅrsak(), resultat.klageVurdering(), resultat.klageVurderingOmgjør());
     }
 
     public KlageVurderingResultatAksjonspunktMellomlagringDto(Behandling behandling, Aksjonspunkt aksjonspunkt) {

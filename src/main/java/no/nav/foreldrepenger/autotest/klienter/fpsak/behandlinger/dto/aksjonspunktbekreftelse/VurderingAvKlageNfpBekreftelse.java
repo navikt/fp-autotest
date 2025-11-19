@@ -1,10 +1,5 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse;
 
-import java.time.LocalDate;
-
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
-
 public class VurderingAvKlageNfpBekreftelse extends AksjonspunktBekreftelse {
 
     private static final String VURDERING_STADFEST = "STADFESTE_YTELSESVEDTAK";
@@ -15,30 +10,29 @@ public class VurderingAvKlageNfpBekreftelse extends AksjonspunktBekreftelse {
     private static final String OMGJØR_UGUNST = "UGUNST_MEDHOLD_I_KLAGE";
 
     protected String klageVurdering;
-    protected String klageMedholdArsak;
-    protected String klageVurderingOmgjoer;
+    protected String klageMedholdÅrsak;
+    protected String klageVurderingOmgjør;
     protected String fritekstTilBrev;
-    protected LocalDate vedtaksdatoPaklagdBehandling;
 
     // Omgjør vedtaket
     public VurderingAvKlageNfpBekreftelse bekreftMedholdGunst(String årsak) {
         klageVurdering = VURDERING_MEDHOLD;
-        klageVurderingOmgjoer = OMGJØR_GUNST;
-        klageMedholdArsak = årsak;
+        klageVurderingOmgjør = OMGJØR_GUNST;
+        klageMedholdÅrsak = årsak;
         return this;
     }
 
     public VurderingAvKlageNfpBekreftelse bekreftMedholdDelvisGunst(String årsak) {
         klageVurdering = VURDERING_MEDHOLD;
-        klageVurderingOmgjoer = OMGJØR_DELVISGUNST;
-        klageMedholdArsak = årsak;
+        klageVurderingOmgjør = OMGJØR_DELVISGUNST;
+        klageMedholdÅrsak = årsak;
         return this;
     }
 
     public VurderingAvKlageNfpBekreftelse bekreftMedholdUGunst(String årsak) {
         klageVurdering = VURDERING_MEDHOLD;
-        klageVurderingOmgjoer = OMGJØR_UGUNST;
-        klageMedholdArsak = årsak;
+        klageVurderingOmgjør = OMGJØR_UGUNST;
+        klageMedholdÅrsak = årsak;
         return this;
     }
 
@@ -56,10 +50,5 @@ public class VurderingAvKlageNfpBekreftelse extends AksjonspunktBekreftelse {
     @Override
     public String aksjonspunktKode() {
         return "5035";
-    }
-
-    @Override
-    public void oppdaterMedDataFraBehandling(Fagsak fagsak, Behandling behandling) {
-        this.vedtaksdatoPaklagdBehandling = LocalDate.now();
     }
 }

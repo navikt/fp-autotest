@@ -68,7 +68,6 @@ class Klage extends VerdikjedeTestBase {
         var vurderingAvKlageNfpBekreftelse = klagebehandler
                 .hentAksjonspunktbekreftelse(new VurderingAvKlageNfpBekreftelse())
                 .bekreftMedholdUGunst("ULIK_VURDERING")
-                .fritekstBrev(fritekstBrev)
                 .setBegrunnelse(begrunnelse);
         klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNfpBekreftelse);
 
@@ -96,7 +95,7 @@ class Klage extends VerdikjedeTestBase {
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        assertThat(beslutter.valgtBehandling.getKlagevurdering().klageVurderingResultatNFP().klageVurderingOmgjoer())
+        assertThat(beslutter.valgtBehandling.getKlagevurdering().klageVurderingResultatNFP().klageVurderingOmgjør())
                 .as("Klagevurderingomgjør fra NFP")
                 .isEqualTo("UGUNST_MEDHOLD_I_KLAGE");
         assertThat(beslutter.valgtBehandling.behandlingsresultat.type())
@@ -108,7 +107,7 @@ class Klage extends VerdikjedeTestBase {
         assertThat(beslutter.valgtBehandling.getKlagevurdering().klageVurderingResultatNFP().fritekstTilBrev())
                 .as("Fritekst til brev for klagevurdering NFP")
                 .isEqualTo(fritekstBrev);
-        assertThat(beslutter.valgtBehandling.getKlagevurdering().klageVurderingResultatNFP().klageMedholdArsak())
+        assertThat(beslutter.valgtBehandling.getKlagevurdering().klageVurderingResultatNFP().klageMedholdÅrsak())
                 .as("Årsak til klagevburdering fra NFP")
                 .isEqualTo("ULIK_VURDERING");
     }
@@ -150,7 +149,7 @@ class Klage extends VerdikjedeTestBase {
         assertThat(beslutter.valgtBehandling.behandlingsresultat.type())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.KLAGE_AVVIST);
-        assertThat(beslutter.valgtBehandling.getKlagevurdering().klageFormkravResultatNFP().avvistArsaker())
+        assertThat(beslutter.valgtBehandling.getKlagevurdering().klageFormkravResultatNFP().avvistÅrsaker())
                 .as("Årsak for avvisning")
                 .contains("IKKE_KONKRET");
     }
