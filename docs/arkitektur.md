@@ -34,7 +34,6 @@ Aktører bruker en eller flere klienter
 Eksempler:
 	+ Saksbehandler
 	+ Gosys
-	+ FpFordel
 	
 ### Klienter
 

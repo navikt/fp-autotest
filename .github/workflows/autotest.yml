@@ -80,9 +80,9 @@ jobs:
           if [[ ${{ inputs.test-suite }} == 'fpkalkulus' ]]; then
             services=("fpkalkulus")
           elif [[ ${{ inputs.test-suite }} == 'fplos' ]]; then
-            services=("fplos" "fpsak" "fpformidling" "fpdokgen" "fpoppdrag" "fptilbake" "fprisk" "fpfordel" "fpsoknad" "fpkalkulus" "fpinntektsmelding")
+            services=("fplos" "fpsak" "fpformidling" "fpdokgen" "fpoppdrag" "fptilbake" "fprisk" "fpmottak" "fpsoknad" "fpkalkulus" "fpinntektsmelding")
           else
-            services=("fpsak" "fpformidling" "fpdokgen" "fpoppdrag" "fptilbake" "fprisk" "fpabonnent" "fpfordel" "fpsoknad" "fpoversikt" "fpkalkulus" "fpinntektsmelding")
+            services=("fpsak" "fpformidling" "fpdokgen" "fpoppdrag" "fptilbake" "fprisk" "fpabonnent" "fpmottak" "fpsoknad" "fpoversikt" "fpkalkulus" "fpinntektsmelding")
           fi
 
           cd resources/pipeline
@@ -105,7 +105,7 @@ jobs:
           elif [[ ${{ inputs.test-suite }} == 'verdikjede' ]]; then
             mvn test -e --batch-mode -s settings.xml -Djuipter.parallelism=${{ inputs.parallellitet }} -P logger -DikkeSjekkLengdeAvContainer=fpdokgen
           elif [[ ${{ inputs.test-suite }} == 'fplos' ]]; then
-            mvn test -e --batch-mode -s settings.xml -Djuipter.parallelism=${{ inputs.parallellitet }} -P logger -DikkeSjekkLengdeAvContainer=fpdokgen,fpabonnent,fpoppdrag,fpfordel
+            mvn test -e --batch-mode -s settings.xml -Djuipter.parallelism=${{ inputs.parallellitet }} -P logger -DikkeSjekkLengdeAvContainer=fpdokgen,fpabonnent,fpoppdrag
           elif [[ ${{ inputs.test-suite }} == 'fpsak' ]]; then
             mvn test -e --batch-mode -s settings.xml -Djuipter.parallelism=${{ inputs.parallellitet }} -P logger -DikkeSjekkLengdeAvContainer=fpdokgen,fpabonnent
           else
