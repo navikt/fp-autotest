@@ -80,7 +80,7 @@ jobs:
           if [[ ${{ inputs.test-suite }} == 'fpkalkulus' ]]; then
             services=("fpkalkulus")
           elif [[ ${{ inputs.test-suite }} == 'fplos' ]]; then
-            services=("fplos" "fpsak" "fpformidling" "fpdokgen" "fpoppdrag" "fptilbake" "fprisk" "fpabonnent" "fpfordel" "fpsoknad" "fpoversikt" "fpkalkulus" "fpinntektsmelding")
+            services=("fplos" "fpsak" "fpformidling" "fpdokgen" "fpoppdrag" "fptilbake" "fprisk" "fpfordel" "fpsoknad" "fpkalkulus" "fpinntektsmelding")
           else
             services=("fpsak" "fpformidling" "fpdokgen" "fpoppdrag" "fptilbake" "fprisk" "fpabonnent" "fpfordel" "fpsoknad" "fpoversikt" "fpkalkulus" "fpinntektsmelding")
           fi
