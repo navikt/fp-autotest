@@ -32,10 +32,10 @@
 
         <slf4j.version>2.0.17</slf4j.version>
         <logback.version>1.5.21</logback.version>
-        <allure.version>2.31.0</allure.version>
-        <allure.maven.version>2.16.1</allure.maven.version>
+        <allure.version>2.29.1</allure.version>
+        <allure.maven.version>2.15.2</allure.maven.version>
         <assertj.version>3.27.6</assertj.version>
-        <aspectj.version>1.9.25</aspectj.version>
+        <aspectj.version>1.9.24</aspectj.version>
         <junit.version>5.13.4</junit.version>
         <jackson.version>2.20.1</jackson.version>
         <jakarta.jakartaee-bom.version>11.0.0</jakarta.jakartaee-bom.version>
