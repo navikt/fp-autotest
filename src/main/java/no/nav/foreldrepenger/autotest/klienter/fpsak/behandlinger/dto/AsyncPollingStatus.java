@@ -8,7 +8,6 @@ public record AsyncPollingStatus(Status status,
                                  String message,
                                  Long pollIntervalMillis,
                                  URI location,
-                                 URI cancelUri,
                                  boolean readOnly) {
 
     public enum Status {

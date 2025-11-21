@@ -19,7 +19,7 @@ public class Aksjonspunkt {
     protected Boolean toTrinnsBehandling;
     protected Boolean toTrinnsBehandlingGodkjent;
     protected Boolean kanLoses;
-    protected Boolean erAktivt;
+    protected boolean erAktivt; //bare fra fptilbake
 
     public String getDefinisjon() {
         return definisjon;
