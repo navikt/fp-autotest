@@ -12,6 +12,12 @@ import static no.nav.foreldrepenger.vtp.kontrakter.v2.ArbeidsavtaleDto.arbeidsav
 import java.time.LocalDate;
 import java.util.List;
 
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.MerkOpptjeningUtlandDto;
+
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.papirsoknad.PapirSoknadForeldrepengerBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.FordelingDto;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.PermisjonPeriodeDto;
+
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -61,12 +67,23 @@ class Aksjonspunkter extends VerdikjedeTestBase {
         var fpStartdato = fødselsdato.minusWeeks(3);
         var saksnummer = mor.søkPapirsøknadForeldrepenger();
 
+        saksbehandler.hentFagsak(saksnummer);
+        saksbehandler.hentAksjonspunkt(AksjonspunktKoder.REGISTRER_PAPIRSØKNAD_FORELDREPENGER);
+        var aksjonspunktBekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(new PapirSoknadForeldrepengerBekreftelse());
+        var fordeling = new FordelingDto();
+        var fpff = new PermisjonPeriodeDto(KontoType.FORELDREPENGER_FØR_FØDSEL,
+                fpStartdato, fødselsdato.minusDays(1));
+        var mødrekvote = new PermisjonPeriodeDto(KontoType.MØDREKVOTE,
+                fødselsdato, fødselsdato.plusWeeks(10));
+        fordeling.permisjonsPerioder.add(fpff);
+        fordeling.permisjonsPerioder.add(mødrekvote);
+        aksjonspunktBekreftelse.morSøkerFødsel(fordeling, fødselsdato, fpff.periodeFom.minusWeeks(3));
+        saksbehandler.bekreftAksjonspunkt(aksjonspunktBekreftelse);
+
         var arbeidsgiver = mor.arbeidsgiver();
         ventPåInntektsmeldingForespørsel(saksnummer);
         arbeidsgiver.sendInntektsmeldingerFP(saksnummer, fpStartdato);
-
-        saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.hentAksjonspunkt(AksjonspunktKoder.REGISTRER_PAPIRSØKNAD_FORELDREPENGER);
     }
 
     @Test
@@ -224,16 +241,19 @@ class Aksjonspunkter extends VerdikjedeTestBase {
         var termindato = LocalDate.now().plusWeeks(3);
         var fpStartdato = termindato.minusWeeks(3);
         var søknad = lagSøknadForeldrepengerTermin(termindato, BrukerRolle.MOR)
-                .medAndreInntekterSiste10Mnd(List.of(OpptjeningMaler.utenlandskArbeidsforhold(CountryCode.NO)))
+                .medAndreInntekterSiste10Mnd(List.of(OpptjeningMaler.utenlandskArbeidsforhold(CountryCode.DE)))
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var saksnummer = mor.søk(søknad);
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.hentAksjonspunkt(AksjonspunktKoder.AUTOMATISK_MARKERING_AV_UTENLANDSSAK_KODE);
+        var sedAksjonspunkt = saksbehandler.hentAksjonspunktbekreftelse(new MerkOpptjeningUtlandDto())
+                .setDokStatus(MerkOpptjeningUtlandDto.UtlandDokumentasjonStatus.DOKUMENTASJON_VIL_IKKE_BLI_INNHENTET)
+                .setBegrunnelse("Mor har ikke opptjening i EØS!");
+        saksbehandler.bekreftAksjonspunkt(sedAksjonspunkt);
 
         var arbeidsgiver = mor.arbeidsgiver();
         ventPåInntektsmeldingForespørsel(saksnummer);
-        arbeidsgiver.sendInntektsmeldingerFP(saksnummer, fpStartdato);
     }
 
     @DisplayName("SJEKK_MANGLENDE_FØDSEL")
