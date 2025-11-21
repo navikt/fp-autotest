@@ -6,12 +6,12 @@ public class AnnenForelderDto {
 
     public KanIkkeOppgiBegrunnelse kanIkkeOppgiBegrunnelse = new KanIkkeOppgiBegrunnelse();
 
-    public boolean sokerHarAleneomsorg = false;
+    public boolean søkerHarAleneomsorg = false;
 
-    public boolean denAndreForelderenHarRettPaForeldrepenger = true;
+    public boolean denAndreForelderenHarRettPåForeldrepenger = true;
 
     public static class KanIkkeOppgiBegrunnelse {
 
-        public String arsak = "UKJENT_FORELDER";
+        public String årsak = "UKJENT_FORELDER";
     }
 }

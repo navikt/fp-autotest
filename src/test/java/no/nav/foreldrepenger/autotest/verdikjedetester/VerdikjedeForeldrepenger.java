@@ -112,7 +112,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.SjekkManglendeFødselBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.SjekkTerminbekreftelseBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.VurderUttakDokumentasjonBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.papirsoknad.PapirSoknadForeldrepengerBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.papirsoknad.PapirSøknadForeldrepengerBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.VilkarTypeKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.BeregningsresultatPeriode;
@@ -416,7 +416,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         fordelingDtoMor.permisjonsPerioder.add(foreldrepengerFørFødsel);
         fordelingDtoMor.permisjonsPerioder.add(mødrekvote);
         var papirSoknadForeldrepengerBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(
-                        new PapirSoknadForeldrepengerBekreftelse())
+                        new PapirSøknadForeldrepengerBekreftelse())
                 .morSøkerTermin(fordelingDtoMor, termindato, fpMottatDato, DekningsgradDto.AATI);
         saksbehandler.bekreftAksjonspunkt(papirSoknadForeldrepengerBekreftelse);
 

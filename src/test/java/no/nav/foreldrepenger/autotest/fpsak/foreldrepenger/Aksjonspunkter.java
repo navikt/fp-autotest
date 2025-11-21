@@ -12,12 +12,6 @@ import static no.nav.foreldrepenger.vtp.kontrakter.v2.ArbeidsavtaleDto.arbeidsav
 import java.time.LocalDate;
 import java.util.List;
 
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.MerkOpptjeningUtlandDto;
-
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.papirsoknad.PapirSoknadForeldrepengerBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.FordelingDto;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.PermisjonPeriodeDto;
-
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -30,8 +24,12 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderFaktaOmBeregningBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderFaresignalerDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderOmsorgsovertakelseVilkårAksjonspunktDto;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.MerkOpptjeningUtlandDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.SjekkManglendeFødselBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.papirsoknad.PapirSøknadForeldrepengerBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.FordelingDto;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.PermisjonPeriodeDto;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
@@ -39,10 +37,10 @@ import no.nav.foreldrepenger.generator.inntektsmelding.builders.Prosent;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
 import no.nav.foreldrepenger.generator.soknad.maler.OpptjeningMaler;
 import no.nav.foreldrepenger.generator.soknad.maler.SøknadEngangsstønadMaler;
+import no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType;
 import no.nav.foreldrepenger.kontrakter.fpsoknad.BrukerRolle;
 import no.nav.foreldrepenger.kontrakter.fpsoknad.barn.AdopsjonDto;
 import no.nav.foreldrepenger.kontrakter.fpsoknad.builder.BarnBuilder;
-import no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.ArenaSakerDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.GrunnlagDto;
@@ -70,7 +68,7 @@ class Aksjonspunkter extends VerdikjedeTestBase {
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.hentAksjonspunkt(AksjonspunktKoder.REGISTRER_PAPIRSØKNAD_FORELDREPENGER);
         var aksjonspunktBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(new PapirSoknadForeldrepengerBekreftelse());
+                .hentAksjonspunktbekreftelse(new PapirSøknadForeldrepengerBekreftelse());
         var fordeling = new FordelingDto();
         var fpff = new PermisjonPeriodeDto(KontoType.FORELDREPENGER_FØR_FØDSEL,
                 fpStartdato, fødselsdato.minusDays(1));

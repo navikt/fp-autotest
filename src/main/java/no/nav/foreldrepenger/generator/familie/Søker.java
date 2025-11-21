@@ -236,7 +236,7 @@ public abstract class Søker {
 
     public Saksnummer søkPapirsøknadForeldrepenger() {
         genererUniktNavConsumerIdForDokument();
-        LOG.info("Sender inn papirsøknadd for {} ..", fødselsnummer.value());
+        LOG.info("Sender inn papirsøknad for {} ..", fødselsnummer.value());
         this.saksnummer = innsender.sendInnPapirsøknadForeldrepenger(aktørId, fødselsnummer, aktørIdAnnenpart);
         LOG.debug("Papirsøknad sendt inn og behandling opprettet på {}", saksnummer.value());
         return this.saksnummer;
@@ -245,7 +245,7 @@ public abstract class Søker {
     public Saksnummer sendInnPapirsøknadEEndringForeldrepenger() {
         guardTrengerEksisterendeBehandling();
         genererUniktNavConsumerIdForDokument();
-        LOG.info("Sender inn endringssøknad på papirsøknadd for {} ..", fødselsnummer.value());
+        LOG.info("Sender inn endringssøknad på papirsøknad for {} ..", fødselsnummer.value());
         this.saksnummer = innsender.sendInnPapirsøknadEEndringForeldrepenger(aktørId, fødselsnummer, aktørIdAnnenpart, saksnummer);
         LOG.debug("Endringssøknad sendt inn og fagsak {} er oppdatert", saksnummer.value());
         return this.saksnummer;
