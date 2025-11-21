@@ -32,6 +32,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
+      start_period: 15s
   postgres:
     image: $POSTGRES_IMAGE
     container_name: postgres
@@ -48,9 +49,9 @@ services:
     healthcheck:
       test: [ "CMD-SHELL", "while ! /usr/bin/pg_isready -U admin -t 1; do sleep 1; done" ]
       interval: 2s
-      retries: 1
+      retries: 10
       timeout: 30s
-      start_period: 10s
+      start_period: 5s
   vtp:
     <<: *default-konfigurasjon
     image: $VTP_IMAGE
@@ -71,12 +72,13 @@ services:
       - "127.0.0.1:8389:8389"
     healthcheck:
       test: ["CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8060/rest/isReady"]
-      interval: 5s
+      interval: 3s
       timeout: 5s
-      retries: 10
+      retries: 20
+      start_period: 5s
     depends_on:
       kafka:
-        condition: service_started
+        condition: service_healthy
   fptilgang:
     <<: *default-konfigurasjon
     image: $FPTILGANG_IMAGE
@@ -108,9 +110,10 @@ services:
       - "127.0.0.1:8050:8080"
     healthcheck:
       test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/fptilgang/internal/health/isReady" ]
-      interval: 5s
+      interval: 3s
       timeout: 5s
-      retries: 10
+      retries: 20
+      start_period: 4s
     depends_on:
       audit.nais:
         condition: service_started
@@ -134,9 +137,10 @@ services:
       - "127.0.0.1:8015:8080"
     healthcheck:
       test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/fpabakus/internal/health/isReady" ]
-      interval: 5s
+      interval: 3s
       timeout: 5s
-      retries: 10
+      retries: 30
+      start_period: 5s
     depends_on:
       audit.nais:
         condition: service_started
@@ -160,9 +164,10 @@ services:
       - "127.0.0.1:8016:8080"
     healthcheck:
       test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/fpkalkulus/internal/health/isReady" ]
-      interval: 5s
+      interval: 3s
       timeout: 5s
-      retries: 10
+      retries: 20
+      start_period: 5s
     depends_on:
       audit.nais:
         condition: service_started
@@ -198,9 +203,10 @@ services:
       #- "127.0.0.1:5005:5005"
     healthcheck:
       test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/fpsak/internal/health/isReady" ]
-      interval: 10s
+      interval: 3s
       timeout: 5s
       retries: 30
+      start_period: 5s
     depends_on:
       audit.nais:
         condition: service_started
@@ -417,9 +423,10 @@ services:
       - "127.0.0.1:8090:8080"
     healthcheck:
       test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/fpfordel/internal/health/isReady" ]
-      interval: 15s
-      timeout: 10s
-      retries: 10
+      interval: 3s
+      timeout: 5s
+      retries: 30
+      start_period: 10s
     depends_on:
       oracle:
         condition: service_healthy
@@ -447,9 +454,10 @@ services:
       - "127.0.0.1:8010:8080"
     healthcheck:
       test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/fpformidling/internal/health/isReady" ]
-      interval: 5s
+      interval: 3s
       timeout: 5s
-      retries: 10
+      retries: 30
+      start_period: 5s
     depends_on:
       vtp:
         condition: service_started
@@ -470,9 +478,10 @@ services:
       - "127.0.0.1:8291:8080"
     healthcheck:
       test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/actuator/info" ]
-      interval: 5s
+      interval: 3s
       timeout: 5s
-      retries: 10
+      retries: 20
+      start_period: 5s
   fpoppdrag:
     <<: *default-konfigurasjon
     image: $FPOPPDRAG_IMAGE
@@ -490,9 +499,10 @@ services:
       - "127.0.0.1:8070:8080"
     healthcheck:
       test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/fpoppdrag/internal/health/isReady" ]
-      interval: 5s
+      interval: 3s
       timeout: 5s
-      retries: 10
+      retries: 20
+      start_period: 5s
     depends_on:
       oracle:
         condition: service_healthy
@@ -528,14 +538,17 @@ services:
       - "127.0.0.1:8030:8080"
     healthcheck:
       test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/fptilbake/internal/health/isReady" ]
-      interval: 5s
+      interval: 3s
       timeout: 5s
-      retries: 10
+      retries: 30
+      start_period: 5s
     depends_on:
       oracle:
         condition: service_healthy
       vtp:
         condition: service_healthy
+      kafka:
+        condition: service_started
       fpoppdrag:
         condition: service_started
   fprisk:
@@ -556,9 +569,10 @@ services:
       - "127.0.0.1:8075:8080"
     healthcheck:
       test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/fprisk/internal/health/isReady" ]
-      interval: 5s
+      interval: 3s
       timeout: 5s
-      retries: 10
+      retries: 30
+      start_period: 5s
     depends_on:
       oracle:
         condition: service_healthy
@@ -581,9 +595,10 @@ services:
       - "127.0.0.1:8065:8080"
     healthcheck:
       test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/fpabonnent/internal/health/isReady" ]
-      interval: 5s
+      interval: 3s
       timeout: 5s
-      retries: 10
+      retries: 30
+      start_period: 5s
     depends_on:
       oracle:
         condition: service_healthy
@@ -609,9 +624,10 @@ services:
       - "127.0.0.1:8071:8080"
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/fplos/internal/health/isReady"]
-      interval: 5s
+      interval: 3s
       timeout: 5s
-      retries: 10
+      retries: 30
+      start_period: 5s
     depends_on:
       oracle:
         condition: service_healthy
@@ -633,9 +649,10 @@ services:
       - "127.0.0.1:8889:8080"
     healthcheck:
       test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/fpoversikt/internal/health/isReady" ]
-      interval: 15s
-      timeout: 10s
-      retries: 10
+      interval: 3s
+      timeout: 5s
+      retries: 30
+      start_period: 5s
     depends_on:
       postgres:
         condition: service_healthy
@@ -658,9 +675,10 @@ services:
       - "127.0.0.1:9191:8080"
     healthcheck:
       test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/fpgrunndata/internal/health/isReady" ]
-      interval: 5s
-      timeout: 10s
-      retries: 10
+      interval: 3s
+      timeout: 5s
+      retries: 20
+      start_period: 5s
   fpsoknad:
     <<: *default-konfigurasjon
     image: $FPSOKNAD_IMAGE
@@ -678,9 +696,10 @@ services:
       - "127.0.0.1:8999:8080"
     healthcheck:
       test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/fpsoknad/internal/health/isReady" ]
-      interval: 15s
-      timeout: 10s
-      retries: 10
+      interval: 3s
+      timeout: 5s
+      retries: 30
+      start_period: 5s
     depends_on:
       vtp:
         condition: service_healthy
@@ -719,9 +738,10 @@ services:
       - "127.0.0.1:8040:8080"
     healthcheck:
       test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/fpinntektsmelding/internal/health/isReady" ]
-      interval: 15s
-      timeout: 10s
-      retries: 10
+      interval: 3s
+      timeout: 5s
+      retries: 30
+      start_period: 5s
     depends_on:
       postgres:
         condition: service_healthy
@@ -1151,5 +1171,5 @@ services:
       test: ["CMD-SHELL", "nc -z kafka 9094 || exit 1"]
       interval: 1s
       timeout: 1s
-      retries: 10
+      retries: 20
       start_period: 2s
