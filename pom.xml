@@ -3,6 +3,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>no.nav.foreldrepenger.felles</groupId>
+        <artifactId>fp-parent-app</artifactId>
+        <version>5.0.2</version>
+    </parent>
+
     <groupId>no.nav.foreldrepenger.autotest</groupId>
     <artifactId>autotest</artifactId>
     <packaging>jar</packaging>
@@ -17,54 +23,59 @@
     </licenses>
 
     <properties>
-        <java.version>25</java.version>
-        <maven.compiler.source>${java.version}</maven.compiler.source>
-        <maven.compiler.target>${java.version}</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <user.timezone>Europe/Oslo</user.timezone> <!-- Sørger for samme tidssone lokalt og på github -->
-
         <vtp.versjon>2.1.1</vtp.versjon>
         <fp-felles.versjon>7.6.8</fp-felles.versjon>
         <fp-prosesstask.version>5.2.1</fp-prosesstask.version>
         <fp-kontrakter.version>9.4.8</fp-kontrakter.version>
         <ftberegning.version>6.1.6</ftberegning.version>
 
-        <slf4j.version>2.0.17</slf4j.version>
-        <logback.version>1.5.21</logback.version>
+        <pdfbox.version>3.0.6</pdfbox.version>
         <allure.version>2.29.1</allure.version>
         <allure.maven.version>2.15.2</allure.maven.version>
-        <assertj.version>3.27.6</assertj.version>
         <aspectj.version>1.9.24</aspectj.version>
-        <junit.version>5.13.4</junit.version>
-        <jackson.version>2.20.1</jackson.version>
-        <jakarta.jakartaee-bom.version>11.0.0</jakarta.jakartaee-bom.version>
-        <jersey.version>4.0.0-M4</jersey.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-            <!-- Jakarta EE API BOM -->
             <dependency>
-                <groupId>jakarta.platform</groupId>
-                <artifactId>jakarta.jakartaee-bom</artifactId>
-                <version>${jakarta.jakartaee-bom.version}</version>
+                <groupId>no.nav.foreldrepenger.felles</groupId>
+                <artifactId>felles</artifactId>
+                <version>${fp-felles.versjon}</version>
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
             <dependency>
-                <groupId>com.fasterxml.jackson</groupId>
-                <artifactId>jackson-bom</artifactId>
-                <version>${jackson.version}</version>
+                <groupId>no.nav.foreldrepenger.kontrakter</groupId>
+                <artifactId>fp-kontrakter-root</artifactId>
+                <version>${fp-kontrakter.version}</version>
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
             <dependency>
-                <groupId>org.junit</groupId>
-                <artifactId>junit-bom</artifactId>
-                <version>${junit.version}</version>
-                <scope>import</scope>
-                <type>pom</type>
+                <groupId>no.nav.vedtak.prosesstask</groupId>
+                <artifactId>prosesstask-rest-api</artifactId>
+                <version>${fp-prosesstask.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.folketrygdloven.kalkulus</groupId>
+                <artifactId>beregning-kontrakt</artifactId>
+                <version>${ftberegning.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.foreldrepenger.vtp</groupId>
+                <artifactId>testmodell</artifactId>
+                <version>${vtp.versjon}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.foreldrepenger.vtp</groupId>
+                <artifactId>kontrakter</artifactId>
+                <version>${vtp.versjon}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.foreldrepenger.kontrakter</groupId>
+                <artifactId>fp-soknad</artifactId>
+                <version>${fp-kontrakter.version}</version>
+                <type>test-jar</type>
             </dependency>
             <dependency>
                 <groupId>io.qameta.allure</groupId>
@@ -72,6 +83,11 @@
                 <version>${allure.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.pdfbox</groupId>
+                <artifactId>pdfbox</artifactId>
+                <version>${pdfbox.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -81,62 +97,51 @@
         <dependency>
             <groupId>no.nav.foreldrepenger.felles</groupId>
             <artifactId>felles-mapper</artifactId>
-            <version>${fp-felles.versjon}</version>
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.felles</groupId>
             <artifactId>felles-log</artifactId>
-            <version>${fp-felles.versjon}</version>
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.felles</groupId>
             <artifactId>felles-klient</artifactId>
-            <version>${fp-felles.versjon}</version>
         </dependency>
         <dependency>
             <groupId>no.nav.vedtak.prosesstask</groupId>
             <artifactId>prosesstask-rest-api</artifactId>
-            <version>${fp-prosesstask.version}</version>
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.kontrakter</groupId>
             <artifactId>fordel-v1</artifactId>
-            <version>${fp-kontrakter.version}</version>
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.kontrakter</groupId>
             <artifactId>risk-v1</artifactId>
-            <version>${fp-kontrakter.version}</version>
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.kontrakter</groupId>
             <artifactId>inntektsmelding-v1</artifactId>
-            <version>${fp-kontrakter.version}</version>
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.kontrakter</groupId>
             <artifactId>fp-soknad</artifactId>
-            <version>${fp-kontrakter.version}</version>
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.kontrakter</groupId>
             <artifactId>fp-oversikt</artifactId>
-            <version>${fp-kontrakter.version}</version>
         </dependency>
+
         <dependency>
             <groupId>no.nav.foreldrepenger.vtp</groupId>
             <artifactId>testmodell</artifactId>
-            <version>${vtp.versjon}</version>
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.vtp</groupId>
             <artifactId>kontrakter</artifactId>
-            <version>${vtp.versjon}</version>
         </dependency>
         <dependency>
             <groupId>no.nav.folketrygdloven.kalkulus</groupId>
             <artifactId>beregning-kontrakt</artifactId>
-            <version>${ftberegning.version}</version>
         </dependency>
 
         <!-- Eksterne avhengigheter (Http klient, jackson og tilhørende avhengigheter) -->
@@ -163,22 +168,18 @@
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
             <artifactId>jersey-common</artifactId>
-            <version>${jersey.version}</version>
         </dependency>
         <dependency>
             <groupId>io.smallrye</groupId>
             <artifactId>jandex</artifactId>
-            <version>3.5.2</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>${logback.version}</version>
         </dependency>
 
 
@@ -186,13 +187,11 @@
         <dependency>
             <groupId>no.nav.foreldrepenger.kontrakter</groupId>
             <artifactId>fp-soknad</artifactId>
-            <version>${fp-kontrakter.version}</version>
             <type>test-jar</type>
         </dependency>
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
-            <version>${assertj.version}</version>
         </dependency>
         <dependency>
             <groupId>io.qameta.allure</groupId>
@@ -213,25 +212,16 @@
         <dependency>
             <groupId>org.apache.pdfbox</groupId>
             <artifactId>pdfbox</artifactId>
-            <version>3.0.6</version>
         </dependency>
     </dependencies>
 
     <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.5.4</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.14.1</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -264,17 +254,6 @@
                 <configuration>
                     <reportDirectory>target/allure-report</reportDirectory>
                     <reportingOutputDirectory>target/allure-report</reportingOutputDirectory>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <parameters>true</parameters>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                    <release>${java.version}</release>
-                    <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
         </plugins>
