@@ -341,7 +341,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
                 .get(0)
                 .setTilretteleggingDatoer(
                         List.of(new Tilretteleggingsdato(LocalDate.now().minusDays(7), TilretteleggingType.INGEN_TILRETTELEGGING,
-                                BigDecimal.valueOf(100))));
+                                BigDecimal.valueOf(100), Tilretteleggingsdato.SvpTilretteleggingFomKilde.ENDRET_AV_SAKSBEHANDLER)));
         saksbehandler.bekreftAksjonspunkt(avklarFaktaFødselOgTilrettelegging2);
 
         var bekreftSvangerskapspengervilkår2 = saksbehandler.hentAksjonspunktbekreftelse(new BekreftSvangerskapspengervilkår());
