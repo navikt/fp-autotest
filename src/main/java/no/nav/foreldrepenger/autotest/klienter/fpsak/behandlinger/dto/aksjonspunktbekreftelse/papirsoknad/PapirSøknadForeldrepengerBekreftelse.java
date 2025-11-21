@@ -12,15 +12,15 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.FrilansDto;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PapirSoknadForeldrepengerBekreftelse extends AksjonspunktBekreftelse {
+public class PapirSøknadForeldrepengerBekreftelse extends AksjonspunktBekreftelse {
 
     protected String tema = "FODSL";
 
-    protected String soknadstype = "FP";
+    protected String søknadstype = "FP";
 
-    protected String soker = "MOR";
+    protected String søker = "MOR";
 
-    protected boolean erBarnetFodt = true;
+    protected boolean erBarnetFødt = true;
 
     protected LocalDate termindato = null;
 
@@ -34,11 +34,11 @@ public class PapirSoknadForeldrepengerBekreftelse extends AksjonspunktBekreftels
 
     protected Integer antallBarnFraTerminbekreftelse = 1;
 
-    protected LocalDate foedselsDato = LocalDate.now().minusDays(1);
+    protected LocalDate fødselsdato = LocalDate.now().minusDays(1);
 
     protected LocalDate mottattDato = LocalDate.now().minusDays(10);
 
-    protected boolean ufullstendigSoeknad;
+    protected boolean ufullstendigSøknad;
 
     protected DekningsgradDto dekningsgrad = DekningsgradDto.HUNDRE;
 
@@ -52,19 +52,19 @@ public class PapirSoknadForeldrepengerBekreftelse extends AksjonspunktBekreftels
 
     protected boolean annenForelderInformert = true;
 
-    public PapirSoknadForeldrepengerBekreftelse morSøkerFødsel(FordelingDto fordeling, LocalDate fødselsdato, LocalDate mottattDato) {
+    public PapirSøknadForeldrepengerBekreftelse morSøkerFødsel(FordelingDto fordeling, LocalDate fødselsdato, LocalDate mottattDato) {
         this.tidsromPermisjon = fordeling;
-        this.foedselsDato = fødselsdato;
+        this.fødselsdato = fødselsdato;
         this.mottattDato = mottattDato;
         return this;
     }
 
-    public PapirSoknadForeldrepengerBekreftelse morSøkerTermin(FordelingDto fordeling, LocalDate termindato, LocalDate mottattDato,
-            DekningsgradDto dekningsgrad) {
+    public PapirSøknadForeldrepengerBekreftelse morSøkerTermin(FordelingDto fordeling, LocalDate termindato, LocalDate mottattDato,
+                                                               DekningsgradDto dekningsgrad) {
         this.tidsromPermisjon = fordeling;
-        this.erBarnetFodt = false;
+        this.erBarnetFødt = false;
         this.termindato = termindato;
-        this.foedselsDato = null;
+        this.fødselsdato = null;
         this.mottattDato = mottattDato;
         this.dekningsgrad = dekningsgrad;
         return this;

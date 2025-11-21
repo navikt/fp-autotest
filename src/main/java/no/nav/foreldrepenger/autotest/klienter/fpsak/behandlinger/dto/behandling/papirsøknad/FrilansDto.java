@@ -2,6 +2,6 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandlin
 
 public class FrilansDto {
 
-    protected boolean harSokerPeriodeMedFrilans;
+    protected boolean harSøkerPeriodeMedFrilans;
 
 }

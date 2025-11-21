@@ -5,16 +5,16 @@ import java.time.LocalDate;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.FordelingDto;
 
-public class PapirSoknadEndringForeldrepengerBekreftelse extends AksjonspunktBekreftelse {
+public class PapirSøknadEndringForeldrepengerBekreftelse extends AksjonspunktBekreftelse {
 
     // FamilieHendelseType
     protected String tema = "FODSL";
 
     // ForeldreType // burde vært RelasjonsRolleType?
-    protected String soker = "MOR";
+    protected String søker = "MOR";
 
     // FagsakYtelseType
-    protected String soknadstype = "FP";
+    protected String søknadstype = "FP";
 
     protected LocalDate mottattDato = LocalDate.now();
 

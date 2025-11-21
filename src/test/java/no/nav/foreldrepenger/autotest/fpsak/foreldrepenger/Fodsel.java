@@ -46,8 +46,8 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaAleneomsorgBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaAnnenForeldreHarRett;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.SjekkManglendeFødselBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.papirsoknad.PapirSoknadEndringForeldrepengerBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.papirsoknad.PapirSoknadForeldrepengerBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.papirsoknad.PapirSøknadEndringForeldrepengerBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.papirsoknad.PapirSøknadForeldrepengerBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.BeregningsresultatMedUttaksplan;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
@@ -63,10 +63,10 @@ import no.nav.foreldrepenger.generator.inntektsmelding.builders.Prosent;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
 import no.nav.foreldrepenger.generator.soknad.maler.OpptjeningMaler;
 import no.nav.foreldrepenger.generator.soknad.maler.UttaksperiodeType;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.BrukerRolle;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.builder.BarnBuilder;
 import no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType;
 import no.nav.foreldrepenger.kontrakter.felles.kodeverk.MorsAktivitet;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.BrukerRolle;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.builder.BarnBuilder;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.PrivatArbeidsgiver;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.SivilstandDto;
@@ -481,7 +481,7 @@ class Fodsel extends VerdikjedeTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         var aksjonspunktBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(new PapirSoknadForeldrepengerBekreftelse());
+                .hentAksjonspunktbekreftelse(new PapirSøknadForeldrepengerBekreftelse());
         var fordeling = new FordelingDto();
         var fpff = new PermisjonPeriodeDto(KontoType.FORELDREPENGER_FØR_FØDSEL,
                 fpStartdato, fødselsdato.minusDays(1));
@@ -516,7 +516,7 @@ class Fodsel extends VerdikjedeTestBase {
         saksbehandler.ventPåOgVelgRevurderingBehandling();
 
         var aksjonspunktBekreftelseEndringssøknad = saksbehandler
-                .hentAksjonspunktbekreftelse(new PapirSoknadEndringForeldrepengerBekreftelse());
+                .hentAksjonspunktbekreftelse(new PapirSøknadEndringForeldrepengerBekreftelse());
         var fordelingEndringssøknad = new FordelingDto();
         // Legger til fellesperiode på slutten
         var fellesperiode = new PermisjonPeriodeDto(FELLESPERIODE,
