@@ -1,12 +1,10 @@
 package no.nav.foreldrepenger.autotest.domain.foreldrepenger;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
  * Brukes i uttaksresultat
  */
-@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum UttakresultatUtsettelseÅrsak {
 
     ARBEID("ARBEID"),
