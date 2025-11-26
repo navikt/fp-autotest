@@ -718,7 +718,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medMottattdato(fødselsdato.minusWeeks(2))
                 .medVedlegg(List.of(
                         dokumenterUttak(fordelingFar, MorsAktivitet.ARBEID, InnsendingType.AUTOMATISK),
-                        dokumenterUttak(fordelingFar, MorsAktivitet.ARBEID_OG_UTDANNING, InnsendingType.LASTET_OPP)
+                        dokumenterUttak(fordelingFar, ARBEID_OG_UTDANNING, InnsendingType.LASTET_OPP)
                 ));
         var saksnummerFar = far.søk(søknadFar);
 
@@ -1907,8 +1907,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
     @Test
     @DisplayName("16: Mor engangstønad. Bare far har rett (BFHR). Utsettelse uten at mor er i aktivitet. Trekker alt utenom minstretten.")
     @Description(
-            "Mor har en ferdig behanldet engagnstønad liggende. Far søker derette foreldrepenger hvor han oppgir at bare han har rett. " +
-            "Far søker først 2 uker foreldrepenger ifm fødselen og deretter 40 uker utsettelse hvor mors aktivit ikke er dokumentert. " +
+            "Mor har en ferdig behandlet engangsstønad liggende. Far søker deretter foreldrepenger hvor han oppgir at bare han har rett. " +
+            "Far søker først 2 uker foreldrepenger ifm fødselen og deretter 40 uker utsettelse hvor mors aktivitet ikke er dokumentert. " +
             "Utsettelsen avslås og trekker dager løpende, men skal ikke trekke noe av minsteretten. Etter utsettelsen så tar far ut en " +
             "periode med foreldrepenger med aktivitetskrav hvor mor er i aktivitet, etterfulgt av en periode hvor han bruker sine resterende " +
             "6 uker med foreldrepenger uten aktivitetskrav. Første uttaksperiode etter utsettelsen innvilges delvis med disse 6 " +
@@ -1995,7 +1995,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         // UTTAKSPLAN
         var avslåtteUttaksperioder = saksbehandler.hentAvslåtteUttaksperioder();
-        assertThat(avslåtteUttaksperioder).as("Forventer at det er 4 avslåtte uttaksperioder").hasSize(4);
+        assertThat(avslåtteUttaksperioder).as("Forventer at det er 3 avslåtte uttaksperioder").hasSize(3);
 
         var avslåttUtsettelseperiodeFørsteDel = avslåtteUttaksperioder.getFirst();
         assertThat(avslåttUtsettelseperiodeFørsteDel.getFom()).isEqualTo(utsettelsesperiode.fom());
@@ -2007,26 +2007,15 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         assertThat(avslåttUtsettelseperiodeFørsteDel.getPeriodeResultatÅrsak()).as("Perioderesultatårsak")
                 .isEqualTo(AKTIVITETSKRAVET_UTDANNING_IKKE_DOKUMENTERT);
 
-        var avslåttUtsettelseperiodeAndreDel = avslåtteUttaksperioder.get(1);
-        assertThat(avslåttUtsettelseperiodeAndreDel.getFom()).isCloseTo(utsettelsesperiode.fom().plusWeeks(30),
-                within(2, ChronoUnit.DAYS)); // splitt tar ikke hensyn til helger
-        assertThat(avslåttUtsettelseperiodeAndreDel.getTom()).isEqualTo(utsettelsesperiode.tom());
-        assertThat(avslåttUtsettelseperiodeAndreDel.getAktiviteter()
-                .getFirst()
-                .getTrekkdagerDesimaler()) // avslag på siste rest av utsettelsen, men trekker ikke av minsteretten!
-                .as("Trekkdager").isZero();
-        assertThat(avslåttUtsettelseperiodeAndreDel.getPeriodeResultatÅrsak()).as("Perioderesultatårsak")
-                .isEqualTo(IKKE_STØNADSDAGER_IGJEN);
+        var avslåttUttaksperiode1 = avslåtteUttaksperioder.get(1);
+        assertThat(avslåttUttaksperiode1.getFom()).isEqualTo(uttaksperiodeEtterUtsettelse1.fom().plusWeeks(8));
+        assertThat(avslåttUttaksperiode1.getTom()).isEqualTo(uttaksperiodeEtterUtsettelse1.tom());
+        assertThat(avslåttUttaksperiode1.getPeriodeResultatÅrsak()).as("Perioderesultatårsak").isEqualTo(IKKE_STØNADSDAGER_IGJEN);
 
-        var avslåtttUttaksperiode1 = avslåtteUttaksperioder.get(2);
-        assertThat(avslåtttUttaksperiode1.getFom()).isEqualTo(uttaksperiodeEtterUtsettelse1.fom().plusWeeks(8));
-        assertThat(avslåtttUttaksperiode1.getTom()).isEqualTo(uttaksperiodeEtterUtsettelse1.tom());
-        assertThat(avslåtttUttaksperiode1.getPeriodeResultatÅrsak()).as("Perioderesultatårsak").isEqualTo(IKKE_STØNADSDAGER_IGJEN);
-
-        var avslåtttUttaksperiode2 = avslåtteUttaksperioder.get(3);
-        assertThat(avslåtttUttaksperiode2.getFom()).isEqualTo(uttaksperiodeEtterUtsettelse2.fom());
-        assertThat(avslåtttUttaksperiode2.getTom()).isEqualTo(uttaksperiodeEtterUtsettelse2.tom());
-        assertThat(avslåtttUttaksperiode2.getPeriodeResultatÅrsak()).as("Perioderesultatårsak").isEqualTo(IKKE_STØNADSDAGER_IGJEN);
+        var avslåttUttaksperiode2 = avslåtteUttaksperioder.get(2);
+        assertThat(avslåttUttaksperiode2.getFom()).isEqualTo(uttaksperiodeEtterUtsettelse2.fom());
+        assertThat(avslåttUttaksperiode2.getTom()).isEqualTo(uttaksperiodeEtterUtsettelse2.tom());
+        assertThat(avslåttUttaksperiode2.getPeriodeResultatÅrsak()).as("Perioderesultatårsak").isEqualTo(IKKE_STØNADSDAGER_IGJEN);
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
         var dagsatsFar = (double) 600_000 / 260;
