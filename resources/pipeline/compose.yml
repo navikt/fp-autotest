@@ -685,6 +685,7 @@ services:
     container_name: fpsoknad
     mem_limit: 512mb
     environment:
+      NAIS_APP_NAME: fpsoknad
       DOKGEN_REST_BASE_URL: http://fpdokgen:8080
       KRYPTERING_PASSWORD: testnokkelforvtp
     env_file:
