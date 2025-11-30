@@ -1,0 +1,1 @@
+{"tema":"FODSL","søker":"MOR","søknadstype":"FP","mottattDato":"2025-11-30","tidsromPermisjon":{"permisjonsPerioder":[{"periodeFom":"2026-01-09","periodeTom":"2026-02-12","periodeType":"FELLESPERIODE"}],"graderingPeriode":[],"utsettelsePeriode":[]},"annenForelderInformert":true,"@type":"5057"}

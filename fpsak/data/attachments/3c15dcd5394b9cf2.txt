@@ -1,0 +1,1 @@
+{"avslagskode":"1004","delvilkår":"FP_VK_4","omsorgsovertakelseDato":"2025-12-30","barn":[{"fødselsdato":"2009-11-30","barnNummer":1}],"ektefellesBarn":false,"@type":"5018"}
