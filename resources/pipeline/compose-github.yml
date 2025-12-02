@@ -15,7 +15,7 @@ services:
     mem_limit: 3gb
   fpfrontend:
     mem_limit: 64mb
-  fpfordel:
+  fpmottak:
     mem_limit: 1gb
   fpformidling:
     mem_limit: 1gb

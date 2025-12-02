@@ -261,9 +261,9 @@ services:
                     "url": "http://fplos:8080"
                 },
                 {
-                    "path": "/fpfordel/api",
-                    "scopes": "api://vtp.teamforeldrepenger.fpfordel/.default",
-                    "url": "http://fpfordel:8080"
+                    "path": "/fpmottak/api",
+                    "scopes": "api://vtp.teamforeldrepenger.fpmottak/.default",
+                    "url": "http://fpmottak:8080"
                 }
             ]
         }
@@ -368,9 +368,9 @@ services:
         {
             "apis": [
                 {
-                    "path": "/fpfordel/api",
-                    "scopes": "api://vtp.teamforeldrepenger.fpfordel/.default",
-                    "url": "http://fpfordel:8080"
+                    "path": "/fpmottak/api",
+                    "scopes": "api://vtp.teamforeldrepenger.fpmottak/.default",
+                    "url": "http://fpmottak:8080"
                 }
             ]
         }
@@ -383,7 +383,7 @@ services:
         condition: service_started
       fpsak:
         condition: service_started
-      fpfordel:
+      fpmottak:
         condition: service_started
   wonderwall-fpjournalforing:
     <<: *default-konfigurasjon
@@ -403,36 +403,35 @@ services:
       - "127.0.0.1:9005:9005"
     env_file:
       - *common-properties
-
-  fpfordel:
+  fpmottak:
     <<: *default-konfigurasjon
-    image: $FPFORDEL_IMAGE
-    container_name: fpfordel
-    mem_limit: 512mb
+    image: $FPMOTTAK_IMAGE
+    container_name: fpmottak
     environment:
-      NAIS_APP_NAME: fpfordel
-      DOKARKIV_BASE_URL: http://vtp:8060/rest/dokarkiv/rest/journalpostapi/v1/journalpost
+      NAIS_APP_NAME: fpmottak
     env_file:
       - *common-properties
+      - fpmottak_datasource.env
     volumes:
       - *sertifikat-volum
-      - *default-oracle-jdbc-config
-      - ./vault-init/fpfordel:/var/run/secrets/nais.io/
-      - ./tokenx:/tokenx
     ports:
-      - "127.0.0.1:8090:8080"
+      - "127.0.0.1:8900:8080"
     healthcheck:
-      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/fpfordel/internal/health/isReady" ]
+      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/fpmottak/internal/health/isReady" ]
       interval: 3s
       timeout: 5s
       retries: 30
       start_period: 10s
     depends_on:
-      oracle:
-        condition: service_healthy
       vtp:
         condition: service_healthy
+      postgres:
+        condition: service_healthy
+      fptilgang:
+        condition: service_started
       fpsak:
+        condition: service_started
+      fptilbake:
         condition: service_started
   fpformidling:
     <<: *default-konfigurasjon
@@ -916,12 +915,6 @@ services:
                     "name": "fp-los"
                 },
                 {
-                    "path": "/fpfordel/api",
-                    "scopes": "api://vtp.teamforeldrepenger.fpfordel/swagger",
-                    "url": "http://fpfordel:8080",
-                    "name": "fp-fordel"
-                },
-                {
                     "path": "/fpabakus/forvaltning/api",
                     "scopes": "api://vtp.teamforeldrepenger.fpabakus/swagger",
                     "url": "http://fpabakus:8080",
@@ -956,6 +949,12 @@ services:
                     "scopes": "api://vtp.teamforeldrepenger.fpsoknad/swagger",
                     "url": "http://fpsoknad:8080",
                     "name": "fp-soknad"
+                },
+                {
+                    "path": "/fpmottak/forvaltning/api",
+                    "scopes": "api://vtp.teamforeldrepenger.fpmottak/swagger",
+                    "url": "http://fpmottak:8080",
+                    "name": "fp-mottak"
                 }
             ]
         }

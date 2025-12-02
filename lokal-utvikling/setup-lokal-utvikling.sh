@@ -24,9 +24,9 @@ settPorterSomSkalErstattes () {
       replace_port_array=("8080")
       with_port_array=("8075")
       ;;
-    fpfordel)
+    fpmottak)
       replace_port_array=("8080")
-      with_port_array=("8090")
+      with_port_array=("8900")
       ;;
     fpabonnent)
       replace_port_array=("8080")
