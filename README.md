@@ -33,7 +33,6 @@ For øyeblikket har vi to test suits som tester enten fpsak eller fptilbake. Vi 
 | fpoppdrag       | [![](https://github.com/navikt/fpoppdrag/workflows/Bygg%20og%20deploy/badge.svg)](https://github.com/navikt/fpoppdrag/actions?query=workflow%3A%22Bygg+og+deploy%22)                       |
 | fptilbake       | [![](https://github.com/navikt/fptilbake/workflows/Bygg%20og%20deploy%20Fptilbake/badge.svg)](https://github.com/navikt/fptilbake/actions?query=workflow%3A%22Bygg+og+deploy+Fptilbake%22) |
 | fp-risk         | [![](https://github.com/navikt/fp-risk/workflows/Bygg%20og%20deploy/badge.svg)](https://github.com/navikt/fp-risk/actions?query=workflow%3A%22Bygg+og+deploy%22)                           |
-| fpabonnent      | [![](https://github.com/navikt/fpabonnent/actions/workflows/build.yml/badge.svg)](https://github.com/navikt/fpabonnent/actions/workflows/build.yml)                                        |
 
 ## Interne avhengigheter til fp-autotest
 Fpsak-autotest er avhengig av følgende repo:
