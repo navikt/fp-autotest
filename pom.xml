@@ -24,7 +24,7 @@
 
     <properties>
         <vtp.versjon>2.1.1</vtp.versjon>
-        <fp-felles.versjon>7.6.10</fp-felles.versjon>
+        <fp-felles.versjon>7.6.11</fp-felles.versjon>
         <fp-prosesstask.version>5.2.1</fp-prosesstask.version>
         <fp-kontrakter.version>9.4.14</fp-kontrakter.version>
         <ftberegning.version>6.1.6</ftberegning.version>
