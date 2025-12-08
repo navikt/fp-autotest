@@ -28,10 +28,6 @@ settPorterSomSkalErstattes () {
       replace_port_array=("8080")
       with_port_array=("8900")
       ;;
-    fpabonnent)
-      replace_port_array=("8080")
-      with_port_array=("8065")
-      ;;
     fpoversikt)
       replace_port_array=("8080")
       with_port_array=("8889")
@@ -96,8 +92,8 @@ cp -a "${relativ_path}/." "." # Copy all docker-compose file to separate docker-
 sh update-versions.sh
 cp -f ".env" "../."
 
-# Redirect alle kall for angitte applikasjoner lokalt på maskinen din. F.eks. ved valg av fpabonnent erstattes
-# http://fpabonnent:8080/fpabonnent med http://host.docker.internal:8065/fpabonnent
+# Redirect alle kall for angitte applikasjoner lokalt på maskinen din. F.eks. ved valg av fpmottak erstattes
+# http://fpmottak:8080/fpmottak med http://host.docker.internal:8900/fpmottak
 for applikasjon in "${applikasjoner[@]}"; do
     settPorterSomSkalErstattes $applikasjon
     for ((i=0;i<${#replace_port_array[@]};++i)); do

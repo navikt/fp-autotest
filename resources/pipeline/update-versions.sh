@@ -30,7 +30,6 @@ echo FPDOKGEN_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-managemen
 echo FPOPPDRAG_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fpoppdrag")" >> .env
 echo FPTILBAKE_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fptilbake")" >> .env
 echo FPRISK_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fp-risk")" >> .env
-echo FPABONNENT_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fpabonnent")" >> .env
 echo FPLOS_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fplos")" >> .env
 echo FPSOKNAD_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fp-soknad")" >> .env
 echo FPMOTTAK_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fp-mottak")" >> .env

@@ -577,34 +577,6 @@ services:
         condition: service_healthy
       vtp:
         condition: service_healthy
-  fpabonnent:
-    <<: *default-konfigurasjon
-    image: $FPABONNENT_IMAGE
-    container_name: fpabonnent
-    mem_limit: 512mb
-    env_file:
-      - *common-properties
-    environment:
-      NAIS_APP_NAME: fpabonnent
-    volumes:
-      - *sertifikat-volum
-      - *default-oracle-jdbc-config
-      - ./vault-init/fpabonnent:/var/run/secrets/nais.io/
-    ports:
-      - "127.0.0.1:8065:8080"
-    healthcheck:
-      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/fpabonnent/internal/health/isReady" ]
-      interval: 3s
-      timeout: 5s
-      retries: 30
-      start_period: 5s
-    depends_on:
-      oracle:
-        condition: service_healthy
-      vtp:
-        condition: service_healthy
-      fpsak:
-        condition: service_started
   fplos:
     <<: *default-konfigurasjon
     image: $FPLOS_IMAGE
@@ -925,12 +897,6 @@ services:
                     "scopes": "api://vtp.teamforeldrepenger.fprisk/swagger",
                     "url": "http://fprisk:8080",
                     "name": "fp-risk"
-                },
-                {
-                    "path": "/fpabonnent/api",
-                    "scopes": "api://vtp.teamforeldrepenger.fpabonnent/swagger",
-                    "url": "http://fpabonnent:8080",
-                    "name": "fp-abonnent"
                 },
                 {
                     "path": "/fpinntektsmelding/forvaltning/api",

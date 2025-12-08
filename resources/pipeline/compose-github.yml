@@ -27,8 +27,6 @@ services:
     mem_limit: 2gb
   fprisk:
     mem_limit: 1gb
-  fpabonnent:
-    mem_limit: 1gb
   fpoversikt:
     mem_limit: 1gb
   fptilgang:

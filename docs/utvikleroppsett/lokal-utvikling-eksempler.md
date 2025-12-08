@@ -10,7 +10,7 @@ er listet under.
     <ingen avhengigheter>   <----   postgres, oracle og vtp
     postgres og vtp         <----   fpabakus
     oracle og fpabakus      <----   fpsak
-    fpsak                   <----   fpformidlding/fpoppdrag/fptilbake/fpfrontend/fprisk/fpabonnent
+    fpsak                   <----   fpformidlding/fpoppdrag/fptilbake/fpfrontend/fprisk/fpmottak
 
 Eksemplene nedenfor kjører opp den MINSTE verdikjeden for hver. Dette gjøres fordi det er godt kjent at en del av PCene
 har dårlig specs og ikke tåler at hele verdikjeden blir kjørt opp. Den minste verdikjeden betyr at Docker setter bare opp de 
