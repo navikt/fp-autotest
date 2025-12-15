@@ -47,9 +47,9 @@ public final class UttaksperioderMaler {
         var periodetype = Set.of(uttaksperiodeTyper);
         return UttakplanPeriodeBuilder.uttak(stønadskontoType, periode.fom, periode.tom)
                 .medØnskerGradering(false)
-                .medSamtidigUttakProsent(Double.valueOf(uttaksprosent))
                 .medØnskerFlerbarnsdager(periodetype.contains(UttaksperiodeType.FLERBARNSDAGER))
                 .medØnskerSamtidigUttak(periodetype.contains(UttaksperiodeType.SAMTIDIGUTTAK))
+                .medSamtidigUttakProsent(periodetype.contains(UttaksperiodeType.SAMTIDIGUTTAK) ? (double) uttaksprosent : null)
                 .build();
     }
 
