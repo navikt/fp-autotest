@@ -1,0 +1,12 @@
+navikt/fp-felles
+navikt/fp-inngangsvilkar
+navikt/fp-jms-integrasjon
+navikt/fp-nare
+navikt/fp-prosesstask
+navikt/fp-stonadskonto
+navikt/fp-tidsserie
+navikt/fp-uttak
+navikt/fp-ytelse-beregn
+navikt/ft-beregning
+navikt/ft-frontend-saksbehandling
+navikt/svp-uttak
