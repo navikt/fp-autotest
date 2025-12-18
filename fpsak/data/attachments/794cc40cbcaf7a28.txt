@@ -1,0 +1,1 @@
+{"begrunnelse":"Begrunnelse NFP.","klageVurdering":"MEDHOLD_I_KLAGE","klageMedholdÅrsak":"ULIK_VURDERING","klageVurderingOmgjør":"UGUNST_MEDHOLD_I_KLAGE","fritekstTilBrev":"Fritektst til brev fra NFP.","@type":"5035"}

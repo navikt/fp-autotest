@@ -1,0 +1,1 @@
+{"begrunnelse":"Fordi","klageVurdering":"MEDHOLD_I_KLAGE","klageMedholdÅrsak":"PROSESSUELL_FEIL","klageVurderingOmgjør":"GUNST_MEDHOLD_I_KLAGE","fritekstTilBrev":"Fritektst til brev fra klagebehandler (vises i brevet).","@type":"5035"}

@@ -1,0 +1,1 @@
+{"begrunnelse":"En begrunnelse fra autotest","termindato":"2026-03-18","bekreftetSvpArbeidsforholdList":[{"avklarteOppholdPerioder":[],"tilretteleggingId":999951,"tilretteleggingBehovFom":"2025-12-18","tilretteleggingDatoer":[{"fom":"2025-12-18","type":"DELVIS_TILRETTELEGGING","stillingsprosent":40,"kilde":"SØKNAD"}],"skalBrukes":true}],"@type":"5091"}
