@@ -30,9 +30,9 @@
         <ftberegning.version>6.1.6</ftberegning.version>
 
         <pdfbox.version>3.0.6</pdfbox.version>
-        <allure.version>2.31.0</allure.version>
-        <allure.maven.version>2.16.1</allure.maven.version>
-        <aspectj.version>1.9.25</aspectj.version>
+        <allure.version>2.32.0</allure.version>
+        <allure.maven.version>2.17.0</allure.maven.version>
+        <aspectj.version>1.9.25.1</aspectj.version>
     </properties>
 
     <dependencyManagement>
