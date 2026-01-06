@@ -6,12 +6,12 @@
 1. Installer følgende:
     * [Docker Desktop](https://www.docker.com/products/docker-desktop), 
       **Note**: Docker Desktop har maksimum 2 GiB minne som standard. Gå inn i innstillinger og endre dette til minst 8 GiB (gitt at du har minst 16GB minne på maskinen).
-    * [JDK21](https://adoptium.net/marketplace/?version=21), 
+    * [JDK25](https://adoptium.net/marketplace/?version=25), 
     * [Maven](https://maven.apache.org/download.cgi).
    
    Alternativ installasjon for Mac:
     ```bash
-      brew install --cask docker temurin@21
+      brew install --cask docker temurin@25
       brew install maven
     ```
 
