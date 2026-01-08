@@ -27,7 +27,7 @@
         <fp-felles.versjon>7.6.12</fp-felles.versjon>
         <fp-prosesstask.version>5.2.2</fp-prosesstask.version>
         <fp-kontrakter.version>9.4.21</fp-kontrakter.version>
-        <ftberegning.version>6.1.6</ftberegning.version>
+        <ftberegning.version>6.3.6</ftberegning.version>
         <fpsoknad-kontrakt.version>1.0.2</fpsoknad-kontrakt.version>
 
         <pdfbox.version>3.0.6</pdfbox.version>
