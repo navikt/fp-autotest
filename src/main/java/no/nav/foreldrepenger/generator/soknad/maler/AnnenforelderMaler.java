@@ -2,10 +2,10 @@ package no.nav.foreldrepenger.generator.soknad.maler;
 
 import com.neovisionaries.i18n.CountryCode;
 
-import no.nav.foreldrepenger.kontrakter.fpsoknad.foreldrepenger.annenpart.AnnenForelderDto;
+import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.annenpart.AnnenForelderDto;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Fødselsnummer;
 import no.nav.foreldrepenger.generator.familie.Søker;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.builder.AnnenforelderBuilder;
+import no.nav.foreldrepenger.soknad.kontrakt.builder.AnnenforelderBuilder;
 
 public class AnnenforelderMaler {
 

@@ -4,16 +4,16 @@ import java.util.List;
 import java.util.UUID;
 
 import no.nav.foreldrepenger.kontrakter.felles.kodeverk.MorsAktivitet;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.foreldrepenger.uttaksplan.UtsettelsesPeriodeDto;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.foreldrepenger.uttaksplan.UttaksPeriodeDto;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.foreldrepenger.uttaksplan.UttaksplanDto;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.foreldrepenger.uttaksplan.Uttaksplanperiode;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.svangerskapspenger.TilretteleggingbehovDto;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.vedlegg.DokumentTypeId;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.vedlegg.Dokumenterer;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.vedlegg.InnsendingType;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.vedlegg.VedleggDto;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.vedlegg.ÅpenPeriodeDto;
+import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.UtsettelsesPeriodeDto;
+import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.UttaksPeriodeDto;
+import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.UttaksplanDto;
+import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.Uttaksplanperiode;
+import no.nav.foreldrepenger.soknad.kontrakt.svangerskapspenger.TilretteleggingbehovDto;
+import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.DokumentTypeId;
+import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.Dokumenterer;
+import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.InnsendingType;
+import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.VedleggDto;
+import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.ÅpenPeriodeDto;
 
 public class VedleggMaler {
 

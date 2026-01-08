@@ -12,15 +12,15 @@ import java.util.List;
 
 import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
 import no.nav.foreldrepenger.autotest.klienter.MultipartBodyPublisher;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.EndringssøknadForeldrepengerDto;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.EngangsstønadDto;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.ForeldrepengesøknadDto;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.SvangerskapspengesøknadDto;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.SøknadDto;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.vedlegg.VedleggDto;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.vedlegg.InnsendingType;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.ettersendelse.EttersendelseDto;
-import no.nav.foreldrepenger.kontrakter.fpsoknad.ettersendelse.YtelseType;
+import no.nav.foreldrepenger.soknad.kontrakt.EndringssøknadForeldrepengerDto;
+import no.nav.foreldrepenger.soknad.kontrakt.EngangsstønadDto;
+import no.nav.foreldrepenger.soknad.kontrakt.ForeldrepengesøknadDto;
+import no.nav.foreldrepenger.soknad.kontrakt.SvangerskapspengesøknadDto;
+import no.nav.foreldrepenger.soknad.kontrakt.SøknadDto;
+import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.VedleggDto;
+import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.InnsendingType;
+import no.nav.foreldrepenger.soknad.kontrakt.ettersendelse.EttersendelseDto;
+import no.nav.foreldrepenger.soknad.kontrakt.ettersendelse.YtelseType;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Fødselsnummer;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Saksnummer;
 
@@ -81,7 +81,7 @@ public class FpsoknadKlient {
     }
 
     private static YtelseType tilYtelseType(SøknadDto innsending) {
-        if (innsending instanceof no.nav.foreldrepenger.kontrakter.fpsoknad.SøknadDto søknadDto) {
+        if (innsending instanceof no.nav.foreldrepenger.soknad.kontrakt.SøknadDto søknadDto) {
             if (søknadDto instanceof ForeldrepengesøknadDto) return YtelseType.FORELDREPENGER;
             if (søknadDto instanceof SvangerskapspengesøknadDto) return YtelseType.SVANGERSKAPSPENGER;
             if (søknadDto instanceof EngangsstønadDto) return YtelseType.ENGANGSSTØNAD;

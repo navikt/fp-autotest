@@ -28,6 +28,7 @@
         <fp-prosesstask.version>5.2.2</fp-prosesstask.version>
         <fp-kontrakter.version>9.4.21</fp-kontrakter.version>
         <ftberegning.version>6.1.6</ftberegning.version>
+        <fpsoknad-kontrakt.version>1.0.2</fpsoknad-kontrakt.version>
 
         <pdfbox.version>3.0.6</pdfbox.version>
         <allure.version>2.32.0</allure.version>
@@ -72,9 +73,14 @@
                 <version>${vtp.versjon}</version>
             </dependency>
             <dependency>
-                <groupId>no.nav.foreldrepenger.kontrakter</groupId>
-                <artifactId>fp-soknad</artifactId>
-                <version>${fp-kontrakter.version}</version>
+                <groupId>no.nav.foreldrepenger.soknad</groupId>
+                <artifactId>kontrakter</artifactId>
+                <version>${fpsoknad-kontrakt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.foreldrepenger.soknad</groupId>
+                <artifactId>kontrakter</artifactId>
+                <version>${fpsoknad-kontrakt.version}</version>
                 <type>test-jar</type>
             </dependency>
             <dependency>
@@ -123,8 +129,8 @@
             <artifactId>inntektsmelding-v1</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.foreldrepenger.kontrakter</groupId>
-            <artifactId>fp-soknad</artifactId>
+            <groupId>no.nav.foreldrepenger.soknad</groupId>
+            <artifactId>kontrakter</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.kontrakter</groupId>
@@ -185,8 +191,8 @@
 
         <!-- Testavhengigheter (brukes også i scr) -->
         <dependency>
-            <groupId>no.nav.foreldrepenger.kontrakter</groupId>
-            <artifactId>fp-soknad</artifactId>
+            <groupId>no.nav.foreldrepenger.soknad</groupId>
+            <artifactId>kontrakter</artifactId>
             <type>test-jar</type>
         </dependency>
         <dependency>
