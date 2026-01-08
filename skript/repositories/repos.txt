@@ -9,6 +9,7 @@ navikt/fp-felles
 navikt/fp-formidling
 navikt/fp-frontend
 navikt/fp-gha-workflows
+navikt/fp-grunndata
 navikt/fp-iac
 navikt/fp-infotrygd
 navikt/fp-inngangsvilkar
@@ -17,6 +18,7 @@ navikt/fp-inntektsmelding-frontend
 navikt/fp-jms-integrasjon
 navikt/fp-kalkulus
 navikt/fp-kontrakter
+navikt/fp-mottak
 navikt/fp-nare
 navikt/fp-oversikt
 navikt/fp-prosesstask
@@ -30,8 +32,6 @@ navikt/fp-tilgang
 navikt/fp-uttak
 navikt/fp-ws-proxy
 navikt/fp-ytelse-beregn
-navikt/fpabonnent
-navikt/fpfordel
 navikt/fplos
 navikt/fpoppdrag
 navikt/fptilbake
