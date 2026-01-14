@@ -4,7 +4,6 @@ import static jakarta.ws.rs.core.UriBuilder.fromUri;
 import static no.nav.foreldrepenger.autotest.klienter.HttpRequestProvider.requestMedInnloggetSaksbehandler;
 import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.toJson;
 import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.send;
-import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.sendStringRequest;
 
 import java.net.http.HttpRequest;
 import java.time.LocalDate;
@@ -40,16 +39,39 @@ public class FplosKlient {
                 .orElseThrow(() -> new RuntimeException("Feilet"));
     }
 
-    public String hentLister() {
+    public List<LosSakslisteId> hentLister() {
         var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle, API_NAME)
                 .uri(fromUri(BaseUriProvider.FPLOS_BASE)
                         .path("/avdelingsleder/sakslister")
-                        .queryParam("avdelingEnhet", "4867")
+                        .queryParam("avdelingEnhet", AvdelingEnhet.defaultEnhet.avdelingEnhet)
                         .build())
                 .GET();
-        return Optional.ofNullable(sendStringRequest(request.build()))
-                .orElseThrow(() -> new RuntimeException("Ussj")).body();
+        return send(request.build(), new TypeReference<>() {
+        });
     }
+
+    public void leggTilSaksbehandlerForListe(SaksbehandlerRolle saksbehandler, LosSakslisteId listeId) {
+        var opprettSaksbehandlerRequest = requestMedInnloggetSaksbehandler(this.saksbehandlerRolle, API_NAME)
+                .uri(fromUri(BaseUriProvider.FPLOS_BASE)
+                        .path("/avdelingsleder/saksbehandlere")
+                        .build())
+                .POST(HttpRequest.BodyPublishers.ofString(toJson(new OpprettSaksbehandlerRequest(AvdelingEnhet.defaultEnhet.avdelingEnhet, saksbehandler.getKode()))))
+                .build();
+        send(opprettSaksbehandlerRequest);
+
+        var leggTilRequest = requestMedInnloggetSaksbehandler(this.saksbehandlerRolle, API_NAME)
+                .uri(fromUri(BaseUriProvider.FPLOS_BASE)
+                        .path("/avdelingsleder/sakslister/saksbehandler")
+                        .build())
+                .POST(HttpRequest.BodyPublishers.ofString(toJson(new LeggTilSaksbehandlerForListeRequest(AvdelingEnhet.defaultEnhet.avdelingEnhet,
+                        saksbehandler.getKode(), true, listeId.sakslisteId()))))
+                .build();
+        send(leggTilRequest);
+    }
+
+    private record OpprettSaksbehandlerRequest(String avdelingEnhet, String brukerIdent) {}
+
+    private record LeggTilSaksbehandlerForListeRequest(String avdelingEnhet, String brukerIdent, boolean checked, int sakslisteId) {}
 
     public static class SakslisteBuilder {
         private final LosSakslisteId sakslisteId;

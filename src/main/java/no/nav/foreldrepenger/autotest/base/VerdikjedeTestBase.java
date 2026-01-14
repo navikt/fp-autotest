@@ -8,6 +8,7 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.Objects;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,10 +19,12 @@ import no.nav.foreldrepenger.autotest.aktoerer.saksbehandler.fpsak.Oppgavestyrer
 import no.nav.foreldrepenger.autotest.aktoerer.saksbehandler.fpsak.Overstyrer;
 import no.nav.foreldrepenger.autotest.aktoerer.saksbehandler.fpsak.Saksbehandler;
 import no.nav.foreldrepenger.autotest.brev.BrevAssertionBuilder;
+import no.nav.foreldrepenger.autotest.klienter.fplos.FplosKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.DokumentTag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkType;
+import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
 import no.nav.foreldrepenger.autotest.util.pdf.Pdf;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Fødselsnummer;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Saksnummer;
@@ -45,6 +48,24 @@ public abstract class VerdikjedeTestBase extends BrevTestBase {
     protected Beslutter beslutter;
     protected Klagebehandler klagebehandler;
     protected Oppgavestyrer oppgavestyrer;
+
+    @BeforeAll
+    public static synchronized void init() {
+        // Skip initialization when running in GitHub Actions
+        if (System.getenv("CI") != null) {
+            LOG.debug("Skipping FPLOS list initialization in CI environment");
+            return;
+        }
+
+        var fplosKlient = new FplosKlient(SaksbehandlerRolle.OPPGAVESTYRER);
+        if (!fplosKlient.hentLister().isEmpty()) {
+            return;
+        }
+        var listeId = FplosKlient.SakslisteBuilder.nyListe().build();
+        for (var saksbehandler : SaksbehandlerRolle.values()) {
+            fplosKlient.leggTilSaksbehandlerForListe(saksbehandler, listeId);
+        }
+    }
 
     @BeforeEach
     public void setUp() {
