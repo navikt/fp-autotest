@@ -38,27 +38,26 @@ public final class JavaHttpKlient {
 
     public static void send(HttpRequest request) {
         handleResponse(sendStringRequest(request), stringHttpResponse -> null,
-                getDefualtErrorConsumer());
+                getDefaultErrorConsumer());
     }
-
     public static <T> T send(HttpRequest request, Class<T> clazz) {
         return handleResponse(sendStringRequest(request), httpResponse -> fromJson(httpResponse.body(), clazz),
-                getDefualtErrorConsumer());
+                getDefaultErrorConsumer());
     }
 
     public static <T> T send(HttpRequest request, Class<T> clazz, ObjectMapper mapper) {
         return handleResponse(sendStringRequest(request), httpResponse -> fromJson(httpResponse.body(), clazz, mapper),
-                getDefualtErrorConsumer());
+                getDefaultErrorConsumer());
     }
 
     public static <T> T send(HttpRequest request, TypeReference<T> typeReference) {
         return handleResponse(sendStringRequest(request), httpResponse -> fromJson(httpResponse.body(), typeReference),
-                getDefualtErrorConsumer());
+                getDefaultErrorConsumer());
     }
 
     public static <T> T send(HttpRequest request, ObjectMapper mapper, TypeReference<T> typeReference) {
         return handleResponse(sendStringRequest(request), httpResponse -> fromJson(httpResponse.body(), mapper, typeReference),
-                getDefualtErrorConsumer());
+                getDefaultErrorConsumer());
     }
 
     public static byte[] sendOgHentByteArray(HttpRequest request) {
@@ -145,7 +144,7 @@ public final class JavaHttpKlient {
                 toJson(response.body())));
     }
 
-    private static Consumer<HttpResponse<String>> getDefualtErrorConsumer() {
+    private static Consumer<HttpResponse<String>> getDefaultErrorConsumer() {
         return httpResponse -> {
             throw new IntegrasjonException("FP-468820", String.format("[HTTP %s] Uventet respons fra %s, med melding: %s", httpResponse.statusCode(),
                     httpResponse.uri(), toJson(httpResponse.body())));
