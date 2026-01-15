@@ -55,6 +55,12 @@ class MilitærTest extends Beregner {
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
+        fortsettBeregningRequest = getFortsettBeregningRequest(fortsettBeregningRequest, BeregningSteg.VURDER_VILKAR_BERGRUNN);
+        tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
+        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
+        assertThat(tilstandResponse.getVilkårResultat()).isNotNull();
+        assertThat(tilstandResponse.getVilkårResultat().getErVilkarOppfylt()).isTrue();
+
         fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.VURDER_REF_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
@@ -103,6 +109,12 @@ class MilitærTest extends Beregner {
         fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.FORS_BERGRUNN_2);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
+
+        fortsettBeregningRequest = getFortsettBeregningRequest(fortsettBeregningRequest, BeregningSteg.VURDER_VILKAR_BERGRUNN);
+        tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
+        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
+        assertThat(tilstandResponse.getVilkårResultat()).isNotNull();
+        assertThat(tilstandResponse.getVilkårResultat().getErVilkarOppfylt()).isTrue();
 
         fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.VURDER_REF_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
@@ -153,6 +165,12 @@ class MilitærTest extends Beregner {
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
+        fortsettBeregningRequest = getFortsettBeregningRequest(fortsettBeregningRequest, BeregningSteg.VURDER_VILKAR_BERGRUNN);
+        tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
+        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
+        assertThat(tilstandResponse.getVilkårResultat()).isNotNull();
+        assertThat(tilstandResponse.getVilkårResultat().getErVilkarOppfylt()).isTrue();
+
         fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.VURDER_REF_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
@@ -202,6 +220,12 @@ class MilitærTest extends Beregner {
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
+        fortsettBeregningRequest = getFortsettBeregningRequest(fortsettBeregningRequest, BeregningSteg.VURDER_VILKAR_BERGRUNN);
+        tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
+        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
+        assertThat(tilstandResponse.getVilkårResultat()).isNotNull();
+        assertThat(tilstandResponse.getVilkårResultat().getErVilkarOppfylt()).isTrue();
+
         fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.VURDER_REF_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
@@ -224,5 +248,4 @@ class MilitærTest extends Beregner {
     private VurderMilitærDto lagMilitærVurdering(boolean erMilitær) {
         return new VurderMilitærDto(erMilitær);
     }
-
 }
