@@ -211,7 +211,6 @@ public class ApiMottak extends DokumentInnsendingHjelper {
         journalpostModell.setArkivtema(Arkivtema.FOR);
         journalpostModell.setAvsenderFnr(fnr.value());
         journalpostModell.setEksternReferanseId(eksternReferanseId);
-        journalpostModell.setSakId("");
         journalpostModell.setBruker(new JournalpostBruker(fnr.value(), BrukerType.FNR));
         journalpostModell.setJournalposttype(Journalposttyper.INNGAAENDE_DOKUMENT);
         journalpostModell.getDokumentModellList().add(lagDokumentModell(innhold, dokumenttypeId));
