@@ -2,9 +2,9 @@
     "beregningsgrunnlag": {
         "skjæringstidspunkt": "2021-02-01",
         "aktivitetStatuserMedHjemmel": [{
-            "aktivitetStatus": "AT",
-            "hjemmel": "F_14_7_8_30"
-        }
+                "aktivitetStatus": "AT",
+                "hjemmel": "F_14_7_8_30"
+            }
         ],
         "beregningsgrunnlagPerioder": [
             {
@@ -34,12 +34,13 @@
                         "redusertPrÅr": 0.0,
                         "beregnetPrÅr": 501276.0,
                         "fordeltPrÅr": 0.0,
+                        "manueltFordeltPrÅr": 0.0,
                         "maksimalRefusjonPrÅr": 0.0,
                         "avkortetRefusjonPrÅr": 0.0,
                         "avkortetBrukersAndelPrÅr": 0.0,
-                        "årsbeløpFraTilstøtendeYtelse": null,
-                        "fastsattAvSaksbehandler": false,
-                        "lagtTilAvSaksbehandler": false
+                        "fastsattAvSaksbehandler": true,
+                        "lagtTilAvSaksbehandler": false,
+                        "kilde": "PROSESS_START"
                     },
                     {
                         "andelsnr": 2,
@@ -62,12 +63,13 @@
                         "avkortetPrÅr": 501276.0,
                         "redusertPrÅr": 501276.0,
                         "fordeltPrÅr": 501276.0,
+                        "manueltFordeltPrÅr": 501276.0,
                         "maksimalRefusjonPrÅr": 501276.0,
                         "avkortetRefusjonPrÅr": 501276.0,
                         "avkortetBrukersAndelPrÅr": 0.0,
-                        "årsbeløpFraTilstøtendeYtelse": null,
-                        "fastsattAvSaksbehandler": false,
-                        "lagtTilAvSaksbehandler": false
+                        "fastsattAvSaksbehandler": true,
+                        "lagtTilAvSaksbehandler": false,
+                        "kilde": "PROSESS_PERIODISERING"
                     }
                 ],
                 "periode": {
@@ -78,7 +80,8 @@
                 "avkortetPrÅr": 501276.0,
                 "redusertPrÅr": 501276.0,
                 "dagsats": 1928,
-                "periodeÅrsaker": []
+                "periodeÅrsaker": [],
+                "totalUtbetalingsgradFraUttak": 1.0000
             },
             {
                 "beregningsgrunnlagPrStatusOgAndelList": [
@@ -110,9 +113,9 @@
                         "maksimalRefusjonPrÅr": 0.0,
                         "avkortetRefusjonPrÅr": 0.0,
                         "avkortetBrukersAndelPrÅr": 0.0,
-                        "årsbeløpFraTilstøtendeYtelse": null,
                         "fastsattAvSaksbehandler": true,
-                        "lagtTilAvSaksbehandler": false
+                        "lagtTilAvSaksbehandler": false,
+                        "kilde": "PROSESS_START"
                     },
                     {
                         "andelsnr": 2,
@@ -137,9 +140,9 @@
                         "maksimalRefusjonPrÅr": 0.0,
                         "avkortetRefusjonPrÅr": 0.0,
                         "avkortetBrukersAndelPrÅr": 501276.0,
-                        "årsbeløpFraTilstøtendeYtelse": null,
                         "fastsattAvSaksbehandler": true,
-                        "lagtTilAvSaksbehandler": false
+                        "lagtTilAvSaksbehandler": false,
+                        "kilde": "PROSESS_PERIODISERING"
                     }
                 ],
                 "periode": {
@@ -152,7 +155,8 @@
                 "dagsats": 1928,
                 "periodeÅrsaker": [
                     "REFUSJON_OPPHØRER"
-                ]
+                ],
+                "totalUtbetalingsgradFraUttak": 1.0000
             },
             {
                 "beregningsgrunnlagPrStatusOgAndelList": [
@@ -183,9 +187,9 @@
                         "maksimalRefusjonPrÅr": 0.0,
                         "avkortetRefusjonPrÅr": 0.0,
                         "avkortetBrukersAndelPrÅr": 0.0,
-                        "årsbeløpFraTilstøtendeYtelse": null,
                         "fastsattAvSaksbehandler": false,
-                        "lagtTilAvSaksbehandler": false
+                        "lagtTilAvSaksbehandler": false,
+                        "kilde": "PROSESS_START"
                     }
                 ],
                 "periode": {
@@ -199,7 +203,8 @@
                 "periodeÅrsaker": [
                     "REFUSJON_OPPHØRER",
                     "ENDRING_I_AKTIVITETER_SØKT_FOR"
-                ]
+                ],
+                "totalUtbetalingsgradFraUttak": 0.0000
             }
         ],
         "sammenligningsgrunnlagPrStatusListe": [
