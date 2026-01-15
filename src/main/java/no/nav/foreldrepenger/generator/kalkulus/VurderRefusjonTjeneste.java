@@ -6,10 +6,10 @@ import static no.nav.foreldrepenger.generator.kalkulus.LagRequestTjeneste.lagHå
 import java.time.LocalDate;
 import java.util.Collections;
 
-import no.nav.folketrygdloven.kalkulus.request.v1.enkel.EnkelBeregnRequestDto;
-import no.nav.folketrygdloven.kalkulus.request.v1.enkel.EnkelHåndterBeregningRequestDto ;
 import no.nav.folketrygdloven.kalkulus.håndtering.v1.refusjon.VurderRefusjonAndelBeregningsgrunnlagDto;
 import no.nav.folketrygdloven.kalkulus.håndtering.v1.refusjon.VurderRefusjonBeregningsgrunnlagDto;
+import no.nav.folketrygdloven.kalkulus.request.v1.enkel.EnkelBeregnRequestDto;
+import no.nav.folketrygdloven.kalkulus.request.v1.enkel.EnkelHåndterBeregningRequestDto;
 
 // TODO: sjekk responser
 public class VurderRefusjonTjeneste {
@@ -23,7 +23,7 @@ public class VurderRefusjonTjeneste {
     }
 
     public static EnkelHåndterBeregningRequestDto  lagVurderRefusjonRequest(EnkelBeregnRequestDto request, VurderRefusjonAndelBeregningsgrunnlagDto andelDto) {
-        VurderRefusjonBeregningsgrunnlagDto dto = new VurderRefusjonBeregningsgrunnlagDto(Collections.singletonList(andelDto));
+        VurderRefusjonBeregningsgrunnlagDto dto = new VurderRefusjonBeregningsgrunnlagDto(Collections.singletonList(andelDto), null);
         return lagHåndterRequest(request, dto);
     }
 
