@@ -331,15 +331,11 @@ class ArbeidstakerTest extends Beregner {
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningRequest(fortsettBeregningRequest, BeregningSteg.VURDER_VILKAR_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request2, BeregningSteg.VURDER_VILKAR_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
         assertThat(tilstandResponse.getVilkårResultat()).isNotNull();
         assertThat(tilstandResponse.getVilkårResultat().getErVilkarOppfylt()).isTrue();
-
-        fortsettBeregningRequest = getFortsettBeregningRequest(request2, BeregningSteg.VURDER_VILKAR_BERGRUNN);
-        tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
         fortsettBeregningRequest = getFortsettBeregningRequest(request2, BeregningSteg.VURDER_REF_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
@@ -396,15 +392,11 @@ class ArbeidstakerTest extends Beregner {
         tilstandResponse = overstyrer.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningRequest(fortsettBeregningRequest, BeregningSteg.VURDER_VILKAR_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.VURDER_VILKAR_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
         assertThat(tilstandResponse.getVilkårResultat()).isNotNull();
         assertThat(tilstandResponse.getVilkårResultat().getErVilkarOppfylt()).isTrue();
-
-        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.VURDER_VILKAR_BERGRUNN);
-        tilstandResponse = overstyrer.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
         fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.VURDER_REF_BERGRUNN);
         tilstandResponse = overstyrer.kjørBeregning(fortsettBeregningRequest);
@@ -456,15 +448,11 @@ class ArbeidstakerTest extends Beregner {
         var håndterBeregningDto = fastsettInntektVarigEndring(321_540, true);
         saksbehandler.håndterBeregning(lagHåndterRequest(request, håndterBeregningDto));
 
-        fortsettBeregningRequest = getFortsettBeregningRequest(fortsettBeregningRequest, BeregningSteg.VURDER_VILKAR_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.VURDER_VILKAR_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
         assertThat(tilstandResponse.getVilkårResultat()).isNotNull();
         assertThat(tilstandResponse.getVilkårResultat().getErVilkarOppfylt()).isTrue();
-
-        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.VURDER_VILKAR_BERGRUNN);
-        tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
         fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.VURDER_REF_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
