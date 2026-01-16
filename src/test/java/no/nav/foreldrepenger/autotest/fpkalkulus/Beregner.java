@@ -40,9 +40,11 @@ public class Beregner extends KalkulusTestBase {
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.VURDER_VILKAR_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(fortsettBeregningRequest, BeregningSteg.VURDER_VILKAR_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
+        assertThat(tilstandResponse.getVilkårResultat()).isNotNull();
+        assertThat(tilstandResponse.getVilkårResultat().getErVilkarOppfylt()).isTrue();
 
         fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.VURDER_REF_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
@@ -96,6 +98,8 @@ public class Beregner extends KalkulusTestBase {
         fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.VURDER_VILKAR_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
+        assertThat(tilstandResponse.getVilkårResultat()).isNotNull();
+        assertThat(tilstandResponse.getVilkårResultat().getErVilkarOppfylt()).isTrue();
 
         fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.VURDER_REF_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
@@ -181,9 +185,11 @@ public class Beregner extends KalkulusTestBase {
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.VURDER_VILKAR_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(fortsettBeregningRequest, BeregningSteg.VURDER_VILKAR_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
+        assertThat(tilstandResponse.getVilkårResultat()).isNotNull();
+        assertThat(tilstandResponse.getVilkårResultat().getErVilkarOppfylt()).isTrue();
     }
 
     private TilstandResponse behandleFraVurderRefusjonTilFordel(EnkelBeregnRequestDto request) {

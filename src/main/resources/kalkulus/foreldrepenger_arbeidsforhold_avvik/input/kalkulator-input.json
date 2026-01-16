@@ -1,0 +1,1036 @@
+{
+    "iayGrunnlag": {
+        "arbeidDto": {
+            "yrkesaktiviteter": [
+                {
+                    "arbeidsgiver": {
+                        "identType": "ORGNUMMER",
+                        "ident": "992260475"
+                    },
+                    "abakusReferanse": {
+                        "abakusReferanse": "a715fee7-c899-44bb-9200-2d283a5e616b"
+                    },
+                    "arbeidType": "FRILANSER_OPPDRAGSTAKER",
+                    "aktivitetsAvtaler": [
+                        {
+                            "periode": {
+                                "fom": "2023-01-15",
+                                "tom": "2025-12-15"
+                            },
+                            "sisteLønnsendringsdato": "2025-07-15",
+                            "stillingsprosent": 25.00
+                        },
+                        {
+                            "periode": {
+                                "fom": "2023-01-15",
+                                "tom": "2025-12-15"
+                            }
+                        }
+                    ],
+                    "permisjoner": []
+                },
+                {
+                    "arbeidsgiver": {
+                        "identType": "ORGNUMMER",
+                        "ident": "992257822"
+                    },
+                    "abakusReferanse": {
+                        "abakusReferanse": "1136e8e5-45af-460c-b500-0bd6a248ad15"
+                    },
+                    "arbeidType": "ORDINÆRT_ARBEIDSFORHOLD",
+                    "aktivitetsAvtaler": [
+                        {
+                            "periode": {
+                                "fom": "2025-01-15",
+                                "tom": "9999-12-31"
+                            }
+                        },
+                        {
+                            "periode": {
+                                "fom": "2025-01-15",
+                                "tom": "9999-12-31"
+                            },
+                            "sisteLønnsendringsdato": "2025-07-15",
+                            "stillingsprosent": 75.00
+                        }
+                    ],
+                    "permisjoner": []
+                }
+            ]
+        },
+        "inntekterDto": {
+            "utbetalinger": [
+                {
+                    "arbeidsgiver": {
+                        "identType": "ORGNUMMER",
+                        "ident": "992257822"
+                    },
+                    "inntektsKilde": "INNTEKT_BEREGNING",
+                    "utbetalingsPoster": [
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-01-01",
+                                "tom": "2025-01-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 40000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-02-01",
+                                "tom": "2025-02-28"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 40000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-03-01",
+                                "tom": "2025-03-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 40000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-04-01",
+                                "tom": "2025-04-30"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 40000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-05-01",
+                                "tom": "2025-05-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 40000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-06-01",
+                                "tom": "2025-06-30"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 40000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-07-01",
+                                "tom": "2025-07-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 40000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-08-01",
+                                "tom": "2025-08-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 40000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-09-01",
+                                "tom": "2025-09-30"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 40000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-10-01",
+                                "tom": "2025-10-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 40000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-11-01",
+                                "tom": "2025-11-30"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 40000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-12-01",
+                                "tom": "2025-12-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 40000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2026-01-01",
+                                "tom": "2026-01-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 40000.00
+                        }
+                    ]
+                },
+                {
+                    "arbeidsgiver": {
+                        "identType": "ORGNUMMER",
+                        "ident": "992260475"
+                    },
+                    "inntektsKilde": "INNTEKT_BEREGNING",
+                    "utbetalingsPoster": [
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2024-08-01",
+                                "tom": "2024-08-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2024-09-01",
+                                "tom": "2024-09-30"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2024-10-01",
+                                "tom": "2024-10-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2024-11-01",
+                                "tom": "2024-11-30"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2024-12-01",
+                                "tom": "2024-12-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-01-01",
+                                "tom": "2025-01-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-02-01",
+                                "tom": "2025-02-28"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-03-01",
+                                "tom": "2025-03-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-04-01",
+                                "tom": "2025-04-30"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-05-01",
+                                "tom": "2025-05-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-06-01",
+                                "tom": "2025-06-30"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-07-01",
+                                "tom": "2025-07-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-08-01",
+                                "tom": "2025-08-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-09-01",
+                                "tom": "2025-09-30"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-10-01",
+                                "tom": "2025-10-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-11-01",
+                                "tom": "2025-11-30"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-12-01",
+                                "tom": "2025-12-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        }
+                    ]
+                },
+                {
+                    "arbeidsgiver": {
+                        "identType": "ORGNUMMER",
+                        "ident": "992257822"
+                    },
+                    "inntektsKilde": "INNTEKT_OPPTJENING",
+                    "utbetalingsPoster": [
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-01-01",
+                                "tom": "2025-01-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 40000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-02-01",
+                                "tom": "2025-02-28"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 40000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-03-01",
+                                "tom": "2025-03-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 40000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-04-01",
+                                "tom": "2025-04-30"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 40000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-05-01",
+                                "tom": "2025-05-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 40000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-06-01",
+                                "tom": "2025-06-30"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 40000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-07-01",
+                                "tom": "2025-07-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 40000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-08-01",
+                                "tom": "2025-08-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 40000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-09-01",
+                                "tom": "2025-09-30"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 40000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-10-01",
+                                "tom": "2025-10-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 40000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-11-01",
+                                "tom": "2025-11-30"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 40000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-12-01",
+                                "tom": "2025-12-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 40000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2026-01-01",
+                                "tom": "2026-01-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 40000.00
+                        }
+                    ]
+                },
+                {
+                    "arbeidsgiver": {
+                        "identType": "ORGNUMMER",
+                        "ident": "992260475"
+                    },
+                    "inntektsKilde": "INNTEKT_OPPTJENING",
+                    "utbetalingsPoster": [
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2024-08-01",
+                                "tom": "2024-08-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2024-09-01",
+                                "tom": "2024-09-30"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2024-10-01",
+                                "tom": "2024-10-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2024-11-01",
+                                "tom": "2024-11-30"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2024-12-01",
+                                "tom": "2024-12-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-01-01",
+                                "tom": "2025-01-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-02-01",
+                                "tom": "2025-02-28"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-03-01",
+                                "tom": "2025-03-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-04-01",
+                                "tom": "2025-04-30"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-05-01",
+                                "tom": "2025-05-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-06-01",
+                                "tom": "2025-06-30"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-07-01",
+                                "tom": "2025-07-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-08-01",
+                                "tom": "2025-08-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-09-01",
+                                "tom": "2025-09-30"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-10-01",
+                                "tom": "2025-10-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-11-01",
+                                "tom": "2025-11-30"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-12-01",
+                                "tom": "2025-12-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        }
+                    ]
+                },
+                {
+                    "arbeidsgiver": {
+                        "identType": "ORGNUMMER",
+                        "ident": "992257822"
+                    },
+                    "inntektsKilde": "INNTEKT_SAMMENLIGNING",
+                    "utbetalingsPoster": [
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-01-01",
+                                "tom": "2025-01-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 40000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-02-01",
+                                "tom": "2025-02-28"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 40000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-03-01",
+                                "tom": "2025-03-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 40000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-04-01",
+                                "tom": "2025-04-30"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 40000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-05-01",
+                                "tom": "2025-05-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 40000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-06-01",
+                                "tom": "2025-06-30"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 40000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-07-01",
+                                "tom": "2025-07-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 40000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-08-01",
+                                "tom": "2025-08-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 40000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-09-01",
+                                "tom": "2025-09-30"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 40000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-10-01",
+                                "tom": "2025-10-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 40000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-11-01",
+                                "tom": "2025-11-30"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 40000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-12-01",
+                                "tom": "2025-12-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 40000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2026-01-01",
+                                "tom": "2026-01-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 40000.00
+                        }
+                    ]
+                },
+                {
+                    "arbeidsgiver": {
+                        "identType": "ORGNUMMER",
+                        "ident": "992260475"
+                    },
+                    "inntektsKilde": "INNTEKT_SAMMENLIGNING",
+                    "utbetalingsPoster": [
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2024-08-01",
+                                "tom": "2024-08-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2024-09-01",
+                                "tom": "2024-09-30"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2024-10-01",
+                                "tom": "2024-10-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2024-11-01",
+                                "tom": "2024-11-30"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2024-12-01",
+                                "tom": "2024-12-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-01-01",
+                                "tom": "2025-01-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-02-01",
+                                "tom": "2025-02-28"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-03-01",
+                                "tom": "2025-03-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-04-01",
+                                "tom": "2025-04-30"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-05-01",
+                                "tom": "2025-05-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-06-01",
+                                "tom": "2025-06-30"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-07-01",
+                                "tom": "2025-07-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-08-01",
+                                "tom": "2025-08-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-09-01",
+                                "tom": "2025-09-30"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-10-01",
+                                "tom": "2025-10-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-11-01",
+                                "tom": "2025-11-30"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2025-12-01",
+                                "tom": "2025-12-31"
+                            },
+                            "skattAvgiftType": "-",
+                            "beløp": 10000.00
+                        }
+                    ]
+                }
+            ]
+        },
+        "ytelserDto": null,
+        "oppgittOpptjening": {
+            "frilans": {
+                "erNyoppstartet": false
+            }
+        },
+        "inntektsmeldinger": {
+            "inntektsmeldinger": [
+                {
+                    "arbeidsgiver": {
+                        "identType": "ORGNUMMER",
+                        "ident": "992257822"
+                    },
+                    "inntektBeløp": 20000.00,
+                    "naturalYtelser": [
+                    ],
+                    "endringerRefusjon": [],
+                    "arbeidsforholdRef": null,
+                    "startDatoPermisjon": "2025-12-25",
+                    "refusjonOpphører": "9999-12-31",
+                    "refusjonBeløpPerMnd": 41666.00,
+                    "journalpostId": null,
+                    "innsendingsdato": "2026-01-15"
+                }
+            ]
+        },
+        "arbeidsforholdInformasjon": {
+            "overstyringer": [],
+            "referanser": [
+                {
+                    "arbeidsgiver": {
+                        "identType": "ORGNUMMER",
+                        "ident": "992260475"
+                    },
+                    "internReferanse": {
+                        "abakusReferanse": "a715fee7-c899-44bb-9200-2d283a5e616b"
+                    },
+                    "eksternReferanse": {
+                        "referanse": "arb"
+                    }
+                },
+                {
+                    "arbeidsgiver": {
+                        "identType": "ORGNUMMER",
+                        "ident": "992257822"
+                    },
+                    "internReferanse": {
+                        "abakusReferanse": "1136e8e5-45af-460c-b500-0bd6a248ad15"
+                    },
+                    "eksternReferanse": {
+                        "referanse": "ARB001-001"
+                    }
+                }
+            ]
+        },
+        "alleInntektsmeldingerPåSak": [
+            {
+                "arbeidsgiver": {
+                    "identType": "ORGNUMMER",
+                    "ident": "992257822"
+                },
+                "inntektBeløp": 20000.00,
+                "naturalYtelser": [
+                ],
+                "endringerRefusjon": [],
+                "arbeidsforholdRef": null,
+                "startDatoPermisjon": "2025-12-25",
+                "refusjonOpphører": "9999-12-31",
+                "refusjonBeløpPerMnd": 41666.00,
+                "journalpostId": null,
+                "innsendingsdato": "2026-01-15"
+            }
+        ]
+    },
+    "opptjeningAktiviteter": {
+        "perioder": [
+            {
+                "opptjeningAktivitetType": "FRILANS",
+                "periode": {
+                    "fom": "2024-01-15",
+                    "tom": "9999-12-31"
+                }
+            },
+            {
+                "opptjeningAktivitetType": "ARBEID",
+                "periode": {
+                    "fom": "2025-01-15",
+                    "tom": "9999-12-31"
+                },
+                "arbeidsgiver": {
+                    "identType": "ORGNUMMER",
+                    "ident": "992257822"
+                },
+                "abakusReferanse": {
+                    "abakusReferanse": "1136e8e5-45af-460c-b500-0bd6a248ad15"
+                }
+            }
+        ]
+    },
+    "ytelsespesifiktGrunnlag": {
+        "ytelseType": "FP",
+        "ytelsegrunnlagForBesteberegning": [],
+        "dekningsgrad": 100,
+        "kvalifisererTilBesteberegning": false,
+        "førsteUttaksdato": "2025-12-25"
+    },
+    "skjæringstidspunkt": "2025-12-25"
+}

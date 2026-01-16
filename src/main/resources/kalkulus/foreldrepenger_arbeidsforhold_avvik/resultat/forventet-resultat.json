@@ -1,0 +1,121 @@
+{
+    "beregningsgrunnlag": {
+        "skjæringstidspunkt": "2025-12-25",
+        "aktivitetStatuserMedHjemmel": [
+            {
+                "aktivitetStatus": "AT_FL",
+                "hjemmel": "F_14_7_8_40"
+            }
+        ],
+        "beregningsgrunnlagPerioder": [
+            {
+                "beregningsgrunnlagPrStatusOgAndelList": [
+                    {
+                        "andelsnr": 1,
+                        "aktivitetStatus": "FL",
+                        "beregningsperiode": {
+                            "fom": "2025-09-01",
+                            "tom": "2025-11-30"
+                        },
+                        "arbeidsforholdType": "FRILANS",
+                        "bruttoPrÅr": 500000.00,
+                        "redusertRefusjonPrÅr": 0.00,
+                        "redusertBrukersAndelPrÅr": 280960.00,
+                        "dagsatsBruker": 1081,
+                        "dagsatsArbeidsgiver": 0,
+                        "inntektskategori": "FRILANSER",
+                        "overstyrtPrÅr": 500000.00,
+                        "avkortetPrÅr": 280960.00,
+                        "redusertPrÅr": 280960.00,
+                        "beregnetPrÅr": 120000.00,
+                        "maksimalRefusjonPrÅr": 0.00,
+                        "avkortetRefusjonPrÅr": 0.00,
+                        "avkortetBrukersAndelPrÅr": 280960.00,
+                        "fastsattAvSaksbehandler": false,
+                        "lagtTilAvSaksbehandler": false,
+                        "kilde": "PROSESS_START"
+                    },
+                    {
+                        "andelsnr": 2,
+                        "aktivitetStatus": "AT",
+                        "beregningsperiode": {
+                            "fom": "2025-09-01",
+                            "tom": "2025-11-30"
+                        },
+                        "arbeidsforholdType": "ARBEID",
+                        "bruttoPrÅr": 500000.00,
+                        "redusertRefusjonPrÅr": 499992.00,
+                        "redusertBrukersAndelPrÅr": 8.00,
+                        "dagsatsBruker": 0,
+                        "dagsatsArbeidsgiver": 1923,
+                        "inntektskategori": "ARBEIDSTAKER",
+                        "bgAndelArbeidsforhold": {
+                            "arbeidsgiver": {
+                                "arbeidsgiverOrgnr": "992257822"
+                            },
+                            "refusjonskravPrÅr": 499992.00,
+                            "arbeidsperiodeFom": "2025-01-15",
+                            "arbeidsperiodeTom": "9999-12-31"
+                        },
+                        "overstyrtPrÅr": 500000.00,
+                        "avkortetPrÅr": 500000.00,
+                        "redusertPrÅr": 500000.00,
+                        "beregnetPrÅr": 240000.00,
+                        "maksimalRefusjonPrÅr": 499992.00,
+                        "avkortetRefusjonPrÅr": 499992.00,
+                        "avkortetBrukersAndelPrÅr": 8.00,
+                        "fastsattAvSaksbehandler": false,
+                        "lagtTilAvSaksbehandler": false,
+                        "kilde": "PROSESS_START"
+                    }
+                ],
+                "periode": {
+                    "fom": "2025-12-25",
+                    "tom": "9999-12-31"
+                },
+                "bruttoPrÅr": 1000000.00,
+                "avkortetPrÅr": 780960.00,
+                "redusertPrÅr": 780960.00,
+                "dagsats": 3004,
+                "periodeÅrsaker": []
+            }
+        ],
+        "sammenligningsgrunnlagPrStatusListe": [
+            {
+                "sammenligningsperiode": {
+                    "fom": "2024-12-01",
+                    "tom": "2025-11-30"
+                },
+                "sammenligningsgrunnlagType": "SAMMENLIGNING_AT_FL",
+                "rapportertPrÅr": 560000.00,
+                "avvikPromilleNy": 357.1428571000
+            }
+        ],
+        "faktaOmBeregningTilfeller": [],
+        "overstyrt": false,
+        "grunnbeløp": 130160.00
+    },
+    "registerAktiviteter": {
+        "aktiviteter": [
+            {
+                "periode": {
+                    "fom": "2024-01-15",
+                    "tom": "9999-12-31"
+                },
+                "opptjeningAktivitetType": "FRILANS"
+            },
+            {
+                "periode": {
+                    "fom": "2025-01-15",
+                    "tom": "9999-12-31"
+                },
+                "arbeidsgiver": {
+                    "arbeidsgiverOrgnr": "992257822"
+                },
+                "opptjeningAktivitetType": "ARBEID"
+            }
+        ],
+        "skjæringstidspunktOpptjening": "2025-12-25"
+    },
+    "beregningsgrunnlagTilstand": "FASTSATT"
+}
