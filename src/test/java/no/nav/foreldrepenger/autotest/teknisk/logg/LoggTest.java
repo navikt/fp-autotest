@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -72,6 +74,8 @@ class LoggTest {
     private static final List<String> ignoreContainersFeil = List.of("vtp", "audit.nais", "postgres", "oracle", "authserver", "fptilgang", "fager-api", "fpcache");
     private static final List<String> ignoreContainersSensitiveInfo = List.of("vtp", "audit.nais", "postgres", "oracle", "authserver", "fager-api", "fpcache");
     private static String IKKE_SJEKK_LENGDE_AV_CONTAINERE;
+    private static String HELGEUNNTAK_CONTAINERE;
+    private static final int MIN_LOGG_LINJER = 65;
 
     private static String toNumericPattern(String s) {
         return "^(.*[^0-9])?" + Pattern.quote(s) + "([^0-9].*)?$";
@@ -86,6 +90,9 @@ class LoggTest {
         IKKE_SJEKK_LENGDE_AV_CONTAINERE = Optional.ofNullable(System.getProperty("ikkeSjekkLengdeAvContainer"))
                 .or(() -> Optional.ofNullable(System.getenv("ikkeSjekkLengdeAvContainer")))
                 .orElse("sjekker alle");
+        HELGEUNNTAK_CONTAINERE = Optional.ofNullable(System.getProperty("kortHelgeLogg"))
+                .or(() -> Optional.ofNullable(System.getenv("kortHelgeLogg")))
+                .orElse("");
         LOG.info("Sjekker ikke lengden av følgende containere: {}", IKKE_SJEKK_LENGDE_AV_CONTAINERE);
     }
 
@@ -124,7 +131,7 @@ class LoggTest {
     @MethodSource("hentContainerNavn")
     void sjekkFeilILogger(String containerNavn) {
         if (!ignoreContainersFeil.contains(containerNavn)) {
-
+            var minLogglinjer = minLogglinjer(containerNavn);
             var log = DockerUtils.hentLoggForContainer(containerNavn);
             try (var scanner = new Scanner(log)) {
                 int linePos = 0;
@@ -137,11 +144,21 @@ class LoggTest {
                     }
                 }
 
-                if (!IKKE_SJEKK_LENGDE_AV_CONTAINERE.contains(containerNavn) && linePos < 65) {
-                    fail(String.format("Det forventes minst 65 linjer i loggen for applikasjon: %s, men var %s.",
-                            containerNavn, linePos));
+                if (!IKKE_SJEKK_LENGDE_AV_CONTAINERE.contains(containerNavn) && linePos < minLogglinjer) {
+                    fail(String.format("Det forventes minst %s linjer i loggen for applikasjon: %s, men var %s.",
+                            minLogglinjer, containerNavn, linePos));
                 }
             }
+        }
+    }
+
+    private static final Set<DayOfWeek> HELGEDAGER = Set.of(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY);
+
+    private int minLogglinjer(String containerNavn) {
+        if (HELGEUNNTAK_CONTAINERE.contains(containerNavn) && HELGEDAGER.contains(LocalDate.now().getDayOfWeek())) {
+            return MIN_LOGG_LINJER - 5;
+        } else {
+            return MIN_LOGG_LINJER;
         }
     }
 
