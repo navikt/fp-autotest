@@ -101,7 +101,7 @@ jobs:
         shell: bash
         run: |
           if [[ ${{ inputs.test-suite }} == 'fptilbake' ]]; then
-            mvn test -e --batch-mode -s settings.xml -Djuipter.parallelism=${{ inputs.parallellitet }} -P loggfeil -DikkeSjekkLengdeAvContainer=fpdokgen
+            mvn test -e --batch-mode -s settings.xml -Djuipter.parallelism=${{ inputs.parallellitet }} -P loggfeil -DikkeSjekkLengdeAvContainer=fpdokgen -DkortHelgeLogg=fpoppdrag
           elif [[ ${{ inputs.test-suite }} == 'verdikjede' ]]; then
             mvn test -e --batch-mode -s settings.xml -Djuipter.parallelism=${{ inputs.parallellitet }} -P logger -DikkeSjekkLengdeAvContainer=fpdokgen
           elif [[ ${{ inputs.test-suite }} == 'fplos' ]]; then
