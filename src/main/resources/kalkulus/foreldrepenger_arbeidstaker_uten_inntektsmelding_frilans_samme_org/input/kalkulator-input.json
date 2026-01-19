@@ -43,19 +43,6 @@
                             }
                         }
                     ]
-                },
-                {
-                    "arbeidsgiver": null,
-                    "abakusReferanse": null,
-                    "arbeidType": "FRILANSER",
-                    "aktivitetsAvtaler": [
-                        {
-                            "periode": {
-                                "fom": "2019-07-01",
-                                "tom": "2020-03-31"
-                            }
-                        }
-                    ]
                 }
             ]
         },
