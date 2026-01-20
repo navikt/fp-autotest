@@ -9,15 +9,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
+import no.nav.foreldrepenger.kalkulus.kontrakt.request.håndtering.fakta.VurderMilitærDto;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 
 import io.qameta.allure.Description;
-import no.nav.folketrygdloven.kalkulus.håndtering.v1.fakta.VurderMilitærDto;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningSteg;
-import no.nav.folketrygdloven.kalkulus.response.v1.TilstandResponse;
+import no.nav.foreldrepenger.kalkulus.kontrakt.response.TilstandResponse;
 import no.nav.foreldrepenger.autotest.fpkalkulus.Beregner;
 import no.nav.foreldrepenger.generator.kalkulus.FaktaBeregningLagreDtoBuilder;
 

@@ -1,12 +1,12 @@
 package no.nav.foreldrepenger.generator.kalkulus;
 
+import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.BeregningsgrunnlagDto;
+import no.nav.foreldrepenger.kalkulus.kontrakt.request.håndtering.avklaraktiviteter.BeregningsaktivitetLagreDto;
+import no.nav.foreldrepenger.kalkulus.kontrakt.request.håndtering.overstyring.OverstyrBeregningsaktiviteterDto;
+
 import java.time.LocalDate;
 import java.util.Map;
 import java.util.UUID;
-
-import no.nav.folketrygdloven.kalkulus.håndtering.v1.avklaraktiviteter.BeregningsaktivitetLagreDto;
-import no.nav.folketrygdloven.kalkulus.håndtering.v1.overstyring.OverstyrBeregningsaktiviteterDto;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.BeregningsgrunnlagDto;
 
 public class AvklarAktiviteterTjeneste {
 
