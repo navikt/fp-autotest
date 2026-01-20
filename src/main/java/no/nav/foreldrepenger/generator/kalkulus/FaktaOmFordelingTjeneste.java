@@ -5,20 +5,18 @@ import static no.nav.foreldrepenger.generator.kalkulus.LagRequestTjeneste.lagHå
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-import no.nav.folketrygdloven.kalkulus.request.v1.enkel.EnkelBeregnRequestDto;
-import no.nav.folketrygdloven.kalkulus.request.v1.enkel.EnkelHåndterBeregningRequestDto ;
-import no.nav.folketrygdloven.kalkulus.felles.v1.Beløp;
-import no.nav.folketrygdloven.kalkulus.håndtering.v1.fordeling.FaktaOmFordelingHåndteringDto;
-import no.nav.folketrygdloven.kalkulus.håndtering.v1.fordeling.FordelBeregningsgrunnlagAndelDto;
-import no.nav.folketrygdloven.kalkulus.håndtering.v1.fordeling.FordelBeregningsgrunnlagDto;
-import no.nav.folketrygdloven.kalkulus.håndtering.v1.fordeling.FordelBeregningsgrunnlagPeriodeDto;
-import no.nav.folketrygdloven.kalkulus.håndtering.v1.fordeling.FordelFastsatteVerdierDto;
-import no.nav.folketrygdloven.kalkulus.håndtering.v1.fordeling.FordelRedigerbarAndelDto;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.BeregningsgrunnlagDto;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.BeregningsgrunnlagPrStatusOgAndelDto;
+import no.nav.foreldrepenger.kalkulus.kontrakt.request.EnkelBeregnRequestDto;
+import no.nav.foreldrepenger.kalkulus.kontrakt.request.EnkelHåndterBeregningRequestDto;
+import no.nav.foreldrepenger.kalkulus.kontrakt.request.håndtering.fordeling.FaktaOmFordelingHåndteringDto;
+import no.nav.foreldrepenger.kalkulus.kontrakt.request.håndtering.fordeling.FordelBeregningsgrunnlagAndelDto;
+import no.nav.foreldrepenger.kalkulus.kontrakt.request.håndtering.fordeling.FordelBeregningsgrunnlagDto;
+import no.nav.foreldrepenger.kalkulus.kontrakt.request.håndtering.fordeling.FordelBeregningsgrunnlagPeriodeDto;
+import no.nav.foreldrepenger.kalkulus.kontrakt.request.håndtering.fordeling.FordelFastsatteVerdierDto;
+import no.nav.foreldrepenger.kalkulus.kontrakt.request.håndtering.fordeling.FordelRedigerbarAndelDto;
 
 public class FaktaOmFordelingTjeneste {
 
@@ -71,13 +69,9 @@ public class FaktaOmFordelingTjeneste {
                             lagRedigerbarAndel(a, matchendeBgAndel),
                             new FordelFastsatteVerdierDto(refusjonskravMap.getOrDefault(a.getAndelsnr(), null), andelsnrBeløpMap.get(a.getAndelsnr()), inntektskategoriMap.get(a.getAndelsnr()), andelsnrBeløpMap.get(a.getAndelsnr())),
                             matchendeBgAndel == null || Inntektskategori.UDEFINERT.equals(matchendeBgAndel.getInntektskategori()) ? null : matchendeBgAndel.getInntektskategori(),
-                            matchendeBgAndel.getArbeidsforhold() == null ? null : getIntValueOrNull(matchendeBgAndel.getArbeidsforhold().getRefusjonPrAar()),
-                            getIntValueOrNull(matchendeBgAndel.getBruttoPrAar()));
-                }).collect(Collectors.toList());
-    }
-
-    private static Integer getIntValueOrNull(Beløp value) {
-        return value == null ? null : value.verdi().intValue();
+                            matchendeBgAndel.getArbeidsforhold() == null ? null : matchendeBgAndel.getArbeidsforhold().getRefusjonPrAar() == null ? null : matchendeBgAndel.getArbeidsforhold().getRefusjonPrAar().verdi().intValue(),
+                            matchendeBgAndel.getBruttoPrAar() == null ? null : matchendeBgAndel.getBruttoPrAar().verdi().intValue());
+                }).toList();
     }
 
     private static FordelRedigerbarAndelDto lagRedigerbarAndel(no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.FordelBeregningsgrunnlagAndelDto a, BeregningsgrunnlagPrStatusOgAndelDto bgAndel) {

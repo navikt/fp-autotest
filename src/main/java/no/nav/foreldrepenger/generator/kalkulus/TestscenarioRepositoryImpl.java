@@ -12,18 +12,18 @@ import java.util.UUID;
 
 import org.junit.jupiter.api.TestInfo;
 
-import no.nav.folketrygdloven.kalkulus.beregning.v1.ForeldrepengerGrunnlag;
-import no.nav.folketrygdloven.kalkulus.beregning.v1.SvangerskapspengerGrunnlag;
-import no.nav.folketrygdloven.kalkulus.beregning.v1.YtelsespesifiktGrunnlagDto;
-import no.nav.folketrygdloven.kalkulus.felles.v1.AktørIdPersonident;
-import no.nav.folketrygdloven.kalkulus.felles.v1.KalkulatorInputDto;
-import no.nav.folketrygdloven.kalkulus.felles.v1.Saksnummer;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningSteg;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FagsakYtelseType;
-import no.nav.folketrygdloven.kalkulus.request.v1.enkel.EnkelBeregnRequestDto;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.detaljert.BeregningsgrunnlagGrunnlagDto;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.BeregningsgrunnlagDto;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
+import no.nav.foreldrepenger.kalkulus.kontrakt.request.EnkelBeregnRequestDto;
+import no.nav.foreldrepenger.kalkulus.kontrakt.request.input.KalkulatorInputDto;
+import no.nav.foreldrepenger.kalkulus.kontrakt.request.input.YtelsespesifiktGrunnlagDto;
+import no.nav.foreldrepenger.kalkulus.kontrakt.request.input.foreldrepenger.ForeldrepengerGrunnlag;
+import no.nav.foreldrepenger.kalkulus.kontrakt.request.input.svangerskapspenger.SvangerskapspengerGrunnlag;
+import no.nav.foreldrepenger.kalkulus.kontrakt.response.beregningsgrunnlag.detaljert.BeregningsgrunnlagGrunnlagDto;
+import no.nav.foreldrepenger.kalkulus.kontrakt.typer.AktørIdPersonident;
+import no.nav.foreldrepenger.kalkulus.kontrakt.typer.Saksnummer;
 import no.nav.foreldrepenger.kontrakter.felles.typer.AktørId;
 import no.nav.vedtak.mapper.json.DefaultJsonMapper;
 

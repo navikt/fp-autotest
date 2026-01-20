@@ -18,7 +18,7 @@ import org.junit.jupiter.api.TestInfo;
 import io.qameta.allure.Description;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningSteg;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
-import no.nav.folketrygdloven.kalkulus.response.v1.TilstandResponse;
+import no.nav.foreldrepenger.kalkulus.kontrakt.response.TilstandResponse;
 import no.nav.foreldrepenger.autotest.fpkalkulus.Beregner;
 
 @Tag("fpkalkulus")

@@ -3,23 +3,23 @@ package no.nav.foreldrepenger.generator.kalkulus;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import no.nav.folketrygdloven.kalkulus.håndtering.v1.fakta.BesteberegningFødendeKvinneDto;
-import no.nav.folketrygdloven.kalkulus.håndtering.v1.fakta.FaktaBeregningLagreDto;
-import no.nav.folketrygdloven.kalkulus.håndtering.v1.fakta.FaktaOmBeregningTilfelleDto;
-import no.nav.folketrygdloven.kalkulus.håndtering.v1.fakta.FastsettBgKunYtelseDto;
-import no.nav.folketrygdloven.kalkulus.håndtering.v1.fakta.FastsettEtterlønnSluttpakkeDto;
-import no.nav.folketrygdloven.kalkulus.håndtering.v1.fakta.FastsettMånedsinntektFLDto;
-import no.nav.folketrygdloven.kalkulus.håndtering.v1.fakta.FastsettMånedsinntektUtenInntektsmeldingDto;
-import no.nav.folketrygdloven.kalkulus.håndtering.v1.fakta.MottarYtelseDto;
-import no.nav.folketrygdloven.kalkulus.håndtering.v1.fakta.RefusjonskravPrArbeidsgiverVurderingDto;
-import no.nav.folketrygdloven.kalkulus.håndtering.v1.fakta.VurderATogFLiSammeOrganisasjonDto;
-import no.nav.folketrygdloven.kalkulus.håndtering.v1.fakta.VurderEtterlønnSluttpakkeDto;
-import no.nav.folketrygdloven.kalkulus.håndtering.v1.fakta.VurderLønnsendringDto;
-import no.nav.folketrygdloven.kalkulus.håndtering.v1.fakta.VurderMilitærDto;
-import no.nav.folketrygdloven.kalkulus.håndtering.v1.fakta.VurderNyoppstartetFLDto;
-import no.nav.folketrygdloven.kalkulus.håndtering.v1.fakta.VurderSelvstendigNæringsdrivendeNyIArbeidslivetDto;
-import no.nav.folketrygdloven.kalkulus.håndtering.v1.fakta.VurderTidsbegrensetArbeidsforholdDto;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FaktaOmBeregningTilfelle;
+import no.nav.foreldrepenger.kalkulus.kontrakt.request.håndtering.fakta.BesteberegningFødendeKvinneDto;
+import no.nav.foreldrepenger.kalkulus.kontrakt.request.håndtering.fakta.FaktaBeregningLagreDto;
+import no.nav.foreldrepenger.kalkulus.kontrakt.request.håndtering.fakta.FaktaOmBeregningTilfelleDto;
+import no.nav.foreldrepenger.kalkulus.kontrakt.request.håndtering.fakta.FastsettBgKunYtelseDto;
+import no.nav.foreldrepenger.kalkulus.kontrakt.request.håndtering.fakta.FastsettEtterlønnSluttpakkeDto;
+import no.nav.foreldrepenger.kalkulus.kontrakt.request.håndtering.fakta.FastsettMånedsinntektFLDto;
+import no.nav.foreldrepenger.kalkulus.kontrakt.request.håndtering.fakta.FastsettMånedsinntektUtenInntektsmeldingDto;
+import no.nav.foreldrepenger.kalkulus.kontrakt.request.håndtering.fakta.MottarYtelseDto;
+import no.nav.foreldrepenger.kalkulus.kontrakt.request.håndtering.fakta.RefusjonskravPrArbeidsgiverVurderingDto;
+import no.nav.foreldrepenger.kalkulus.kontrakt.request.håndtering.fakta.VurderATogFLiSammeOrganisasjonDto;
+import no.nav.foreldrepenger.kalkulus.kontrakt.request.håndtering.fakta.VurderEtterlønnSluttpakkeDto;
+import no.nav.foreldrepenger.kalkulus.kontrakt.request.håndtering.fakta.VurderLønnsendringDto;
+import no.nav.foreldrepenger.kalkulus.kontrakt.request.håndtering.fakta.VurderMilitærDto;
+import no.nav.foreldrepenger.kalkulus.kontrakt.request.håndtering.fakta.VurderNyoppstartetFLDto;
+import no.nav.foreldrepenger.kalkulus.kontrakt.request.håndtering.fakta.VurderSelvstendigNæringsdrivendeNyIArbeidslivetDto;
+import no.nav.foreldrepenger.kalkulus.kontrakt.request.håndtering.fakta.VurderTidsbegrensetArbeidsforholdDto;
 
 public class FaktaBeregningLagreDtoBuilder {
 
