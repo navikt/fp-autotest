@@ -693,8 +693,8 @@ services:
       FPDOKGEN_URL: http://fpdokgen:8080
       ARBEIDSGIVER_NOTIFIKASJON_URL: http://vtp:8060/rest/api/fager/graphql
       ARBEIDSGIVER_NOTIFIKASJON_SCOPES: api://vtp.teamforeldrepenger.vtp/.default
-      ALTINN_URL: http://vtp:8060/rest/altinn-rettigheter-proxy/ekstern/altinn/api/serviceowner/reportees
       ALTINN_RETTIGHETER_PROXY_URL: http://vtp:8060/rest/altinn-rettigheter-proxy/ekstern/altinn/api/serviceowner/reportees
+      ARBEIDSGIVER_ALTINN_TILGANGER_URL: http://vtp:8060/rest/arbeidsgiver-altinn-tilganger
       INNTEKTSMELDING_SKJEMA_LENKE: http://localhost:9300/fp-im-dialog
       DOKARKIV_BASE_URL: http://vtp:8060/rest/dokarkiv/rest/journalpostapi/v1/journalpost
       ALTINN_TRE_BASE_URL: http://localhost:8060/rest/dummy/altinn-tre
