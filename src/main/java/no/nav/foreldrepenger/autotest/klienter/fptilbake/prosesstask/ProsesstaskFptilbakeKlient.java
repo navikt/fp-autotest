@@ -1,5 +1,9 @@
 package no.nav.foreldrepenger.autotest.klienter.fptilbake.prosesstask;
 
+import static no.nav.foreldrepenger.autotest.klienter.BaseUriProvider.FPTILBAKE_FORVALTNING_BASE;
+
+import java.util.List;
+
 import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.ProsessTaskKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.ProsesstaskKlientFelles;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
@@ -7,22 +11,13 @@ import no.nav.vedtak.felles.prosesstask.api.ProsessTaskStatus;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskDataDto;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskOpprettInputDto;
 
-import java.util.List;
-
-import static no.nav.foreldrepenger.autotest.klienter.BaseUriProvider.FPTILBAKE_BASE;
-
 public class ProsesstaskFptilbakeKlient implements ProsessTaskKlient {
 
     private final ProsesstaskKlientFelles prosesstaskKlient;
 
-    public ProsesstaskFptilbakeKlient() {
-        prosesstaskKlient = new ProsesstaskKlientFelles(FPTILBAKE_BASE, "fptilbake");
-    }
-
     public ProsesstaskFptilbakeKlient(SaksbehandlerRolle saksbehandlerRolle) {
-        prosesstaskKlient = new ProsesstaskKlientFelles(FPTILBAKE_BASE, saksbehandlerRolle, "fptilbake");
+        prosesstaskKlient = new ProsesstaskKlientFelles(FPTILBAKE_FORVALTNING_BASE, saksbehandlerRolle, "fptilbake");
     }
-
 
     @Override
     public List<ProsessTaskDataDto> alleProsesstaskPåBehandling() {

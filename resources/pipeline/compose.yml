@@ -880,7 +880,7 @@ services:
                     "name": "fp-formidling"
                 },
                 {
-                    "path": "/fplos/api",
+                    "path": "/fplos/forvaltning/api",
                     "scopes": "api://vtp.teamforeldrepenger.fplos/swagger",
                     "url": "http://fplos:8080",
                     "name": "fp-los"

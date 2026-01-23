@@ -1,10 +1,9 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
-import no.nav.vedtak.felles.prosesstask.api.ProsessTaskStatus;
-import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskDataDto;
-import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskOpprettInputDto;
+import static jakarta.ws.rs.core.UriBuilder.fromUri;
+import static no.nav.foreldrepenger.autotest.klienter.HttpRequestProvider.requestMedInnloggetSaksbehandler;
+import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.toJson;
+import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.send;
 
 import java.net.URI;
 import java.net.http.HttpRequest;
@@ -12,10 +11,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-import static jakarta.ws.rs.core.UriBuilder.fromUri;
-import static no.nav.foreldrepenger.autotest.klienter.HttpRequestProvider.requestMedInnloggetSaksbehandler;
-import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.toJson;
-import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.send;
+import com.fasterxml.jackson.core.type.TypeReference;
+
+import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
+import no.nav.vedtak.felles.prosesstask.api.ProsessTaskStatus;
+import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskDataDto;
+import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskOpprettInputDto;
 
 public class ProsesstaskKlientFelles implements ProsessTaskKlient {
 
@@ -29,12 +30,6 @@ public class ProsesstaskKlientFelles implements ProsessTaskKlient {
     private final SaksbehandlerRolle saksbehandlerRolle;
 
     private final String apiName;
-
-    public ProsesstaskKlientFelles(URI baseUrl, String apiName) {
-        this.baseUrl = baseUrl;
-        this.apiName = apiName;
-        this.saksbehandlerRolle = SaksbehandlerRolle.DRIFTER;
-    }
 
     public ProsesstaskKlientFelles(URI baseUrl, SaksbehandlerRolle saksbehandlerRolle, String apiName) {
         this.baseUrl = baseUrl;
