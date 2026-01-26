@@ -47,7 +47,7 @@ jobs:
           private-key: ${{ secrets.APP_GITHUB_PRIVATE_KEY }}
           app-id: ${{ secrets.APP_GITHUB_ID }}
           repo: navikt/fp-autotest
-      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # ratchet:actions/checkout@v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # ratchet:actions/checkout@v4
         with:
           repository: 'navikt/fp-autotest'
           token: ${{ steps.get-token.outputs.token }}
@@ -109,7 +109,7 @@ jobs:
     timeout-minutes: 2
     steps:
       - name: Henter ut historie til trigger
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # ratchet:actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # ratchet:actions/checkout@v4
         with:
           repository: ${{ github.repository }}
           path: ${{ github.repository }}
