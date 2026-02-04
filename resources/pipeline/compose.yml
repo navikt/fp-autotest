@@ -584,7 +584,6 @@ services:
     mem_limit: 512mb
     environment:
       NAIS_APP_NAME: fplos
-      AXSYS_URL: http://vtp:8060/rest/axsys-enhetstilgang
     env_file:
       - *common-properties
     volumes:
