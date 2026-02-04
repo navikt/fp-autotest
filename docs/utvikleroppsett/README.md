@@ -17,13 +17,12 @@
 
 2. [Sett opp SSH-nøkkel for Git](github-ssh-key.md).
 
-3. [Sett opp GPG-nøkkel for Git](github-gpg-key.md).
 
-4. [Sett opp "Personal access tokens" for din Github-bruker som skal brukes for Maven og Docker](github-personal-access-tokens.md).
+3. [Sett opp "Personal access tokens" for din Github-bruker som skal brukes for Maven og Docker](github-personal-access-tokens.md).
 
-5. [Sett opp Mavens "settings.xml" for tilgang mot NAVs repositories](maven-settings.md).
+4. [Sett opp Mavens "settings.xml" for tilgang mot NAVs repositories](maven-settings.md).
 
-6. Sett opp tilgang til Google Cloud Artifact Repository(GCAR).
+5. Sett opp tilgang til Google Cloud Artifact Repository(GCAR).
     **Note**: De fleste docker imagene til team foreldrepenger finnes [her](https://console.cloud.google.com/artifacts/docker/nais-management-233d/europe-north1/teamforeldrepenger):
 
    1. Du må ha `gcloud` installert
