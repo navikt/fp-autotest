@@ -11,12 +11,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskStatus;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskDataDto;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskOpprettInputDto;
+import tools.jackson.core.type.TypeReference;
 
 public class ProsesstaskKlientFelles implements ProsessTaskKlient {
 

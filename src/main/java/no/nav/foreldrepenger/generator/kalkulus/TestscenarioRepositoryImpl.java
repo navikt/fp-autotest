@@ -25,7 +25,7 @@ import no.nav.foreldrepenger.kalkulus.kontrakt.response.beregningsgrunnlag.detal
 import no.nav.foreldrepenger.kalkulus.kontrakt.typer.AktørIdPersonident;
 import no.nav.foreldrepenger.kalkulus.kontrakt.typer.Saksnummer;
 import no.nav.foreldrepenger.kontrakter.felles.typer.AktørId;
-import no.nav.vedtak.mapper.json.DefaultJsonMapper;
+import no.nav.vedtak.mapper.json.DefaultJson3Mapper;
 
 public class TestscenarioRepositoryImpl {
     public static final String KALKULATOR_INPUT_JSON_FIL_NAVN = "kalkulator-input.json";
@@ -75,7 +75,7 @@ public class TestscenarioRepositoryImpl {
             var fil = hentFilSomMatcherStreng(scenarioFiles, filnavn);
             if (fil != null) {
                 var fileReader = new FileReader(fil);
-                return DefaultJsonMapper.getObjectMapper().readValue(fileReader, BeregningsgrunnlagDto.class);
+                return DefaultJson3Mapper.getJsonMapper().readValue(fileReader, BeregningsgrunnlagDto.class);
             }
         } catch (IOException e) {
             throw new IllegalArgumentException("Kunne ikke startBeregningRequest vars for scenario", e);
@@ -94,7 +94,7 @@ public class TestscenarioRepositoryImpl {
             var fil = hentFilSomMatcherStreng(resultFiles, forventetResultatJsonFilNavn);
             if (fil != null) {
                 var fileReader = new FileReader(fil);
-                return DefaultJsonMapper.getObjectMapper().readValue(fileReader, klasse);
+                return DefaultJson3Mapper.getJsonMapper().readValue(fileReader, klasse);
             }
         } catch (IOException e) {
             throw new IllegalArgumentException("Kunne lese forventet resultat", e);
@@ -136,7 +136,7 @@ public class TestscenarioRepositoryImpl {
             File kalkulatorInputFil = hentFilSomMatcherStreng(scenarioFiles, inputNavn);
             if (kalkulatorInputFil != null) {
                 var fileReader = new FileReader(kalkulatorInputFil);
-                return DefaultJsonMapper.getObjectMapper().readValue(fileReader, KalkulatorInputDto.class);
+                return DefaultJson3Mapper.getJsonMapper().readValue(fileReader, KalkulatorInputDto.class);
             }
         } catch (IOException e) {
             throw new IllegalArgumentException("Kunne ikke finne kalkulatorinput for scenario", e);

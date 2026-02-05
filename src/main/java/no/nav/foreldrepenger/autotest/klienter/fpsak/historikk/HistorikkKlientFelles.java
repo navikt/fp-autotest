@@ -8,11 +8,10 @@ import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Saksnummer;
+import tools.jackson.core.type.TypeReference;
 
 public class HistorikkKlientFelles implements HistorikkKlient {
 
