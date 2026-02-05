@@ -111,7 +111,7 @@
                         "avkortetRefusjonPrÅr": 0.0,
                         "avkortetBrukersAndelPrÅr": 331776.0,
                         "årsbeløpFraTilstøtendeYtelse": null,
-                        "fastsattAvSaksbehandler": true,
+                        "fastsattAvSaksbehandler": false,
                         "lagtTilAvSaksbehandler": false
                     },
                     {
@@ -141,7 +141,7 @@
                         "pgi2": 384757,
                         "pgi3": 331908,
                         "årsbeløpFraTilstøtendeYtelse": null,
-                        "fastsattAvSaksbehandler": true,
+                        "fastsattAvSaksbehandler": false,
                         "lagtTilAvSaksbehandler": false
                     }
                 ],
@@ -188,7 +188,7 @@
                         "avkortetRefusjonPrÅr": 0.0,
                         "avkortetBrukersAndelPrÅr": 331776.0,
                         "årsbeløpFraTilstøtendeYtelse": null,
-                        "fastsattAvSaksbehandler": true,
+                        "fastsattAvSaksbehandler": false,
                         "lagtTilAvSaksbehandler": false
                     },
                     {
@@ -218,7 +218,7 @@
                         "pgi2": 384757,
                         "pgi3": 331908,
                         "årsbeløpFraTilstøtendeYtelse": null,
-                        "fastsattAvSaksbehandler": true,
+                        "fastsattAvSaksbehandler": false,
                         "lagtTilAvSaksbehandler": false
                     }
                 ],

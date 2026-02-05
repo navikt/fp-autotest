@@ -38,7 +38,7 @@
                         "maksimalRefusjonPrÅr": 0.0,
                         "avkortetRefusjonPrÅr": 0.0,
                         "avkortetBrukersAndelPrÅr": 0.0,
-                        "fastsattAvSaksbehandler": true,
+                        "fastsattAvSaksbehandler": false,
                         "lagtTilAvSaksbehandler": false,
                         "kilde": "PROSESS_START"
                     },
@@ -67,7 +67,7 @@
                         "maksimalRefusjonPrÅr": 501276.0,
                         "avkortetRefusjonPrÅr": 501276.0,
                         "avkortetBrukersAndelPrÅr": 0.0,
-                        "fastsattAvSaksbehandler": true,
+                        "fastsattAvSaksbehandler": false,
                         "lagtTilAvSaksbehandler": false,
                         "kilde": "PROSESS_PERIODISERING"
                     }
@@ -113,7 +113,7 @@
                         "maksimalRefusjonPrÅr": 0.0,
                         "avkortetRefusjonPrÅr": 0.0,
                         "avkortetBrukersAndelPrÅr": 0.0,
-                        "fastsattAvSaksbehandler": true,
+                        "fastsattAvSaksbehandler": false,
                         "lagtTilAvSaksbehandler": false,
                         "kilde": "PROSESS_START"
                     },
@@ -140,7 +140,7 @@
                         "maksimalRefusjonPrÅr": 0.0,
                         "avkortetRefusjonPrÅr": 0.0,
                         "avkortetBrukersAndelPrÅr": 501276.0,
-                        "fastsattAvSaksbehandler": true,
+                        "fastsattAvSaksbehandler": false,
                         "lagtTilAvSaksbehandler": false,
                         "kilde": "PROSESS_PERIODISERING"
                     }

@@ -39,7 +39,7 @@
                         "avkortetRefusjonPrÅr": 0.0,
                         "avkortetBrukersAndelPrÅr": 108106.0,
                         "årsbeløpFraTilstøtendeYtelse": null,
-                        "fastsattAvSaksbehandler": true,
+                        "fastsattAvSaksbehandler": false,
                         "lagtTilAvSaksbehandler": false
                     },
                     {
@@ -73,7 +73,7 @@
                         "avkortetRefusjonPrÅr": 500000.0,
                         "avkortetBrukersAndelPrÅr": 0.0,
                         "årsbeløpFraTilstøtendeYtelse": null,
-                        "fastsattAvSaksbehandler": true,
+                        "fastsattAvSaksbehandler": false,
                         "lagtTilAvSaksbehandler": false
                     }
                 ],
@@ -201,7 +201,7 @@
                         "avkortetRefusjonPrÅr": 0.0,
                         "avkortetBrukersAndelPrÅr": 108106.0,
                         "årsbeløpFraTilstøtendeYtelse": null,
-                        "fastsattAvSaksbehandler": true,
+                        "fastsattAvSaksbehandler": false,
                         "lagtTilAvSaksbehandler": false
                     },
                     {
@@ -235,7 +235,7 @@
                         "avkortetRefusjonPrÅr": 500000.0,
                         "avkortetBrukersAndelPrÅr": 0.0,
                         "årsbeløpFraTilstøtendeYtelse": null,
-                        "fastsattAvSaksbehandler": true,
+                        "fastsattAvSaksbehandler": false,
                         "lagtTilAvSaksbehandler": false
                     }
                 ],
