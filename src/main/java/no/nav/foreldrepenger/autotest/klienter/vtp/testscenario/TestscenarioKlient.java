@@ -13,12 +13,11 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.PersonDto;
+import tools.jackson.core.type.TypeReference;
 
 public class TestscenarioKlient {
 
@@ -30,7 +29,7 @@ public class TestscenarioKlient {
         var request = requestMedBasicHeadere()
                 .uri(fromUri(BaseUriProvider.VTP_API_BASE).path("/testscenarios/v2").build())
                 .POST(HttpRequest.BodyPublishers.ofString(personerJson));
-        var testscenarioDto = send(request.build(), TestscenarioDto.class, TestscenarioObjectMapper.DEFAULT_MAPPER_VTP);
+        var testscenarioDto = send(request.build(), TestscenarioDto.class, TestscenarioJsonMapper.DEFAULT_MAPPER_VTP);
         debugJson(personerJson);
         LOG.info("Testscenario opprettet med mor: {} far: {}", testscenarioDto.personopplysninger().søkerIdent(), testscenarioDto.personopplysninger().annenpartIdent());
         return testscenarioDto;
@@ -42,7 +41,7 @@ public class TestscenarioKlient {
                         .path("/testscenarios")
                         .build())
                 .GET();
-        return Optional.ofNullable(send(request.build(), TestscenarioObjectMapper.DEFAULT_MAPPER_VTP, new TypeReference<List<TestscenarioDto>>() {}))
+        return Optional.ofNullable(send(request.build(), TestscenarioJsonMapper.DEFAULT_MAPPER_VTP, new TypeReference<List<TestscenarioDto>>() {}))
                 .orElse(List.of());
     }
 }

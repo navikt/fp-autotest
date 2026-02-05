@@ -17,8 +17,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingHenlegg;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingIdDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingNy;
@@ -45,6 +43,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Saksnummer;
+import tools.jackson.core.type.TypeReference;
 
 public class BehandlingFpsakKlient implements BehandlingerKlient {
 

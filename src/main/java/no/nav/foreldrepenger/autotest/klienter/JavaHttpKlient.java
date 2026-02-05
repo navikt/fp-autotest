@@ -16,12 +16,11 @@ import java.util.function.Function;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import no.nav.vedtak.exception.IntegrasjonException;
 import no.nav.vedtak.exception.ManglerTilgangException;
 import no.nav.vedtak.exception.TekniskException;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.json.JsonMapper;
 
 public final class JavaHttpKlient {
     private static final Logger LOG = LoggerFactory.getLogger(JavaHttpKlient.class);
@@ -45,7 +44,7 @@ public final class JavaHttpKlient {
                 getDefaultErrorConsumer());
     }
 
-    public static <T> T send(HttpRequest request, Class<T> clazz, ObjectMapper mapper) {
+    public static <T> T send(HttpRequest request, Class<T> clazz, JsonMapper mapper) {
         return handleResponse(sendStringRequest(request), httpResponse -> fromJson(httpResponse.body(), clazz, mapper),
                 getDefaultErrorConsumer());
     }
@@ -55,7 +54,7 @@ public final class JavaHttpKlient {
                 getDefaultErrorConsumer());
     }
 
-    public static <T> T send(HttpRequest request, ObjectMapper mapper, TypeReference<T> typeReference) {
+    public static <T> T send(HttpRequest request, JsonMapper mapper, TypeReference<T> typeReference) {
         return handleResponse(sendStringRequest(request), httpResponse -> fromJson(httpResponse.body(), mapper, typeReference),
                 getDefaultErrorConsumer());
     }

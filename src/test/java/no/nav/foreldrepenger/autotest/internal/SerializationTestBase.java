@@ -3,32 +3,18 @@ package no.nav.foreldrepenger.autotest.internal;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers;
+import no.nav.vedtak.mapper.json.DefaultJson3Mapper;
 
 
 public class SerializationTestBase {
 
     protected static final Logger LOG = LoggerFactory.getLogger(SerializationTestBase.class);
-    protected static ObjectMapper mapper;
-
-    @BeforeAll
-    public static void beforeAll() {
-        mapper = JacksonBodyHandlers.getObjectmapper();
-    }
 
     protected static void test(Object obj) {
         test(obj, true);
-    }
-
-    private static String serialize(Object obj) throws JsonProcessingException {
-        return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
     }
 
     protected static void test(Object obj, boolean log) {
@@ -36,11 +22,11 @@ public class SerializationTestBase {
             if (log) {
                 LOG.info("{}", obj);
             }
-            var serialized = serialize(obj);
+            var serialized = DefaultJson3Mapper.toJson(obj);
             if (log) {
                 LOG.info("Serialized as {}", serialized);
             }
-            var deserialized = mapper.readValue(serialized, obj.getClass());
+            var deserialized = DefaultJson3Mapper.fromJson(serialized, obj.getClass());
             if (log) {
                 LOG.info("{}", deserialized);
             }
