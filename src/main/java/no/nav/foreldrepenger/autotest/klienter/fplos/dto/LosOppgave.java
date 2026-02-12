@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.autotest.klienter.fplos;
+package no.nav.foreldrepenger.autotest.klienter.fplos.dto;
 
 import java.time.LocalDateTime;
 import java.util.Set;
