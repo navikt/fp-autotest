@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.autotest.base;
 
+import static no.nav.foreldrepenger.autotest.aktoerer.saksbehandler.fpsak.Oppgavestyrer.DEFAULT_AVDELING;
 import static no.nav.foreldrepenger.autotest.brev.BrevFormateringUtils.førsteArbeidsdagEtter;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -61,7 +62,7 @@ public abstract class VerdikjedeTestBase extends BrevTestBase {
         if (!fplosKlient.hentLister().isEmpty()) {
             return;
         }
-        var listeId = FplosKlient.SakslisteBuilder.nyListe().build();
+        var listeId = fplosKlient.opprettNySaksliste(DEFAULT_AVDELING);
         for (var saksbehandler : SaksbehandlerRolle.values()) {
             fplosKlient.leggTilSaksbehandlerForListe(saksbehandler, listeId);
         }

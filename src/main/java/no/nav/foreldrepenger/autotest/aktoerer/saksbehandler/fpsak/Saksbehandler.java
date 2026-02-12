@@ -31,7 +31,7 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Venteårsak;
 import no.nav.foreldrepenger.autotest.klienter.fplos.FplosKlient;
-import no.nav.foreldrepenger.autotest.klienter.fplos.LosOppgave;
+import no.nav.foreldrepenger.autotest.klienter.fplos.dto.LosOppgave;
 import no.nav.foreldrepenger.autotest.klienter.fprisk.risikovurdering.RisikovurderingKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingFpsakKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingHenlegg;
