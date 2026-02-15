@@ -861,19 +861,13 @@ services:
                     "name": "fp-sak"
                 },
                 {
-                    "path": "/fpoppdrag/api",
-                    "scopes": "api://vtp.teamforeldrepenger.fpoppdrag/swagger",
-                    "url": "http://fpoppdrag:8080",
-                    "name": "fp-oppdrag"
-                },
-                {
-                    "path": "/fptilbake/api",
+                    "path": "/fptilbake/forvaltning/api",
                     "scopes": "api://vtp.teamforeldrepenger.fptilbake/swagger",
                     "url": "http://fptilbake:8080",
                     "name": "fp-tilbake"
                 },
                 {
-                    "path": "/fpformidling/api",
+                    "path": "/fpformidling/forvaltning/api",
                     "scopes": "api://vtp.teamforeldrepenger.fpformidling/swagger",
                     "url": "http://fpformidling:8080",
                     "name": "fp-formidling"
@@ -891,7 +885,7 @@ services:
                     "name": "fp-abakus"
                 },
                 {
-                    "path": "/fprisk/api",
+                    "path": "/fprisk/forvaltning/api",
                     "scopes": "api://vtp.teamforeldrepenger.fprisk/swagger",
                     "url": "http://fprisk:8080",
                     "name": "fp-risk"

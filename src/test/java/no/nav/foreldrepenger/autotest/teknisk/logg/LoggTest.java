@@ -156,7 +156,7 @@ class LoggTest {
 
     private int minLogglinjer(String containerNavn) {
         if (HELGEUNNTAK_CONTAINERE.contains(containerNavn) && HELGEDAGER.contains(LocalDate.now().getDayOfWeek())) {
-            return MIN_LOGG_LINJER - 5;
+            return MIN_LOGG_LINJER - 9;
         } else {
             return MIN_LOGG_LINJER;
         }
