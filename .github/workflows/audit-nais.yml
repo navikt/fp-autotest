@@ -27,7 +27,7 @@ jobs:
       - name: Print build version
         run: echo "Generated build-version is ${{ env.build-version }}"
       - name: Login to GitHub Packages Docker Registry
-        uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef
+        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
