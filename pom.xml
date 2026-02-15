@@ -23,7 +23,7 @@
     </licenses>
 
     <properties>
-        <vtp.versjon>2.1.1</vtp.versjon>
+        <vtp.versjon>1.0-SNAPSHOT</vtp.versjon>
 
         <fp-felles.versjon>7.6.15</fp-felles.versjon>
         <fp-prosesstask.version>5.2.3</fp-prosesstask.version>
