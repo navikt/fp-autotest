@@ -1,7 +1,12 @@
 package no.nav.foreldrepenger.generator.familie;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.autotest.aktoerer.innsender.ApiMottak;
 import no.nav.foreldrepenger.autotest.aktoerer.innsender.Innsender;
@@ -12,12 +17,14 @@ import no.nav.foreldrepenger.vtp.kontrakter.DødfødselhendelseDto;
 import no.nav.foreldrepenger.vtp.kontrakter.DødshendelseDto;
 import no.nav.foreldrepenger.vtp.kontrakter.FødselshendelseDto;
 import no.nav.foreldrepenger.vtp.kontrakter.PersonhendelseDto;
-import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
-import no.nav.foreldrepenger.vtp.testmodell.personopplysning.BrukerModell;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.PersonDto;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.Rolle;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.TilordnetIdentDto;
 
 public class Familie {
 
-    private final TestscenarioDto scenario;
+    private final List<PersonDto> parter;
+    private final Map<UUID, TilordnetIdentDto> identer;
     private final Innsender innsender;
     private static final String ENDRINGSTYPE_OPPRETTET = "OPPRETTET";
 
@@ -25,33 +32,31 @@ public class Familie {
     private Far far;
     private Mor medmor;
 
-    public Familie(TestscenarioDto testscenarioDto, SaksbehandlerRolle saksbehandlerRolle) {
-        this.scenario = testscenarioDto;
+    public Familie(List<PersonDto> parter, List<TilordnetIdentDto> identer, SaksbehandlerRolle saksbehandlerRolle) {
+        this.parter = parter;
+        this.identer = identer.stream().collect(Collectors.toMap(TilordnetIdentDto::id, Function.identity()));
         this.innsender = new ApiMottak(saksbehandlerRolle);
     }
 
 
     public Mor mor() {
         if (mor == null) {
-            if (scenario.personopplysninger().søkerKjønn().equals(BrukerModell.Kjønn.K)) {
-                mor = new Mor(
-                        new Fødselsnummer(scenario.personopplysninger().søkerIdent()),
-                        new AktørId(scenario.personopplysninger().søkerAktørIdent()),
-                        new AktørId(scenario.personopplysninger().annenpartAktørIdent()),
-                        scenario.scenariodata(),
-                        innsender);
-                return mor;
-            }
-            if (scenario.personopplysninger().annenpartKjønn().equals(BrukerModell.Kjønn.K)) {
-                mor = new Mor(
-                        new Fødselsnummer(scenario.personopplysninger().annenpartIdent()),
-                        new AktørId(scenario.personopplysninger().annenpartAktørIdent()),
-                        new AktørId(scenario.personopplysninger().søkerAktørIdent()),
-                        scenario.scenariodataAnnenpart(),
-                        innsender);
-                return mor;
-            }
-            throw new IllegalStateException("Hverken søker eller annenpart er kvinne. Bruk metoden far()!");
+            var morPerson = parter.stream()
+                    .filter(p -> p.rolle().equals(no.nav.foreldrepenger.vtp.kontrakter.v2.Rolle.MOR))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalStateException("Ingen mor i familien"));
+            var morIdent = identer.get(morPerson.id());
+            var annenpartIdent = parter.stream()
+                    .filter(p -> p.rolle().equals(Rolle.FAR) || p.rolle().equals(Rolle.MEDMOR))
+                    .findFirst()
+                    .map(ap -> identer.get(ap.id()));
+            mor = new Mor(
+                    new Fødselsnummer(morIdent.fnr()),
+                    new AktørId(morIdent.aktørId()),
+                    annenpartIdent.map(TilordnetIdentDto::aktørId).map(AktørId::new).orElse(null),
+                    morPerson,
+                    identer,
+                    innsender);
         }
         return mor;
 
@@ -59,51 +64,54 @@ public class Familie {
 
     public Mor medmor() {
         if (medmor == null) {
-            if (scenario.personopplysninger().søkerKjønn().equals(BrukerModell.Kjønn.K) &&
-                    scenario.personopplysninger().annenpartKjønn().equals(BrukerModell.Kjønn.K)) {
-                medmor = new Mor(
-                        new Fødselsnummer(scenario.personopplysninger().annenpartIdent()),
-                        new AktørId(scenario.personopplysninger().annenpartAktørIdent()),
-                        new AktørId(scenario.personopplysninger().søkerAktørIdent()),
-                        scenario.scenariodataAnnenpart(),
-                        innsender);
-                return medmor;
-            }
-            throw new IllegalStateException("Medmor eksistere ikke for scenarioid: Enten er søker eller annenpart far");
+            var medmorPerson = parter.stream()
+                    .filter(p -> p.rolle().equals(Rolle.MEDMOR))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalStateException("Ingen medmor i familien"));
+            var morIdent = identer.get(medmorPerson.id());
+            var annenpartIdent = parter.stream()
+                    .filter(p -> p.rolle().equals(Rolle.MOR))
+                    .findFirst()
+                    .map(ap -> identer.get(ap.id()));
+            medmor = new Mor(
+                    new Fødselsnummer(morIdent.fnr()),
+                    new AktørId(morIdent.aktørId()),
+                    annenpartIdent.map(TilordnetIdentDto::aktørId).map(AktørId::new).orElse(null),
+                    medmorPerson,
+                    identer,
+                    innsender);
         }
         return medmor;
     }
 
     public Far far() {
         if (far == null) {
-            if (scenario.personopplysninger().søkerKjønn().equals(BrukerModell.Kjønn.M)) {
-                far = new Far(
-                        new Fødselsnummer(scenario.personopplysninger().søkerIdent()),
-                        new AktørId(scenario.personopplysninger().søkerAktørIdent()),
-                        new AktørId(scenario.personopplysninger().annenpartAktørIdent()),
-                        scenario.scenariodata(),
-                        innsender);
-                return far;
-            }
-            if (scenario.personopplysninger().annenpartKjønn().equals(BrukerModell.Kjønn.M)) {
-                far = new Far(
-                        new Fødselsnummer(scenario.personopplysninger().annenpartIdent()),
-                        new AktørId(scenario.personopplysninger().annenpartAktørIdent()),
-                        new AktørId(scenario.personopplysninger().søkerAktørIdent()),
-                        scenario.scenariodataAnnenpart(),
-                        innsender);
-                return far;
-            }
-            throw new IllegalStateException("Hverken søker eller annenpart er mann: Bruk mor() eller medmor()");
+            var farPerson = parter.stream()
+                    .filter(p -> p.rolle().equals(Rolle.FAR))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalStateException("Ingen far i familien"));
+            var morIdent = identer.get(farPerson.id());
+            var annenpartIdent = parter.stream()
+                    .filter(p -> p.rolle().equals(Rolle.MOR))
+                    .findFirst()
+                    .map(ap -> identer.get(ap.id()));
+            far = new Far(
+                    new Fødselsnummer(morIdent.fnr()),
+                    new AktørId(morIdent.aktørId()),
+                    annenpartIdent.map(TilordnetIdentDto::aktørId).map(AktørId::new).orElse(null),
+                    farPerson,
+                    identer,
+                    innsender);
         }
         return far;
     }
 
     public Barn barn() {
-        if (scenario.personopplysninger().barnIdenter().isEmpty()) {
+        var barn = parter.stream().filter(p -> p.rolle().equals(Rolle.BARN)).toList();
+        if (barn.isEmpty()) {
             throw new IllegalStateException("Barn er enda ikke født for familie");
         }
-        return new Barn(scenario.personopplysninger().fødselsdato());
+        return new Barn(barn.stream().map(PersonDto::fødselsdato).findFirst().orElse(null));
     }
 
     public void sendInnDødshendelse(Fødselsnummer fnr, LocalDate dødsdato) {

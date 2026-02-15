@@ -15,8 +15,8 @@ import org.slf4j.LoggerFactory;
 
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
-import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.PersonDto;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.TilordnetIdentDto;
 import tools.jackson.core.type.TypeReference;
 
 public class TestscenarioKlient {
@@ -24,24 +24,23 @@ public class TestscenarioKlient {
     private static final Logger LOG = LoggerFactory.getLogger(TestscenarioKlient.class);
 
     @Step("Oppretter familie/scenario")
-    public TestscenarioDto opprettTestscenario(List<PersonDto> personer) {
+    public List<TilordnetIdentDto> opprettTestscenario(List<PersonDto> personer) {
         var personerJson = toJson(personer);
         var request = requestMedBasicHeadere()
-                .uri(fromUri(BaseUriProvider.VTP_API_BASE).path("/testscenarios/v2").build())
+                .uri(fromUri(BaseUriProvider.VTP_API_BASE).path("/testscenarios/v2/opprett").build())
                 .POST(HttpRequest.BodyPublishers.ofString(personerJson));
-        var testscenarioDto = send(request.build(), TestscenarioDto.class, TestscenarioJsonMapper.DEFAULT_MAPPER_VTP);
+        var identer = Optional.ofNullable(send(request.build(), new TypeReference<List<TilordnetIdentDto>>() {})).orElseGet(List::of);
         debugJson(personerJson);
-        LOG.info("Testscenario opprettet med mor: {} far: {}", testscenarioDto.personopplysninger().søkerIdent(), testscenarioDto.personopplysninger().annenpartIdent());
-        return testscenarioDto;
+        LOG.info("Testscenario opprettet med identer: {} ", identer.stream().map(TilordnetIdentDto::fnr).toList());
+        return identer;
     }
 
-    public List<TestscenarioDto> hentAlleScenarier() {
+    public List<String> hentAlleIdenterFraAlleScenarier() {
         var request = requestMedBasicHeadere()
                 .uri(fromUri(BaseUriProvider.VTP_API_BASE)
-                        .path("/testscenarios")
+                        .path("/testscenarios/v2/alleidenter")
                         .build())
                 .GET();
-        return Optional.ofNullable(send(request.build(), TestscenarioJsonMapper.DEFAULT_MAPPER_VTP, new TypeReference<List<TestscenarioDto>>() {}))
-                .orElse(List.of());
+        return Optional.ofNullable(send(request.build(), new TypeReference<List<String>>() {})).orElseGet(List::of);
     }
 }

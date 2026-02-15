@@ -4,12 +4,14 @@ import static no.nav.foreldrepenger.autotest.util.StreamUtils.distinctByKeys;
 import static no.nav.foreldrepenger.generator.familie.Aareg.arbeidsforholdFrilans;
 import static no.nav.foreldrepenger.generator.familie.Sigrun.hentNæringsinntekt;
 import static no.nav.foreldrepenger.generator.familie.Sigrun.startdato;
-import static no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforholdstype.ORDINÆRT_ARBEIDSFORHOLD;
+import static no.nav.foreldrepenger.vtp.kontrakter.v2.Arbeidsforholdstype.ORDINÆRT_ARBEIDSFORHOLD;
 import static no.nav.vedtak.klient.http.CommonHttpHeaders.HEADER_NAV_CONSUMER_ID;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.slf4j.Logger;
@@ -31,7 +33,11 @@ import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.DokumentTypeId;
 import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.Dokumenterer;
 import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.InnsendingType;
 import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.VedleggDto;
-import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.InntektYtelseModell;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.AaregDto;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.InntektYtelseModellDto;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.OrganisasjonDto;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.PersonDto;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.TilordnetIdentDto;
 import no.nav.vedtak.log.mdc.MDCOperations;
 
 public abstract class Søker {
@@ -41,18 +47,21 @@ public abstract class Søker {
     private final Fødselsnummer fødselsnummer;
     private final AktørId aktørId;
     private final AktørId aktørIdAnnenpart;
-    private final InntektYtelseModell inntektYtelseModell;
+    private final PersonDto personDto;
+    private final Map<UUID, TilordnetIdentDto> identer;
     private final Innsender innsender;
 
     private Innsyn innsyn;
     private Saksnummer saksnummer = null;
     private SøknadDto førstegangssøknad = null;
 
-    Søker(Fødselsnummer fødselsnummer, AktørId aktørId, AktørId aktørIdAnnenpart, InntektYtelseModell inntektYtelseModell, Innsender innsender) {
+    Søker(Fødselsnummer fødselsnummer, AktørId aktørId, AktørId aktørIdAnnenpart, PersonDto personDto,
+          Map<UUID, TilordnetIdentDto> identer, Innsender innsender) {
         this.fødselsnummer = fødselsnummer;
         this.aktørId = aktørId;
         this.aktørIdAnnenpart = aktørIdAnnenpart;
-        this.inntektYtelseModell = inntektYtelseModell;
+        this.personDto = personDto;
+        this.identer = identer;
         this.innsender = innsender;
     }
 
@@ -81,10 +90,10 @@ public abstract class Søker {
     }
 
     public List<Arbeidsforhold> arbeidsforholdene() {
-        if (inntektYtelseModell == null) {
+        if (personDto.inntektytelse() == null) {
             return List.of();
         }
-        return Aareg.arbeidsforholdene(inntektYtelseModell.arbeidsforholdModell());
+        return Aareg.arbeidsforholdene(personDto.inntektytelse().aareg(), identer);
     }
 
     public Arbeidsforhold arbeidsforhold(String orgnummer) {
@@ -95,11 +104,11 @@ public abstract class Søker {
     }
 
     private List<Arbeidsforhold> arbeidsforholdene(AktørId identifikator) {
-        return Aareg.arbeidsforholdene(inntektYtelseModell.arbeidsforholdModell(), identifikator);
+        return Aareg.arbeidsforholdene(personDto.inntektytelse().aareg(), identer, identifikator);
     }
 
     private List<Arbeidsforhold> arbeidsforholdene(Orgnummer identifikator) {
-        return Aareg.arbeidsforholdene(inntektYtelseModell.arbeidsforholdModell(), identifikator);
+        return Aareg.arbeidsforholdene(personDto.inntektytelse().aareg(), identer, identifikator);
     }
 
     public Arbeidsgiver arbeidsgiver(String orgnummer) {
@@ -118,25 +127,28 @@ public abstract class Søker {
 
     public Arbeidsgivere arbeidsgivere(){
         var arbeidsgivere = new ArrayList<Arbeidsgiver>();
-        inntektYtelseModell.arbeidsforholdModell().arbeidsforhold().stream()
+        arbeidsforholdene().stream()
                 .filter(a -> ORDINÆRT_ARBEIDSFORHOLD.equals(a.arbeidsforholdstype()))
-                .filter(distinctByKeys(no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforhold::arbeidsgiverOrgnr, no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforhold::arbeidsgiverAktorId))
+                .filter(distinctByKeys(Arbeidsforhold::arbeidsgiverIdentifikasjon))
                 .forEach(a -> leggTilArbeidsforhold(arbeidsgivere, a));
 
         return new Arbeidsgivere(arbeidsgivere);
     }
 
-    private boolean leggTilArbeidsforhold(ArrayList<Arbeidsgiver> arbeidsgivere, no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforhold arbeidsforhold) {
-        if (arbeidsforhold.arbeidsgiverOrgnr() != null) {
-            var orgnummer = new Orgnummer(arbeidsforhold.arbeidsgiverOrgnr());
+    private boolean leggTilArbeidsforhold(ArrayList<Arbeidsgiver> arbeidsgivere, Arbeidsforhold arbeidsforhold) {
+        if (arbeidsforhold.arbeidsgiverIdentifikasjon().length() == 9) {
+            var orgnummer = new Orgnummer(arbeidsforhold.arbeidsgiverIdentifikasjon());
             return arbeidsgivere.add(new Virksomhet(orgnummer,
                     new Arbeidstaker(fødselsnummer, aktørId, månedsinntekt(orgnummer)),
                     arbeidsforholdene(orgnummer),
                     innsender));
         }
-        var personarbeidsgiver = arbeidsforhold.personArbeidsgiver();
-        var fnrArbeidsgiver = new Fødselsnummer(personarbeidsgiver.getIdent());
-        var aktørIdArbeidsgiver = new AktørId(personarbeidsgiver.getAktørIdent());
+        var aktørIdArbeidsgiver = new AktørId(arbeidsforhold.arbeidsgiverIdentifikasjon());
+        var fnrArbeidsgiver = identer.entrySet().stream()
+                .filter(e -> e.getValue().aktørId().equals(aktørIdArbeidsgiver.value()))
+                .findFirst()
+                .map(a -> new Fødselsnummer(a.getValue().fnr()))
+                .orElseThrow(() -> new IllegalArgumentException("Fant ikke fødselsnummer for arbeidsgiver med aktørId " + aktørIdArbeidsgiver.value()));
         return arbeidsgivere.add(new PersonArbeidsgiver(aktørIdArbeidsgiver,
                 new Arbeidstaker(fødselsnummer, aktørId, månedsinntekt(fnrArbeidsgiver)),
                 arbeidsforholdene(aktørIdArbeidsgiver),
@@ -150,25 +162,25 @@ public abstract class Søker {
     }
 
     public LocalDate frilansAnnsettelsesFom() {
-        return arbeidsforholdFrilans(inntektYtelseModell.arbeidsforholdModell()).getFirst()
+        return arbeidsforholdFrilans(personDto.inntektytelse().aareg(), identer).getFirst()
                 .ansettelsesperiodeFom();
     }
 
     public int månedsinntekt() {
         guardFlereArbeidsgivere();
-        return Inntektskomponenten.månedsinntekt(inntektYtelseModell.inntektskomponentModell());
+        return Inntektskomponenten.månedsinntekt(personDto.inntektytelse().inntektskomponent());
     }
 
     public int månedsinntekt(String identifikator) {
-        return Inntektskomponenten.månedsinntekt(inntektYtelseModell.inntektskomponentModell(), identifikator);
+        return Inntektskomponenten.månedsinntekt(personDto.inntektytelse().inntektskomponent(), identer, identifikator);
     }
 
     public int månedsinntekt(Orgnummer orgnummer) {
-        return Inntektskomponenten.månedsinntekt(inntektYtelseModell.inntektskomponentModell(), orgnummer);
+        return Inntektskomponenten.månedsinntekt(personDto.inntektytelse().inntektskomponent(), identer, orgnummer);
     }
 
     public int månedsinntekt(Fødselsnummer fnrArbeidsgiver) {
-        return Inntektskomponenten.månedsinntekt(inntektYtelseModell.inntektskomponentModell(), fnrArbeidsgiver);
+        return Inntektskomponenten.månedsinntekt(personDto.inntektytelse().inntektskomponent(), identer, fnrArbeidsgiver);
     }
 
     public int månedsinntekt(Orgnummer orgnummer, ArbeidsforholdId arbeidsforholdId) {
@@ -182,7 +194,7 @@ public abstract class Søker {
 
     public Integer stillingsprosent(Orgnummer orgnummer, ArbeidsforholdId arbeidsforholdId) {
         return arbeidsforholdene().stream()
-                .filter(p -> orgnummer.equals(p.arbeidsgiverIdentifikasjon()))
+                .filter(p -> orgnummer.value().equals(p.arbeidsgiverIdentifikasjon()))
                 .filter(p -> arbeidsforholdId.equals(p.arbeidsforholdId()))
                 .map(Arbeidsforhold::stillingsprosent)
                 .findFirst()
@@ -190,11 +202,11 @@ public abstract class Søker {
     }
 
     public double næringsinntekt() {
-        return hentNæringsinntekt(inntektYtelseModell.sigrunModell(), LocalDate.now().getYear() - 1);
+        return hentNæringsinntekt(personDto.inntektytelse().sigrun(), LocalDate.now().getYear() - 1);
     }
 
     public LocalDate næringStartdato() {
-        var årstall = startdato(inntektYtelseModell.sigrunModell());
+        var årstall = startdato(personDto.inntektytelse().sigrun());
         return LocalDate.now().withYear(årstall);
     }
 
@@ -277,9 +289,11 @@ public abstract class Søker {
     }
 
     private void guardFlereArbeidsgivere() {
-        var antallOrdinæreArbeidsforhold = inntektYtelseModell.arbeidsforholdModell().arbeidsforhold().stream()
+        var antallOrdinæreArbeidsforhold = Optional.ofNullable(personDto.inntektytelse())
+                .map(InntektYtelseModellDto::aareg).map(AaregDto::arbeidsforhold).orElseGet(List::of).stream()
                 .filter(a -> a.arbeidsforholdstype().equals(ORDINÆRT_ARBEIDSFORHOLD))
-                .map(no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforhold::arbeidsgiverOrgnr)
+                .filter(a -> a.arbeidsgiver() instanceof OrganisasjonDto)
+                .map(a -> ((OrganisasjonDto) a.arbeidsgiver()).orgnummer())
                 .distinct()
                 .count();
         if (antallOrdinæreArbeidsforhold > 1) {

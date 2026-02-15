@@ -131,8 +131,8 @@ public class FamilieGenerator {
                 .map(PrivatArbeidsgiver.class::cast)
                 .collect(Collectors.toSet());
         privateArbeidsgiver.forEach(p -> parter.add(privatArbeidsgiver(p)));
-        var testscenarioDto = TESTSCENARIO_JERSEY_KLIENT.opprettTestscenario(parter);
-        return new Familie(testscenarioDto, saksbehandlerRolle);
+        var identer = TESTSCENARIO_JERSEY_KLIENT.opprettTestscenario(parter);
+        return new Familie(parter, identer, saksbehandlerRolle);
     }
 
     private void guardForeldresammensetning() {

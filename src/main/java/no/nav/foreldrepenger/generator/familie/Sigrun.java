@@ -2,30 +2,28 @@ package no.nav.foreldrepenger.generator.familie;
 
 import java.util.Comparator;
 
-import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.sigrun.Inntektsår;
-import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.sigrun.SigrunModell;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.SigrunDto;
+
 
 final class Sigrun {
 
     private Sigrun() {
     }
 
-    static double hentNæringsinntekt(SigrunModell sigrunModell, int beregnFraOgMedÅr) {
-        double gjennomsnittDeTreSisteÅrene = sigrunModell.inntektsår().stream()
-                .sorted(Comparator.comparing(Inntektsår::år).reversed())
-                .filter(inntektsår -> Integer.parseInt(inntektsår.år()) <= beregnFraOgMedÅr)
-                .flatMap(inntektsår -> inntektsår.oppføring().stream())
-                .filter(oppføring -> oppføring.tekniskNavn().equals("personinntektNaering")) // For å hente skattegrunlag, ikke oppgjørsdato
-                .mapToDouble(oppføring -> Double.parseDouble(oppføring.verdi()))
+    static double hentNæringsinntekt(SigrunDto sigrunModell, int beregnFraOgMedÅr) {
+        double gjennomsnittDeTreSisteÅrene = sigrunModell.inntektår().stream()
+                .sorted(Comparator.comparing(SigrunDto.InntektsårDto::år).reversed())
+                .filter(inntektsår -> inntektsår.år() <= beregnFraOgMedÅr)
+                .mapToDouble(oppføring -> oppføring.beløp().doubleValue())
                 .limit(3)
                 .sum();
         return gjennomsnittDeTreSisteÅrene/3;
     }
 
-    static Integer startdato(SigrunModell modell) {
-        return modell.inntektsår().stream()
-                .sorted(Comparator.comparing(Inntektsår::år))
-                .map(inntektsår -> Integer.parseInt(inntektsår.år()))
+    static Integer startdato(SigrunDto modell) {
+        return modell.inntektår().stream()
+                .sorted(Comparator.comparing(SigrunDto.InntektsårDto::år))
+                .map(SigrunDto.InntektsårDto::år)
                 .findFirst()
                 .orElseThrow();
     }
