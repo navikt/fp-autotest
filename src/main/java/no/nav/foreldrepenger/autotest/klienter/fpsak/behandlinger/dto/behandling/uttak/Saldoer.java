@@ -5,7 +5,7 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record Saldoer(Map<SaldoVisningStønadskontoType, Stonadskontoer> stonadskontoer) {
+public record Saldoer(Map<SaldoVisningStønadskontoType, Stønadskonti> stønadskonti) {
 
     public enum SaldoVisningStønadskontoType {
         MØDREKVOTE,

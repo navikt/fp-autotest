@@ -130,7 +130,7 @@ class RegresjonPreWLB extends VerdikjedeTestBase {
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);
 
-        var stonadskontoer = saksbehandler.valgtBehandling.getSaldoer().stonadskontoer();
+        var stonadskontoer = saksbehandler.valgtBehandling.getSaldoer().stønadskonti();
         assertThat(stonadskontoer.get(Saldoer.SaldoVisningStønadskontoType.FORELDREPENGER).saldo())
                 .as("Saldoen for stønadskonton FORELDREPENGER")
                 .isZero();
