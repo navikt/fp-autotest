@@ -253,7 +253,7 @@ public class BehandlingFpsakKlient implements BehandlingerKlient {
     /*
      * hent stønadskontoer for behandling
      */
-    public Saldoer behandlingUttakStonadskontoer(UUID behandlingUuid) {
+    public Saldoer behandlingUttakStønadskontoer(UUID behandlingUuid) {
         var request = requestMedInnloggetSaksbehandler(this.saksbehandlerRolle, API_NAME)
                 .uri(fromUri(baseUri)
                         .path(BEHANDLING_UTTAK_STONADSKONTOER_URL)

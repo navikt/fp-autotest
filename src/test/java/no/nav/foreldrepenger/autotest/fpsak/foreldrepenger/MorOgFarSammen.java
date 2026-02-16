@@ -298,7 +298,7 @@ class MorOgFarSammen extends VerdikjedeTestBase {
                 .isEqualTo(BehandlingResultatType.INNVILGET);
         assertThat(saksbehandler.valgtBehandling.getUttakResultatPerioder().getPerioderSøker()).as("Antall uttkasperioder for søker")
                 .hasSize(3);
-        assertThat(saksbehandler.valgtBehandling.getSaldoer().stonadskontoer()).as("Antall stønadskontoer i saldo").hasSize(4);
+        assertThat(saksbehandler.valgtBehandling.getSaldoer().stønadskonti()).as("Antall stønadskontoer i saldo").hasSize(4);
 
         // FAR
         var far = familie.far();
@@ -332,14 +332,14 @@ class MorOgFarSammen extends VerdikjedeTestBase {
         assertThat(saksbehandler.hentAvslåtteUttaksperioder().get(0).getFom()).isEqualTo(
                 helgejustertTilMandag(fpStartdatoFar.plusWeeks(8)));
         assertThat(saksbehandler.valgtBehandling.getSaldoer()
-                .stonadskontoer()
+                .stønadskonti()
                 .get(Saldoer.SaldoVisningStønadskontoType.FEDREKVOTE)
                 .saldo()).as("Saldo fro stønadskonto FEDREKVOTE").isPositive();
-        assertThat(saksbehandler.valgtBehandling.getSaldoer().stonadskontoer().get(MØDREKVOTE).saldo()).as(
+        assertThat(saksbehandler.valgtBehandling.getSaldoer().stønadskonti().get(MØDREKVOTE).saldo()).as(
                 "Saldo fro stønadskonto MØDREKVOTE").isPositive();
-        assertThat(saksbehandler.valgtBehandling.getSaldoer().stonadskontoer().get(FELLESPERIODE).saldo()).as(
+        assertThat(saksbehandler.valgtBehandling.getSaldoer().stønadskonti().get(FELLESPERIODE).saldo()).as(
                 "Saldo fro stønadskonto FELLESPERIODE").isEqualTo(80);
-        assertThat(saksbehandler.valgtBehandling.getSaldoer().stonadskontoer().get(FORELDREPENGER_FØR_FØDSEL).saldo()).as(
+        assertThat(saksbehandler.valgtBehandling.getSaldoer().stønadskonti().get(FORELDREPENGER_FØR_FØDSEL).saldo()).as(
                 "Saldo fro stønadskonto FORELDREPENGER_FØR_FØDSEL").isNotNegative();
 
         // FAR: Verifiser at far ikke får berørt behandling

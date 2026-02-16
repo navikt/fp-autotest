@@ -210,7 +210,7 @@ class ToTetteOgMinsterettTester extends VerdikjedeTestBase {
         saksbehandler.hentFagsak(saksnummerMorBarn1);
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
-        var saldoMorFS = saksbehandler.valgtBehandling.getSaldoer().stonadskontoer();
+        var saldoMorFS = saksbehandler.valgtBehandling.getSaldoer().stønadskonti();
         assertThat(saldoMorFS.containsKey(Saldoer.SaldoVisningStønadskontoType.MINSTERETT)).isFalse();
         assertThat(saldoMorFS.containsKey(Saldoer.SaldoVisningStønadskontoType.MINSTERETT_NESTE_STØNADSPERIODE)).isFalse();
 
@@ -231,7 +231,7 @@ class ToTetteOgMinsterettTester extends VerdikjedeTestBase {
         saksbehandler.hentFagsak(saksnummerFarBarn1);
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
-        var saldoFarFs = saksbehandler.valgtBehandling.getSaldoer().stonadskontoer();
+        var saldoFarFs = saksbehandler.valgtBehandling.getSaldoer().stønadskonti();
         assertThat(saldoFarFs.containsKey(Saldoer.SaldoVisningStønadskontoType.MINSTERETT)).isFalse();
         assertThat(saldoFarFs.containsKey(Saldoer.SaldoVisningStønadskontoType.MINSTERETT_NESTE_STØNADSPERIODE)).isFalse();
 
@@ -268,7 +268,7 @@ class ToTetteOgMinsterettTester extends VerdikjedeTestBase {
         beslutter.bekreftAksjonspunktMedDefaultVerdier(new VurdereAnnenYtelseFørVedtakBekreftelse());
         beslutter.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
-        var saldoFarRevurdering = beslutter.valgtBehandling.getSaldoer().stonadskontoer();
+        var saldoFarRevurdering = beslutter.valgtBehandling.getSaldoer().stønadskonti();
         assertThat(saldoFarRevurdering.containsKey(Saldoer.SaldoVisningStønadskontoType.MINSTERETT)).isFalse();
         assertThat(saldoFarRevurdering.containsKey(Saldoer.SaldoVisningStønadskontoType.MINSTERETT_NESTE_STØNADSPERIODE)).isTrue();
         assertThat(saldoFarRevurdering.get(Saldoer.SaldoVisningStønadskontoType.MINSTERETT_NESTE_STØNADSPERIODE).saldo()).isZero();

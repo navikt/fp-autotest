@@ -3,6 +3,6 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandlin
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record Stonadskontoer(Saldoer.SaldoVisningStønadskontoType stonadskontoType, int maxDager, int saldo) {
+public record Stønadskonti(Saldoer.SaldoVisningStønadskontoType stonadskontoType, int maxDager, int saldo) {
 
 }
