@@ -1,69 +1,64 @@
 package no.nav.foreldrepenger.generator.familie;
 
 
-import static no.nav.foreldrepenger.autotest.util.StreamUtils.safeStream;
-
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 import no.nav.foreldrepenger.kontrakter.felles.typer.AktørId;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Orgnummer;
-import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.ArbeidsforholdModell;
-import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforholdstype;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.AaregDto;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.ArbeidsforholdDto;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.Arbeidsforholdstype;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.TilordnetIdentDto;
 
 final class Aareg {
 
     private Aareg() {
     }
 
-    static List<Arbeidsforhold> arbeidsforholdene(ArbeidsforholdModell aareg) {
-        return safeStream(aareg.arbeidsforhold())
-                .map(Aareg::mapTilArbeidsforhold)
+    static List<Arbeidsforhold> arbeidsforholdene(AaregDto aareg, Map<UUID, TilordnetIdentDto> identer) {
+        return Optional.ofNullable(aareg).map(AaregDto::arbeidsforhold).orElseGet(List::of).stream()
+                .map(a -> mapTilArbeidsforhold(a, identer))
                 .toList();
     }
 
-    static List<Arbeidsforhold> arbeidsforholdene(ArbeidsforholdModell aareg, Orgnummer orgnummer) {
-        return arbeidsforholdene(aareg, orgnummer.value());
+    static List<Arbeidsforhold> arbeidsforholdene(AaregDto aareg, Map<UUID, TilordnetIdentDto> identer, Orgnummer orgnummer) {
+        return arbeidsforholdene(aareg, identer, orgnummer.value());
     }
 
-    static List<Arbeidsforhold> arbeidsforholdene(ArbeidsforholdModell aareg, AktørId aktørId) {
-        return arbeidsforholdene(aareg, aktørId.value());
+    static List<Arbeidsforhold> arbeidsforholdene(AaregDto aareg, Map<UUID, TilordnetIdentDto> identer, AktørId aktørId) {
+        return arbeidsforholdene(aareg, identer, aktørId.value());
     }
 
-    static List<Arbeidsforhold> arbeidsforholdene(ArbeidsforholdModell aareg, String identifikator) {
-        return safeStream(aareg.arbeidsforhold())
-                .filter(a -> erArbeidsgiver(identifikator, a))
-                .map(Aareg::mapTilArbeidsforhold)
+    static List<Arbeidsforhold> arbeidsforholdene(AaregDto aareg, Map<UUID, TilordnetIdentDto> identer, String identifikator) {
+        return Optional.ofNullable(aareg).map(AaregDto::arbeidsforhold).orElseGet(List::of).stream()
+                .filter(a -> erArbeidsgiver(identifikator, a, identer))
+                .map(a -> mapTilArbeidsforhold(a, identer))
                 .toList();
     }
 
 
-    static List<Arbeidsforhold> arbeidsforholdFrilans(ArbeidsforholdModell aareg) {
-        return aareg.arbeidsforhold().stream()
+    static List<Arbeidsforhold> arbeidsforholdFrilans(AaregDto aareg, Map<UUID, TilordnetIdentDto> identer) {
+        return Optional.ofNullable(aareg).map(AaregDto::arbeidsforhold).orElseGet(List::of).stream()
                 .filter(a -> a.arbeidsforholdstype().equals(Arbeidsforholdstype.FRILANSER_OPPDRAGSTAKER_MED_MER))
-                .map(Aareg::mapTilArbeidsforhold)
+                .map(a -> mapTilArbeidsforhold(a, identer))
                 .toList();
     }
 
-    private static Arbeidsforhold mapTilArbeidsforhold(no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforhold a) {
+    private static Arbeidsforhold mapTilArbeidsforhold(ArbeidsforholdDto a, Map<UUID, TilordnetIdentDto> identer) {
         return new Arbeidsforhold(
-                a.arbeidsgiverOrgnr() != null ? a.arbeidsgiverOrgnr() : a.arbeidsgiverAktorId(),
+                Arbeidsgiver.hentIdentifikator(a.arbeidsgiver(), identer),
                 new ArbeidsforholdId(a.arbeidsforholdId()), a.ansettelsesperiodeFom(), a.ansettelsesperiodeTom(),
                 a.arbeidsforholdstype(), a.arbeidsavtaler().getFirst().stillingsprosent());
     }
 
-    private static boolean erArbeidsgiver(String identifikator, no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforhold a) {
-        if (identifikator == null) {
+    private static boolean erArbeidsgiver(String identifikator, ArbeidsforholdDto a, Map<UUID, TilordnetIdentDto> identer) {
+        var aident = Arbeidsgiver.hentIdentifikator(a.arbeidsgiver(), identer);
+        if (identifikator == null || aident == null) {
             return false;
         }
-        if (a.arbeidsgiverOrgnr() != null) {
-             return identifikator.equalsIgnoreCase(a.arbeidsgiverOrgnr());
-        }
-        if (a.arbeidsgiverAktorId() != null) {
-            return identifikator.equalsIgnoreCase(a.arbeidsgiverAktorId());
-        }
-        if (a.personArbeidsgiver() != null) {
-            return identifikator.equalsIgnoreCase(a.personArbeidsgiver().getAktørIdent());
-        }
-        return false;
+        return aident.equals(identifikator);
     }
 }

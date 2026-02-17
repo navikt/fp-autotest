@@ -9,7 +9,6 @@ import java.sql.SQLException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -17,7 +16,6 @@ import java.util.Optional;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -32,10 +30,6 @@ import io.qameta.allure.Description;
 import jakarta.validation.ConstraintViolationException;
 import no.nav.foreldrepenger.autotest.klienter.vtp.testscenario.TestscenarioKlient;
 import no.nav.foreldrepenger.autotest.util.DockerUtils;
-import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
-import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.InntektYtelseModell;
-import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforhold;
-import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.ArbeidsforholdModell;
 
 @Tag("logger")
 class LoggTest {
@@ -168,49 +162,23 @@ class LoggTest {
 
     private Set<SensitivInformasjon> hentSensitiveStrengerFraVTP() {
         var scenarioKlient = new TestscenarioKlient();
-        var testscenarioDtos = scenarioKlient.hentAlleScenarier();
-        Set<SensitivInformasjon> sensitiveStrenger = new LinkedHashSet<>();
-
-        testscenarioDtos.forEach(testscenarioDto -> {
-            sensitiveStrenger.add(new SensitivInformasjon("FNR/DNR på person", toNumericPattern(testscenarioDto.personopplysninger().søkerIdent())));
-            sensitiveStrenger.add(new SensitivInformasjon("aktørID på person", toNumericPattern(testscenarioDto.personopplysninger().søkerAktørIdent())));
-            if (testscenarioDto.personopplysninger().annenpartIdent() != null) {
-                sensitiveStrenger.add(new SensitivInformasjon("FNR/DNR på annenPart", toNumericPattern(testscenarioDto.personopplysninger().annenpartIdent())));
-                sensitiveStrenger.add(new SensitivInformasjon("aktørID på annenPart", toNumericPattern(testscenarioDto.personopplysninger().annenpartAktørIdent())));
-            }
-
-            final Set<SensitivInformasjon> arbeidsgivere = sensitivArbeidsgiverInformasjon(testscenarioDto);
-            sensitiveStrenger.addAll(arbeidsgivere);
-        });
-        return sensitiveStrenger;
+        var sensitiv = scenarioKlient.hentAlleIdenterFraAlleScenarier().stream()
+                .map(i -> new SensitivInformasjon(sensitivPrefixForIdent(i), toNumericPattern(i)))
+                .toList();
+        return new LinkedHashSet<>(sensitiv);
     }
 
-    private Set<SensitivInformasjon> sensitivArbeidsgiverInformasjon(TestscenarioDto testscenarioDto) {
-        return Optional.ofNullable(testscenarioDto.scenariodata())
-            .map(InntektYtelseModell::arbeidsforholdModell)
-            .map(ArbeidsforholdModell::arbeidsforhold).orElseGet(List::of).stream()
-            .map(LoggTest::sensitivForArbeidsforhold)
-            .flatMap(Collection::stream)
-            .collect(Collectors.toSet());
+    private String sensitivPrefixForIdent(String ident) {
+        if (ident.length() == 11) {
+            return "FNR/DNR";
+        } else if (ident.length() == 13) {
+            return "AktørId";
+        }  else if (ident.length() == 9) {
+            return "OrgNr";
+        } else {
+            throw new IllegalArgumentException("Ukjent type ident: " + ident);
+        }
     }
 
-    private static Set<SensitivInformasjon> sensitivForArbeidsforhold(Arbeidsforhold arbeidsforhold) {
-        Set<SensitivInformasjon> sensitiv = new LinkedHashSet<>();
-        if (arbeidsforhold.arbeidsgiverOrgnr() != null) {
-            sensitiv.add(new SensitivInformasjon("orgnr på arbeidsgiver", toNumericPattern(arbeidsforhold.arbeidsgiverOrgnr())));
-        }
-        if (arbeidsforhold.arbeidsgiverAktorId() != null) {
-            sensitiv.add(new SensitivInformasjon("aktørID på arbeidsgiver", toNumericPattern(arbeidsforhold.arbeidsgiverAktorId())));
-        }
-        if (arbeidsforhold.personArbeidsgiver() != null && arbeidsforhold.personArbeidsgiver().getAktørIdent() != null) {
-            sensitiv.add(new SensitivInformasjon("aktørID på arbeidsgiver", toNumericPattern(arbeidsforhold.personArbeidsgiver().getAktørIdent())));
-        }
-        if (arbeidsforhold.personArbeidsgiver() != null && arbeidsforhold.personArbeidsgiver().getIdent() != null) {
-            sensitiv.add(new SensitivInformasjon("FNR/DNR på arbeidsgiver", toNumericPattern(arbeidsforhold.personArbeidsgiver().getIdent())));
-        }
-        return sensitiv;
-    }
-
-    private record SensitivInformasjon(String kilde, String data) {
-    }
+    private record SensitivInformasjon(String kilde, String data) { }
 }
