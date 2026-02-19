@@ -367,7 +367,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
 
         var beregningsresultatPeriodeAndeler = saksbehandler.hentBeregningsresultatPerioderMedAndelISN();
         assertThat(beregningsresultatPeriodeAndeler.get(0).getRefusjon()).as("Dagsats til refusjon").isZero();
-        assertThat(beregningsresultatPeriodeAndeler.get(0).getTilSoker()).as("Dagsats til søker").isZero();
+        assertThat(beregningsresultatPeriodeAndeler.get(0).getTilSøker()).as("Dagsats til søker").isZero();
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
         var brevAssertionsBuilder = alleYtelserFellesAssertionsBuilder(familie.mor().fødselsnummer(),

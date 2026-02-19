@@ -12,7 +12,7 @@ public class VurderingAvInnsynBekreftelse extends AksjonspunktBekreftelse {
     public LocalDate fristDato;
     public List<Object> innsynDokumenter = new ArrayList<>();
     public String innsynResultatType;
-    public Boolean sattPaVent;
+    public Boolean sattPåVent;
 
     public VurderingAvInnsynBekreftelse setMottattDato(LocalDate mottattDato) {
         this.mottattDato = mottattDato;
@@ -26,7 +26,7 @@ public class VurderingAvInnsynBekreftelse extends AksjonspunktBekreftelse {
     }
 
     public VurderingAvInnsynBekreftelse skalSetteSakPåVent(boolean settPåVent) {
-        this.sattPaVent = settPåVent;
+        this.sattPåVent = settPåVent;
         return this;
     }
 

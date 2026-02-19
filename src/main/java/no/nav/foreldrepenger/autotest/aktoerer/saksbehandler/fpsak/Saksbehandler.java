@@ -765,7 +765,7 @@ public class Saksbehandler {
         List<Integer> utbetaltTilSøkerForAndeler = new ArrayList<>();
         List<Integer> utbetaltRefusjonForAndeler = new ArrayList<>();
         for (var andel : periode.getAndeler()) {
-            utbetaltTilSøkerForAndeler.add(andel.getTilSoker());
+            utbetaltTilSøkerForAndeler.add(andel.getTilSøker());
             utbetaltRefusjonForAndeler.add(andel.getRefusjon());
         }
         if (utbetaltRefusjonForAndeler.stream().mapToInt(Integer::intValue).sum() != forventetUtbetaltDagsatsTilArbeidsgiver) {

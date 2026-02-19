@@ -1024,14 +1024,14 @@ class Fodsel extends VerdikjedeTestBase {
                 var kode = andel.getAktivitetStatus();
                 if (kode.equals(AktivitetStatus.ARBEIDSTAKER)) {
                     if (medFullRefusjon) {
-                        assertThat(andel.getTilSoker()).isZero();
+                        assertThat(andel.getTilSøker()).isZero();
                         assertThat(andel.getRefusjon()).isPositive();
                     } else {
-                        assertThat(andel.getTilSoker()).isPositive();
+                        assertThat(andel.getTilSøker()).isPositive();
                         assertThat(andel.getRefusjon()).isZero();
                     }
                 } else if (kode.equals(AktivitetStatus.FRILANSER) || kode.equals(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE)) {
-                    assertThat(andel.getTilSoker()).isPositive();
+                    assertThat(andel.getTilSøker()).isPositive();
                     assertThat(andel.getRefusjon()).isZero();
                 }
                 assertThat(andel.getUttak().isGradering()).isFalse();

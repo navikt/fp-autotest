@@ -172,7 +172,7 @@ class ArbeidsforholdVarianter extends VerdikjedeTestBase {
                     assertThat(p.getDagsats()).isEqualTo(1154);
                     assertThat(p.getAndeler()).hasSize(1);
                     assertThat(p.getAndeler().get(0).getRefusjon()).isZero();
-                    assertThat(p.getAndeler().get(0).getTilSoker()).isEqualTo(1154);
+                    assertThat(p.getAndeler().get(0).getTilSøker()).isEqualTo(1154);
         });
 
     }

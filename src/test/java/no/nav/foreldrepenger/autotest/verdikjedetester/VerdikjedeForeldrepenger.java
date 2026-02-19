@@ -794,14 +794,14 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var andelerForAT2 = saksbehandler.hentBeregningsresultatPerioderMedAndelIArbeidsforhold(orgNummerFar2);
         // IFM fødsel
         assertThat(beregningsresultatPerioder.getFirst().getDagsats()).as("Dagsatsen for perioden").isEqualTo(1616);
-        assertThat(andelerForAT1.getFirst().getTilSoker()).as("Forventer at dagsatsen matchen den kalkulerte og alt går til søker")
+        assertThat(andelerForAT1.getFirst().getTilSøker()).as("Forventer at dagsatsen matchen den kalkulerte og alt går til søker")
                 .isEqualTo(462);
         assertThat(andelerForAT2.getFirst().getRefusjon()).as(
                 "Forventer at dagsatsen matchen den kalkulerte og alt går til arbeidsgiver").isEqualTo(923);
 
         // Første uttaksperiode etter uke 6
         assertThat(beregningsresultatPerioder.get(2).getDagsats()).as("Dagsatsen for perioden").isEqualTo(1477);
-        assertThat(andelerForAT1.get(2).getTilSoker()).as("Forventer at dagsatsen matchen den kalkulerte og alt går til søker")
+        assertThat(andelerForAT1.get(2).getTilSøker()).as("Forventer at dagsatsen matchen den kalkulerte og alt går til søker")
                 .isEqualTo(554);
         assertThat(andelerForAT2.get(2).getRefusjon()).as("Forventer at dagsatsen matchen den kalkulerte og alt går til arbeidsgiver")
                 .isEqualTo(923);
@@ -809,17 +809,17 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         // Endring i refusjon, flyttes til søker.
         assertThat(beregningsresultatPerioder.get(3).getDagsats()).as(
                 "Forventer at dagsatsen for perioden matcher summen av den kalkulerte dagsatsen for hver andel").isEqualTo(1477);
-        assertThat(andelerForAT1.get(3).getTilSoker()).as("Forventer at dagsatsen matchen den kalkulerte og alt går til søker")
+        assertThat(andelerForAT1.get(3).getTilSøker()).as("Forventer at dagsatsen matchen den kalkulerte og alt går til søker")
                 .isEqualTo(554);
-        assertThat(andelerForAT2.get(3).getTilSoker()).as("Forventer at dagsatsen matchen den kalkulerte og alt går til søker")
+        assertThat(andelerForAT2.get(3).getTilSøker()).as("Forventer at dagsatsen matchen den kalkulerte og alt går til søker")
                 .isEqualTo(923);
 
         // Opphører IM med refusjon
         assertThat(beregningsresultatPerioder.get(4).getDagsats()).as(
                 "Forventer at dagsatsen for perioden matcher summen av den kalkulerte dagsatsen for hver andel").isEqualTo(554);
-        assertThat(andelerForAT1.get(4).getTilSoker()).as("Forventer at dagsatsen matchen den kalkulerte og alt går til søker")
+        assertThat(andelerForAT1.get(4).getTilSøker()).as("Forventer at dagsatsen matchen den kalkulerte og alt går til søker")
                 .isEqualTo(554);
-        assertThat(andelerForAT2.get(4).getTilSoker()).as("Forventer at dagsatsen matchen den kalkulerte og alt går til søker")
+        assertThat(andelerForAT2.get(4).getTilSøker()).as("Forventer at dagsatsen matchen den kalkulerte og alt går til søker")
                 .isZero();
 
         assertThat(beregningsresultatPerioder.get(5).getDagsats()).as("Forventer at dagsatsen for utsettelsen er null").isZero();
@@ -827,9 +827,9 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         assertThat(beregningsresultatPerioder.get(7).getDagsats()).as(
                 "Forventer at dagsatsen for perioden matcher summen av den kalkulerte dagsatsen for hver andel").isEqualTo(554);
-        assertThat(andelerForAT1.get(7).getTilSoker()).as("Forventer at dagsatsen matchen den kalkulerte og alt går til søker")
+        assertThat(andelerForAT1.get(7).getTilSøker()).as("Forventer at dagsatsen matchen den kalkulerte og alt går til søker")
                 .isEqualTo(554);
-        assertThat(andelerForAT2.get(7).getTilSoker()).as("Forventer at dagsatsen matchen den kalkulerte og alt går til søker")
+        assertThat(andelerForAT2.get(7).getTilSøker()).as("Forventer at dagsatsen matchen den kalkulerte og alt går til søker")
                 .isZero();
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
@@ -1100,22 +1100,22 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         var perioderMedAndelIArbeidsforhold = saksbehandler.hentBeregningsresultatPerioderMedAndelIArbeidsforhold(
                 arbeidsgiverFar.arbeidsgiverIdentifikator());
-        assertThat(perioderMedAndelIArbeidsforhold.getFirst().getTilSoker()).as(
+        assertThat(perioderMedAndelIArbeidsforhold.getFirst().getTilSøker()).as(
                 "Forventer at dagsatsen for arbeidsforholdet blir beregnet først – rest går til søker for SN").isEqualTo(dagsatsTilAF);
-        assertThat(perioderMedAndelIArbeidsforhold.get(1).getTilSoker()).as(
+        assertThat(perioderMedAndelIArbeidsforhold.get(1).getTilSøker()).as(
                 "Forventer at dagsatsen for arbeidsforholdet blir beregnet først – rest går til søker for SN").isEqualTo(dagsatsTilAF);
-        assertThat(perioderMedAndelIArbeidsforhold.get(2).getTilSoker()).as(
+        assertThat(perioderMedAndelIArbeidsforhold.get(2).getTilSøker()).as(
                 "Forventer at dagsatsen for arbeidsforholdet blir beregnet først – rest går til søker for SN").isEqualTo(dagsatsTilAF);
         assertThat(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForAllePeriode(
                 new Orgnummer(arbeidsgiverFar.arbeidsgiverIdentifikator()), 0)).as("Foventer at hele den utbetalte dagsatsen går til søker!")
                 .isTrue();
 
         var perioderMedAndelISN = saksbehandler.hentBeregningsresultatPerioderMedAndelISN();
-        assertThat(perioderMedAndelISN.getFirst().getTilSoker()).as("Forventer at resten av dagsatsen går til søker for SN")
+        assertThat(perioderMedAndelISN.getFirst().getTilSøker()).as("Forventer at resten av dagsatsen går til søker for SN")
                 .isEqualTo(dagsats - dagsatsTilAF);
-        assertThat(perioderMedAndelISN.get(1).getTilSoker()).as("Forventer at resten av dagsatsen går til søker for SN")
+        assertThat(perioderMedAndelISN.get(1).getTilSøker()).as("Forventer at resten av dagsatsen går til søker for SN")
                 .isEqualTo(dagsats - dagsatsTilAF);
-        assertThat(perioderMedAndelISN.get(2).getTilSoker()).as("Forventer at resten av dagsatsen går til søker for SN")
+        assertThat(perioderMedAndelISN.get(2).getTilSøker()).as("Forventer at resten av dagsatsen går til søker for SN")
                 .isEqualTo(dagsats - dagsatsTilAF);
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
