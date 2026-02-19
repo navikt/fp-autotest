@@ -13,7 +13,7 @@ public class BeregningsresultatPeriodeAndel {
 
     protected String arbeidsgiverReferanse;
     protected Integer refusjon;
-    protected Integer tilSoker;
+    protected Integer tilSøker;
     protected Uttak uttak;
     protected BigDecimal utbetalingsgrad;
     protected LocalDate sisteUtbetalingsdato;
@@ -30,8 +30,8 @@ public class BeregningsresultatPeriodeAndel {
         return refusjon;
     }
 
-    public Integer getTilSoker() {
-        return tilSoker;
+    public Integer getTilSøker() {
+        return tilSøker;
     }
 
     public Uttak getUttak() {

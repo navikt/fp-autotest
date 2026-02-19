@@ -1,25 +1,20 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse;
 
-import java.time.LocalDate;
-
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
-
 public class VurderSoknadsfristBekreftelse extends AksjonspunktBekreftelse {
 
-    protected boolean erVilkarOk;
+    protected boolean erVilkårOk;
 
     public VurderSoknadsfristBekreftelse() {
         super();
     }
 
     public VurderSoknadsfristBekreftelse bekreftVilkårErOk() {
-        erVilkarOk = true;
+        erVilkårOk = true;
         return this;
     }
 
     public VurderSoknadsfristBekreftelse bekreftVilkårErIkkeOk() {
-        erVilkarOk = false;
+        erVilkårOk = false;
         return this;
     }
 

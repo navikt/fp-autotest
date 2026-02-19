@@ -7,14 +7,14 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 public abstract class OverstyringsBekreftelse extends AksjonspunktBekreftelse {
 
     protected String avslagskode;
-    protected boolean erVilkarOk = true;
+    protected boolean erVilkårOk = true;
 
     public OverstyringsBekreftelse() {
         super();
     }
 
-    public void overstyr(boolean erVilkarOk, String årsak) {
-        this.erVilkarOk = erVilkarOk;
+    public void overstyr(boolean erVilkårOk, String årsak) {
+        this.erVilkårOk = erVilkårOk;
         this.avslagskode = årsak;
     }
 
