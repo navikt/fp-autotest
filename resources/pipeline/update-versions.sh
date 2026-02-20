@@ -27,6 +27,7 @@ echo AVDELINGSLEDER_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-man
 echo JOURNALFORING_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fp-frontend/fp-journalforing")" >> .env
 echo FPFORMIDLING_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fp-formidling")" >> .env
 echo FPDOKGEN_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fp-dokgen")" >> .env
+echo FPDOKGEN_NY_IMAGE="europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fp-dokgen:2026.02.20.145512-6d02be4" >> .env # Denne er ny versjon av fp-dokgen, og er ikke publisert til latest enda. Må oppdateres manuelt til den versjonen som er publisert
 echo FPOPPDRAG_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fpoppdrag")" >> .env
 echo FPTILBAKE_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fptilbake")" >> .env
 echo FPRISK_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fp-risk")" >> .env
