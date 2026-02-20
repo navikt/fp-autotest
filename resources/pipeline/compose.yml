@@ -177,7 +177,6 @@ services:
         condition: service_healthy
       fptilgang:
         condition: service_healthy
-
   fpsak:
     <<: *default-konfigurasjon
     image: $FPSAK_IMAGE
@@ -441,6 +440,8 @@ services:
     environment:
       NAIS_APP_NAME: fpformidling
       DOKGEN_REST_BASE_URL: http://fpdokgen:8080
+      NY_FPDOKGEN_URL: http://fpdokgenny:8080/fpdokgen
+      TOGGLE_BRUK_NY_DOKGEN: "true"
       DOKDIST_REST_BASE_URL: http://vtp:8060/rest/dokdist/v1
       JOURNALPOST_REST_V1_URL: http://vtp:8060/rest/dokarkiv/rest/journalpostapi/v1/journalpost
       JOURNALPOST_REST_PROXY_V1_URL: http://vtp:8060/rest/dokarkiv/rest/journalpostapi/v1/journalpost
@@ -477,6 +478,23 @@ services:
       - "127.0.0.1:8291:8080"
     healthcheck:
       test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/actuator/info" ]
+      interval: 3s
+      timeout: 5s
+      retries: 20
+      start_period: 5s
+  fpdokgenny:
+    <<: *default-konfigurasjon
+    image: $FPDOKGEN_NY_IMAGE
+    container_name: fpdokgenny
+    mem_limit: 512mb
+    env_file:
+      - *common-properties
+    volumes:
+      - *sertifikat-volum
+    ports:
+      - "127.0.0.1:8292:8080"
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/fpdokgen/internal/health/isReady" ]
       interval: 3s
       timeout: 5s
       retries: 20
@@ -657,6 +675,8 @@ services:
     environment:
       NAIS_APP_NAME: fpsoknad
       DOKGEN_REST_BASE_URL: http://fpdokgen:8080
+      NY_FPDOKGEN_URL: http://fpdokgenny:8080/fpdokgen
+      TOGGLE_BRUK_NY_DOKGEN: "true"
       KRYPTERING_PASSWORD: testnokkelforvtp
     env_file:
       - *common-properties
@@ -690,6 +710,8 @@ services:
     environment:
       NAIS_APP_NAME: fpinntektsmelding
       FPDOKGEN_URL: http://fpdokgen:8080
+      NY_FPDOKGEN_URL: http://fpdokgenny:8080/fpdokgen
+      TOGGLE_BRUK_NY_DOKGEN: "true"
       ARBEIDSGIVER_NOTIFIKASJON_URL: http://vtp:8060/rest/api/fager/graphql
       ARBEIDSGIVER_NOTIFIKASJON_SCOPES: api://vtp.teamforeldrepenger.vtp/.default
       ARBEIDSGIVER_ALTINN_TILGANGER_URL: http://vtp:8060/rest/arbeidsgiver-altinn-tilganger
