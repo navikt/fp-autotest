@@ -9,6 +9,7 @@ jobs:
     name: Kjører autotest
     permissions:
       id-token: write
+      pages: write
     runs-on: 'ubuntu-latest-8-cores'
     timeout-minutes: 30
     environment:
