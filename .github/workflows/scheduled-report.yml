@@ -56,23 +56,18 @@ jobs:
           docker compose -f compose.yml -f compose-github.yml up --wait "${services[@]}" || (docker ps ; echo "Oppstart feilet. Se etter tjenester som er \"unhealthy\" eller \"restarting\" i listen over." ; exit 1)
 
       - name: Tester - verdikjede
-        id: tester
         shell: bash
         run: mvn test -e --batch-mode -s settings.xml -Djuipter.parallelism=8 -P verdikjede
       - name: Tester - fpsak
-        id: tester
         shell: bash
         run: mvn test -e --batch-mode -s settings.xml -Djuipter.parallelism=8 -P fpsak
       - name: Tester - fptilbake
-        id: tester
         shell: bash
         run: mvn test -e --batch-mode -s settings.xml -Djuipter.parallelism=8 -P fptilbake
       - name: Tester - fplos
-        id: tester
         shell: bash
         run: mvn test -e --batch-mode -s settings.xml -Djuipter.parallelism=8 -P fplos
       - name: Tester - fpkalkulus
-        id: tester
         shell: bash
         run: mvn test -e --batch-mode -s settings.xml -Djuipter.parallelism=8 -P fpkalkulus
 
