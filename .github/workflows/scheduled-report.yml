@@ -11,6 +11,9 @@ jobs:
       id-token: write
     runs-on: 'ubuntu-latest-8-cores'
     timeout-minutes: 30
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # ratchet:actions/checkout@v4
       - name: Create maven .m2 settings for GITHUB
@@ -81,3 +84,4 @@ jobs:
         with:
          path: ./target/allure-report
       - uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # ratchet:actions/deploy-pages@v4
+        id: deployment
