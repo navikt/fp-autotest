@@ -1,0 +1,87 @@
+name: scheduled-report.yml
+on:
+  schedule:
+    - cron: '0 2 * * 2'
+  workflow_dispatch:
+
+jobs:
+  autotest:
+    name: Kjører autotest
+    permissions:
+      id-token: write
+    runs-on: 'ubuntu-latest-8-cores'
+    timeout-minutes: 30
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # ratchet:actions/checkout@v4
+      - name: Create maven .m2 settings for GITHUB
+        uses: whelk-io/maven-settings-xml-action@9dc09b23833fa9aa7f27b63db287951856f3433d # ratchet:whelk-io/maven-settings-xml-action@v22
+        with:
+          repositories: '[{"id": "github", "name": "github", "url": "https://maven.pkg.github.com/${{ github.repository }}", "releases": { "enabled": "true" }, "snapshots": { "enabled": "false" }}]'
+          servers: '[{ "id": "github", "username": "${{ github.actor }}", "password": "${{ secrets.GITHUB_TOKEN}}" }]'
+          output_file: settings.xml
+      - uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # ratchet:actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: 25
+      - name: Login to GitHub Packages Docker Registry
+        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # Use commit-sha1 instead of tag for security concerns
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Login GAR
+        uses: nais/login@e7cf2c159677dc7c7d599feff5f808f2bf59c7cf # ratchet:nais/login@v0
+        with:
+          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
+          identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
+          team: teamforeldrepenger
+      - name: Setup keystore
+        shell: bash
+        run: |
+          cd resources/keystore
+          ./make-dummy-keystore.sh
+      - name: Setup fpsak og dens avhengigheter
+        id: setup
+        shell: bash
+        run: |
+          services=("fpsak" "fpformidling" "fpdokgen" "fpoppdrag" "fptilbake" "fprisk" "fpmottak" "fpsoknad" "fpoversikt" "fpkalkulus" "fpinntektsmelding")
+          cd resources/pipeline
+          ./update-versions.sh
+          echo "Kjører docker compose up på følgende applikasjoner: ${services[*]}"
+          docker compose -f compose.yml -f compose-github.yml pull --quiet "${services[@]}"
+          docker stop $(docker ps -a -q) || docker rm $rm $(docker ps -a -q)
+          docker compose -f compose.yml -f compose-github.yml up --wait "${services[@]}" || (docker ps ; echo "Oppstart feilet. Se etter tjenester som er \"unhealthy\" eller \"restarting\" i listen over." ; exit 1)
+
+      - name: Tester - verdikjede
+        id: tester
+        shell: bash
+        run: mvn test -e --batch-mode -s settings.xml -Djuipter.parallelism=8 -P verdikjede
+      - name: Tester - fpsak
+        id: tester
+        shell: bash
+        run: mvn test -e --batch-mode -s settings.xml -Djuipter.parallelism=8 -P fpsak
+      - name: Tester - fptilbake
+        id: tester
+        shell: bash
+        run: mvn test -e --batch-mode -s settings.xml -Djuipter.parallelism=8 -P fptilbake
+      - name: Tester - fplos
+        id: tester
+        shell: bash
+        run: mvn test -e --batch-mode -s settings.xml -Djuipter.parallelism=8 -P fplos
+      - name: Tester - fpkalkulus
+        id: tester
+        shell: bash
+        run: mvn test -e --batch-mode -s settings.xml -Djuipter.parallelism=8 -P fpkalkulus
+
+      - name: Lager testrapport
+        run: mvn allure:report --batch-mode -s settings.xml
+
+      - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # ratchet:actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # ratchet:actions/upload-pages-artifact@v4
+        with:
+         path: ./target/allure-report
+      - uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # ratchet:actions/deploy-pages@v4
+        id: deployment
