@@ -1,7 +1,5 @@
 name: Build and deploy nais.audit
 on:
-  schedule:
-    - cron: '0 2 * * 2'
   workflow_dispatch:
   push:
     branches:
