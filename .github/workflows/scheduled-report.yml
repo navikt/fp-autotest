@@ -1,4 +1,4 @@
-name: scheduled-report.yml
+name: Scheduled allure report
 on:
   schedule:
     - cron: '0 2 * * 2'
