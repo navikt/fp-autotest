@@ -72,3 +72,12 @@ jobs:
         id: tester
         shell: bash
         run: mvn test -e --batch-mode -s settings.xml -Djuipter.parallelism=8 -P fpkalkulus
+
+      - name: Lager testrapport
+        run: mvn allure:report --batch-mode -s settings.xml
+
+      - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # ratchet:actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # ratchet:actions/upload-pages-artifact@v4
+        with:
+         path: ./target/allure-report
+      - uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # ratchet:actions/deploy-pages@v4
