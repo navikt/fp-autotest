@@ -29,6 +29,9 @@ jobs:
     timeout-minutes: 15
     outputs:
       result: ${{ steps.result.outputs.result }}
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_ACTOR: ${{ github.actor }}
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # ratchet:actions/checkout@v4
         if: github.repository == 'navikt/fp-autotest'
@@ -39,12 +42,6 @@ jobs:
         with:
           repository: 'navikt/fp-autotest'
           ref: 'master'
-      - name: Create maven .m2 settings for GITHUB
-        uses: whelk-io/maven-settings-xml-action@9dc09b23833fa9aa7f27b63db287951856f3433d # ratchet:whelk-io/maven-settings-xml-action@v22
-        with:
-          repositories: '[{"id": "github", "name": "github", "url": "https://maven.pkg.github.com/${{ github.repository }}", "releases": { "enabled": "true" }, "snapshots": { "enabled": "false" }}]'
-          servers: '[{ "id": "github", "username": "${{ github.actor }}", "password": "${{ secrets.GITHUB_TOKEN}}" }]'
-          output_file: settings.xml
       - uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # ratchet:actions/setup-java@v3
         with:
           distribution: 'temurin'
@@ -94,22 +91,22 @@ jobs:
       - name: Utfører tester fra test suite ${{ inputs.test-suite }} mot SUT
         id: tester
         shell: bash
-        run: mvn test -e --batch-mode -s settings.xml -Djuipter.parallelism=${{ inputs.parallellitet }} -P ${{ inputs.test-suite }} > >(tee test-result-log.txt)
+        run: mvn test -e --batch-mode -Djuipter.parallelism=${{ inputs.parallellitet }} -P ${{ inputs.test-suite }} > >(tee test-result-log.txt)
       - name: Sjekker loggen etter feil
         if: (success() || failure()) && steps.setup.outcome == 'success'
         id: logger
         shell: bash
         run: |
           if [[ ${{ inputs.test-suite }} == 'fptilbake' ]]; then
-            mvn test -e --batch-mode -s settings.xml -Djuipter.parallelism=${{ inputs.parallellitet }} -P loggfeil -DikkeSjekkLengdeAvContainer=fpdokgen -DkortHelgeLogg=fpoppdrag
+            mvn test -e --batch-mode -Djuipter.parallelism=${{ inputs.parallellitet }} -P loggfeil -DikkeSjekkLengdeAvContainer=fpdokgen -DkortHelgeLogg=fpoppdrag
           elif [[ ${{ inputs.test-suite }} == 'verdikjede' ]]; then
-            mvn test -e --batch-mode -s settings.xml -Djuipter.parallelism=${{ inputs.parallellitet }} -P logger -DikkeSjekkLengdeAvContainer=fpdokgen
+            mvn test -e --batch-mode -Djuipter.parallelism=${{ inputs.parallellitet }} -P logger -DikkeSjekkLengdeAvContainer=fpdokgen
           elif [[ ${{ inputs.test-suite }} == 'fplos' ]]; then
-            mvn test -e --batch-mode -s settings.xml -Djuipter.parallelism=${{ inputs.parallellitet }} -P logger -DikkeSjekkLengdeAvContainer=fpdokgen,fpoppdrag
+            mvn test -e --batch-mode -Djuipter.parallelism=${{ inputs.parallellitet }} -P logger -DikkeSjekkLengdeAvContainer=fpdokgen,fpoppdrag
           elif [[ ${{ inputs.test-suite }} == 'fpsak' ]]; then
-            mvn test -e --batch-mode -s settings.xml -Djuipter.parallelism=${{ inputs.parallellitet }} -P logger -DikkeSjekkLengdeAvContainer=fpdokgen
+            mvn test -e --batch-mode -Djuipter.parallelism=${{ inputs.parallellitet }} -P logger -DikkeSjekkLengdeAvContainer=fpdokgen
           else
-            mvn test -e --batch-mode -s settings.xml -Djuipter.parallelism=${{ inputs.parallellitet }} -P loggfeil
+            mvn test -e --batch-mode -Djuipter.parallelism=${{ inputs.parallellitet }} -P loggfeil
           fi
       - name: Sjekker minneforbruk
         if: failure() || cancelled()

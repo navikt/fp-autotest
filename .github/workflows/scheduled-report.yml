@@ -14,14 +14,11 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_ACTOR: ${{ github.actor }}
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # ratchet:actions/checkout@v4
-      - name: Create maven .m2 settings for GITHUB
-        uses: whelk-io/maven-settings-xml-action@9dc09b23833fa9aa7f27b63db287951856f3433d # ratchet:whelk-io/maven-settings-xml-action@v22
-        with:
-          repositories: '[{"id": "github", "name": "github", "url": "https://maven.pkg.github.com/${{ github.repository }}", "releases": { "enabled": "true" }, "snapshots": { "enabled": "false" }}]'
-          servers: '[{ "id": "github", "username": "${{ github.actor }}", "password": "${{ secrets.GITHUB_TOKEN}}" }]'
-          output_file: settings.xml
       - uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # ratchet:actions/setup-java@v3
         with:
           distribution: 'temurin'
@@ -57,22 +54,22 @@ jobs:
 
       - name: Tester - verdikjede
         shell: bash
-        run: mvn test -e --batch-mode -s settings.xml -Djuipter.parallelism=8 -P verdikjede
+        run: mvn test -e --batch-mode -Djuipter.parallelism=8 -P verdikjede
       - name: Tester - fpsak
         shell: bash
-        run: mvn test -e --batch-mode -s settings.xml -Djuipter.parallelism=8 -P fpsak
+        run: mvn test -e --batch-mode -Djuipter.parallelism=8 -P fpsak
       - name: Tester - fptilbake
         shell: bash
-        run: mvn test -e --batch-mode -s settings.xml -Djuipter.parallelism=8 -P fptilbake
+        run: mvn test -e --batch-mode -Djuipter.parallelism=8 -P fptilbake
       - name: Tester - fplos
         shell: bash
-        run: mvn test -e --batch-mode -s settings.xml -Djuipter.parallelism=8 -P fplos
+        run: mvn test -e --batch-mode -Djuipter.parallelism=8 -P fplos
       - name: Tester - fpkalkulus
         shell: bash
-        run: mvn test -e --batch-mode -s settings.xml -Djuipter.parallelism=8 -P fpkalkulus
+        run: mvn test -e --batch-mode -Djuipter.parallelism=8 -P fpkalkulus
 
       - name: Lager testrapport
-        run: mvn allure:report --batch-mode -s settings.xml
+        run: mvn allure:report --batch-mode
 
       - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # ratchet:actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # ratchet:actions/upload-pages-artifact@v4

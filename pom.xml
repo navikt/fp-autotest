@@ -369,4 +369,11 @@
             <url>https://maven.pkg.github.com/navikt/fp-autotest</url>
         </repository>
     </distributionManagement>
+
+    <repositories>
+        <repository>
+            <id>github</id> <!-- OBS: Settings fil som generes i github action inneholder ikke repo-del, må derfor har her. -->
+            <url>https://maven.pkg.github.com/navikt/fp-bom</url>
+        </repository>
+    </repositories>
 </project>
