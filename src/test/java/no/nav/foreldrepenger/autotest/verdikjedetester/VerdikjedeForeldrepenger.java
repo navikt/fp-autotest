@@ -2073,6 +2073,11 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var vedtaksperioderInnsyn = fpSak.gjeldendeVedtak().perioder();
         assertThat(vedtaksperioderInnsyn).hasSize(3);
 
+        // Verifiser info om beregning på innsynsak
+        assertThat(fpSak.gjeldendeVedtak().tilkjentYtelse().utbetalingsperioder()).hasSize(4);
+        assertThat(fpSak.gjeldendeVedtak().tilkjentYtelse().feriepenger()).hasSize(2);
+
+
         // Verifisere at alle perioder er innvilget i både uttak og vedtaket i innsyn
         uttakResultatPerioder.forEach(
                 periode -> assertThat(periode.getPeriodeResultatType()).isEqualTo(PeriodeResultatType.INNVILGET));
@@ -2575,23 +2580,23 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET, HistorikkType.BREV_SENDT);
 
         // Verifiser innsyn har korrekt uttak periode for annenpart EØS
-//        var innsynSak = far.innsyn().hentFpSakUtenÅpenBehandling(saksnummer);
-//        var uttakPeriodeAnnenpartEøs = innsynSak.gjeldendeVedtak().perioderAnnenpartEøs();
-//        assertThat(uttakPeriodeAnnenpartEøs).hasSize(2);
-//
-//        var førstePeriodeInnsyn = uttakPeriodeAnnenpartEøs.get(0);
-//        var førsteAvklarAnnenforelderEøsPeriodeFpsak = avklarAnnenforelderEøsPerioder.getPerioder().get(0);
-//        assertThat(førstePeriodeInnsyn.fom()).isEqualTo(førsteAvklarAnnenforelderEøsPeriodeFpsak.fom());
-//        assertThat(førstePeriodeInnsyn.tom()).isEqualTo(førsteAvklarAnnenforelderEøsPeriodeFpsak.tom());
-//        assertThat(førstePeriodeInnsyn.trekkonto()).isEqualTo(no.nav.foreldrepenger.kontrakter.fpoversikt.KontoType.MØDREKVOTE);
-//        assertThat(førstePeriodeInnsyn.trekkdager().verdi()).isEqualByComparingTo(førsteAvklarAnnenforelderEøsPeriodeFpsak.trekkdager());
-//
-//        var andrePeriodeInnsyn = uttakPeriodeAnnenpartEøs.get(1);
-//        var andreAvklarAnnenforelderEøsPeriodeFpsak = avklarAnnenforelderEøsPerioder.getPerioder().get(1);
-//        assertThat(andrePeriodeInnsyn.fom()).isEqualTo(andreAvklarAnnenforelderEøsPeriodeFpsak.fom());
-//        assertThat(andrePeriodeInnsyn.tom()).isEqualTo(andreAvklarAnnenforelderEøsPeriodeFpsak.tom());
-//        assertThat(andrePeriodeInnsyn.trekkonto()).isEqualTo(no.nav.foreldrepenger.kontrakter.fpoversikt.KontoType.FELLESPERIODE);
-//        assertThat(andrePeriodeInnsyn.trekkdager().verdi()).isEqualByComparingTo(andreAvklarAnnenforelderEøsPeriodeFpsak.trekkdager());
+        var innsynSak = far.innsyn().hentFpSakUtenÅpenBehandling(saksnummer);
+        var uttakPeriodeAnnenpartEøs = innsynSak.gjeldendeVedtak().perioderAnnenpartEøs();
+        assertThat(uttakPeriodeAnnenpartEøs).hasSize(2);
+
+        var førstePeriodeInnsyn = uttakPeriodeAnnenpartEøs.get(0);
+        var førsteAvklarAnnenforelderEøsPeriodeFpsak = avklarAnnenforelderEøsPerioder.getPerioder().get(0);
+        assertThat(førstePeriodeInnsyn.fom()).isEqualTo(førsteAvklarAnnenforelderEøsPeriodeFpsak.fom());
+        assertThat(førstePeriodeInnsyn.tom()).isEqualTo(førsteAvklarAnnenforelderEøsPeriodeFpsak.tom());
+        assertThat(førstePeriodeInnsyn.kontoType()).isEqualTo(MØDREKVOTE);
+        assertThat(førstePeriodeInnsyn.trekkdager().verdi()).isEqualByComparingTo(førsteAvklarAnnenforelderEøsPeriodeFpsak.trekkdager());
+
+        var andrePeriodeInnsyn = uttakPeriodeAnnenpartEøs.get(1);
+        var andreAvklarAnnenforelderEøsPeriodeFpsak = avklarAnnenforelderEøsPerioder.getPerioder().get(1);
+        assertThat(andrePeriodeInnsyn.fom()).isEqualTo(andreAvklarAnnenforelderEøsPeriodeFpsak.fom());
+        assertThat(andrePeriodeInnsyn.tom()).isEqualTo(andreAvklarAnnenforelderEøsPeriodeFpsak.tom());
+        assertThat(andrePeriodeInnsyn.kontoType()).isEqualTo(FELLESPERIODE);
+        assertThat(andrePeriodeInnsyn.trekkdager().verdi()).isEqualByComparingTo(andreAvklarAnnenforelderEøsPeriodeFpsak.trekkdager());
 
 
         // Revurdering
