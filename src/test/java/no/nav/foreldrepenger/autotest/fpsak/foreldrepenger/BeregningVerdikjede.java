@@ -16,6 +16,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+import no.nav.foreldrepenger.kontrakter.fpoversikt.Inntektskilde;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -250,11 +252,15 @@ class BeregningVerdikjede extends VerdikjedeTestBase {
         var bekreftelse = beslutter.hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse());
         bekreftelse.godkjennAksjonspunkter(List.of(apFaktaOmBeregning));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
-
         // ASSERT FASTSATT BEREGNINGSGRUNNLAG //
         var beregningsgrunnlag = saksbehandler.valgtBehandling.getBeregningsgrunnlag();
         verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(0),
                 lagBGAndelMedBesteberegning("BA", 120_000));
+
+        var fpSak = mor.innsyn().hentFpSakUtenÅpenBehandling(saksnummer);
+
+        // Ikke støttet enda
+        Assertions.assertThat(fpSak.gjeldendeVedtak().beregningsgrunnlag()).isNull();
     }
 
     @Test
@@ -344,6 +350,18 @@ class BeregningVerdikjede extends VerdikjedeTestBase {
         assertThat(beregningsgrunnlag.getBeregningsgrunnlagPeriode(2).getBeregningsgrunnlagPrStatusOgAndel().stream()
                 .filter(andel -> andel.getAktivitetStatus().equals(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE))
                 .mapToInt(andel -> ((Double)andel.getDagsats()).intValue()).sum()).isZero();
+
+        var fpSak = mor.innsyn().hentFpSakUtenÅpenBehandling(saksnummer);
+
+        var beregningsresultat = fpSak.gjeldendeVedtak().beregningsgrunnlag();
+        Assertions.assertThat(beregningsresultat).isNotNull();
+        Assertions.assertThat(beregningsresultat.beregningsandeler()).hasSize(2);
+
+        Assertions.assertThat(beregningsresultat.beregningsandeler().get(0).fastsattPrÅr()).isEqualTo(BigDecimal.valueOf(900000.0));
+        Assertions.assertThat(beregningsresultat.beregningsandeler().get(1).fastsattPrÅr()).isEqualTo(BigDecimal.valueOf(0.0));
+        Assertions.assertThat(beregningsresultat.beregningsandeler().get(0).inntektsKilde()).isEqualTo(Inntektskilde.INNTEKTSMELDING);
+        Assertions.assertThat(beregningsresultat.beregningsandeler().get(1).inntektsKilde()).isEqualTo(Inntektskilde.PGI);
+
     }
 
     private void assertFordeltSNAndel(BeregningsgrunnlagPeriodeDto periode, int bruttoPrÅr) {
