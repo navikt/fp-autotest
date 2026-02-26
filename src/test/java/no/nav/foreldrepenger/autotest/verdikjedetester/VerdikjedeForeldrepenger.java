@@ -2074,6 +2074,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         assertThat(vedtaksperioderInnsyn).hasSize(3);
 
         // Verifiser info om beregning på innsynsak
+        assertThat(fpSak.gjeldendeVedtak().beregningsgrunnlag()).isNotNull();
         assertThat(fpSak.gjeldendeVedtak().tilkjentYtelse().utbetalingsperioder()).hasSize(4);
         assertThat(fpSak.gjeldendeVedtak().tilkjentYtelse().feriepenger()).hasSize(2);
 
