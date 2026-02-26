@@ -351,7 +351,6 @@ class BeregningVerdikjede extends VerdikjedeTestBase {
                 .filter(andel -> andel.getAktivitetStatus().equals(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE))
                 .mapToInt(andel -> ((Double)andel.getDagsats()).intValue()).sum()).isZero();
 
-        // ASSERT BEREGNINGSRESULTAT //
         var fpSak = mor.innsyn().hentFpSakUtenÅpenBehandling(saksnummer);
 
         var beregningsresultat = fpSak.gjeldendeVedtak().beregningsgrunnlag();
