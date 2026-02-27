@@ -48,7 +48,7 @@ allure-results/*
 *-result.json
 .DS_Store
 server/src/main/resources/webapps
-resources/pipeline/.env
+pipeline/.env
 resources/.DS_Store
 lokal-utvikling/docker-compose-lokal
 lokal-utvikling/update-versions.sh
