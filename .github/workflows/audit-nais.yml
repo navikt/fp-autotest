@@ -6,6 +6,7 @@ on:
       - master
     paths:
       - 'resources/pipeline/audit.nais/Dockerfile'
+      - '.github/workflows/audit-nais.yml'
 jobs:
   build:
     name: Build audit.nais mock
@@ -13,27 +14,18 @@ jobs:
       contents: read
       packages: write
     runs-on: ubuntu-latest
-    env:
-      image: 'ghcr.io/${{ github.repository }}/audit-nais-mock'
     steps:
       - name: Checkout code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # ratchet:actions/checkout@v4
-      - name: Generate build version
-        id: generate-build-version
-        run: |
-          echo "build-version=$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_ENV
-      - name: Print build version
-        run: echo "Generated build-version is ${{ env.build-version }}"
-      - name: Login to GitHub Packages Docker Registry
-        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Set up QEMU
         uses: docker/setup-qemu-action@c7c53464625b32c7a7e944ae62b3e17d2b600130 # ratchet:docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # ratchet:docker/setup-buildx-action@v2
+      - name: NAIS login
+        uses: nais/login@e7cf2c159677dc7c7d599feff5f808f2bf59c7cf # ratchet:nais/login@v0
+        id: login
+        with:
+          team: teamforeldrepenger
       - name: Build and push
         uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # ratchet:docker/build-push-action@v4
         with:
@@ -41,6 +33,6 @@ jobs:
           platforms: linux/amd64, linux/arm64
           pull: true
           push: true
-          tags: ${{ env.image }}:latest
+          tags: ${{ steps.login.outputs.registry }}/${{ github.repository }}/audit-nais-mock:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
