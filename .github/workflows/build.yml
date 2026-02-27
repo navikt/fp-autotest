@@ -4,19 +4,11 @@ on:
   push:
     branches:
       - '**'
-    paths-ignore:
-      - '**.md'
-      - '**.MD'
-      - '.gitignore'
-      - '.editorconfig'
-      - '.java-version'
-      - '.gitattributes'
-      - 'LICENSE'
-      - 'CODEOWNERS'
-      - '.github/workflows/trigger.yml.yml'
-      - 'docs/**'
-      - '.github/*.yml'
-
+    paths:
+      - '.github/workflows/build.yml'
+      - 'src/**'
+      - 'pipeline/**'
+      - 'pom.xml'
 jobs:
   fpsak-tester:
     name: Fpsak tester
