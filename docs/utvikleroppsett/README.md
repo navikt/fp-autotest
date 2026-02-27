@@ -54,7 +54,7 @@
 
 1. Gå til katalogen der du vil ha kodeprosjektene dine og kjør `git clone git@github.com:navikt/fp-autotest.git`
 2. Kjør `cd fp-autotest`
-3. Kjør `resources/keystore/make-dummy-keystore.sh`
+3. Kjør `pipeline/keystore/make-dummy-keystore.sh`
 4. Legg til følgende i hosts-filen (på Mac/Linux: `/etc/hosts`, på Windows: `C:\Windows\System32\drivers\etc\hosts`):
     ```
     127.0.0.1  fptilbake fpoppdrag fpformidling fprisk fpabonennt fpfrontend fpsak fpabakus vtp oracle postgres kafka
@@ -126,9 +126,9 @@ versjon for hver gang du skriver inn kommandoen.
 
 
 ### Docker Compose for utvikling av tester
-I prosjektet finnes det en docker-compose fil som befinner seg under `resources/pipeline/compose.yml`. Denne blir
+I prosjektet finnes det en docker-compose fil som befinner seg under `pipeline/compose.yml`. Denne blir
 brukt til å kjøre opp verdikjeden i Github Action. For å kjøre opp HELE verdikjeden kan du gå til katalogen hvor 
-*docker-compose.yml* filen befinner seg (_resources/pipeline/_) og kjøre følgende:
+*docker-compose.yml* filen befinner seg (_pipeline/_) og kjøre følgende:
 
 1. Sette hvilke versjoner som skal kjøres opp: `./update-versions.sh`
     1. Kommandoen over brukes den siste versjon av alle applikasjonene (dvs. "latest"). Ønsker du en spesifikk versjon 

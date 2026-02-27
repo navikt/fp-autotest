@@ -74,7 +74,7 @@ done
 
 applikasjoner=( "$@" )
 folder=docker-compose-lokal
-relativ_path=../../resources/pipeline
+relativ_path=../../pipeline
 
 if [ $# -eq 0 ]; then
     echo "Alle applikasjonene er satt opp til å kjøre i docker compose"

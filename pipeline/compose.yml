@@ -281,7 +281,7 @@ services:
         condition: service_started
   wonderwall-fpfrontend:
     <<: *default-konfigurasjon
-    image: ghcr.io/nais/wonderwall:latest
+    image: $WONDERWALL_IMAGE
     container_name: wonderwall-fpfrontend
     mem_limit: 16mb
     command: |
@@ -333,7 +333,7 @@ services:
 
   wonderwall-fpavdelingsleder:
     <<: *default-konfigurasjon
-    image: ghcr.io/nais/wonderwall:latest
+    image: $WONDERWALL_IMAGE
     container_name: wonderwall-fpavdelingsleder
     mem_limit: 16mb
     command: |
@@ -386,7 +386,7 @@ services:
         condition: service_started
   wonderwall-fpjournalforing:
     <<: *default-konfigurasjon
-    image: ghcr.io/nais/wonderwall:latest
+    image: $WONDERWALL_IMAGE
     container_name: wonderwall-fpjournalforing
     mem_limit: 16mb
     command: |
@@ -742,7 +742,7 @@ services:
 
   wonderwall-fpinntektsmelding-frontend:
     <<: *default-konfigurasjon
-    image: ghcr.io/nais/wonderwall:latest
+    image: $WONDERWALL_IMAGE
     container_name: wonderwall-fpinntektsmelding-frontend
     mem_limit: 16mb
     command: |
@@ -947,7 +947,7 @@ services:
         condition: service_started
   fpswagger-wonderwall:
     <<: *default-konfigurasjon
-    image: ghcr.io/nais/wonderwall:latest
+    image: $WONDERWALL_IMAGE
     container_name: wonderwall-swagger
     mem_limit: 16mb
     command: |
@@ -972,7 +972,7 @@ services:
       - "127.0.0.1:6379:6379"
   wonderwall-selvbetjening-sso-server:
     <<: *default-konfigurasjon
-    image: ghcr.io/nais/wonderwall:latest
+    image: $WONDERWALL_IMAGE
     container_name: wonderwall-selvbetjening-sso-server
     mem_limit: 16mb
     command: |
@@ -996,7 +996,7 @@ services:
       - fpcache
   wonderwall-foreldrepengeoversikt:
     <<: *default-konfigurasjon
-    image: ghcr.io/nais/wonderwall:latest
+    image: $WONDERWALL_IMAGE
     container_name: wonderwall-foreldrepengeoversikt
     mem_limit: 16mb
     command: |
@@ -1021,7 +1021,7 @@ services:
       - wonderwall-selvbetjening-sso-server
   wonderwall-foreldrepengesoknad:
     <<: *default-konfigurasjon
-    image: ghcr.io/nais/wonderwall:latest
+    image: $WONDERWALL_IMAGE
     container_name: wonderwall-foreldrepengesoknad
     mem_limit: 16mb
     command: |
@@ -1046,7 +1046,7 @@ services:
       - wonderwall-selvbetjening-sso-server
   wonderwall-svangerskapspengesoknad:
     <<: *default-konfigurasjon
-    image: ghcr.io/nais/wonderwall:latest
+    image: $WONDERWALL_IMAGE
     container_name: wonderwall-svangerskapspengesoknad
     mem_limit: 16mb
     command: |
@@ -1071,7 +1071,7 @@ services:
       - wonderwall-selvbetjening-sso-server
   wonderwall-engangsstonad:
     <<: *default-konfigurasjon
-    image: ghcr.io/nais/wonderwall:latest
+    image: $WONDERWALL_IMAGE
     container_name: wonderwall-engangsstonad
     mem_limit: 16mb
     command: |

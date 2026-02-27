@@ -4,19 +4,11 @@ on:
   push:
     branches:
       - '**'
-    paths-ignore:
-      - '**.md'
-      - '**.MD'
-      - '.gitignore'
-      - '.editorconfig'
-      - '.java-version'
-      - '.gitattributes'
-      - 'LICENSE'
-      - 'CODEOWNERS'
-      - '.github/workflows/trigger.yml.yml'
-      - 'docs/**'
-      - '.github/*.yml'
-
+    paths:
+      - '.github/workflows/build.yml'
+      - 'src/**'
+      - 'pipeline/**'
+      - 'pom.xml'
 jobs:
   fpsak-tester:
     name: Fpsak tester
@@ -24,7 +16,7 @@ jobs:
        contents: read
        id-token: write
     if: github.ref_name != 'master'
-    uses: navikt/fp-autotest/.github/workflows/autotest.yml@master # ratchet:exclude
+    uses: navikt/fp-autotest/.github/workflows/autotest.yml@${{ github.ref_name }} # ratchet:exclude
     with:
       test-suite: fpsak
     secrets: inherit
@@ -35,7 +27,7 @@ jobs:
        contents: read
        id-token: write
     if: github.ref_name != 'master'
-    uses: navikt/fp-autotest/.github/workflows/autotest.yml@master # ratchet:exclude
+    uses: navikt/fp-autotest/.github/workflows/autotest.yml@${{ github.ref_name }} # ratchet:exclude
     with:
       test-suite: fptilbake
     secrets: inherit
@@ -45,7 +37,7 @@ jobs:
     permissions:
        contents: read
        id-token: write
-    uses: navikt/fp-autotest/.github/workflows/autotest.yml@master # ratchet:exclude
+    uses: navikt/fp-autotest/.github/workflows/autotest.yml@${{ github.ref_name }} # ratchet:exclude
     with:
       test-suite: verdikjede
     secrets: inherit

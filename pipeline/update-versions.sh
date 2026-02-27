@@ -17,7 +17,7 @@ imageVersion () {
 
 echo POSTGRES_IMAGE="postgres:18" > .env
 echo ORACLE_IMAGE="gvenzl/oracle-free:23-slim-faststart" >> .env
-echo AUDIT_NAIS_IMAGE="$(imageVersion "ghcr.io/navikt/fp-autotest/audit-nais-mock")" >> .env
+echo AUDIT_NAIS_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fp-autotest/audit-nais-mock")" >> .env
 echo VTP_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/vtp")" >> .env
 echo FPABAKUS_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fp-abakus")" >> .env
 echo FPKALKULUS_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fp-kalkulus")" >> .env
@@ -44,5 +44,6 @@ echo FPSWAGGER_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-manageme
 echo FPTILGANG_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fp-tilgang")" >> .env
 echo FPINNTEKTSMELDING_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fp-inntektsmelding")" >> .env
 echo FPINNTEKTSMELDINGFRONTEND_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fp-inntektsmelding-frontend")" >> .env
+echo WONDERWALL_IMAGE="$(imageVersion "ghcr.io/nais/wonderwall")" >> .env
 
 echo ".env fil opprettet - Klart for docker compose up"
