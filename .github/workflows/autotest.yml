@@ -61,12 +61,12 @@ jobs:
           team: teamforeldrepenger
       - name: Setup keystore
         shell: bash
-        run: |
-          cd pipeline/keystore
-          ./make-dummy-keystore.sh
+        working-directory: pipeline/keystore
+        run: ./make-dummy-keystore.sh
       - name: Setup fpsak og dens avhengigheter
         id: setup
         shell: bash
+        working-directory: pipeline
         run: |
           if [[ ${{ inputs.test-suite }} == 'fpkalkulus' ]]; then
             services=("fpkalkulus")
@@ -76,7 +76,6 @@ jobs:
             services=("fpsak" "fpformidling" "fpdokgen" "fpoppdrag" "fptilbake" "fprisk" "fpmottak" "fpsoknad" "fpoversikt" "fpkalkulus" "fpinntektsmelding")
           fi
 
-          cd pipeline
           ./update-versions.sh ${{ github.repository }} ${{ inputs.build-version }}
           echo "Kjører docker compose up på følgende applikasjoner: ${services[*]}"
           docker compose -f compose.yml -f compose-github.yml pull --quiet "${services[@]}"
