@@ -1,4 +1,4 @@
-name: scheduled-report.yml
+name: Scheduled allure report
 on:
   schedule:
     - cron: '0 2 * * 2'
@@ -9,6 +9,7 @@ jobs:
     name: Kjører autotest
     permissions:
       id-token: write
+      pages: write
     runs-on: 'ubuntu-latest-8-cores'
     timeout-minutes: 30
     environment:
@@ -44,7 +45,7 @@ jobs:
         id: setup
         shell: bash
         run: |
-          services=("fpsak" "fpformidling" "fpdokgen" "fpoppdrag" "fptilbake" "fprisk" "fpmottak" "fpsoknad" "fpoversikt" "fpkalkulus" "fpinntektsmelding")
+          services=("fpsak" "fpformidling" "fpdokgen" "fpoppdrag" "fptilbake" "fprisk" "fpmottak" "fpsoknad" "fpoversikt" "fpkalkulus" "fpinntektsmelding" "fplos")
           cd resources/pipeline
           ./update-versions.sh
           echo "Kjører docker compose up på følgende applikasjoner: ${services[*]}"
