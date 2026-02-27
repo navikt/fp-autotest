@@ -373,7 +373,7 @@
     <repositories>
         <repository>
             <id>github</id> <!-- OBS: Settings fil som generes i github action inneholder ikke repo-del, må derfor har her. -->
-            <url>https://maven.pkg.github.com/navikt/fp-bom</url>
+            <url>https://maven.pkg.github.com/navikt/fp-felles</url>
         </repository>
     </repositories>
 </project>
