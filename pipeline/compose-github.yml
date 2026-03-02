@@ -21,6 +21,8 @@ services:
     mem_limit: 1gb
   fpdokgen:
     mem_limit: 1gb
+  fpdokgenny:
+    mem_limit: 1gb
   fpoppdrag:
     mem_limit: 1gb
   fptilbake:
