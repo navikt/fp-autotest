@@ -440,6 +440,7 @@ services:
     environment:
       NAIS_APP_NAME: fpformidling
       DOKGEN_REST_BASE_URL: http://fpdokgen:8080
+      FPDOKGEN_BASE_URL: http://fpdokgen:8080/fpdokgen
       NY_FPDOKGEN_URL: http://fpdokgenny:8080/fpdokgen
       TOGGLE_BRUK_NY_DOKGEN: "true"
       DOKDIST_REST_BASE_URL: http://vtp:8060/rest/dokdist/v1
@@ -675,6 +676,7 @@ services:
     environment:
       NAIS_APP_NAME: fpsoknad
       DOKGEN_REST_BASE_URL: http://fpdokgen:8080
+      FPDOKGEN_BASE_URL: http://fpdokgen:8080/fpdokgen
       NY_FPDOKGEN_URL: http://fpdokgenny:8080/fpdokgen
       TOGGLE_BRUK_NY_DOKGEN: "true"
       KRYPTERING_PASSWORD: testnokkelforvtp
@@ -710,6 +712,7 @@ services:
     environment:
       NAIS_APP_NAME: fpinntektsmelding
       FPDOKGEN_URL: http://fpdokgen:8080
+      FPDOKGEN_BASE_URL: http://fpdokgen:8080/fpdokgen
       NY_FPDOKGEN_URL: http://fpdokgenny:8080/fpdokgen
       TOGGLE_BRUK_NY_DOKGEN: "true"
       ARBEIDSGIVER_NOTIFIKASJON_URL: http://vtp:8060/rest/api/fager/graphql
