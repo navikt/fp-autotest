@@ -37,9 +37,13 @@ settPorterSomSkalErstattes () {
       with_port_array=("8050")
       ;;
     fpinntektsmelding)
-          replace_port_array=("8080")
-          with_port_array=("8040")
-          ;;
+      replace_port_array=("8080")
+      with_port_array=("8040")
+      ;;
+    fplos)
+      replace_port_array=("8080")
+      with_port_array=("8071")
+      ;;
     *)
       replace_port_array=("")
       with_port_array=("")
