@@ -22,6 +22,7 @@ public interface Innsender {
     Saksnummer sendInnSøknad(SøknadDto søknad, AktørId aktørId, Fødselsnummer fnr, AktørId aktørIdAnnenpart, Saksnummer saksnummer);
     Saksnummer sendInnSøknad(EndringssøknadForeldrepengerDto søknad, AktørId aktørId, Fødselsnummer fnr, AktørId aktørIdAnnenpart, Saksnummer saksnummer);
     Saksnummer sendInnPapirsøknadForeldrepenger(AktørId aktørId, Fødselsnummer fnr, AktørId aktørIdAnnenpart);
+    Saksnummer sendInnPapirsøknadSvangerskapspenger(AktørId aktørId, Fødselsnummer fnr, AktørId aktørIdAnnenpart);
     Saksnummer sendInnPapirsøknadEEndringForeldrepenger(AktørId aktørId, Fødselsnummer fnr, AktørId aktørIdAnnenpart, Saksnummer saksnummer);
     Saksnummer sendInnPapirsøknadEngangsstønad(AktørId aktørId, Fødselsnummer fnr);
     void sendInnKlage(AktørId aktørId, Fødselsnummer fnr, Saksnummer saksnummer);
