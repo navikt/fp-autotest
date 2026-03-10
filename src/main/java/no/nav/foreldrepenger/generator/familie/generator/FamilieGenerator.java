@@ -1,5 +1,9 @@
 package no.nav.foreldrepenger.generator.familie.generator;
 
+import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.bosattFra;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.norskStatsborgerskap;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.ugift;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +21,7 @@ import no.nav.foreldrepenger.generator.familie.Familie;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.ArbeidsforholdDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.InntektYtelseModellDto;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.Kjønn;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.PersonDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.PrivatArbeidsgiver;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.Rolle;
@@ -57,6 +62,11 @@ public class FamilieGenerator {
     public FamilieGenerator barn(LocalDate fødselsdato) {
         var barn = PersonDto.builder()
                 .rolle(Rolle.BARN)
+                .kjønn(Kjønn.K)
+                .adresser(foreldrene().stream().findFirst().map(PersonDto::adresser).orElse(List.of()))
+                .personstatus(bosattFra(fødselsdato))
+                .sivilstand(ugift())
+                .statsborgerskap(norskStatsborgerskap())
                 .fødselsdato(fødselsdato)
                 .build();
         this.parter.add(barn);
@@ -72,12 +82,17 @@ public class FamilieGenerator {
         foreldre.get(0).familierelasjoner().add(new FamilierelasjonModellDto(relasjon, foreldre.get(1).id()));
         foreldre.get(1).familierelasjoner().add(new FamilierelasjonModellDto(relasjon, foreldre.get(0).id()));
         if (Objects.requireNonNull(relasjon) == FamilierelasjonModellDto.Relasjon.EKTE) {
-            foreldre.forEach(f -> f.sivilstand().add(new SivilstandDto(SivilstandDto.Sivilstander.GIFT, LocalDate.now().minusYears(4), null)));
+            foreldre.forEach(f -> oppdaterSivilstand(f, SivilstandDto.Sivilstander.GIFT));
         } else if (relasjon == FamilierelasjonModellDto.Relasjon.SAMBOER) {
-            foreldre.forEach(f -> f.sivilstand().add(new SivilstandDto(SivilstandDto.Sivilstander.SAMB, null, null)));
+            foreldre.forEach(f -> oppdaterSivilstand(f, SivilstandDto.Sivilstander.SAMB));
         }
 
         return this;
+    }
+
+    private static void oppdaterSivilstand(PersonDto f, SivilstandDto.Sivilstander sivilstand) {
+        f.sivilstand().removeIf(s -> SivilstandDto.Sivilstander.UGIF.equals(s.sivilstand()));
+        f.sivilstand().add(new SivilstandDto(sivilstand, LocalDate.now().minusYears(4), null));
     }
 
     private void opprettFamilieRelasjonForFødteBarn() {
