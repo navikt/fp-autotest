@@ -254,6 +254,14 @@ public abstract class Søker {
         return this.saksnummer;
     }
 
+    public Saksnummer søkPapirsøknadSvangerskapspenger() {
+        genererUniktNavConsumerIdForDokument();
+        LOG.info("Sender inn papirsøknad for {} ..", fødselsnummer.value());
+        this.saksnummer = innsender.sendInnPapirsøknadSvangerskapspenger(aktørId, fødselsnummer, aktørIdAnnenpart);
+        LOG.debug("Papirsøknad sendt inn og behandling opprettet på {}", saksnummer.value());
+        return this.saksnummer;
+    }
+
     public Saksnummer sendInnPapirsøknadEEndringForeldrepenger() {
         guardTrengerEksisterendeBehandling();
         genererUniktNavConsumerIdForDokument();

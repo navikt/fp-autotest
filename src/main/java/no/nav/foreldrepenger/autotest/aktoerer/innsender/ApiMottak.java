@@ -155,6 +155,11 @@ public class ApiMottak extends DokumentInnsendingHjelper {
     }
 
     @Override
+    public Saksnummer sendInnPapirsøknadSvangerskapspenger(AktørId aktørId, Fødselsnummer fnr, AktørId aktørIdAnnenpart) {
+        return sendInnPapirsøknad(fnr, DokumenttypeId.SØKNAD_SVANGERSKAPSPENGER, null);
+    }
+
+    @Override
     public Saksnummer sendInnPapirsøknadEEndringForeldrepenger(AktørId aktørId,
                                                                Fødselsnummer fnr,
                                                                AktørId aktørIdAnnenpart,
