@@ -229,6 +229,8 @@ services:
         condition: service_started
       fpkalkulus:
         condition: service_started
+      fpdokgen:
+        condition: service_started
   fpfrontend:
     <<: *default-konfigurasjon
     image: $FPFRONTEND_IMAGE
@@ -439,7 +441,6 @@ services:
     mem_limit: 512mb
     environment:
       NAIS_APP_NAME: fpformidling
-      FPDOKGEN_BASE_URL: http://fpdokgen:8080/fpdokgen
       DOKDIST_REST_BASE_URL: http://vtp:8060/rest/dokdist/v1
       JOURNALPOST_REST_V1_URL: http://vtp:8060/rest/dokarkiv/rest/journalpostapi/v1/journalpost
       JOURNALPOST_REST_PROXY_V1_URL: http://vtp:8060/rest/dokarkiv/rest/journalpostapi/v1/journalpost
@@ -655,7 +656,6 @@ services:
     mem_limit: 512mb
     environment:
       NAIS_APP_NAME: fpsoknad
-      FPDOKGEN_BASE_URL: http://fpdokgen:8080/fpdokgen
       KRYPTERING_PASSWORD: testnokkelforvtp
     env_file:
       - *common-properties
@@ -688,7 +688,6 @@ services:
     mem_limit: 512mb
     environment:
       NAIS_APP_NAME: fpinntektsmelding
-      FPDOKGEN_BASE_URL: http://fpdokgen:8080/fpdokgen
       ARBEIDSGIVER_NOTIFIKASJON_URL: http://vtp:8060/rest/api/fager/graphql
       ARBEIDSGIVER_NOTIFIKASJON_SCOPES: api://vtp.teamforeldrepenger.vtp/.default
       ARBEIDSGIVER_ALTINN_TILGANGER_URL: http://vtp:8060/rest/arbeidsgiver-altinn-tilganger
