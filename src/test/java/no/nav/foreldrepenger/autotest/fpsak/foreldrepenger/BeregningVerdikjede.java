@@ -13,9 +13,12 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatType;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.kontrakter.fpoversikt.Inntektskilde;
 
 import org.assertj.core.api.Assertions;
@@ -335,19 +338,29 @@ class BeregningVerdikjede extends VerdikjedeTestBase {
 
         // ASSERT FASTSATT BEREGNINGSGRUNNLAG //
         var beregningsgrunnlag = saksbehandler.valgtBehandling.getBeregningsgrunnlag();
-        verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(0),
+        var førsteUttaksdato = saksbehandler.valgtBehandling.getUttakResultatPerioder()
+                .getPerioderSøker()
+                .stream()
+                .filter(p -> p.getPeriodeResultatType().equals(PeriodeResultatType.INNVILGET))
+                .min(Comparator.comparing(UttakResultatPeriode::getFom))
+                .map(UttakResultatPeriode::getFom)
+                .orElseThrow();
+        var førstePeriodeMedRef = beregningsgrunnlag.getBeregningsgrunnlagPeriode(førsteUttaksdato);
+        var startIndexRefusjon = beregningsgrunnlag.getBeregningsgrunnlagPerioder().indexOf(førstePeriodeMedRef);
+
+        verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(startIndexRefusjon),
                 lagBGAndel(arbeidsgiverIdentifikator, 900_000, 900_000, 0, 900_000));
         assertThat(beregningsgrunnlag.getBeregningsgrunnlagPeriode(0).getBeregningsgrunnlagPrStatusOgAndel().stream()
                 .filter(andel -> andel.getAktivitetStatus().equals(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE))
                 .mapToInt(andel -> ((Double)andel.getDagsats()).intValue()).sum()).isZero();
 
-        verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(1),
+        verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(startIndexRefusjon+1),
                 lagBGAndelMedFordelt(arbeidsgiverIdentifikator, 900_000, 500_000, 0, 500_000));
-        assertFordeltSNAndel(beregningsgrunnlag.getBeregningsgrunnlagPeriode(1), 235_138);
+        assertFordeltSNAndel(beregningsgrunnlag.getBeregningsgrunnlagPeriode(startIndexRefusjon+1), 235_138);
 
-        verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(2),
+        verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(startIndexRefusjon+2),
                 lagBGAndelMedFordelt(arbeidsgiverIdentifikator, 900_000, 720_000, 0, 720_000));
-        assertThat(beregningsgrunnlag.getBeregningsgrunnlagPeriode(2).getBeregningsgrunnlagPrStatusOgAndel().stream()
+        assertThat(beregningsgrunnlag.getBeregningsgrunnlagPeriode(startIndexRefusjon+2).getBeregningsgrunnlagPrStatusOgAndel().stream()
                 .filter(andel -> andel.getAktivitetStatus().equals(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE))
                 .mapToInt(andel -> ((Double)andel.getDagsats()).intValue()).sum()).isZero();
 
@@ -442,8 +455,15 @@ class BeregningVerdikjede extends VerdikjedeTestBase {
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
         // ASSERT FASTSATT BEREGNINGSGRUNNLAG //
+        var førsteUttaksdato = saksbehandler.valgtBehandling.getUttakResultatPerioder()
+                .getPerioderSøker()
+                .stream()
+                .filter(p -> p.getPeriodeResultatType().equals(PeriodeResultatType.INNVILGET))
+                .min(Comparator.comparing(UttakResultatPeriode::getFom))
+                .map(UttakResultatPeriode::getFom)
+                .orElseThrow();
         var beregningsgrunnlag = saksbehandler.valgtBehandling.getBeregningsgrunnlag();
-        verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(0),
+        verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(førsteUttaksdato),
                 lagBGAndel(arbeidsgiverIdentifikator, 450_000, 360_000, 0, 348_000));
     }
 
