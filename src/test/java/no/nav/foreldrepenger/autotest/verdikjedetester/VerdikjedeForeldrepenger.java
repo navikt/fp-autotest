@@ -139,6 +139,8 @@ import no.nav.foreldrepenger.kontrakter.felles.kodeverk.MorsAktivitet;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Orgnummer;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Saksnummer;
 import no.nav.foreldrepenger.kontrakter.fpoversikt.DekningsgradSak;
+import no.nav.foreldrepenger.kontrakter.fpoversikt.TilkjentYtelse;
+import no.nav.foreldrepenger.kontrakter.risk.kodeverk.RisikoklasseType;
 import no.nav.foreldrepenger.soknad.kontrakt.BrukerRolle;
 import no.nav.foreldrepenger.soknad.kontrakt.ForeldrepengesøknadDto;
 import no.nav.foreldrepenger.soknad.kontrakt.SøknadDto;
@@ -152,7 +154,6 @@ import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.DokumentTypeId;
 import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.Dokumenterer;
 import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.InnsendingType;
 import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.ÅpenPeriodeDto;
-import no.nav.foreldrepenger.kontrakter.risk.kodeverk.RisikoklasseType;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.ArenaSakerDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.GrunnlagDto;
@@ -2076,7 +2077,15 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         // Verifiser info om beregning på innsynsak
         assertThat(fpSak.gjeldendeVedtak().beregningsgrunnlag()).isNotNull();
         assertThat(fpSak.gjeldendeVedtak().tilkjentYtelse().utbetalingsperioder()).hasSize(4);
-        assertThat(fpSak.gjeldendeVedtak().tilkjentYtelse().feriepenger()).hasSize(2);
+        var førsteUttak = fpSak.gjeldendeVedtak()
+                .tilkjentYtelse()
+                .utbetalingsperioder()
+                .stream()
+                .map(TilkjentYtelse.TilkjentYtelsePeriode::fom)
+                .min(Comparator.naturalOrder())
+                .orElseThrow();
+        var årMedFeriepenger = førsteUttak.plusDays(60).getYear() == førsteUttak.getYear() ? 1 : 2;
+        assertThat(fpSak.gjeldendeVedtak().tilkjentYtelse().feriepenger()).hasSize(årMedFeriepenger);
 
 
         // Verifisere at alle perioder er innvilget i både uttak og vedtaket i innsyn
