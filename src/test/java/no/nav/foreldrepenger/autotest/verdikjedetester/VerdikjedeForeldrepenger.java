@@ -139,7 +139,6 @@ import no.nav.foreldrepenger.kontrakter.felles.kodeverk.MorsAktivitet;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Orgnummer;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Saksnummer;
 import no.nav.foreldrepenger.kontrakter.fpoversikt.DekningsgradSak;
-import no.nav.foreldrepenger.kontrakter.fpoversikt.TilkjentYtelse;
 import no.nav.foreldrepenger.kontrakter.risk.kodeverk.RisikoklasseType;
 import no.nav.foreldrepenger.soknad.kontrakt.BrukerRolle;
 import no.nav.foreldrepenger.soknad.kontrakt.ForeldrepengesøknadDto;
@@ -2077,14 +2076,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         // Verifiser info om beregning på innsynsak
         assertThat(fpSak.gjeldendeVedtak().beregningsgrunnlag()).isNotNull();
         assertThat(fpSak.gjeldendeVedtak().tilkjentYtelse().utbetalingsperioder()).hasSize(4);
-        var førsteUttak = fpSak.gjeldendeVedtak()
-                .tilkjentYtelse()
-                .utbetalingsperioder()
-                .stream()
-                .map(TilkjentYtelse.TilkjentYtelsePeriode::fom)
-                .min(Comparator.naturalOrder())
-                .orElseThrow();
-        var årMedFeriepenger = førsteUttak.plusDays(60).getYear() == førsteUttak.getYear() ? 1 : 2;
+        var årMedFeriepenger = fpStartdatoMor.plusWeeks(12).getYear() == fpStartdatoMor.getYear() ? 1 : 2;
         assertThat(fpSak.gjeldendeVedtak().tilkjentYtelse().feriepenger()).hasSize(årMedFeriepenger);
 
 
