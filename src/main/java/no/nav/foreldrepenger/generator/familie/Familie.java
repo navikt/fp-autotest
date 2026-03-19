@@ -2,11 +2,7 @@ package no.nav.foreldrepenger.generator.familie;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,15 +10,13 @@ import org.slf4j.LoggerFactory;
 import no.nav.foreldrepenger.autotest.aktoerer.innsender.ApiMottak;
 import no.nav.foreldrepenger.autotest.aktoerer.innsender.Innsender;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
-import no.nav.foreldrepenger.kontrakter.felles.typer.AktørId;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Fødselsnummer;
-import no.nav.foreldrepenger.vtp.kontrakter.DødfødselhendelseDto;
-import no.nav.foreldrepenger.vtp.kontrakter.DødshendelseDto;
-import no.nav.foreldrepenger.vtp.kontrakter.FødselshendelseDto;
-import no.nav.foreldrepenger.vtp.kontrakter.PersonhendelseDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.PersonDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.Rolle;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.TilordnetIdentDto;
+import no.nav.foreldrepenger.vtp.kontrakter.hendelser.DødfødselhendelseDto;
+import no.nav.foreldrepenger.vtp.kontrakter.hendelser.DødshendelseDto;
+import no.nav.foreldrepenger.vtp.kontrakter.hendelser.FødselshendelseDto;
+import no.nav.foreldrepenger.vtp.kontrakter.hendelser.PersonhendelseDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.PersonDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.Rolle;
 
 public class Familie {
 
@@ -30,7 +24,6 @@ public class Familie {
     private static final Logger LOG = LoggerFactory.getLogger(Familie.class);
 
     private final List<PersonDto> parter;
-    private final Map<UUID, TilordnetIdentDto> identer;
     private final Innsender innsender;
     private static final String ENDRINGSTYPE_OPPRETTET = "OPPRETTET";
 
@@ -38,15 +31,14 @@ public class Familie {
     private Far far;
     private Mor medmor;
 
-    public Familie(List<PersonDto> parter, List<TilordnetIdentDto> identer, SaksbehandlerRolle saksbehandlerRolle) {
+    public Familie(List<PersonDto> parter, SaksbehandlerRolle saksbehandlerRolle) {
         this.parter = parter;
-        this.identer = identer.stream().collect(Collectors.toMap(TilordnetIdentDto::id, Function.identity()));
         this.innsender = new ApiMottak(saksbehandlerRolle);
         initMor();
         initFar();
         initMedmor();
-        LOG.info("Familie opprettet med mor: {}, far/medmor: {}", mor != null ? mor.fødselsnummer().value() : "Ingen mor",
-                far != null ? far.fødselsnummer().value() : medmor != null ? medmor.fødselsnummer().value() : "Ingen far/medmor");
+        LOG.info("Familie opprettet med mor: {}, far/medmor: {}", mor != null ? mor.ident() : "Ingen mor",
+                far != null ? far.ident() : medmor != null ? medmor.ident() : "Ingen far/medmor");
     }
 
     private void initMedmor() {
@@ -54,10 +46,8 @@ public class Familie {
         if (medmorPerson.isEmpty()) {
             return;
         }
-        var morIdent = identer.get(medmorPerson.get().id());
-        var annenpartIdent = parter.stream().filter(p -> p.rolle().equals(Rolle.MOR)).findFirst().map(ap -> identer.get(ap.id()));
-        medmor = new Mor(new Fødselsnummer(morIdent.fnr()), new AktørId(morIdent.aktørId()),
-                annenpartIdent.map(TilordnetIdentDto::aktørId).map(AktørId::new).orElse(null), medmorPerson.get(), identer, innsender);
+        var annenpartIdent = parter.stream().filter(p -> p.rolle().equals(Rolle.MOR)).findFirst().map(ap -> Ident.fra(ap.fnr()));
+        medmor = new Mor(Ident.fra(medmorPerson.get().fnr()), annenpartIdent.orElse(null), medmorPerson.get(), innsender);
     }
 
     private void initFar() {
@@ -65,24 +55,20 @@ public class Familie {
         if (farPerson.isEmpty()) {
             return;
         }
-        var morIdent = identer.get(farPerson.get().id());
-        var annenpartIdent = parter.stream().filter(p -> p.rolle().equals(Rolle.MOR)).findFirst().map(ap -> identer.get(ap.id()));
-        far = new Far(new Fødselsnummer(morIdent.fnr()), new AktørId(morIdent.aktørId()),
-                annenpartIdent.map(TilordnetIdentDto::aktørId).map(AktørId::new).orElse(null), farPerson.get(), identer, innsender);
+        var annenpartIdent = parter.stream().filter(p -> p.rolle().equals(Rolle.MOR)).findFirst().map(ap -> Ident.fra(ap.fnr()));
+        far = new Far(Ident.fra(farPerson.get().fnr()), annenpartIdent.orElse(null), farPerson.get(), innsender);
     }
 
     private void initMor() {
-        var morPerson = parter.stream().filter(p -> p.rolle().equals(no.nav.foreldrepenger.vtp.kontrakter.v2.Rolle.MOR)).findFirst();
+        var morPerson = parter.stream().filter(p -> p.rolle().equals(Rolle.MOR)).findFirst();
         if (morPerson.isEmpty()) {
             return;
         }
-        var morIdent = identer.get(morPerson.get().id());
         var annenpartIdent = parter.stream()
                 .filter(p -> p.rolle().equals(Rolle.FAR) || p.rolle().equals(Rolle.MEDMOR))
                 .findFirst()
-                .map(ap -> identer.get(ap.id()));
-        mor = new Mor(new Fødselsnummer(morIdent.fnr()), new AktørId(morIdent.aktørId()),
-                annenpartIdent.map(TilordnetIdentDto::aktørId).map(AktørId::new).orElse(null), morPerson.get(), identer, innsender);
+                .map(ap -> Ident.fra(ap.fnr()));
+        mor = new Mor(Ident.fra(morPerson.get().fnr()), annenpartIdent.orElse(null), morPerson.get(), innsender);
     }
 
     public Mor mor() {
@@ -133,5 +119,4 @@ public class Familie {
     private void sendInnHendelse(PersonhendelseDto personhendelseDto) {
         innsender.sendInnHendelse(personhendelseDto);
     }
-
 }

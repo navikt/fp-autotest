@@ -1,12 +1,10 @@
 package no.nav.foreldrepenger.generator.familie;
 
-import static no.nav.foreldrepenger.vtp.kontrakter.v2.Arbeidsforholdstype.ORDINÆRT_ARBEIDSFORHOLD;
+import static no.nav.foreldrepenger.vtp.kontrakter.person.Arbeidsforholdstype.ORDINÆRT_ARBEIDSFORHOLD;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +13,6 @@ import no.nav.foreldrepenger.autotest.aktoerer.innsender.Innsender;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.Inntektsmelding;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Saksnummer;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.TilordnetIdentDto;
 
 public abstract class Arbeidsgiver {
     private static final Logger LOG = LoggerFactory.getLogger(Arbeidsgiver.class);
@@ -40,10 +37,10 @@ public abstract class Arbeidsgiver {
     }
 
 
-    public static String hentIdentifikator(no.nav.foreldrepenger.vtp.kontrakter.v2.Arbeidsgiver arbeidsgiver, Map<UUID, TilordnetIdentDto> identer) {
+    public static String hentIdentifikator(no.nav.foreldrepenger.vtp.kontrakter.person.Arbeidsgiver arbeidsgiver) {
         return switch (arbeidsgiver) {
-            case no.nav.foreldrepenger.vtp.kontrakter.v2.OrganisasjonDto org -> org.orgnummer().value();
-            case no.nav.foreldrepenger.vtp.kontrakter.v2.PrivatArbeidsgiver(UUID uuid)  -> identer.get(uuid).aktørId();
+            case no.nav.foreldrepenger.vtp.kontrakter.person.OrganisasjonDto org -> org.orgnummer().value();
+            case no.nav.foreldrepenger.vtp.kontrakter.person.PrivatArbeidsgiver privat -> "99" + privat.fnr();
             default -> throw new IllegalStateException("Ukjent type arbeidsgiver");
         };
     }
@@ -143,7 +140,7 @@ public abstract class Arbeidsgiver {
             LOG.debug("Ingen inntektsmeldinger å sende for arbeidsgiver {}", arbeidsgiverIdentifikator);
             return saksnummer;
         }
-        return innsender.sendInnInntektsmelding(buildInntektsmeldinger(im), arbeidstaker.aktørId(), arbeidstaker.fødselsnummer(), saksnummer);
+        return innsender.sendInnInntektsmelding(buildInntektsmeldinger(im), arbeidstaker.ident().aktørId(), arbeidstaker.ident().fødselsnummer(), saksnummer);
     }
 
     public Saksnummer sendInntektsmeldingerFP(Saksnummer saksnummer, LocalDate startdatoForeldrepenger) {
@@ -152,15 +149,15 @@ public abstract class Arbeidsgiver {
             LOG.debug("Ingen inntektsmeldinger å sende for arbeidsgiver {} for FP-startdato {}.", arbeidsgiverIdentifikator, startdatoForeldrepenger);
             return saksnummer;
         }
-        return innsender.sendInnInntektsmelding(buildInntektsmeldinger(im), arbeidstaker.aktørId(), arbeidstaker.fødselsnummer(), saksnummer);
+        return innsender.sendInnInntektsmelding(buildInntektsmeldinger(im), arbeidstaker.ident().aktørId(), arbeidstaker.ident().fødselsnummer(), saksnummer);
     }
 
     public Saksnummer sendInnInntektsmeldingUtenForespørsel(Saksnummer saksnummer, InntektsmeldingBuilder im, LocalDate startdato, boolean registrertIAareg) {
-        return innsender.sendInnInntektsmeldingUtenForespørsel(im.build(), startdato, arbeidstaker.aktørId(), arbeidstaker.fødselsnummer(), saksnummer, registrertIAareg);
+        return innsender.sendInnInntektsmeldingUtenForespørsel(im.build(), startdato, arbeidstaker.ident().aktørId(), arbeidstaker.ident().fødselsnummer(), saksnummer, registrertIAareg);
     }
 
     public Saksnummer sendInntektsmelding(Saksnummer saksnummer, InntektsmeldingBuilder inntektsmelding) {
-        return innsender.sendInnInntektsmelding(inntektsmelding.build(), arbeidstaker.aktørId(), arbeidstaker.fødselsnummer(), saksnummer);
+        return innsender.sendInnInntektsmelding(inntektsmelding.build(), arbeidstaker.ident().aktørId(), arbeidstaker.ident().fødselsnummer(), saksnummer);
     }
 
     private List<Inntektsmelding> buildInntektsmeldinger(List<InntektsmeldingBuilder> inntektsmeldingStream) {

@@ -4,25 +4,25 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import no.nav.foreldrepenger.vtp.kontrakter.v2.AaregDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.ArbeidsavtaleDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.ArbeidsforholdDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.Arbeidsforholdstype;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.Arbeidsgiver;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.ArenaDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.ArenaMeldekort;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.ArenaSakerDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.ArenaVedtakDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.GrunnlagDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.InfotrygdDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.InntektYtelseModellDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.InntektYtelseType;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.InntektkomponentDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.InntektsperiodeDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.OrganisasjonDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.PermisjonDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.PesysDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.SigrunDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.AaregDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.ArbeidsavtaleDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.ArbeidsforholdDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.Arbeidsforholdstype;
+import no.nav.foreldrepenger.vtp.kontrakter.person.Arbeidsgiver;
+import no.nav.foreldrepenger.vtp.kontrakter.person.ArenaDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.ArenaMeldekort;
+import no.nav.foreldrepenger.vtp.kontrakter.person.ArenaSakerDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.ArenaVedtakDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.GrunnlagDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.InfotrygdDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.InntektYtelseModellDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.InntektYtelseType;
+import no.nav.foreldrepenger.vtp.kontrakter.person.InntektkomponentDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.InntektsperiodeDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.OrganisasjonDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.PermisjonDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.PesysDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.SigrunDto;
 
 public class InntektYtelseGenerator {
 
