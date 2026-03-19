@@ -2,7 +2,7 @@ package no.nav.foreldrepenger.generator.familie;
 
 import java.util.Comparator;
 
-import no.nav.foreldrepenger.vtp.kontrakter.v2.SigrunDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.SigrunDto;
 
 
 final class Sigrun {

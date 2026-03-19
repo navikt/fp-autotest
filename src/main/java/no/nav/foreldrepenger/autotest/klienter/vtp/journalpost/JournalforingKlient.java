@@ -11,7 +11,7 @@ import java.util.Optional;
 import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
 import no.nav.foreldrepenger.autotest.klienter.vtp.journalpost.dto.JournalpostIdDto;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Saksnummer;
-import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.JournalpostModell;
+import no.nav.foreldrepenger.vtp.kontrakter.journalpost.JournalpostModell;
 
 public class JournalforingKlient {
 

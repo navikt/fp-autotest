@@ -15,8 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.PersonDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.TilordnetIdentDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.PersonDto;
 import tools.jackson.core.type.TypeReference;
 
 public class TestscenarioKlient {
@@ -24,15 +23,14 @@ public class TestscenarioKlient {
     private static final Logger LOG = LoggerFactory.getLogger(TestscenarioKlient.class);
 
     @Step("Oppretter familie/scenario")
-    public List<TilordnetIdentDto> opprettTestscenario(List<PersonDto> personer) {
+    public void opprettTestscenario(List<PersonDto> personer) {
         var personerJson = toJson(personer);
         var request = requestMedBasicHeadere()
                 .uri(fromUri(BaseUriProvider.VTP_API_BASE).path("/testscenarios/v2/opprett").build())
                 .POST(HttpRequest.BodyPublishers.ofString(personerJson));
-        var identer = Optional.ofNullable(send(request.build(), new TypeReference<List<TilordnetIdentDto>>() {})).orElseGet(List::of);
+        send(request.build());
         debugJson(personerJson);
-        LOG.info("Testscenario opprettet med identer: {} ", identer.stream().map(TilordnetIdentDto::fnr).toList());
-        return identer;
+        LOG.info("Testscenario opprettet for {} personer", personer.size());
     }
 
     public List<String> hentAlleIdenterFraAlleScenarier() {

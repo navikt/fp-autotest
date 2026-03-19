@@ -3,7 +3,7 @@ package no.nav.foreldrepenger.autotest.fpsak.engangsstonad;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
 import static no.nav.foreldrepenger.generator.soknad.maler.SøknadEngangsstønadMaler.lagEngangstønadAdopsjon;
-import static no.nav.foreldrepenger.vtp.kontrakter.v2.ArbeidsavtaleDto.arbeidsavtale;
+import static no.nav.foreldrepenger.vtp.kontrakter.person.ArbeidsavtaleDto.arbeidsavtale;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
@@ -27,8 +27,8 @@ import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 import no.nav.foreldrepenger.soknad.kontrakt.EngangsstønadDto;
 import no.nav.foreldrepenger.soknad.kontrakt.SøknadDto;
 import no.nav.foreldrepenger.soknad.kontrakt.barn.AdopsjonDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.ArenaSakerDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.ArenaSakerDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.FamilierelasjonModellDto;
 
 @Tag("fpsak")
 @Tag("engangsstonad")

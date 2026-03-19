@@ -8,28 +8,26 @@ import java.util.List;
 
 import no.nav.foreldrepenger.autotest.aktoerer.innsender.Innsender;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.InntektsmeldingBuilder;
-import no.nav.foreldrepenger.kontrakter.felles.typer.AktørId;
-import no.nav.foreldrepenger.kontrakter.felles.typer.Fødselsnummer;
 
 class PersonArbeidsgiver extends Arbeidsgiver {
 
-    private final Fødselsnummer fnrArbeidsgiver;
+    private final Ident identArbeidsgiver;
 
-    public PersonArbeidsgiver(AktørId aktørId, Arbeidstaker arbeidstaker,
-                              List<Arbeidsforhold> arbeidsforhold, Innsender innsender, Fødselsnummer fnrArbeidsgiver) {
-        super(aktørId.value(), arbeidstaker, arbeidsforhold, innsender);
-        this.fnrArbeidsgiver = fnrArbeidsgiver;
+    public PersonArbeidsgiver(Ident identArbeidsgiver, Arbeidstaker arbeidstaker,
+                              List<Arbeidsforhold> arbeidsforhold, Innsender innsender) {
+        super(identArbeidsgiver.aktørId().value(), arbeidstaker, arbeidsforhold, innsender);
+        this.identArbeidsgiver = identArbeidsgiver;
     }
 
-    public Fødselsnummer fnrArbeidsgiver() {
-        return fnrArbeidsgiver;
+    public Ident identArbeidsgiver() {
+        return identArbeidsgiver;
     }
 
     protected InntektsmeldingBuilder lagInntektsmeldingFP(Integer månedsinntekt, ArbeidsforholdId arbeidsforholdId, LocalDate startdatoForeldrepenger) {
-        return lagInntektsmeldingPrivateArbeidsgiver(månedsinntekt, arbeidstaker.fødselsnummer(), startdatoForeldrepenger, fnrArbeidsgiver);
+        return lagInntektsmeldingPrivateArbeidsgiver(månedsinntekt, arbeidstaker.ident().fødselsnummer(), startdatoForeldrepenger, identArbeidsgiver.fødselsnummer());
     }
 
     protected InntektsmeldingBuilder lagInntektsmeldingSVP(Integer månedsinntekt, ArbeidsforholdId arbeidsforholdId) {
-        return lagInntektsmeldingPrivateArbeidsgiver(arbeidstaker.fødselsnummer(), månedsinntekt, fnrArbeidsgiver);
+        return lagInntektsmeldingPrivateArbeidsgiver(arbeidstaker.ident().fødselsnummer(), månedsinntekt, identArbeidsgiver.fødselsnummer());
     }
 }

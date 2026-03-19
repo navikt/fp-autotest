@@ -46,7 +46,7 @@ import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
 import no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler;
 import no.nav.foreldrepenger.soknad.kontrakt.BrukerRolle;
 import no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.FamilierelasjonModellDto;
 
 
 /**

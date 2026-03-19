@@ -18,14 +18,14 @@ import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.Saksbehandler
 import no.nav.foreldrepenger.autotest.klienter.vtp.testscenario.TestscenarioKlient;
 import no.nav.foreldrepenger.autotest.util.log.LoggFormater;
 import no.nav.foreldrepenger.generator.familie.Familie;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.ArbeidsforholdDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.InntektYtelseModellDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.Kjønn;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.PersonDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.PrivatArbeidsgiver;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.Rolle;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.SivilstandDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.ArbeidsforholdDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.FamilierelasjonModellDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.InntektYtelseModellDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.Kjønn;
+import no.nav.foreldrepenger.vtp.kontrakter.person.PersonDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.PrivatArbeidsgiver;
+import no.nav.foreldrepenger.vtp.kontrakter.person.Rolle;
+import no.nav.foreldrepenger.vtp.kontrakter.person.SivilstandDto;
 import no.nav.vedtak.log.mdc.MDCOperations;
 
 
@@ -79,8 +79,8 @@ public class FamilieGenerator {
             throw new IllegalStateException("Du må instansiere 2 foreldre!");
         }
 
-        foreldre.get(0).familierelasjoner().add(new FamilierelasjonModellDto(relasjon, foreldre.get(1).id()));
-        foreldre.get(1).familierelasjoner().add(new FamilierelasjonModellDto(relasjon, foreldre.get(0).id()));
+        foreldre.get(0).familierelasjoner().add(new FamilierelasjonModellDto(relasjon, foreldre.get(1).fnr()));
+        foreldre.get(1).familierelasjoner().add(new FamilierelasjonModellDto(relasjon, foreldre.get(0).fnr()));
         if (Objects.requireNonNull(relasjon) == FamilierelasjonModellDto.Relasjon.EKTE) {
             foreldre.forEach(f -> oppdaterSivilstand(f, SivilstandDto.Sivilstander.GIFT));
         } else if (relasjon == FamilierelasjonModellDto.Relasjon.SAMBOER) {
@@ -106,8 +106,8 @@ public class FamilieGenerator {
                     case FAR, MEDFAR -> FamilierelasjonModellDto.Relasjon.FAR;
                     default -> throw new IllegalStateException("Unexpected value: " + forelder.rolle());
                 };
-                barnet.familierelasjoner().add(new FamilierelasjonModellDto(barnetsRelasjonTilForelder, forelder.id()));
-                forelder.familierelasjoner().add(new FamilierelasjonModellDto(FamilierelasjonModellDto.Relasjon.BARN, barnet.id()));
+                barnet.familierelasjoner().add(new FamilierelasjonModellDto(barnetsRelasjonTilForelder, forelder.fnr()));
+                forelder.familierelasjoner().add(new FamilierelasjonModellDto(FamilierelasjonModellDto.Relasjon.BARN, barnet.fnr()));
 
             }
         }
@@ -123,9 +123,9 @@ public class FamilieGenerator {
 
     private static PersonDto privatArbeidsgiver(PrivatArbeidsgiver p) {
         return PersonDto.builder()
+                .ident(p.fnr())
                 .rolle(Rolle.PRIVATE_ARBEIDSGIVER)
                 .fødselsdato(LocalDate.now().minusYears(40))
-                .id(p.uuid())
                 .build();
     }
 
@@ -146,8 +146,8 @@ public class FamilieGenerator {
                 .map(PrivatArbeidsgiver.class::cast)
                 .collect(Collectors.toSet());
         privateArbeidsgiver.forEach(p -> parter.add(privatArbeidsgiver(p)));
-        var identer = TESTSCENARIO_JERSEY_KLIENT.opprettTestscenario(parter);
-        return new Familie(parter, identer, saksbehandlerRolle);
+        TESTSCENARIO_JERSEY_KLIENT.opprettTestscenario(parter);
+        return new Familie(parter, saksbehandlerRolle);
     }
 
     private void guardForeldresammensetning() {

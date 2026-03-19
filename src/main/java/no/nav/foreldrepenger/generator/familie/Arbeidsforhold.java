@@ -2,7 +2,7 @@ package no.nav.foreldrepenger.generator.familie;
 
 import java.time.LocalDate;
 
-import no.nav.foreldrepenger.vtp.kontrakter.v2.Arbeidsforholdstype;
+import no.nav.foreldrepenger.vtp.kontrakter.person.Arbeidsforholdstype;
 
 public class Arbeidsforhold {
 
