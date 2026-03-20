@@ -1,8 +1,8 @@
 package no.nav.foreldrepenger.autotest.fpsak.engangsstonad;
 
-import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
-import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
-import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.utenlandskAdresse;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonopplysningMaler.far;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonopplysningMaler.mor;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonopplysningMaler.utenlandskAdresser;
 import static no.nav.foreldrepenger.generator.soknad.maler.SøknadEngangsstønadMaler.lagEngangstønadFødsel;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -28,11 +28,11 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
-import no.nav.foreldrepenger.vtp.kontrakter.person.ArenaSakerDto;
-import no.nav.foreldrepenger.vtp.kontrakter.person.FamilierelasjonModellDto;
-import no.nav.foreldrepenger.vtp.kontrakter.person.GeografiskTilknytningDto;
-import no.nav.foreldrepenger.vtp.kontrakter.person.MedlemskapDto;
-import no.nav.foreldrepenger.vtp.kontrakter.person.PersonstatusDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.ytelse.YtelseType;
+import no.nav.foreldrepenger.vtp.kontrakter.person.personopplysninger.FamilierelasjonDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.personopplysninger.GeografiskTilknytningDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.personopplysninger.MedlemskapDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.personopplysninger.PersonstatusDto;
 
 @Tag("fpsak")
 @Tag("engangsstonad")
@@ -46,16 +46,16 @@ class Medlemskap extends VerdikjedeTestBase {
     void morSøkerFødselErUtvandret() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                        .personstatus(List.of(new PersonstatusDto(PersonstatusDto.Personstatuser.UTVA, LocalDate.now().minusYears(30), null)))
+                        .personstatus(List.of(new PersonstatusDto(PersonstatusDto.Type.UTVA, LocalDate.now().minusYears(30), null)))
                         .medlemskap(List.of(new MedlemskapDto(LocalDate.now().minusYears(1), LocalDate.now().plusYears(3), CountryCode.DE, MedlemskapDto.DekningsType.IHT_AVTALE)))
                         .inntektytelse(InntektYtelseGenerator.ny()
-                                .arena(ArenaSakerDto.YtelseTema.AAP, LocalDate.now().minusMonths(1), LocalDate.now().plusMonths(2), 10_000)
+                                .ytelse(YtelseType.ARBEIDSAVKLARINGSPENGER, LocalDate.now().minusMonths(1), LocalDate.now().plusMonths(2), 1_000, 10_000)
                                 .arbeidsforhold(LocalDate.now().minusYears(4), LocalDate.now().minusMonths(4))
                                 .arbeidsforhold(LocalDate.now().minusMonths(4))
                                 .arbeidMedOpptjeningOver6G().build())
                         .build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusMonths(1))
                 .build();
 
@@ -96,10 +96,10 @@ class Medlemskap extends VerdikjedeTestBase {
         var familie = new FamilieGenerator()
                 .forelder(mor()
                         .geografiskTilknytning(new GeografiskTilknytningDto(CountryCode.GB, GeografiskTilknytningDto.GeografiskTilknytningType.LAND))
-                        .personstatus(List.of(new PersonstatusDto(PersonstatusDto.Personstatuser.UREG, LocalDate.now().minusYears(30), null)))
+                        .personstatus(List.of(new PersonstatusDto(PersonstatusDto.Type.UREG, LocalDate.now().minusYears(30), null)))
                         .build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusMonths(1))
                 .build();
         var mor = familie.mor();
@@ -128,11 +128,11 @@ class Medlemskap extends VerdikjedeTestBase {
     void morSøkerFødselUtenlandsadresse() {
         var familie = new FamilieGenerator()
                 .forelder(mor()
-                        .adresser(utenlandskAdresse(CountryCode.DE))
+                        .adresser(utenlandskAdresser(CountryCode.DE))
                         .medlemskap(List.of(new MedlemskapDto(LocalDate.now().minusYears(1), LocalDate.now().plusYears(3), CountryCode.DE, MedlemskapDto.DekningsType.FULL)))
                         .build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusMonths(1))
                 .build();
 

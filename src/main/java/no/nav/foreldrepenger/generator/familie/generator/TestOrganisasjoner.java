@@ -5,68 +5,60 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import no.nav.foreldrepenger.vtp.kontrakter.person.OrganisasjonDto;
-import no.nav.foreldrepenger.vtp.kontrakter.person.Orgnummer;
+import no.nav.foreldrepenger.vtp.kontrakter.person.arbeidsforhold.OrganisasjonDto;
 
 public class TestOrganisasjoner {
 
 
     public static final OrganisasjonDto NAV = new OrganisasjonDto(
-            new Orgnummer("889640782"),
+            "889640782",
             new OrganisasjonDto.OrganisasjonsdetaljerDto(
                     "ARBEIDS- OG VELFERDSETATEN",
-                    LocalDate.of(2003, 1, 1),
-                    LocalDate.of(2015, 1, 1))
+                    LocalDate.of(2003, 1, 1))
     );
 
     public static final OrganisasjonDto NAV_OSLO = new OrganisasjonDto(
-            new Orgnummer("992257822"),
+            "992257822",
             new OrganisasjonDto.OrganisasjonsdetaljerDto(
                     "NAV FAMILIE- OG PENSJONSYTELSER OSLO",
-                    LocalDate.of(2003, 1, 1),
-                    LocalDate.of(2015, 1, 1))
+                    LocalDate.of(2003, 1, 1))
     );
 
     public static final OrganisasjonDto NAV_BERGEN = new OrganisasjonDto(
-            new Orgnummer("992260432"),
+            "992260432",
             new OrganisasjonDto.OrganisasjonsdetaljerDto(
                     "NAV FAMILIE- OG PENSJONSYTELSER BERGEN",
-                    LocalDate.of(2003, 1, 1),
-                    LocalDate.of(2015, 1, 1))
+                    LocalDate.of(2003, 1, 1))
     );
 
 
     public static final OrganisasjonDto NAV_STORD = new OrganisasjonDto(
-            new Orgnummer("992260475"),
+            "992260475",
             new OrganisasjonDto.OrganisasjonsdetaljerDto(
                     "NAV FAMILIE- OG PENSJONSYTELSER STORD",
-                    LocalDate.of(2003, 1, 1),
-                    LocalDate.of(2015, 1, 1))
+                    LocalDate.of(2003, 1, 1))
     );
 
     public static final OrganisasjonDto NAV_KLAGE_MIDT = new OrganisasjonDto(
-            new Orgnummer("991078045"),
+            "991078045",
             new OrganisasjonDto.OrganisasjonsdetaljerDto(
                     "NAV KLAGEINSTANS MIDT-NORGE",
-                    LocalDate.of(2003, 1, 1),
-                    LocalDate.of(2015, 1, 1))
+                    LocalDate.of(2003, 1, 1))
     );
 
 
     public static final OrganisasjonDto NAV_YTELSE_BETALING = new OrganisasjonDto(
-            new Orgnummer("991013628"),
+            "991013628",
             new OrganisasjonDto.OrganisasjonsdetaljerDto(
                     "NAV UTBETALING YTELSE",
-                    LocalDate.of(2003, 1, 1),
-                    LocalDate.of(2015, 1, 1))
+                    LocalDate.of(2003, 1, 1))
     );
 
 
     public static final OrganisasjonDto NYLIG_OPPSTATET = new OrganisasjonDto(
-            new Orgnummer("992261048"),
+            "992261048",
             new OrganisasjonDto.OrganisasjonsdetaljerDto(
                     "NAV FAMILIE- OG PENSJONSYTELSER TROMSØ",
-                    LocalDate.now().minusDays(2),
                     LocalDate.now().minusDays(2))
     );
 

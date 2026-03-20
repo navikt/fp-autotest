@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.generator.kalkulus;
 
-import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonopplysningMaler.mor;
 
 import java.io.File;
 import java.io.FileNotFoundException;

@@ -1,7 +1,7 @@
 package no.nav.foreldrepenger.autotest.fptilbake.svangerskapspenger;
 
-import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
-import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonopplysningMaler.far;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonopplysningMaler.mor;
 import static no.nav.foreldrepenger.generator.soknad.maler.ArbeidsforholdMaler.virksomhet;
 import static no.nav.foreldrepenger.generator.soknad.maler.SøknadSvangerskapspengerMaler.lagSvangerskapspengerSøknad;
 import static org.assertj.core.api.Assertions.assertThat;

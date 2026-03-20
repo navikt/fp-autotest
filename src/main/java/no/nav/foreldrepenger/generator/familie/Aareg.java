@@ -6,39 +6,38 @@ import java.util.Optional;
 
 import no.nav.foreldrepenger.kontrakter.felles.typer.AktørId;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Orgnummer;
-import no.nav.foreldrepenger.vtp.kontrakter.person.AaregDto;
-import no.nav.foreldrepenger.vtp.kontrakter.person.ArbeidsforholdDto;
-import no.nav.foreldrepenger.vtp.kontrakter.person.Arbeidsforholdstype;
+import no.nav.foreldrepenger.vtp.kontrakter.person.arbeidsforhold.ArbeidsforholdDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.arbeidsforhold.Arbeidsforholdstype;
 
 final class Aareg {
 
     private Aareg() {
     }
 
-    static List<Arbeidsforhold> arbeidsforholdene(AaregDto aareg) {
-        return Optional.ofNullable(aareg).map(AaregDto::arbeidsforhold).orElseGet(List::of).stream()
+    static List<Arbeidsforhold> arbeidsforholdene(List<ArbeidsforholdDto> arbeidsforholdDtoer) {
+        return Optional.ofNullable(arbeidsforholdDtoer).orElseGet(List::of).stream()
                 .map(Aareg::mapTilArbeidsforhold)
                 .toList();
     }
 
-    static List<Arbeidsforhold> arbeidsforholdene(AaregDto aareg, Orgnummer orgnummer) {
-        return arbeidsforholdene(aareg, orgnummer.value());
+    static List<Arbeidsforhold> arbeidsforholdene(List<ArbeidsforholdDto> arbeidsforholdDtoer, Orgnummer orgnummer) {
+        return arbeidsforholdene(arbeidsforholdDtoer, orgnummer.value());
     }
 
-    static List<Arbeidsforhold> arbeidsforholdene(AaregDto aareg, AktørId aktørId) {
-        return arbeidsforholdene(aareg, aktørId.value());
+    static List<Arbeidsforhold> arbeidsforholdene(List<ArbeidsforholdDto> arbeidsforholdDtoer, AktørId aktørId) {
+        return arbeidsforholdene(arbeidsforholdDtoer, aktørId.value());
     }
 
-    static List<Arbeidsforhold> arbeidsforholdene(AaregDto aareg, String identifikator) {
-        return Optional.ofNullable(aareg).map(AaregDto::arbeidsforhold).orElseGet(List::of).stream()
+    static List<Arbeidsforhold> arbeidsforholdene(List<ArbeidsforholdDto> arbeidsforholdDtoer, String identifikator) {
+        return Optional.ofNullable(arbeidsforholdDtoer).orElseGet(List::of).stream()
                 .filter(a -> erArbeidsgiver(identifikator, a))
                 .map(Aareg::mapTilArbeidsforhold)
                 .toList();
     }
 
 
-    static List<Arbeidsforhold> arbeidsforholdFrilans(AaregDto aareg) {
-        return Optional.ofNullable(aareg).map(AaregDto::arbeidsforhold).orElseGet(List::of).stream()
+    static List<Arbeidsforhold> arbeidsforholdFrilans(List<ArbeidsforholdDto> arbeidsforholdDtoer) {
+        return Optional.ofNullable(arbeidsforholdDtoer).orElseGet(List::of).stream()
                 .filter(a -> a.arbeidsforholdstype().equals(Arbeidsforholdstype.FRILANSER_OPPDRAGSTAKER_MED_MER))
                 .map(Aareg::mapTilArbeidsforhold)
                 .toList();

@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.generator.familie;
 
-import static no.nav.foreldrepenger.vtp.kontrakter.person.Arbeidsforholdstype.ORDINÆRT_ARBEIDSFORHOLD;
+import static no.nav.foreldrepenger.vtp.kontrakter.person.arbeidsforhold.Arbeidsforholdstype.ORDINÆRT_ARBEIDSFORHOLD;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -13,6 +13,9 @@ import no.nav.foreldrepenger.autotest.aktoerer.innsender.Innsender;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.Inntektsmelding;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Saksnummer;
+import no.nav.foreldrepenger.vtp.kontrakter.person.arbeidsforhold.ArbeidsgiverDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.arbeidsforhold.OrganisasjonDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.arbeidsforhold.PrivatArbeidsgiverDto;
 
 public abstract class Arbeidsgiver {
     private static final Logger LOG = LoggerFactory.getLogger(Arbeidsgiver.class);
@@ -37,10 +40,10 @@ public abstract class Arbeidsgiver {
     }
 
 
-    public static String hentIdentifikator(no.nav.foreldrepenger.vtp.kontrakter.person.Arbeidsgiver arbeidsgiver) {
+    public static String hentIdentifikator(ArbeidsgiverDto arbeidsgiver) {
         return switch (arbeidsgiver) {
-            case no.nav.foreldrepenger.vtp.kontrakter.person.OrganisasjonDto org -> org.orgnummer().value();
-            case no.nav.foreldrepenger.vtp.kontrakter.person.PrivatArbeidsgiver privat -> "99" + privat.fnr();
+            case OrganisasjonDto org -> org.orgnummer();
+            case PrivatArbeidsgiverDto privat -> "99" + privat.fnr();
             default -> throw new IllegalStateException("Ukjent type arbeidsgiver");
         };
     }

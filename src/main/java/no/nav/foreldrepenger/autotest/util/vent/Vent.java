@@ -12,7 +12,7 @@ public final class Vent {
 
     private static final Logger LOG = LoggerFactory.getLogger(Vent.class);
     private static final int TIMEOUT_SEKUNDER = 15;
-    private static final int VENT_MULTIPLIER = 1; // Endre denne hvis du har treg pc og kjører alle testene, slik at de ikke feiler pga timeout.
+    private static final int VENT_MULTIPLIER = 3; // Endre denne hvis du har treg pc og kjører alle testene, slik at de ikke feiler pga timeout.
 
     private Vent() {
     }

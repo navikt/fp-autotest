@@ -3,8 +3,8 @@ package no.nav.foreldrepenger.autotest.fpsak.foreldrepenger;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType.RE_ENDRING_FRA_BRUKER;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType.RE_OPPLYSNINGER_OM_FORDELING;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder.VURDER_FEILUTBETALING_KODE;
-import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
-import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonopplysningMaler.far;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonopplysningMaler.mor;
 import static no.nav.foreldrepenger.generator.soknad.maler.SøknadEndringMaler.lagEndringssøknad;
 import static no.nav.foreldrepenger.generator.soknad.maler.UttakMaler.fordeling;
 import static no.nav.foreldrepenger.generator.soknad.maler.UttaksperioderMaler.graderingsperiodeArbeidstaker;
@@ -41,7 +41,7 @@ import no.nav.foreldrepenger.generator.soknad.maler.UttakMaler;
 import no.nav.foreldrepenger.soknad.kontrakt.BrukerRolle;
 import no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType;
 import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.UtsettelsesÅrsak;
-import no.nav.foreldrepenger.vtp.kontrakter.person.FamilierelasjonModellDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.personopplysninger.FamilierelasjonDto;
 
 @Tag("fpsak")
 @Tag("foreldrepenger")
@@ -64,7 +64,7 @@ class SammenhengendeUttak extends VerdikjedeTestBase {
                                 .arbeidsforhold(LocalDate.of(2018, 1, 1))
                                 .build())
                         .build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(LocalDate.of(2019, 11, 1))
                 .build();
         var mor = familie.mor();
@@ -155,7 +155,7 @@ class SammenhengendeUttak extends VerdikjedeTestBase {
                                 .arbeidsforhold(LocalDate.of(2018, 1, 1))
                                 .build())
                         .build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(LocalDate.of(2019, 11, 1))
                 .build();
         var mor = familie.mor();
@@ -271,7 +271,7 @@ class SammenhengendeUttak extends VerdikjedeTestBase {
                                 .arbeidsforhold(LocalDate.of(2018, 1, 1))
                                 .build())
                         .build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(LocalDate.of(2019, 11, 1))
                 .build();
         var mor = familie.mor();
@@ -361,7 +361,7 @@ class SammenhengendeUttak extends VerdikjedeTestBase {
                                 .arbeidsforhold(LocalDate.of(2018, 1, 1))
                                 .build())
                         .build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(LocalDate.of(2019, 11, 1))
                 .build();
         var mor = familie.mor();

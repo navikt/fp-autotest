@@ -31,8 +31,6 @@ import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.beh
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer.SaldoVisningStønadskontoType;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer.SaldoVisningStønadskontoType.FORELDREPENGER;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer.SaldoVisningStønadskontoType.MINSTERETT;
-import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
-import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
 import static no.nav.foreldrepenger.generator.soknad.maler.SøknadEndringMaler.lagEndringssøknad;
 import static no.nav.foreldrepenger.generator.soknad.maler.SøknadEngangsstønadMaler.lagEngangstønadFødsel;
 import static no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler.lagSøknadForeldrepengerAdopsjon;
@@ -61,7 +59,6 @@ import static no.nav.foreldrepenger.kontrakter.felles.kodeverk.MorsAktivitet.UTD
 import static no.nav.foreldrepenger.kontrakter.felles.kodeverk.Overføringsårsak.SYKDOM_ANNEN_FORELDER;
 import static no.nav.foreldrepenger.soknad.kontrakt.BrukerRolle.FAR;
 import static no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.UtsettelsesÅrsak.FRI;
-import static no.nav.foreldrepenger.vtp.kontrakter.person.ArbeidsavtaleDto.arbeidsavtale;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 
@@ -125,7 +122,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkType
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
 import no.nav.foreldrepenger.generator.familie.Familie;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
-import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
+import no.nav.foreldrepenger.generator.familie.generator.PersonBuilder;
 import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.Prosent;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
@@ -139,12 +136,12 @@ import no.nav.foreldrepenger.kontrakter.felles.kodeverk.MorsAktivitet;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Orgnummer;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Saksnummer;
 import no.nav.foreldrepenger.kontrakter.fpoversikt.DekningsgradSak;
+import no.nav.foreldrepenger.kontrakter.risk.kodeverk.RisikoklasseType;
 import no.nav.foreldrepenger.soknad.kontrakt.BrukerRolle;
 import no.nav.foreldrepenger.soknad.kontrakt.ForeldrepengesøknadDto;
 import no.nav.foreldrepenger.soknad.kontrakt.SøknadDto;
 import no.nav.foreldrepenger.soknad.kontrakt.barn.AdopsjonDto;
 import no.nav.foreldrepenger.soknad.kontrakt.builder.BarnBuilder;
-import no.nav.foreldrepenger.soknad.kontrakt.ettersendelse.YtelseType;
 import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.UtsettelsesÅrsak;
 import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.UttaksPeriodeDto;
 import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.UttaksplanDto;
@@ -152,12 +149,9 @@ import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.DokumentTypeId;
 import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.Dokumenterer;
 import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.InnsendingType;
 import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.ÅpenPeriodeDto;
-import no.nav.foreldrepenger.kontrakter.risk.kodeverk.RisikoklasseType;
-import no.nav.foreldrepenger.vtp.kontrakter.person.ArenaSakerDto;
-import no.nav.foreldrepenger.vtp.kontrakter.person.FamilierelasjonModellDto;
-import no.nav.foreldrepenger.vtp.kontrakter.person.GrunnlagDto;
-import no.nav.foreldrepenger.vtp.kontrakter.person.PermisjonDto;
-import no.nav.foreldrepenger.vtp.kontrakter.person.Permisjonstype;
+import no.nav.foreldrepenger.vtp.kontrakter.person.arbeidsforhold.PermisjonDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.personopplysninger.FamilierelasjonDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.ytelse.YtelseType;
 
 
 @Tag("verdikjede")
@@ -169,9 +163,9 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
             + "25% avvik med delvis refusjon. Etter behandlingen er ferdigbehandlet mottas en fødselshendelse.")
     void testcase_mor_fødsel() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor().inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build()).build())
-                .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .forelder(PersonBuilder.mor().arbeidMedOpptjeningUnder6G().build())
+                .forelder(PersonBuilder.far().build())
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .build();
 
         var mor = familie.mor();
@@ -282,9 +276,13 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
             + "ferdigbehandlet. NB: Må legge til ferdiglignet inntekt for inneværende år -1 etter 1/7")
     void morSelvstendigNæringsdrivendeTest() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor().inntektytelse(InntektYtelseGenerator.ny().selvstendigNæringsdrivende(200_000).build()).build())
-                .forelder(far().inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningOver6G().build()).build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .forelder(PersonBuilder.mor()
+                        .selvstendigNæringsdrivende(200_000)
+                        .build())
+                .forelder(PersonBuilder.far()
+                        .arbeidMedOpptjeningOver6G()
+                        .build())
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusWeeks(2))
                 .build();
 
@@ -394,13 +392,12 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
             + "omgjøring i anke")
     void morSykepengerKunYtelseTest() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor().inntektytelse(InntektYtelseGenerator.ny()
-                        .infotrygd(GrunnlagDto.Ytelse.SP, LocalDate.now().minusMonths(9), LocalDate.now(), GrunnlagDto.Status.LØPENDE,
-                                LocalDate.now().minusDays(2))
+                .forelder(PersonBuilder.mor()
+                        .ytelse(YtelseType.SYKEPENGER, LocalDate.now().minusMonths(9), LocalDate.now(), 1_000, 10_000)
                         .arbeidsforhold(LocalDate.now().minusYears(4), LocalDate.now().minusYears(1), 480_000)
-                        .build()).build())
-                .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                        .build())
+                .forelder(PersonBuilder.far().build())
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .build();
 
         var mor = familie.mor();
@@ -475,16 +472,16 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var årslønnMor = 480_000;
         var årslønnFar = 720_000;
         var familie = FamilieGenerator.ny()
-                .forelder(mor().inntektytelse(InntektYtelseGenerator.ny()
+                .forelder(PersonBuilder.mor()
                         .arbeidsforhold(LocalDate.now().minusYears(3), årslønnMor,
-                                List.of(new PermisjonDto(100, fpStartdatoMor, morsPermisjonsTom,
-                                        Permisjonstype.PERMISJON_MED_FORELDREPENGER)))
-                        .build()).build())
-                .forelder(far().inntektytelse(InntektYtelseGenerator.ny()
+                                List.of(new PermisjonDto(fpStartdatoMor, morsPermisjonsTom, 100,
+                                        PermisjonDto.Permisjonstype.PERMISJON_MED_FORELDREPENGER)))
+                        .build())
+                .forelder(PersonBuilder.far()
                         .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-001", 50, LocalDate.now().minusYears(2), årslønnFar)
                         .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-002", 50, LocalDate.now().minusYears(4), null)
-                        .build()).build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                        .build())
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(fødselsdato)
                 .build();
 
@@ -591,14 +588,14 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var årslønnMor = 900_000;
 
         var familie = FamilieGenerator.ny()
-                .forelder(far().inntektytelse(InntektYtelseGenerator.ny().frilans(LocalDate.now().minusYears(2), årslønnFar).build())
+                .forelder(PersonBuilder.far().frilans(LocalDate.now().minusYears(2), årslønnFar)
                         .build())
-                .forelder(mor().inntektytelse(InntektYtelseGenerator.ny()
+                .forelder(PersonBuilder.mor()
                         .arbeidsforhold(LocalDate.now().minusYears(3), årslønnMor,
-                                List.of(new PermisjonDto(100, fpStartdatoMor, fødselsdato.plusMonths(3),
-                                        Permisjonstype.PERMISJON_MED_FORELDREPENGER)))
-                        .build()).build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                                List.of(new PermisjonDto( fpStartdatoMor, fødselsdato.plusMonths(3), 100,
+                                        PermisjonDto.Permisjonstype.PERMISJON_MED_FORELDREPENGER)))
+                        .build())
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(fødselsdato)
                 .build();
 
@@ -682,19 +679,19 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
             + "Mor dokumentasjon automatisk godkjent med unntak av arbeid og utdanning som må vurders.")
     void farSøkerMedToAktiveArbeidsforholdOgEtInaktivtTest() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor().inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningOver6G().build()).build())
-                .forelder(far().inntektytelse(InntektYtelseGenerator.ny()
+                .forelder(PersonBuilder.mor().arbeidMedOpptjeningOver6G().build())
+                .forelder(PersonBuilder.far()
                         .arbeidsforhold(TestOrganisasjoner.NAV, 60, LocalDate.now().minusYears(2), 360_000)
                         .arbeidsforhold(TestOrganisasjoner.NAV_BERGEN, 40, LocalDate.now().minusYears(4), 240_000)
                         .arbeidsforholdUtenInntekt(TestOrganisasjoner.NAV_STORD, LocalDate.now().minusYears(8))
-                        .build()).build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                        .build())
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusWeeks(3))
                 .build();
 
         var far = familie.far();
         var fødselsdato = familie.barn().fødselsdato();
-        var arbeidsforhold1 = far.arbeidsforhold(TestOrganisasjoner.NAV.orgnummer().value());
+        var arbeidsforhold1 = far.arbeidsforhold(TestOrganisasjoner.NAV.orgnummer());
         var orgNummerFar1 = arbeidsforhold1.arbeidsgiverIdentifikasjon();
         var stillingsprosent1 = arbeidsforhold1.stillingsprosent();
         var førsteGradertUttaksPeriodeEtterUke6 = graderingsperiodeArbeidstaker(KontoType.FORELDREPENGER,
@@ -722,14 +719,14 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 ));
         var saksnummerFar = far.søk(søknadFar);
 
-        var arbeidsgiver1 = far.arbeidsgiver(TestOrganisasjoner.NAV.orgnummer().value());
+        var arbeidsgiver1 = far.arbeidsgiver(TestOrganisasjoner.NAV.orgnummer());
         var inntektsmelding1 = arbeidsgiver1.lagInntektsmeldingFP(fpStartdatoIfmFødselFar)
                 .medRefusjonBeløpPerMnd(Prosent.valueOf(100));
 
         ventPåInntektsmeldingForespørsel(saksnummerFar);
         arbeidsgiver1.sendInntektsmelding(saksnummerFar, inntektsmelding1);
 
-        var arbeidsgiver2 = far.arbeidsgiver(TestOrganisasjoner.NAV_BERGEN.orgnummer().value());
+        var arbeidsgiver2 = far.arbeidsgiver(TestOrganisasjoner.NAV_BERGEN.orgnummer());
         var orgNummerFar2 = arbeidsgiver2.arbeidsgiverIdentifikator();
         var opphørsDatoForRefusjon = fpStartdatoEtterUke6Far.plusMonths(2).minusDays(1);
         var inntektsmelding2 = arbeidsgiver2.lagInntektsmeldingFP(fpStartdatoIfmFødselFar)
@@ -876,11 +873,11 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
     void FarTestMorSyk() {
         var ytelseFar = 260_000;
         var familie = FamilieGenerator.ny()
-                .forelder(mor().inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningOver6G().build()).build())
-                .forelder(far().inntektytelse(InntektYtelseGenerator.ny()
-                        .arena(ArenaSakerDto.YtelseTema.AAP, LocalDate.now().minusMonths(12), LocalDate.now().plusMonths(2), ytelseFar)
-                        .build()).build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .forelder(PersonBuilder.mor().arbeidMedOpptjeningOver6G().build())
+                .forelder(PersonBuilder.far()
+                        .ytelse(YtelseType.ARBEIDSAVKLARINGSPENGER, LocalDate.now().minusMonths(12), LocalDate.now().plusMonths(2), ytelseFar, ytelseFar)
+                        .build())
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusWeeks(6))
                 .build();
 
@@ -1000,11 +997,11 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
             + "av fedrekvoten, frem til mor er ferdig med fellesperioden, og deretter søker resten av fedrekvoten.")
     void MorSøkerFor2BarnHvorHunFårBerørtSakPgaFar() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor().inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build()).build())
-                .forelder(far().inntektytelse(
-                                InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().selvstendigNæringsdrivende(1_000_000).build())
+                .forelder(PersonBuilder.mor().arbeidMedOpptjeningUnder6G().build())
+                .forelder(PersonBuilder.far()
+                        .arbeidMedOpptjeningUnder6G().selvstendigNæringsdrivende(1_000_000)
                         .build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusWeeks(28))
                 .barn(LocalDate.now().minusWeeks(28))
                 .build();
@@ -1173,12 +1170,12 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
     void MorSøkerMedDagpengerTest() {
         var ytelseMor = 260_000;
         var familie = FamilieGenerator.ny()
-                .forelder(mor().inntektytelse(InntektYtelseGenerator.ny()
+                .forelder(PersonBuilder.mor()
                         .arbeidsforhold(LocalDate.now().minusMonths(10), LocalDate.now().minusMonths(5).minusDays(1))
-                        .arena(ArenaSakerDto.YtelseTema.DAG, LocalDate.now().minusMonths(5), LocalDate.now().minusWeeks(5), ytelseMor)
-                        .build()).build())
-                .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                        .ytelse(YtelseType.DAGPENGER, LocalDate.now().minusMonths(5), LocalDate.now().minusWeeks(5), ytelseMor, ytelseMor)
+                        .build())
+                .forelder(PersonBuilder.far().build())
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusWeeks(2))
                 .build();
 
@@ -1233,8 +1230,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
             + "den inneværende måneden og tre måneder tilbake i tid; tiden før dette skal gå til søker.")
     void FarSøkerAdopsjonAleneomsorgOgRevurderingPgaEndringIRefusjonFraAG() {
         var familie = FamilieGenerator.ny()
-                .forelder(far().inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningOver6G().build()).build())
-                .forelder(mor().build())
+                .forelder(PersonBuilder.far().arbeidMedOpptjeningOver6G().build())
+                .forelder(PersonBuilder.mor().build())
                 .barn(LocalDate.now().minusYears(10))
                 .build();
 
@@ -1365,8 +1362,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
             + "berørt sak hvor han får avkortet fellesperidoen på slutten og redusert perioder hvor mor søker samtidig uttak")
     void FarSøkerAdopsjonOgMorMødrekvoteMidtIFarsOgDeretterSamtidigUttakAvFellesperidoe() {
         var familie = FamilieGenerator.ny()
-                .forelder(far().inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningOver6G().build()).build())
-                .forelder(mor().inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build()).build())
+                .forelder(PersonBuilder.far().arbeidMedOpptjeningOver6G().build())
+                .forelder(PersonBuilder.mor().arbeidMedOpptjeningUnder6G().build())
                 .barn(LocalDate.now().minusYears(10))
                 .build();
 
@@ -1533,11 +1530,10 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
     void morSøkerFødselMottarForLite() {
         var fødselsdatoBarn = LocalDate.now().minusDays(2);
         var familie = FamilieGenerator.ny()
-                .forelder(mor().inntektytelse(InntektYtelseGenerator.ny()
-                        .infotrygd(GrunnlagDto.Ytelse.SP, LocalDate.now().minusMonths(9), LocalDate.now().plusDays(1),
-                                GrunnlagDto.Status.LØPENDE, fødselsdatoBarn)
-                        .build()).build())
-                .forelder(far().build())
+                .forelder(PersonBuilder.mor()
+                        .ytelse(YtelseType.SYKEPENGER, LocalDate.now().minusMonths(9), LocalDate.now().plusDays(1), 1_000, 10_000)
+                        .build())
+                .forelder(PersonBuilder.far().build())
                 .barn(fødselsdatoBarn)
                 .build();
 
@@ -1642,13 +1638,13 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
             + "en dødfødselshendelse hvor mor får avslag etter det 6 uken av mødrekvoten.")
     void morSøkerTerminFårInnvilgetOgSåKommerDetEnDødfødselEtterTermin() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor().inntektytelse(InntektYtelseGenerator.ny()
+                .forelder(PersonBuilder.mor()
                         .arbeidsforhold(LocalDate.now().minusYears(4),
                                 arbeidsavtale(LocalDate.now().minusYears(4), LocalDate.now().minusDays(60)).build(),
                                 arbeidsavtale(LocalDate.now().minusDays(59)).stillingsprosent(50).build())
-                        .build()).build())
-                .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                        .build())
+                .forelder(PersonBuilder.far().build())
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .build();
 
         var mor = familie.mor();
@@ -1773,9 +1769,9 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
             + "utsettelse og blir automatisk innvilget uten trekk.")
     void mor_fødsel_sykdom_innefor_første_6_ukene_utsettelse() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor().inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build()).build())
-                .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .forelder(PersonBuilder.mor().arbeidMedOpptjeningUnder6G().build())
+                .forelder(PersonBuilder.far().build())
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusWeeks(8))
                 .build();
 
@@ -1848,9 +1844,9 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
             + "fra uke 3 til 8. Ikke noe krav til å søke om utsettlse og saken blir automatisk behandlet og innvilget.")
     void mor_adopsjon_sykdom_uke_3_til_8_automatisk_invilget() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor().inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build()).build())
-                .forelder(far().inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build()).build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .forelder(PersonBuilder.mor().arbeidMedOpptjeningUnder6G().build())
+                .forelder(PersonBuilder.far().arbeidMedOpptjeningUnder6G().build())
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusMonths(15))
                 .build();
 
@@ -1915,13 +1911,13 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
             "gjenværende stønadsukene uten aktivitetskrav. Resten av periode og neste uttaks periode avslås pga av manglede stønadsdager igjen")
     void farBhfrTest() {
         var familie = FamilieGenerator.ny()
-                .forelder(far().inntektytelse(InntektYtelseGenerator.ny()
+                .forelder(PersonBuilder.far()
                         .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-001", LocalDate.now().minusYears(4),
                                 LocalDate.now().minusMonths(4))
                         .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-002", LocalDate.now().minusMonths(4))
-                        .build()).build())
-                .forelder(mor().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                        .build())
+                .forelder(PersonBuilder.mor().build())
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusMonths(1))
                 .build();
 
@@ -2033,9 +2029,9 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
     @Description("Verifiserer at innsyn har korrekt data og sammenligner med vedtaket med det saksbehandlerene ser")
     void mor_innsyn_verifsere() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor().inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build()).build())
-                .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .forelder(PersonBuilder.mor().arbeidMedOpptjeningUnder6G().build())
+                .forelder(PersonBuilder.far().build())
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusWeeks(8))
                 .build();
 
@@ -2091,9 +2087,9 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
             + "fødselsdato")
     void farUtsetterOppstartRundtFødselSøkerTermin() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor().inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningOver6G().build()).build())
-                .forelder(far().inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningOver6G().build()).build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .forelder(PersonBuilder.mor().arbeidMedOpptjeningOver6G().build())
+                .forelder(PersonBuilder.far().arbeidMedOpptjeningOver6G().build())
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .build();
 
         var termindato = LocalDate.now().minusWeeks(2).minusDays(2);
@@ -2219,9 +2215,9 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
     @Description("Far søker og får innvilget på termin. Fødselen kommer og uttaket justeres")
     void farFårJustertUttakVedFødselshendelse() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor().inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningOver6G().build()).build())
-                .forelder(far().inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningOver6G().build()).build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .forelder(PersonBuilder.mor().arbeidMedOpptjeningOver6G().build())
+                .forelder(PersonBuilder.far().arbeidMedOpptjeningOver6G().build())
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .build();
         var termindato = LocalDate.now().minusWeeks(2).plusDays(2);
 
@@ -2337,9 +2333,9 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
     @Description("Far søker og får innvilget på termin. Fødselen kommer og uttaket justeres")
     void farSettesPåVentPåManglendeVedleggOgEttersenderVedleggSomFørerTilKomplettbehandlingOgAtDenTasAvVent() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor().inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build()).build())
-                .forelder(far().inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build()).build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .forelder(PersonBuilder.mor().arbeidMedOpptjeningUnder6G().build())
+                .forelder(PersonBuilder.far().arbeidMedOpptjeningUnder6G().build())
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .build();
         var termindato = LocalDate.now().minusWeeks(6);
         var far = familie.far();
@@ -2360,7 +2356,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         assertThat(saksbehandler.harAksjonspunkt(AksjonspunktKoder.AUTO_VENTER_PÅ_KOMPLETT_SØKNAD)).isTrue();
 
         // Ettersend vedlegg som mangler
-        far.ettersendVedlegg(far.fødselsnummer(), YtelseType.FORELDREPENGER, DokumentTypeId.I000141,
+        far.ettersendVedlegg(far.fødselsnummer(), no.nav.foreldrepenger.soknad.kontrakt.ettersendelse.YtelseType.FORELDREPENGER, DokumentTypeId.I000141,
                 new Dokumenterer(Dokumenterer.DokumentererType.BARN, null, null));
 
         saksbehandler.hentFagsak(saksnummer);
@@ -2397,16 +2393,16 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
     void farBfhrMinsterettOgUttakTest() {
         var fødselsdato = LocalDate.now().minusMonths(1);
         var familie = FamilieGenerator.ny()
-                .forelder(far().inntektytelse(InntektYtelseGenerator.ny()
+                .forelder(PersonBuilder.far()
                         .arbeidsforhold(LocalDate.now().minusYears(4),
                                 arbeidsavtale(LocalDate.now().minusYears(4), LocalDate.now().minusMonths(4).minusDays(1)).build(),
                                 arbeidsavtale(LocalDate.now().minusMonths(4)).build())
-                        .build()).build())
-                .forelder(mor().inntektytelse(InntektYtelseGenerator.ny()
+                        .build())
+                .forelder(PersonBuilder.mor()
                         .arbeidsforhold(fødselsdato.plusWeeks(26),
                                 arbeidsavtale(fødselsdato.plusWeeks(26)).stillingsprosent(80).build())
-                        .build()).build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                        .build())
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(fødselsdato)
                 .build();
 
@@ -2488,7 +2484,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
             + "Far får innvilget resten.")
     void farBfhrMinsterettasdasdaOgUttakTest() {
         var familie = FamilieGenerator.ny()
-                .forelder(far().inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningOver6G().build()).build())
+                .forelder(PersonBuilder.far().arbeidMedOpptjeningOver6G().build())
                 .barn(LocalDate.now().minusWeeks(8))
                 .build();
         var fødselsdato = familie.barn().fødselsdato();
