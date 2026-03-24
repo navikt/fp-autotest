@@ -79,8 +79,8 @@ public class FamilieGenerator {
             throw new IllegalStateException("Du må instansiere 2 foreldre!");
         }
 
-        foreldre.get(0).familierelasjoner().add(new FamilierelasjonModellDto(relasjon, foreldre.get(1).fnr()));
-        foreldre.get(1).familierelasjoner().add(new FamilierelasjonModellDto(relasjon, foreldre.get(0).fnr()));
+        foreldre.get(0).familierelasjoner().add(new FamilierelasjonModellDto(relasjon, foreldre.get(1).uuid()));
+        foreldre.get(1).familierelasjoner().add(new FamilierelasjonModellDto(relasjon, foreldre.get(0).uuid()));
         if (Objects.requireNonNull(relasjon) == FamilierelasjonModellDto.Relasjon.EKTE) {
             foreldre.forEach(f -> oppdaterSivilstand(f, SivilstandDto.Sivilstander.GIFT));
         } else if (relasjon == FamilierelasjonModellDto.Relasjon.SAMBOER) {
@@ -106,8 +106,8 @@ public class FamilieGenerator {
                     case FAR, MEDFAR -> FamilierelasjonModellDto.Relasjon.FAR;
                     default -> throw new IllegalStateException("Unexpected value: " + forelder.rolle());
                 };
-                barnet.familierelasjoner().add(new FamilierelasjonModellDto(barnetsRelasjonTilForelder, forelder.fnr()));
-                forelder.familierelasjoner().add(new FamilierelasjonModellDto(FamilierelasjonModellDto.Relasjon.BARN, barnet.fnr()));
+                barnet.familierelasjoner().add(new FamilierelasjonModellDto(barnetsRelasjonTilForelder, forelder.uuid()));
+                forelder.familierelasjoner().add(new FamilierelasjonModellDto(FamilierelasjonModellDto.Relasjon.BARN, barnet.uuid()));
 
             }
         }
@@ -123,7 +123,7 @@ public class FamilieGenerator {
 
     private static PersonDto privatArbeidsgiver(PrivatArbeidsgiver p) {
         return PersonDto.builder()
-                .ident(p.fnr())
+                .uuid(p.uuid())
                 .rolle(Rolle.PRIVATE_ARBEIDSGIVER)
                 .fødselsdato(LocalDate.now().minusYears(40))
                 .build();
@@ -146,8 +146,8 @@ public class FamilieGenerator {
                 .map(PrivatArbeidsgiver.class::cast)
                 .collect(Collectors.toSet());
         privateArbeidsgiver.forEach(p -> parter.add(privatArbeidsgiver(p)));
-        TESTSCENARIO_JERSEY_KLIENT.opprettTestscenario(parter);
-        return new Familie(parter, saksbehandlerRolle);
+        var identer = TESTSCENARIO_JERSEY_KLIENT.opprettTestscenario(parter);
+        return new Familie(parter, identer, saksbehandlerRolle);
     }
 
     private void guardForeldresammensetning() {

@@ -30,7 +30,7 @@ public class Arbeidsgivere {
         return alleArbeidsgivere.stream()
                 .filter(PersonArbeidsgiver.class::isInstance)
                 .map(PersonArbeidsgiver.class::cast)
-                .filter(a -> a.identArbeidsgiver().fødselsnummer().equals(fødselsnummer))
+                .filter(a -> a.fnrArbeidsgiver().equals(fødselsnummer))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Scenario har ikke private arbeidsforhold"));
     }

@@ -10,6 +10,7 @@ import static no.nav.vedtak.klient.http.CommonHttpHeaders.HEADER_NAV_CONSUMER_ID
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -36,25 +37,31 @@ import no.nav.foreldrepenger.vtp.kontrakter.person.AaregDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.InntektYtelseModellDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.OrganisasjonDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.PersonDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.TilordnetIdentDto;
 import no.nav.vedtak.log.mdc.MDCOperations;
 
 public abstract class Søker {
 
     private static final Logger LOG = LoggerFactory.getLogger(Søker.class);
 
-    private final Ident ident;
-    private final Ident identAnnenpart;
+    private final Fødselsnummer fødselsnummer;
+    private final AktørId aktørId;
+    private final AktørId aktørIdAnnenpart;
     private final PersonDto personDto;
+    private final Map<UUID, TilordnetIdentDto> identer;
     private final Innsender innsender;
 
     private Innsyn innsyn;
     private Saksnummer saksnummer = null;
     private SøknadDto førstegangssøknad = null;
 
-    Søker(Ident ident, Ident identAnnenpart, PersonDto personDto, Innsender innsender) {
-        this.ident = ident;
-        this.identAnnenpart = identAnnenpart;
+    Søker(Fødselsnummer fødselsnummer, AktørId aktørId, AktørId aktørIdAnnenpart, PersonDto personDto,
+          Map<UUID, TilordnetIdentDto> identer, Innsender innsender) {
+        this.fødselsnummer = fødselsnummer;
+        this.aktørId = aktørId;
+        this.aktørIdAnnenpart = aktørIdAnnenpart;
         this.personDto = personDto;
+        this.identer = identer;
         this.innsender = innsender;
     }
 
@@ -63,20 +70,16 @@ public abstract class Søker {
     }
 
     public Fødselsnummer fødselsnummer() {
-        return ident.fødselsnummer();
+        return fødselsnummer;
     }
 
     public AktørId aktørId() {
-        return ident.aktørId();
-    }
-
-    public Ident ident() {
-        return ident;
+        return aktørId;
     }
 
     public Innsyn innsyn() {
         if (innsyn == null) {
-            innsyn = new Innsyn(ident.fødselsnummer());
+            innsyn = new Innsyn(fødselsnummer);
         }
         return innsyn;
     }
@@ -90,7 +93,7 @@ public abstract class Søker {
         if (personDto.inntektytelse() == null) {
             return List.of();
         }
-        return Aareg.arbeidsforholdene(personDto.inntektytelse().aareg());
+        return Aareg.arbeidsforholdene(personDto.inntektytelse().aareg(), identer);
     }
 
     public Arbeidsforhold arbeidsforhold(String orgnummer) {
@@ -101,11 +104,11 @@ public abstract class Søker {
     }
 
     private List<Arbeidsforhold> arbeidsforholdene(AktørId identifikator) {
-        return Aareg.arbeidsforholdene(personDto.inntektytelse().aareg(), identifikator);
+        return Aareg.arbeidsforholdene(personDto.inntektytelse().aareg(), identer, identifikator);
     }
 
     private List<Arbeidsforhold> arbeidsforholdene(Orgnummer identifikator) {
-        return Aareg.arbeidsforholdene(personDto.inntektytelse().aareg(), identifikator);
+        return Aareg.arbeidsforholdene(personDto.inntektytelse().aareg(), identer, identifikator);
     }
 
     public Arbeidsgiver arbeidsgiver(String orgnummer) {
@@ -136,15 +139,20 @@ public abstract class Søker {
         if (arbeidsforhold.arbeidsgiverIdentifikasjon().length() == 9) {
             var orgnummer = new Orgnummer(arbeidsforhold.arbeidsgiverIdentifikasjon());
             return arbeidsgivere.add(new Virksomhet(orgnummer,
-                    new Arbeidstaker(ident, månedsinntekt(orgnummer)),
+                    new Arbeidstaker(fødselsnummer, aktørId, månedsinntekt(orgnummer)),
                     arbeidsforholdene(orgnummer),
                     innsender));
         }
-        var identArbeidsgiver = Ident.fra(arbeidsforhold.arbeidsgiverIdentifikasjon());
-        return arbeidsgivere.add(new PersonArbeidsgiver(identArbeidsgiver,
-                new Arbeidstaker(ident, månedsinntekt(identArbeidsgiver.fødselsnummer())),
-                arbeidsforholdene(identArbeidsgiver.aktørId()),
-                innsender));
+        var aktørIdArbeidsgiver = new AktørId(arbeidsforhold.arbeidsgiverIdentifikasjon());
+        var fnrArbeidsgiver = identer.entrySet().stream()
+                .filter(e -> e.getValue().aktørId().equals(aktørIdArbeidsgiver.value()))
+                .findFirst()
+                .map(a -> new Fødselsnummer(a.getValue().fnr()))
+                .orElseThrow(() -> new IllegalArgumentException("Fant ikke fødselsnummer for arbeidsgiver med aktørId " + aktørIdArbeidsgiver.value()));
+        return arbeidsgivere.add(new PersonArbeidsgiver(aktørIdArbeidsgiver,
+                new Arbeidstaker(fødselsnummer, aktørId, månedsinntekt(fnrArbeidsgiver)),
+                arbeidsforholdene(aktørIdArbeidsgiver),
+                innsender, fnrArbeidsgiver));
     }
 
     public Arbeidsgivere arbeidsgivere(String orgnummer){
@@ -154,7 +162,7 @@ public abstract class Søker {
     }
 
     public LocalDate frilansAnnsettelsesFom() {
-        return arbeidsforholdFrilans(personDto.inntektytelse().aareg()).getFirst()
+        return arbeidsforholdFrilans(personDto.inntektytelse().aareg(), identer).getFirst()
                 .ansettelsesperiodeFom();
     }
 
@@ -164,15 +172,15 @@ public abstract class Søker {
     }
 
     public int månedsinntekt(String identifikator) {
-        return Inntektskomponenten.månedsinntekt(personDto.inntektytelse().inntektskomponent(), identifikator);
+        return Inntektskomponenten.månedsinntekt(personDto.inntektytelse().inntektskomponent(), identer, identifikator);
     }
 
     public int månedsinntekt(Orgnummer orgnummer) {
-        return Inntektskomponenten.månedsinntekt(personDto.inntektytelse().inntektskomponent(), orgnummer);
+        return Inntektskomponenten.månedsinntekt(personDto.inntektytelse().inntektskomponent(), identer, orgnummer);
     }
 
     public int månedsinntekt(Fødselsnummer fnrArbeidsgiver) {
-        return Inntektskomponenten.månedsinntekt(personDto.inntektytelse().inntektskomponent(), fnrArbeidsgiver);
+        return Inntektskomponenten.månedsinntekt(personDto.inntektytelse().inntektskomponent(), identer, fnrArbeidsgiver);
     }
 
     public int månedsinntekt(Orgnummer orgnummer, ArbeidsforholdId arbeidsforholdId) {
@@ -204,57 +212,52 @@ public abstract class Søker {
 
     public Saksnummer søk(SøknadBuilder søknadBuilder) {
         var søknad = søknadBuilder
-                .medSøkerinfo(new SøkerDto(ident.fødselsnummer(), new SøkerDto.Navn("Fornavnet", "Mellomnavnet", "Etternavnet hardkodet"), registrerteArbeidsforhold()))
+                .medSøkerinfo(new SøkerDto(fødselsnummer, new SøkerDto.Navn("Fornavnet", "Mellomnavnet", "Etternavnet hardkodet"), registrerteArbeidsforhold()))
                 .build();
         genererUniktNavConsumerIdForDokument();
-        LOG.info("Sender inn søknad for {} ...", ident);
+        LOG.info("Sender inn søknad for {} ...", fødselsnummer.value());
         this.førstegangssøknad = søknad;
-        this.saksnummer = innsender.sendInnSøknad(søknad, ident.aktørId(), ident.fødselsnummer(),
-                identAnnenpart != null ? identAnnenpart.aktørId() : null, null);
+        this.saksnummer = innsender.sendInnSøknad(søknad, aktørId, fødselsnummer, aktørIdAnnenpart, null);
         LOG.debug("Søknad sendt inn og behandling opprettet på {}", this.saksnummer.value());
         return this.saksnummer;
     }
 
     public Saksnummer søk(SøknadBuilder søknadBuilder, Saksnummer saksnummer) {
         var søknad = søknadBuilder
-                .medSøkerinfo(new SøkerDto(ident.fødselsnummer(), new SøkerDto.Navn("Fornavnet", "Mellomnavnet", "Etternavnet hardkodet"), registrerteArbeidsforhold()))
+                .medSøkerinfo(new SøkerDto(fødselsnummer, new SøkerDto.Navn("Fornavnet", "Mellomnavnet", "Etternavnet hardkodet"), registrerteArbeidsforhold()))
                 .build();
         genererUniktNavConsumerIdForDokument();
-        LOG.info("Sender inn søknad for {} med saksnummer {} ...", ident, saksnummer.value());
+        LOG.info("Sender inn søknad for {} med saksnummer {} ...", fødselsnummer.value(), saksnummer.value());
         this.førstegangssøknad = søknad;
-        this.saksnummer = innsender.sendInnSøknad(søknad, ident.aktørId(), ident.fødselsnummer(),
-                identAnnenpart != null ? identAnnenpart.aktørId() : null, saksnummer);
+        this.saksnummer = innsender.sendInnSøknad(søknad, aktørId, fødselsnummer, aktørIdAnnenpart, saksnummer);
         LOG.debug("Søknad sendt inn og behandling opprettet på fagsak {}", saksnummer.value());
         return this.saksnummer;
     }
 
     public Saksnummer søk(EndringssøknadBuilder søknadBuilder) {
         var søknad = søknadBuilder
-                .medSøkerinfo(new SøkerDto(ident.fødselsnummer(), new SøkerDto.Navn("Fornavnet", "Mellomnavnet", "Etternavnet hardkodet"), registrerteArbeidsforhold()))
+                .medSøkerinfo(new SøkerDto(fødselsnummer, new SøkerDto.Navn("Fornavnet", "Mellomnavnet", "Etternavnet hardkodet"), registrerteArbeidsforhold()))
                 .build();
         genererUniktNavConsumerIdForDokument();
         this.saksnummer = søknad.saksnummer();
-        LOG.info("Sender inn endringssøknadsøknad for {} med saksnummer {} ...", ident, this.saksnummer.value());
-        innsender.sendInnSøknad(søknad, ident.aktørId(), ident.fødselsnummer(),
-                identAnnenpart != null ? identAnnenpart.aktørId() : null, saksnummer);
+        LOG.info("Sender inn endringssøknadsøknad for {} med saksnummer {} ...", fødselsnummer.value(), this.saksnummer.value());
+        innsender.sendInnSøknad(søknad, aktørId, fødselsnummer, aktørIdAnnenpart, saksnummer);
         LOG.debug("Endringssøknad sendt inn og fagsak {} er oppdatert", saksnummer.value());
         return saksnummer;
     }
 
     public Saksnummer søkPapirsøknadForeldrepenger() {
         genererUniktNavConsumerIdForDokument();
-        LOG.info("Sender inn papirsøknad for {} ..", ident);
-        this.saksnummer = innsender.sendInnPapirsøknadForeldrepenger(ident.aktørId(), ident.fødselsnummer(),
-                identAnnenpart != null ? identAnnenpart.aktørId() : null);
+        LOG.info("Sender inn papirsøknad for {} ..", fødselsnummer.value());
+        this.saksnummer = innsender.sendInnPapirsøknadForeldrepenger(aktørId, fødselsnummer, aktørIdAnnenpart);
         LOG.debug("Papirsøknad sendt inn og behandling opprettet på {}", saksnummer.value());
         return this.saksnummer;
     }
 
     public Saksnummer søkPapirsøknadSvangerskapspenger() {
         genererUniktNavConsumerIdForDokument();
-        LOG.info("Sender inn papirsøknad for {} ..", ident);
-        this.saksnummer = innsender.sendInnPapirsøknadSvangerskapspenger(ident.aktørId(), ident.fødselsnummer(),
-                identAnnenpart != null ? identAnnenpart.aktørId() : null);
+        LOG.info("Sender inn papirsøknad for {} ..", fødselsnummer.value());
+        this.saksnummer = innsender.sendInnPapirsøknadSvangerskapspenger(aktørId, fødselsnummer, aktørIdAnnenpart);
         LOG.debug("Papirsøknad sendt inn og behandling opprettet på {}", saksnummer.value());
         return this.saksnummer;
     }
@@ -262,23 +265,22 @@ public abstract class Søker {
     public Saksnummer sendInnPapirsøknadEEndringForeldrepenger() {
         guardTrengerEksisterendeBehandling();
         genererUniktNavConsumerIdForDokument();
-        LOG.info("Sender inn endringssøknad på papirsøknad for {} ..", ident);
-        this.saksnummer = innsender.sendInnPapirsøknadEEndringForeldrepenger(ident.aktørId(), ident.fødselsnummer(),
-                identAnnenpart != null ? identAnnenpart.aktørId() : null, saksnummer);
+        LOG.info("Sender inn endringssøknad på papirsøknad for {} ..", fødselsnummer.value());
+        this.saksnummer = innsender.sendInnPapirsøknadEEndringForeldrepenger(aktørId, fødselsnummer, aktørIdAnnenpart, saksnummer);
         LOG.debug("Endringssøknad sendt inn og fagsak {} er oppdatert", saksnummer.value());
         return this.saksnummer;
     }
 
     public Saksnummer søkPapirsøknadEngangsstønad() {
         genererUniktNavConsumerIdForDokument();
-        this.saksnummer = innsender.sendInnPapirsøknadEngangsstønad(ident.aktørId(), ident.fødselsnummer());
+        this.saksnummer = innsender.sendInnPapirsøknadEngangsstønad(aktørId, fødselsnummer);
         return this.saksnummer;
     }
 
     public void sendInnKlage() {
         guardTrengerEksisterendeBehandling();
         genererUniktNavConsumerIdForDokument();
-        innsender.sendInnKlage(ident.aktørId(), ident.fødselsnummer(), this.saksnummer);
+        innsender.sendInnKlage(aktørId, fødselsnummer, this.saksnummer);
     }
 
     public void ettersendVedlegg(Fødselsnummer fnr, YtelseType ytelseType, DokumentTypeId skjemanummer, Dokumenterer dokumenterer) {
@@ -291,7 +293,7 @@ public abstract class Søker {
     // Brukes bare i tilfelle hvor en ønsker å sende IM uten registret arbeidsforhold i Aareg!
     public void sendIMBasertPåInntekskomponenten(InntektsmeldingBuilder inntektsmelding, LocalDate startdato) {
         genererUniktNavConsumerIdForDokument();
-        innsender.sendInnInntektsmeldingUtenForespørsel(inntektsmelding.build(), startdato, ident.aktørId(), ident.fødselsnummer(), this.saksnummer, false);
+        innsender.sendInnInntektsmeldingUtenForespørsel(inntektsmelding.build(), startdato, aktørId, fødselsnummer, this.saksnummer, false);
     }
 
     private void guardFlereArbeidsgivere() {

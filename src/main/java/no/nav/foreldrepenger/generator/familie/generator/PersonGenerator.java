@@ -2,7 +2,9 @@ package no.nav.foreldrepenger.generator.familie.generator;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.neovisionaries.i18n.CountryCode;
 
@@ -19,6 +21,7 @@ import no.nav.foreldrepenger.vtp.kontrakter.person.StatsborgerskapDto;
 
 public class PersonGenerator {
 
+    private static final Set<String> BRUKTE_FØDSELSNUMMER = new HashSet<>();
     private static final LocalDate DEFAULT_FØRDSELSDATO_MOR = LocalDate.now().minusYears(32);
     private static final LocalDate DEFAULT_FØDSELSDATO_FAR = LocalDate.now().minusYears(34);
     private static final Språk DEFAULT_SPRÅK = Språk.NB;

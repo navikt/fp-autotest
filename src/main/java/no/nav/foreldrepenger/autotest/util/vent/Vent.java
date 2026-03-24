@@ -12,7 +12,7 @@ public final class Vent {
 
     private static final Logger LOG = LoggerFactory.getLogger(Vent.class);
     private static final int TIMEOUT_SEKUNDER = 15;
-    private static final int VENT_MULTIPLIER = 1; // Endre denne hvis du har treg pc og kjører alle testene, slik at de ikke feiler pga timeout.
+    private static final int VENT_MULTIPLIER = 3; // Endre denne hvis du har treg pc og kjører alle testene, slik at de ikke feiler pga timeout.
 
     private Vent() {
     }
@@ -31,7 +31,7 @@ public final class Vent {
 
     public static <T> T på(Callable<T> callable, Callable<String> errorMessageProducer, int timeoutSekunder, int progressivVentetid) {
         var start = LocalDateTime.now();
-        var end = start.plusSeconds(timeoutSekunder * VENT_MULTIPLIER);
+        var end = start.plusSeconds((long) timeoutSekunder * VENT_MULTIPLIER);
         var advarsel = start.plusSeconds((int) (timeoutSekunder * 0.75));
         var logget = false;
 

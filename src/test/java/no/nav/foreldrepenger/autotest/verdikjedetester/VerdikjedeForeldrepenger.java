@@ -153,7 +153,6 @@ import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.DokumentTypeId;
 import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.Dokumenterer;
 import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.InnsendingType;
 import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.ÅpenPeriodeDto;
-import no.nav.foreldrepenger.kontrakter.risk.kodeverk.RisikoklasseType;
 import no.nav.foreldrepenger.vtp.kontrakter.person.ArenaSakerDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.FamilierelasjonModellDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.GrunnlagDto;
