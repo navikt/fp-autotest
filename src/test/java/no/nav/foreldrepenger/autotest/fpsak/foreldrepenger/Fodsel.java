@@ -22,6 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -66,7 +67,6 @@ import no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType;
 import no.nav.foreldrepenger.kontrakter.felles.kodeverk.MorsAktivitet;
 import no.nav.foreldrepenger.soknad.kontrakt.BrukerRolle;
 import no.nav.foreldrepenger.soknad.kontrakt.builder.BarnBuilder;
-import no.nav.foreldrepenger.vtp.kontrakter.FødselsnummerGenerator;
 import no.nav.foreldrepenger.vtp.kontrakter.person.FamilierelasjonModellDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.PrivatArbeidsgiver;
 import no.nav.foreldrepenger.vtp.kontrakter.person.SivilstandDto;
@@ -545,7 +545,7 @@ class Fodsel extends VerdikjedeTestBase {
     @Description("Mor søker fødsel med privatperson som arbeidsgiver")
     @DisplayName("Mor søker fødsel med privatperson som arbeidsgiver, avvik i beregning")
     void morSøkerFødselMedPrivatpersonSomArbeidsgiver() {
-        var fnrArbeidsgiver = new FødselsnummerGenerator.Builder().buildAndGenerate();
+        var fnrArbeidsgiver = UUID.randomUUID();
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
                     .inntektytelse(InntektYtelseGenerator.ny()
