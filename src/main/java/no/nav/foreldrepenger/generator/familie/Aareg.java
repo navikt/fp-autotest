@@ -8,10 +8,10 @@ import java.util.UUID;
 
 import no.nav.foreldrepenger.kontrakter.felles.typer.AktørId;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Orgnummer;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.AaregDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.ArbeidsforholdDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.Arbeidsforholdstype;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.TilordnetIdentDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.AaregDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.ArbeidsforholdDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.Arbeidsforholdstype;
+import no.nav.foreldrepenger.vtp.kontrakter.person.TilordnetIdentDto;
 
 final class Aareg {
 

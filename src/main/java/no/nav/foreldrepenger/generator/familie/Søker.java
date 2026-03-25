@@ -4,7 +4,7 @@ import static no.nav.foreldrepenger.autotest.util.StreamUtils.distinctByKeys;
 import static no.nav.foreldrepenger.generator.familie.Aareg.arbeidsforholdFrilans;
 import static no.nav.foreldrepenger.generator.familie.Sigrun.hentNæringsinntekt;
 import static no.nav.foreldrepenger.generator.familie.Sigrun.startdato;
-import static no.nav.foreldrepenger.vtp.kontrakter.v2.Arbeidsforholdstype.ORDINÆRT_ARBEIDSFORHOLD;
+import static no.nav.foreldrepenger.vtp.kontrakter.person.Arbeidsforholdstype.ORDINÆRT_ARBEIDSFORHOLD;
 import static no.nav.vedtak.klient.http.CommonHttpHeaders.HEADER_NAV_CONSUMER_ID;
 
 import java.time.LocalDate;
@@ -33,11 +33,11 @@ import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.DokumentTypeId;
 import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.Dokumenterer;
 import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.InnsendingType;
 import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.VedleggDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.AaregDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.InntektYtelseModellDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.OrganisasjonDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.PersonDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.TilordnetIdentDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.AaregDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.InntektYtelseModellDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.OrganisasjonDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.PersonDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.TilordnetIdentDto;
 import no.nav.vedtak.log.mdc.MDCOperations;
 
 public abstract class Søker {

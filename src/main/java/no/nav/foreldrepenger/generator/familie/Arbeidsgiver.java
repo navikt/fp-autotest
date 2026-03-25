@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.generator.familie;
 
-import static no.nav.foreldrepenger.vtp.kontrakter.v2.Arbeidsforholdstype.ORDINÆRT_ARBEIDSFORHOLD;
+import static no.nav.foreldrepenger.vtp.kontrakter.person.Arbeidsforholdstype.ORDINÆRT_ARBEIDSFORHOLD;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -15,7 +15,9 @@ import no.nav.foreldrepenger.autotest.aktoerer.innsender.Innsender;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.Inntektsmelding;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Saksnummer;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.TilordnetIdentDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.OrganisasjonDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.PrivatArbeidsgiver;
+import no.nav.foreldrepenger.vtp.kontrakter.person.TilordnetIdentDto;
 
 public abstract class Arbeidsgiver {
     private static final Logger LOG = LoggerFactory.getLogger(Arbeidsgiver.class);
@@ -40,10 +42,10 @@ public abstract class Arbeidsgiver {
     }
 
 
-    public static String hentIdentifikator(no.nav.foreldrepenger.vtp.kontrakter.v2.Arbeidsgiver arbeidsgiver, Map<UUID, TilordnetIdentDto> identer) {
+    public static String hentIdentifikator(no.nav.foreldrepenger.vtp.kontrakter.person.Arbeidsgiver arbeidsgiver, Map<UUID, TilordnetIdentDto> identer) {
         return switch (arbeidsgiver) {
-            case no.nav.foreldrepenger.vtp.kontrakter.v2.OrganisasjonDto org -> org.orgnummer().value();
-            case no.nav.foreldrepenger.vtp.kontrakter.v2.PrivatArbeidsgiver(UUID uuid)  -> identer.get(uuid).aktørId();
+            case OrganisasjonDto org -> org.orgnummer().value();
+            case PrivatArbeidsgiver(UUID uuid)  -> identer.get(uuid).aktørId();
             default -> throw new IllegalStateException("Ukjent type arbeidsgiver");
         };
     }

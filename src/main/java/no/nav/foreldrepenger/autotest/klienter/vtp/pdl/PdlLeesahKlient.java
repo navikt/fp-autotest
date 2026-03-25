@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
-import no.nav.foreldrepenger.vtp.kontrakter.PersonhendelseDto;
+import no.nav.foreldrepenger.vtp.kontrakter.hendelser.PersonhendelseDto;
 
 public class PdlLeesahKlient {
 

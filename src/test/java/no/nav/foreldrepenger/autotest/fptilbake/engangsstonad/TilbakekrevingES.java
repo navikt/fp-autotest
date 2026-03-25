@@ -35,11 +35,11 @@ import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.Kravgrunnla
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.ArbeidsavtaleDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.ArenaSakerDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.MedlemskapDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.PersonstatusDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.ArbeidsavtaleDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.ArenaSakerDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.FamilierelasjonModellDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.MedlemskapDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.PersonstatusDto;
 
 @Tag("tilbakekreving")
 @Tag("fptilbake")

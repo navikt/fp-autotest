@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.autotest.aktoerer.innsender;
 
-import static no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Mottakskanal.SKAN_IM;
+import static no.nav.foreldrepenger.vtp.kontrakter.journalpost.koder.Mottakskanal.SKAN_IM;
 import static org.assertj.core.api.Assertions.fail;
 
 import java.time.LocalDate;
@@ -23,20 +23,20 @@ import no.nav.foreldrepenger.kontrakter.felles.typer.Saksnummer;
 import no.nav.foreldrepenger.soknad.kontrakt.SøknadDto;
 import no.nav.foreldrepenger.soknad.kontrakt.ettersendelse.YtelseType;
 import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.VedleggDto;
-import no.nav.foreldrepenger.vtp.kontrakter.PersonhendelseDto;
-import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.DokumentModell;
-import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.DokumentVariantInnhold;
-import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.JournalpostBruker;
-import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.JournalpostModell;
-import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Arkivfiltype;
-import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Arkivtema;
-import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.BrukerType;
-import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumentTilknyttetJournalpost;
-import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
-import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Journalposttyper;
-import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Journalstatus;
-import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Mottakskanal;
-import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Variantformat;
+import no.nav.foreldrepenger.vtp.kontrakter.hendelser.PersonhendelseDto;
+import no.nav.foreldrepenger.vtp.kontrakter.journalpost.DokumentModell;
+import no.nav.foreldrepenger.vtp.kontrakter.journalpost.DokumentVariantInnhold;
+import no.nav.foreldrepenger.vtp.kontrakter.journalpost.JournalpostBruker;
+import no.nav.foreldrepenger.vtp.kontrakter.journalpost.JournalpostModell;
+import no.nav.foreldrepenger.vtp.kontrakter.journalpost.koder.Arkivfiltype;
+import no.nav.foreldrepenger.vtp.kontrakter.journalpost.koder.Arkivtema;
+import no.nav.foreldrepenger.vtp.kontrakter.journalpost.koder.BrukerType;
+import no.nav.foreldrepenger.vtp.kontrakter.journalpost.koder.DokumentTilknyttetJournalpost;
+import no.nav.foreldrepenger.vtp.kontrakter.journalpost.koder.DokumenttypeId;
+import no.nav.foreldrepenger.vtp.kontrakter.journalpost.koder.Journalposttyper;
+import no.nav.foreldrepenger.vtp.kontrakter.journalpost.koder.Journalstatus;
+import no.nav.foreldrepenger.vtp.kontrakter.journalpost.koder.Mottakskanal;
+import no.nav.foreldrepenger.vtp.kontrakter.journalpost.koder.Variantformat;
 
 public class ApiMottak extends DokumentInnsendingHjelper {
 

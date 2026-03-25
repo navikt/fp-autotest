@@ -16,7 +16,7 @@ import static no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType.FELLESP
 import static no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType.FORELDREPENGER;
 import static no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType.FORELDREPENGER_FØR_FØDSEL;
 import static no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType.MØDREKVOTE;
-import static no.nav.foreldrepenger.vtp.kontrakter.v2.ArbeidsavtaleDto.arbeidsavtale;
+import static no.nav.foreldrepenger.vtp.kontrakter.person.ArbeidsavtaleDto.arbeidsavtale;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
@@ -67,9 +67,9 @@ import no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType;
 import no.nav.foreldrepenger.kontrakter.felles.kodeverk.MorsAktivitet;
 import no.nav.foreldrepenger.soknad.kontrakt.BrukerRolle;
 import no.nav.foreldrepenger.soknad.kontrakt.builder.BarnBuilder;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.PrivatArbeidsgiver;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.SivilstandDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.FamilierelasjonModellDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.PrivatArbeidsgiver;
+import no.nav.foreldrepenger.vtp.kontrakter.person.SivilstandDto;
 
 @Tag("fpsak")
 @Tag("foreldrepenger")
@@ -545,17 +545,17 @@ class Fodsel extends VerdikjedeTestBase {
     @Description("Mor søker fødsel med privatperson som arbeidsgiver")
     @DisplayName("Mor søker fødsel med privatperson som arbeidsgiver, avvik i beregning")
     void morSøkerFødselMedPrivatpersonSomArbeidsgiver() {
-        var uuidArbeidsgiver = UUID.randomUUID();
+        var fnrArbeidsgiver = UUID.randomUUID();
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
                     .inntektytelse(InntektYtelseGenerator.ny()
-                        .arbeidsforhold(new PrivatArbeidsgiver(uuidArbeidsgiver), "ARB001-000", 0, LocalDate.now().minusMonths(12), LocalDate.now().minusMonths(11), 360_000)
-                        .arbeidsforhold(new PrivatArbeidsgiver(uuidArbeidsgiver), "ARB001-001", 0, LocalDate.now().minusMonths(10), LocalDate.now().minusMonths(9), 360_000)
-                        .arbeidsforhold(new PrivatArbeidsgiver(uuidArbeidsgiver), "ARB001-002", 0, LocalDate.now().minusMonths(7), LocalDate.now().minusMonths(6), 360_000)
-                        .arbeidsforhold(new PrivatArbeidsgiver(uuidArbeidsgiver), "ARB001-003", 0, LocalDate.now().minusMonths(4), LocalDate.now().minusMonths(3), 360_000)
-                        .arbeidsforhold(new PrivatArbeidsgiver(uuidArbeidsgiver), "ARB001-004", 0, LocalDate.now().minusMonths(3), LocalDate.now().minusMonths(2), 360_000)
-                        .arbeidsforhold(new PrivatArbeidsgiver(uuidArbeidsgiver), "ARB001-005", 0, LocalDate.now().minusMonths(2), LocalDate.now().minusMonths(1), 360_000)
-                        .arbeidsforhold(new PrivatArbeidsgiver(uuidArbeidsgiver), "ARB001-006", 0, LocalDate.now().minusMonths(1), 360_000)
+                        .arbeidsforhold(new PrivatArbeidsgiver(fnrArbeidsgiver), "ARB001-000", 0, LocalDate.now().minusMonths(12), LocalDate.now().minusMonths(11), 360_000)
+                        .arbeidsforhold(new PrivatArbeidsgiver(fnrArbeidsgiver), "ARB001-001", 0, LocalDate.now().minusMonths(10), LocalDate.now().minusMonths(9), 360_000)
+                        .arbeidsforhold(new PrivatArbeidsgiver(fnrArbeidsgiver), "ARB001-002", 0, LocalDate.now().minusMonths(7), LocalDate.now().minusMonths(6), 360_000)
+                        .arbeidsforhold(new PrivatArbeidsgiver(fnrArbeidsgiver), "ARB001-003", 0, LocalDate.now().minusMonths(4), LocalDate.now().minusMonths(3), 360_000)
+                        .arbeidsforhold(new PrivatArbeidsgiver(fnrArbeidsgiver), "ARB001-004", 0, LocalDate.now().minusMonths(3), LocalDate.now().minusMonths(2), 360_000)
+                        .arbeidsforhold(new PrivatArbeidsgiver(fnrArbeidsgiver), "ARB001-005", 0, LocalDate.now().minusMonths(2), LocalDate.now().minusMonths(1), 360_000)
+                        .arbeidsforhold(new PrivatArbeidsgiver(fnrArbeidsgiver), "ARB001-006", 0, LocalDate.now().minusMonths(1), 360_000)
                         .build())
                     .build())
                 .forelder(far().build())

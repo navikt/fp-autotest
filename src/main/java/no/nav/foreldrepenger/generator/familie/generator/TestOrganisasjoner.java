@@ -4,11 +4,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 
-import no.nav.foreldrepenger.vtp.kontrakter.v2.OrganisasjonDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.Orgnummer;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.PrivatArbeidsgiver;
+import no.nav.foreldrepenger.vtp.kontrakter.person.OrganisasjonDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.Orgnummer;
 
 public class TestOrganisasjoner {
 
@@ -78,8 +76,6 @@ public class TestOrganisasjoner {
     public TestOrganisasjoner() {
         ORGANISASJONER.addAll(List.of(NAV, NAV_OSLO, NAV_BERGEN, NAV_STORD, NAV_KLAGE_MIDT));
     }
-
-    public static final PrivatArbeidsgiver PRIVAT_ARBEIDSGIVER = new PrivatArbeidsgiver(UUID.randomUUID());
 
 
     private final Random random = new Random();
