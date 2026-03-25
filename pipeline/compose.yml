@@ -238,6 +238,7 @@ services:
     mem_limit: 128mb
     environment:
       PORT: 9090
+      VITE_MODE_PORT: "9010"
       HOST: http://localhost
       CORS_ALLOWED_METHODS: GET, POST
       CORS_EXPOSED_HEADERS: Location
@@ -308,6 +309,7 @@ services:
     mem_limit: 128mb
     environment:
       PORT: 9091
+      VITE_MODE_PORT: "9014"
       HOST: http://localhost
       CORS_ALLOWED_METHODS: GET, POST
       CORS_EXPOSED_HEADERS: Location
@@ -360,6 +362,7 @@ services:
     mem_limit: 128mb
     environment:
       PORT: 9092
+      VITE_MODE_PORT: "9015"
       HOST: http://localhost
       CORS_ALLOWED_METHODS: GET, POST
       CORS_EXPOSED_HEADERS: Location
@@ -785,6 +788,7 @@ services:
     environment:
       PORT: 9066
       PUBLIC_PATH: /foreldrepenger/oversikt
+      VITE_MODE_PORT: "9110"
     depends_on:
       - fpoversikt
       - fpgrunndata
@@ -802,6 +806,7 @@ services:
       INNSYN: http://localhost:9100/foreldrepenger/oversikt
       PUBLIC_PATH: /foreldrepenger/soknad
       PORT: 9067
+      VITE_MODE_PORT: "9114"
     depends_on:
       - fpsoknad
       - fpgrunndata
@@ -819,6 +824,7 @@ services:
       INNSYN: http://localhost:9100/foreldrepenger/oversikt
       PUBLIC_PATH: /svangerskapspenger/soknad
       PORT: 9068
+      VITE_MODE_PORT: "9112"
     depends_on:
       - fpsoknad
       - fpgrunndata
@@ -836,6 +842,7 @@ services:
       INNSYN: http://localhost:9100/foreldrepenger/oversikt
       PUBLIC_PATH: /engangsstonad/soknad
       PORT: 9069
+      VITE_MODE_PORT: "9113"
     depends_on:
       - fpsoknad
       - fpgrunndata
