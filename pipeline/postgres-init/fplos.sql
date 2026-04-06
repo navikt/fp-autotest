@@ -1,0 +1,5 @@
+CREATE DATABASE fplos;
+CREATE USER fplos WITH PASSWORD 'fplos';
+GRANT ALL ON DATABASE fplos TO fplos;
+ALTER DATABASE fplos SET timezone TO 'Europe/Oslo';
+ALTER DATABASE fplos OWNER TO fplos;
