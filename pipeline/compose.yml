@@ -196,7 +196,9 @@ services:
       - *sertifikat-volum
       - *default-oracle-jdbc-config
       - ./vault-init/dbConfig:/var/run/secrets/nais.io/dvhDSconfig/
-      - ./vault-init/fpsak:/var/run/secrets/nais.io/
+      - ./vault-init/fpsak/defaultDS:/var/run/secrets/nais.io/defaultDS/
+      - ./vault-init/fpsak/dvhDS:/var/run/secrets/nais.io/dvhDS/
+      - ./vault-init/fpsak/serviceuser:/var/run/secrets/nais.io/serviceuser/
     ports:
       - "127.0.0.1:8080:8080"
       #- "127.0.0.1:5005:5005"
@@ -496,7 +498,7 @@ services:
     volumes:
       - *sertifikat-volum
       - *default-oracle-jdbc-config
-      - ./vault-init/fpoppdrag:/var/run/secrets/nais.io/
+      - ./vault-init/fpoppdrag/defaultDS:/var/run/secrets/nais.io/defaultDS/
     ports:
       - "127.0.0.1:8070:8080"
     healthcheck:
@@ -535,7 +537,8 @@ services:
     volumes:
       - *sertifikat-volum
       - *default-oracle-jdbc-config
-      - ./vault-init/fptilbake:/var/run/secrets/nais.io/
+      - ./vault-init/fptilbake/defaultDS:/var/run/secrets/nais.io/defaultDS/
+      - ./vault-init/fptilbake/serviceuser:/var/run/secrets/nais.io/serviceuser/
     ports:
       - "127.0.0.1:8030:8080"
     healthcheck:
@@ -566,7 +569,7 @@ services:
     volumes:
       - *sertifikat-volum
       - *default-oracle-jdbc-config
-      - ./vault-init/fprisk:/var/run/secrets/nais.io/
+      - ./vault-init/fprisk/defaultDS:/var/run/secrets/nais.io/defaultDS/
     ports:
       - "127.0.0.1:8075:8080"
     healthcheck:
@@ -592,7 +595,7 @@ services:
     volumes:
       - *sertifikat-volum
       - *default-oracle-jdbc-config
-      - ./vault-init/fplos:/var/run/secrets/nais.io/
+      - ./vault-init/fplos/defaultDS:/var/run/secrets/nais.io/defaultDS/
     ports:
       - "127.0.0.1:8071:8080"
     healthcheck:
