@@ -27,7 +27,7 @@ public final class HttpRequestProvider {
 
     public static HttpRequest.Builder requestMedInnloggetBruker(Fødselsnummer søker) {
         var requestBuilder = requestMedBasicHeadere();
-        return medBearerTokenOgConsumerId(requestBuilder, TokenProvider.tokenXToken(søker), søker.value());
+        return medBearerTokenOgConsumerId(requestBuilder, TokenProvider.tokenXToken(søker), getCallId());
     }
 
     public static HttpRequest.Builder requestMedInnloggetSaksbehandler(SaksbehandlerRolle saksbehandlerRolle, String clientId) {
