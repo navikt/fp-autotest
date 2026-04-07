@@ -71,12 +71,12 @@ public class FplosKlient {
         send(leggTilRequest);
     }
 
-    public SakslisteIdDto opprettNySaksliste(String defaultAvdeling) {
+    public SakslisteIdDto opprettNySaksliste() {
         var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle, API_NAME)
                 .uri(fromUri(BaseUriProvider.FPLOS_BASE)
                         .path("/avdelingsleder/sakslister")
                         .build())
-                .POST(HttpRequest.BodyPublishers.ofString(toJson(defaultAvdeling)));
+                .POST(HttpRequest.BodyPublishers.ofString(toJson(FplosKlient.DEFAULT_AVDELING)));
         return send(request.build(), SakslisteIdDto.class);
     }
 
@@ -89,9 +89,18 @@ public class FplosKlient {
         send(request.build(), SakslisteIdDto.class);
     }
 
+    public void opprettAvdeling() {
+        var request = requestMedInnloggetSaksbehandler(SaksbehandlerRolle.DRIFTER, API_NAME)
+                .uri(fromUri(BaseUriProvider.FPLOS_FORVALTNING_BASE)
+                        .path("/admin/opprett-avdeling")
+                        .build())
+                .POST(HttpRequest.BodyPublishers.ofString(toJson(new OpprettAvdelingDto(DEFAULT_AVDELING, "Avdelingen"))));
+        send(request.build());
+    }
+
     private record OpprettSaksbehandlerRequest(String avdelingEnhet, String brukerIdent) {}
 
     private record LeggTilSaksbehandlerForListeRequest(String avdelingEnhet, String brukerIdent, boolean checked, Long sakslisteId) {}
 
-
+    private record OpprettAvdelingDto(String enhetsnummer, String enhetsnavn) {}
 }
