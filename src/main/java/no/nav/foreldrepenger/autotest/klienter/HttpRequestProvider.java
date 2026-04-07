@@ -27,12 +27,12 @@ public final class HttpRequestProvider {
 
     public static HttpRequest.Builder requestMedInnloggetBruker(Fødselsnummer søker) {
         var requestBuilder = requestMedBasicHeadere();
-        return medBearerTokenOgConsumerId(requestBuilder, TokenProvider.tokenXToken(søker));
+        return medBearerTokenOgConsumerId(requestBuilder, TokenProvider.tokenXToken(søker), søker.value());
     }
 
     public static HttpRequest.Builder requestMedInnloggetSaksbehandler(SaksbehandlerRolle saksbehandlerRolle, String clientId) {
         var requestBuilder = requestMedBasicHeadere();
-        return medBearerTokenOgConsumerId(requestBuilder, AzureTokenProvider.azureOboToken(saksbehandlerRolle));
+        return medBearerTokenOgConsumerId(requestBuilder, AzureTokenProvider.azureOboToken(saksbehandlerRolle), clientId);
     }
 
     public static HttpRequest.Builder requestMedBasicHeadere() {
@@ -42,22 +42,17 @@ public final class HttpRequestProvider {
                 .timeout(Duration.ofSeconds(5));
     }
 
-    private static HttpRequest.Builder medBearerTokenOgConsumerId(HttpRequest.Builder requestBuilder, String token) {
+    private static HttpRequest.Builder medBearerTokenOgConsumerId(HttpRequest.Builder requestBuilder, String token, String consumerId) {
         return requestBuilder
                 .header(AUTHORIZATION, OIDC_AUTH_HEADER_PREFIX + token)
-                .header(HEADER_NAV_CONSUMER_ID, getConsumerId())
+                .header(HEADER_NAV_CONSUMER_ID, consumerId)
                 .header(HEADER_NAV_CALLID, getCallId())
                 .header(HEADER_NAV_ALT_CALLID, getCallId());
     }
 
 
-    private static String getConsumerId() {
-        return Optional.ofNullable(MDCOperations.getConsumerId())
-                .orElseGet(MDCOperations::generateCallId);
-    }
-
     private static String getCallId() {
-        return getConsumerId();
+        return Optional.ofNullable(MDCOperations.getCallId()).orElseGet(MDCOperations::generateCallId);
     }
 
 }
