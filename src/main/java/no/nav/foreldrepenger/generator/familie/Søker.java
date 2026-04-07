@@ -5,7 +5,6 @@ import static no.nav.foreldrepenger.generator.familie.Aareg.arbeidsforholdFrilan
 import static no.nav.foreldrepenger.generator.familie.Sigrun.hentNæringsinntekt;
 import static no.nav.foreldrepenger.generator.familie.Sigrun.startdato;
 import static no.nav.foreldrepenger.vtp.kontrakter.v2.Arbeidsforholdstype.ORDINÆRT_ARBEIDSFORHOLD;
-import static no.nav.vedtak.klient.http.CommonHttpHeaders.HEADER_NAV_CONSUMER_ID;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -38,7 +37,6 @@ import no.nav.foreldrepenger.vtp.kontrakter.v2.InntektYtelseModellDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.OrganisasjonDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.PersonDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.TilordnetIdentDto;
-import no.nav.vedtak.log.mdc.MDCOperations;
 
 public abstract class Søker {
 
@@ -214,7 +212,6 @@ public abstract class Søker {
         var søknad = søknadBuilder
                 .medSøkerinfo(new SøkerDto(fødselsnummer, new SøkerDto.Navn("Fornavnet", "Mellomnavnet", "Etternavnet hardkodet"), registrerteArbeidsforhold()))
                 .build();
-        genererUniktNavConsumerIdForDokument();
         LOG.info("Sender inn søknad for {} ...", fødselsnummer.value());
         this.førstegangssøknad = søknad;
         this.saksnummer = innsender.sendInnSøknad(søknad, aktørId, fødselsnummer, aktørIdAnnenpart, null);
@@ -226,7 +223,6 @@ public abstract class Søker {
         var søknad = søknadBuilder
                 .medSøkerinfo(new SøkerDto(fødselsnummer, new SøkerDto.Navn("Fornavnet", "Mellomnavnet", "Etternavnet hardkodet"), registrerteArbeidsforhold()))
                 .build();
-        genererUniktNavConsumerIdForDokument();
         LOG.info("Sender inn søknad for {} med saksnummer {} ...", fødselsnummer.value(), saksnummer.value());
         this.førstegangssøknad = søknad;
         this.saksnummer = innsender.sendInnSøknad(søknad, aktørId, fødselsnummer, aktørIdAnnenpart, saksnummer);
@@ -238,7 +234,6 @@ public abstract class Søker {
         var søknad = søknadBuilder
                 .medSøkerinfo(new SøkerDto(fødselsnummer, new SøkerDto.Navn("Fornavnet", "Mellomnavnet", "Etternavnet hardkodet"), registrerteArbeidsforhold()))
                 .build();
-        genererUniktNavConsumerIdForDokument();
         this.saksnummer = søknad.saksnummer();
         LOG.info("Sender inn endringssøknadsøknad for {} med saksnummer {} ...", fødselsnummer.value(), this.saksnummer.value());
         innsender.sendInnSøknad(søknad, aktørId, fødselsnummer, aktørIdAnnenpart, saksnummer);
@@ -247,7 +242,6 @@ public abstract class Søker {
     }
 
     public Saksnummer søkPapirsøknadForeldrepenger() {
-        genererUniktNavConsumerIdForDokument();
         LOG.info("Sender inn papirsøknad for {} ..", fødselsnummer.value());
         this.saksnummer = innsender.sendInnPapirsøknadForeldrepenger(aktørId, fødselsnummer, aktørIdAnnenpart);
         LOG.debug("Papirsøknad sendt inn og behandling opprettet på {}", saksnummer.value());
@@ -255,7 +249,6 @@ public abstract class Søker {
     }
 
     public Saksnummer søkPapirsøknadSvangerskapspenger() {
-        genererUniktNavConsumerIdForDokument();
         LOG.info("Sender inn papirsøknad for {} ..", fødselsnummer.value());
         this.saksnummer = innsender.sendInnPapirsøknadSvangerskapspenger(aktørId, fødselsnummer, aktørIdAnnenpart);
         LOG.debug("Papirsøknad sendt inn og behandling opprettet på {}", saksnummer.value());
@@ -264,7 +257,6 @@ public abstract class Søker {
 
     public Saksnummer sendInnPapirsøknadEEndringForeldrepenger() {
         guardTrengerEksisterendeBehandling();
-        genererUniktNavConsumerIdForDokument();
         LOG.info("Sender inn endringssøknad på papirsøknad for {} ..", fødselsnummer.value());
         this.saksnummer = innsender.sendInnPapirsøknadEEndringForeldrepenger(aktørId, fødselsnummer, aktørIdAnnenpart, saksnummer);
         LOG.debug("Endringssøknad sendt inn og fagsak {} er oppdatert", saksnummer.value());
@@ -272,14 +264,12 @@ public abstract class Søker {
     }
 
     public Saksnummer søkPapirsøknadEngangsstønad() {
-        genererUniktNavConsumerIdForDokument();
         this.saksnummer = innsender.sendInnPapirsøknadEngangsstønad(aktørId, fødselsnummer);
         return this.saksnummer;
     }
 
     public void sendInnKlage() {
         guardTrengerEksisterendeBehandling();
-        genererUniktNavConsumerIdForDokument();
         innsender.sendInnKlage(aktørId, fødselsnummer, this.saksnummer);
     }
 
@@ -292,7 +282,6 @@ public abstract class Søker {
 
     // Brukes bare i tilfelle hvor en ønsker å sende IM uten registret arbeidsforhold i Aareg!
     public void sendIMBasertPåInntekskomponenten(InntektsmeldingBuilder inntektsmelding, LocalDate startdato) {
-        genererUniktNavConsumerIdForDokument();
         innsender.sendInnInntektsmeldingUtenForespørsel(inntektsmelding.build(), startdato, aktørId, fødselsnummer, this.saksnummer, false);
     }
 
@@ -313,11 +302,6 @@ public abstract class Søker {
         if (this.saksnummer == null) {
             throw new IllegalStateException("For å sende endringssøknad eller klage så trengs det en eksistrende behandling!");
         }
-    }
-
-    // Fpfordel stiller krav til at Nav-ConsumerId er unik på tvers av ulike dokumenter!
-    private void genererUniktNavConsumerIdForDokument() {
-        MDCOperations.putToMDC(HEADER_NAV_CONSUMER_ID, UUID.randomUUID().toString());
     }
 
     private List<SøkerDto.Arbeidsforhold> registrerteArbeidsforhold() {
