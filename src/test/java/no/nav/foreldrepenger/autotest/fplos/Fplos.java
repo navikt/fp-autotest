@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -24,6 +25,7 @@ import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.VerdikjedeTestBase;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.ArbeidsforholdKomplettVurderingType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Inntektskategori;
+import no.nav.foreldrepenger.autotest.klienter.fplos.FplosKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingIdVersjonDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsettMaanedsinntektUtenInntektsmeldingAndel;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
@@ -40,6 +42,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeidInntektsmelding.ManueltArbeidsforholdDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.ArbeidstakerandelUtenIMMottarYtelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkType;
+import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
@@ -47,14 +50,22 @@ import no.nav.foreldrepenger.generator.inntektsmelding.builders.Prosent;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
 import no.nav.foreldrepenger.generator.soknad.maler.ArbeidsforholdMaler;
 import no.nav.foreldrepenger.generator.soknad.maler.OpptjeningMaler;
-import no.nav.foreldrepenger.soknad.kontrakt.BrukerRolle;
-import no.nav.foreldrepenger.kontrakter.felles.typer.Orgnummer;
-import no.nav.foreldrepenger.soknad.kontrakt.builder.TilretteleggingBehovBuilder;
 import no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType;
+import no.nav.foreldrepenger.kontrakter.felles.typer.Orgnummer;
+import no.nav.foreldrepenger.soknad.kontrakt.BrukerRolle;
+import no.nav.foreldrepenger.soknad.kontrakt.builder.TilretteleggingBehovBuilder;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 
 @Tag("fplos")
 class Fplos extends VerdikjedeTestBase {
+
+    @BeforeAll
+    public static synchronized void init() {
+        if (kjørerIGithubActions()) {
+            //Gjør det her pga at det ikke gjøres i parent. Bare fplos tag kjører fplos appen
+            new FplosKlient(SaksbehandlerRolle.DRIFTER).opprettAvdeling();
+        }
+    }
 
     @Test
     @DisplayName("Saksmarkering i fpsak gir oppgaveegenskap i LOS")
