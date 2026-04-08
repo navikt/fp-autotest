@@ -592,6 +592,7 @@ services:
       NAIS_APP_NAME: fplos
     env_file:
       - *common-properties
+      - fplos_datasource.env
     volumes:
       - *sertifikat-volum
       - *default-oracle-jdbc-config
