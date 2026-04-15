@@ -8,23 +8,22 @@ Rekkefølgen som en kjører opp applikasjonene er veldig viktig, og må tas hens
 er listet under.
 
     <ingen avhengigheter>   <----   postgres, oracle og vtp
-    postgres og vtp         <----   fpabakus
-    oracle og fpabakus      <----   fpsak
+    postgres og vtp         <----   fpabakus, fpkalkulus
+    oracle, fpabakus og fpkalkulus  <----   fpsak
     fpsak                   <----   fpformidlding/fpoppdrag/fptilbake/fpfrontend/fprisk/fpmottak
 
 Eksemplene nedenfor kjører opp den MINSTE verdikjeden for hver. Dette gjøres fordi det er godt kjent at en del av PCene
 har dårlig specs og ikke tåler at hele verdikjeden blir kjørt opp. Den minste verdikjeden betyr at Docker setter bare opp de 
 nødvendige applikasjonene som trengs for å kunne kjøre angitt applikasjon. 
 
-*   Minste verdikjede for FPSAK: postgres, oracle, fpabakus og vtp.
+*   Minste verdikjede for FPSAK: postgres, oracle, fpabakus, fpkalkulus og vtp.
 *   IKKE minste verdikjede for FPSAK: postgres, oracle, fpabakus, vtp, fpformidling, fpfrontend, ...
 
 Hvis en ønsker å kjøre opp hele verdikjeden med ingen applikasjoner utenfor i IDE kan `pipeline/compose.yml` kjøres.
 
 
 ## Eksempel 1: FPSAK kjørende i IDE
-Her ønsker vi å kjøre opp fpsak i IDE, mens resten av dens avhengigheter kjøres opp av docker-compose. Siden lokal utvikling
-pågår oftere i fpsak er det laget et eget script for å få opp alt på en kjøring. Følg følgende oppskrift får å få opp avhengighetene:
+Her ønsker vi å kjøre opp fpsak i IDE, mens resten av dens avhengigheter kjøres opp av docker-compose.
 
 1) Gå til mappen lokal-utvikling/: `cd lokal-utvikling`.
 
@@ -34,11 +33,16 @@ steg 3). Ønsker du å bruke en annen versjon enn den siste for noen av avhengig
     ./update-versions.sh <APPLIKASJONSNAVN> <VERSION>
     ```
 
-3) Kjør scriptet `lokal-utvikling-fpsak.sh` i som ligger i mappen _"lokal-utvikling/"_.
-    1) For Mac skriv følgende i terminalen: `./lokal-utvikling-fpsak.sh`
-    2) For Windows skriv følgende i terminalen: `sh lokal-utvikling-fpsak.sh`
+3) Kjør scriptet `lokal-utvikling-ide.sh` med `fpsak` som argument:
+    ```bash
+    ./lokal-utvikling-ide.sh fpsak
+    ```
+   Dette setter opp og starter alle avhengigheter i Docker (oracle, postgres, vtp, fpabakus, fpkalkulus, etc.)
+   mens fpsak **ikke** kjøres i Docker (`--scale fpsak=0`).
 
 4) Kjør deretter opp _FPSAK_ i ønsket IDE.
+
+5) For å kjøre ned: `./lokal-utvikling-ide.sh down`
 
 
 ## Eksempel 2: Applikasjoner som ikke er "løvnoder" kjørende i IDE (e.g. FPABAKUS)
