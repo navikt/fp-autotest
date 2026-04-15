@@ -517,6 +517,12 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         assertThat(svpSakEtterVedtak.familiehendelse().antallBarn()).isZero();
         assertThat(svpSakEtterVedtak.familiehendelse().omsorgsovertakelse()).isNull();
 
+        // Verifiser info om beregning og tilkjent ytelse på innsynsak
+        assertThat(svpSakEtterVedtak.gjeldendeVedtak().beregningsgrunnlag()).isNotNull();
+        assertThat(svpSakEtterVedtak.gjeldendeVedtak().tilkjentYtelse()).isNotNull();
+        assertThat(svpSakEtterVedtak.gjeldendeVedtak().tilkjentYtelse().utbetalingsperioder()).isNotEmpty();
+        assertThat(svpSakEtterVedtak.gjeldendeVedtak().tilkjentYtelse().feriepenger()).isNotEmpty();
+
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
         int dagsats = Math.min(SEKS_G_2025, månedsinntektMor * 12) / 260;
         int dagsatsAvkortet = (int) Math.round(dagsats * (100 - tilrettelegginsprosent) / 100);
