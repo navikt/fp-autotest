@@ -2588,15 +2588,17 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         var førstePeriodeInnsyn = uttakPeriodeAnnenpartEøs.get(0);
         var førsteAvklarAnnenforelderEøsPeriodeFpsak = avklarAnnenforelderEøsPerioder.getPerioder().get(0);
+        var helgejustertTom = helgejustertTilFredag(førsteAvklarAnnenforelderEøsPeriodeFpsak.tom());
         assertThat(førstePeriodeInnsyn.fom()).isEqualTo(førsteAvklarAnnenforelderEøsPeriodeFpsak.fom());
-        assertThat(førstePeriodeInnsyn.tom()).isEqualTo(førsteAvklarAnnenforelderEøsPeriodeFpsak.tom());
+        assertThat(førstePeriodeInnsyn.tom()).isEqualTo(helgejustertTom);
         assertThat(førstePeriodeInnsyn.kontoType()).isEqualTo(MØDREKVOTE);
         assertThat(førstePeriodeInnsyn.trekkdager().verdi()).isEqualByComparingTo(førsteAvklarAnnenforelderEøsPeriodeFpsak.trekkdager());
 
         var andrePeriodeInnsyn = uttakPeriodeAnnenpartEøs.get(1);
         var andreAvklarAnnenforelderEøsPeriodeFpsak = avklarAnnenforelderEøsPerioder.getPerioder().get(1);
+        var helgejustertAndreTom = helgejustertTilFredag(andreAvklarAnnenforelderEøsPeriodeFpsak.tom());
         assertThat(andrePeriodeInnsyn.fom()).isEqualTo(andreAvklarAnnenforelderEøsPeriodeFpsak.fom());
-        assertThat(andrePeriodeInnsyn.tom()).isEqualTo(andreAvklarAnnenforelderEøsPeriodeFpsak.tom());
+        assertThat(andrePeriodeInnsyn.tom()).isEqualTo(helgejustertAndreTom);
         assertThat(andrePeriodeInnsyn.kontoType()).isEqualTo(FELLESPERIODE);
         assertThat(andrePeriodeInnsyn.trekkdager().verdi()).isEqualByComparingTo(andreAvklarAnnenforelderEøsPeriodeFpsak.trekkdager());
 
