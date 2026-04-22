@@ -13,8 +13,8 @@ jobs:
   fpsak-tester:
     name: Fpsak tester
     permissions:
-       contents: read
-       id-token: write
+      contents: read
+      id-token: write
     if: github.ref_name != 'master'
     uses: navikt/fp-autotest/.github/workflows/autotest.yml@master # ratchet:exclude
     with:
@@ -24,8 +24,8 @@ jobs:
   fptilbake-tester:
     name: Fptilbake tester
     permissions:
-       contents: read
-       id-token: write
+      contents: read
+      id-token: write
     if: github.ref_name != 'master'
     uses: navikt/fp-autotest/.github/workflows/autotest.yml@master # ratchet:exclude
     with:
@@ -35,8 +35,8 @@ jobs:
   verdikjede-tester:
     name: Verdikjedetester
     permissions:
-       contents: read
-       id-token: write
+      contents: read
+      id-token: write
     uses: navikt/fp-autotest/.github/workflows/autotest.yml@master # ratchet:exclude
     with:
       test-suite: verdikjede
