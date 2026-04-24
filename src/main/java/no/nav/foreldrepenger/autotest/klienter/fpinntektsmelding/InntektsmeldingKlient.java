@@ -37,13 +37,16 @@ public class InntektsmeldingKlient {
     public static ListForespørslerResponse hentInntektsmeldingForespørslerFor(Saksnummer saksnummer) {
         var request = requestMedInnloggetSaksbehandler(SaksbehandlerRolle.DRIFTER, FPINNTEKTSMELDING_APP).uri(
                 fromUri(BaseUriProvider.FPINNTEKTSMELDING_BASE).path(FORESPØRSEL_UUID + "/" + saksnummer.value()).build()).GET();
-        var jalla = hentInntektsmeldingForespørslerForMaskin();
-        return send(request.build(), ListForespørslerResponse.class);
+        var respons = send(request.build(), ListForespørslerResponse.class);
+
+        var midlertidig = hentInntektsmeldingForespørslerForMaskin(respons.inntektmeldingForespørsler.getFirst().uuid, respons.inntektmeldingForespørsler.getFirst().arbeidsgiverident.ident());
+        return respons;
     }
 
-    public static Object hentInntektsmeldingForespørslerForMaskin() {
-        var request = requestMedMaskinportenToken("nav:inntektsmelding/foreldrepenger").uri(
-                fromUri(BaseUriProvider.FPINNTEKTSMELDINGAPI_BASE).path(API_HENT_FORESPØRSLER + "/" + UUID.randomUUID()).build()).GET();
+    public static Object hentInntektsmeldingForespørslerForMaskin(UUID uuid,
+                                                                 String orgnr) {
+        var request = requestMedMaskinportenToken("nav:inntektsmelding/foreldrepenger", orgnr).uri(
+                fromUri(BaseUriProvider.FPINNTEKTSMELDINGAPI_BASE).path(API_HENT_FORESPØRSLER + "/" + uuid).build()).GET();
 
         return send(request.build(), Object.class);
     }

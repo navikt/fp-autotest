@@ -9,11 +9,13 @@ import static no.nav.vedtak.klient.http.CommonHttpHeaders.HEADER_NAV_CONSUMER_ID
 
 import java.net.http.HttpRequest;
 import java.time.Duration;
+import java.util.List;
 import java.util.Optional;
 
 import jakarta.ws.rs.core.MediaType;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.AzureTokenProvider;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
+import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.maskinporten.AuthorizationDetails;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Fødselsnummer;
 import no.nav.vedtak.log.mdc.MDCOperations;
 
@@ -35,9 +37,10 @@ public final class HttpRequestProvider {
         return medBearerTokenOgConsumerId(requestBuilder, AzureTokenProvider.azureOboToken(saksbehandlerRolle), clientId);
     }
 
-    public static HttpRequest.Builder requestMedMaskinportenToken(String scope) {
+    public static HttpRequest.Builder requestMedMaskinportenToken(String scope, String orgnr) {
         var requestBuilder = requestMedBasicHeadere();
-        return medBearerTokenOgConsumerId(requestBuilder, TokenProvider.maskinportenToken(scope), getCallId());
+        var authDetails = new AuthorizationDetails("maskinporten", new AuthorizationDetails.Consumer(orgnr, orgnr), List.of(orgnr), "NAVIDA_LPS");
+        return medBearerTokenOgConsumerId(requestBuilder, TokenProvider.maskinportenToken(scope, List.of(authDetails)), getCallId());
     }
 
     public static HttpRequest.Builder requestMedBasicHeadere() {

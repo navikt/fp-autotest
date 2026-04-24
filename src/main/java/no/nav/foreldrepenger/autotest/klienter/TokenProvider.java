@@ -21,11 +21,7 @@ public final class TokenProvider {
     public static String tokenXToken(Fødselsnummer fnr) {
         return TokenXVekslingKlient.hentAccessTokenForBruker(fnr);
     }
-
-    public static String maskinportenToken(String scope) {
-        return MaskinportenKlient.hentAccessToken(scope);
-    }
-
+    
     public static String maskinportenToken(String scope, List<AuthorizationDetails> authorizationDetails) {
         return MaskinportenKlient.hentAccessToken(scope, authorizationDetails);
     }
