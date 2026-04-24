@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.autotest.klienter.fpinntektsmelding;
 import static jakarta.ws.rs.core.UriBuilder.fromUri;
 import static no.nav.foreldrepenger.autotest.klienter.HttpRequestProvider.requestMedInnloggetBruker;
 import static no.nav.foreldrepenger.autotest.klienter.HttpRequestProvider.requestMedInnloggetSaksbehandler;
+import static no.nav.foreldrepenger.autotest.klienter.HttpRequestProvider.requestMedMaskinportenToken;
 import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.toJson;
 import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.send;
 
@@ -24,18 +25,27 @@ public class InntektsmeldingKlient {
 
     private static final String FORESPØRSEL_UUID = "/forvaltning/api/foresporsel/list";
     private static final String FORESPØRSEL_OPPRETT = "/api/imdialog/send-inntektsmelding";
+    private static final String API_HENT_FORESPØRSLER = "/v1/forespoersel";
 
-    private static final String API_NAME = "fpinntektsmelding";
+    private static final String FPINNTEKTSMELDING_APP = "fpinntektsmelding";
+    private static final String FPINNTEKTSMELDING_API_APP = "fpinntektsmeldingapi";
 
     private InntektsmeldingKlient() {
         // skjul ctor
     }
 
     public static ListForespørslerResponse hentInntektsmeldingForespørslerFor(Saksnummer saksnummer) {
-        var request = requestMedInnloggetSaksbehandler(SaksbehandlerRolle.DRIFTER, API_NAME).uri(
+        var request = requestMedInnloggetSaksbehandler(SaksbehandlerRolle.DRIFTER, FPINNTEKTSMELDING_APP).uri(
                 fromUri(BaseUriProvider.FPINNTEKTSMELDING_BASE).path(FORESPØRSEL_UUID + "/" + saksnummer.value()).build()).GET();
-
+        var jalla = hentInntektsmeldingForespørslerForMaskin();
         return send(request.build(), ListForespørslerResponse.class);
+    }
+
+    public static Object hentInntektsmeldingForespørslerForMaskin() {
+        var request = requestMedMaskinportenToken("nav:inntektsmelding/foreldrepenger").uri(
+                fromUri(BaseUriProvider.FPINNTEKTSMELDINGAPI_BASE).path(API_HENT_FORESPØRSLER + "/" + UUID.randomUUID()).build()).GET();
+
+        return send(request.build(), Object.class);
     }
 
     public static void sendInntektsmelding(SendInntektsmeldingDto sendInntektsmeldingDto, Fødselsnummer fnr) {

@@ -35,6 +35,11 @@ public final class HttpRequestProvider {
         return medBearerTokenOgConsumerId(requestBuilder, AzureTokenProvider.azureOboToken(saksbehandlerRolle), clientId);
     }
 
+    public static HttpRequest.Builder requestMedMaskinportenToken(String scope) {
+        var requestBuilder = requestMedBasicHeadere();
+        return medBearerTokenOgConsumerId(requestBuilder, TokenProvider.maskinportenToken(scope), getCallId());
+    }
+
     public static HttpRequest.Builder requestMedBasicHeadere() {
         return HttpRequest.newBuilder()
                 .header(ACCEPT, MediaType.APPLICATION_JSON)
