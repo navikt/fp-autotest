@@ -734,6 +734,7 @@ services:
       ALTINN_TRE_BASE_URL: http://vtp:8060/rest/dummy/altinn-tre
       ALTINN_TRE_TOKEN_EXCHANGE_PATH: http://vtp:8060/rest/dummy/altinn-tre/authentication/api/v1/exchange/maskinporten
       ALTINN_TRE_INNTEKTSMELDING_RESSURS: nav_foreldrepenger_inntektsmelding
+      ALTINN_TRE_SUBSCRIPTION_KEY: vtp-mock-key
     env_file:
       - *common-properties
     volumes:
