@@ -37,10 +37,10 @@ public final class HttpRequestProvider {
         return medBearerTokenOgConsumerId(requestBuilder, AzureTokenProvider.azureOboToken(saksbehandlerRolle), clientId);
     }
 
-    public static HttpRequest.Builder requestMedMaskinportenToken(String scope, String orgnr) {
+    public static HttpRequest.Builder requestMedMaskinportenToken(String orgnr) {
         var requestBuilder = requestMedBasicHeadere();
         var authDetails = new AuthorizationDetails("maskinporten", new AuthorizationDetails.Consumer(orgnr, orgnr), List.of(orgnr), "NAVIDA_LPS");
-        return medBearerTokenOgConsumerId(requestBuilder, TokenProvider.maskinportenToken(scope, List.of(authDetails)), getCallId());
+        return medBearerTokenOgConsumerId(requestBuilder, TokenProvider.maskinportenToken("nav:inntektsmelding/foreldrepenger", List.of(authDetails)), getCallId());
     }
 
     public static HttpRequest.Builder requestMedBasicHeadere() {

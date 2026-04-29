@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.autotest.klienter.fpinntektsmelding.dto;
+package no.nav.foreldrepenger.autotest.klienter.fpinntektsmelding.dto.arbeidsgiverportal;
 
 /**
  * Hvorfor inntekt i inntektsmeldingen er endret fra snittet de siste tre måneder

@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.autotest.klienter.fpinntektsmelding.dto;
+package no.nav.foreldrepenger.autotest.klienter.fpinntektsmelding.dto.arbeidsgiverportal;
 
 public enum NaturalytelsetypeDto {
     ELEKTRISK_KOMMUNIKASJON,

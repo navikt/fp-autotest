@@ -28,6 +28,7 @@ public interface Innsender {
     void sendInnKlage(AktørId aktørId, Fødselsnummer fnr, Saksnummer saksnummer);
     void ettersendVedlegg(Fødselsnummer fnr, Saksnummer saksnummer, YtelseType ytelseType, VedleggDto vedlegg);
     Saksnummer sendInnInntektsmelding(Inntektsmelding inntektsmelding, AktørId aktørId, Fødselsnummer fnr, Saksnummer saksnummer);
+    Saksnummer sendInnInntektsmeldingViaApi(Inntektsmelding inntektsmelding, Saksnummer saksnummer);
     Saksnummer sendInnInntektsmelding(List<Inntektsmelding> inntektsmeldingBuilder, AktørId aktørId, Fødselsnummer fnr, Saksnummer saksnummer);
     Saksnummer sendInnInntektsmeldingUtenForespørsel(Inntektsmelding inntektsmelding, LocalDate startDato, AktørId aktørId, Fødselsnummer fødselsnummer, Saksnummer saksnummer, boolean registrertIAareg);
     void sendInnHendelse(PersonhendelseDto personhendelseDto);
