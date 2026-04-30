@@ -42,6 +42,7 @@ echo FPGRUNNDATA_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-manage
 echo FPSWAGGER_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fp-swagger")" >> .env
 echo FPTILGANG_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fp-tilgang")" >> .env
 echo FPINNTEKTSMELDING_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fp-inntektsmelding")" >> .env
+echo FPINNTEKTSMELDINGAPI_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fp-inntektsmelding-api")" >> .env
 echo FPINNTEKTSMELDINGFRONTEND_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fp-inntektsmelding-frontend")" >> .env
 echo WONDERWALL_IMAGE="$(imageVersion "ghcr.io/nais/wonderwall")" >> .env
 

@@ -24,6 +24,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
+import no.nav.foreldrepenger.generator.inntektsmelding.builders.Inntektsmelding;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -106,9 +108,10 @@ class Fodsel extends VerdikjedeTestBase {
         var arbeidsgiver = mor.arbeidsgiver();
         var inntektsmelding = arbeidsgiver.lagInntektsmeldingFP(fpStartdato)
                 .medBeregnetInntekt(Prosent.valueOf(50))
+                .leggTilEndretInntektÅrsak(Inntektsmelding.Endringsårsaker.Endringsårsak.BONUS)
                 .medRefusjonBeløpPerMnd(refusjon);
         ventPåInntektsmeldingForespørsel(saksnummer);
-        arbeidsgiver.sendInntektsmelding(saksnummer, inntektsmelding);
+        arbeidsgiver.sendInntektsmeldingViaApi(saksnummer, inntektsmelding);
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.VEDLEGG_MOTTATT);

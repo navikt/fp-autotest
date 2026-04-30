@@ -27,6 +27,7 @@ public class InntektsmeldingBuilder {
     // AvsenderSystem
     private String avsendersystem;
     private String systemVersjon;
+    private List<Inntektsmelding.Endringsårsaker> inntektEndringsårsaker = new ArrayList<>();
 
     private InntektsmeldingBuilder() {
         opphørAvNaturalytelseList = new ArrayList<>();
@@ -138,6 +139,16 @@ public class InntektsmeldingBuilder {
         return this;
     }
 
+    public InntektsmeldingBuilder leggTilEndretInntektÅrsak(Inntektsmelding.Endringsårsaker.Endringsårsak årsak) {
+        this.inntektEndringsårsaker.add(new Inntektsmelding.Endringsårsaker(årsak, null, null, null));
+        return this;
+    }
+
+    public InntektsmeldingBuilder leggTilEndretInntektÅrsak(Inntektsmelding.Endringsårsaker endring) {
+        this.inntektEndringsårsaker.add(endring);
+        return this;
+    }
+
     public Inntektsmelding build() {
         Objects.requireNonNull(this.ytelseType, "YtelseType kan ikke være null.");
         Objects.requireNonNull(this.arbeidstakerFnr, "ArbeidstakerFnr kan ikke være null.");
@@ -161,6 +172,7 @@ public class InntektsmeldingBuilder {
         }
 
         return new Inntektsmelding(this.ytelseType, this.arbeidstakerFnr, this.arbeidsgiver, arbeidsforhold, refusjon,
-                this.opphørAvNaturalytelseList, avsenderSystem);
+                this.opphørAvNaturalytelseList, avsenderSystem, this.inntektEndringsårsaker);
     }
+
 }

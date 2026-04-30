@@ -71,6 +71,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.List;
 
+import no.nav.foreldrepenger.generator.inntektsmelding.builders.Inntektsmelding;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -192,10 +194,11 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var avvikendeMånedsinntekt = månedsinntekt * 1.3;
         var inntektsmelding = arbeidsgiver.lagInntektsmeldingFP(fpStartdato)
                 .medBeregnetInntekt(BigDecimal.valueOf(avvikendeMånedsinntekt))
+                .leggTilEndretInntektÅrsak(new Inntektsmelding.Endringsårsaker(Inntektsmelding.Endringsårsaker.Endringsårsak.PERMITTERING, LocalDate.now().minusWeeks(8), LocalDate.now().plusWeeks(6), null))
                 .medRefusjonBeløpPerMnd(BigDecimal.valueOf(månedsinntekt * 0.6));
 
         ventPåInntektsmeldingForespørsel(saksnummer);
-        arbeidsgiver.sendInntektsmelding(saksnummer, inntektsmelding);
+        arbeidsgiver.sendInntektsmeldingViaApi(saksnummer, inntektsmelding);
 
         saksbehandler.hentFagsak(saksnummer);
         var brevAssertionsBuilder = BrevAssertionBuilder.ny()
@@ -541,7 +544,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         inntektsmeldingFar.medRefusjonBeløpPerMnd(Prosent.valueOf(100));
 
         ventPåInntektsmeldingForespørsel(saksnummerFar);
-        arbeidsgiver.sendInntektsmelding(saksnummerFar, inntektsmeldingFar);
+        arbeidsgiver.sendInntektsmeldingViaApi(saksnummerFar, inntektsmeldingFar);
 
         saksbehandler.hentFagsak(saksnummerFar);
         saksbehandler.bekreftAksjonspunkt(saksbehandler.hentAksjonspunktbekreftelse(new VurderUttakDokumentasjonBekreftelse())
