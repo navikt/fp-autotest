@@ -87,7 +87,6 @@ When a developer wants to test local changes to an application:
 | fp-soknad | fp-soknad | FPSOKNAD_IMAGE | fpsoknad | `verdikjede` |
 | fplos | fplos | FPLOS_IMAGE | fplos | `fplos` |
 | fp-inntektsmelding | fp-inntektsmelding | FPINNTEKTSMELDING_IMAGE | fpinntektsmelding | `verdikjede` |
-| fp-inntektsmelding-api | fp-inntektsmelding-api | FPINNTEKTSMELDINGAPI_IMAGE | fpinntektsmeldingapi | `verdikjede` |
 | fp-tilgang | fp-tilgang | FPTILGANG_IMAGE | fptilgang | `verdikjede` |
 
 ## Prerequisites
@@ -99,7 +98,7 @@ cd ~/git/fp-autotest/lokal-utvikling
 cd docker-compose-lokal
 docker compose up --detach
 ```
-This starts all services (oracle, postgres, vtp, fpsak, fpabakus, fpkalkulus, fplos, fpformidling, fpdokgen, fpoppdrag, fptilbake, fprisk, fpmottak, fpsoknad, fpoversikt, fpinntektsmelding, fpinntektsmeldingapi, fptilgang).
+This starts all services (oracle, postgres, vtp, fpsak, fpabakus, fpkalkulus, fplos, fpformidling, fpdokgen, fpoppdrag, fptilbake, fprisk, fpmottak, fpsoknad, fpoversikt, fpinntektsmelding, fptilgang).
 
 Wait for all services to be healthy before running tests:
 ```bash

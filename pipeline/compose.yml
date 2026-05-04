@@ -724,36 +724,6 @@ services:
       fpdokgen:
         condition: service_started
 
-  fpinntektsmeldingapi:
-    <<: *default-konfigurasjon
-    image: $FPINNTEKTSMELDINGAPI_IMAGE
-    container_name: fpinntektsmelding-api
-    mem_limit: 512mb
-    environment:
-      NAIS_APP_NAME: fpinntektsmeldingapi
-      ALTINN_TRE_BASE_URL: http://vtp:8060/rest/dummy/altinn-tre
-      ALTINN_TRE_TOKEN_EXCHANGE_PATH: http://vtp:8060/rest/dummy/altinn-tre/authentication/api/v1/exchange/maskinporten
-      ALTINN_TRE_INNTEKTSMELDING_RESSURS: nav_foreldrepenger_inntektsmelding
-      ALTINN_TRE_SUBSCRIPTION_KEY: vtp-mock-key
-    env_file:
-      - *common-properties
-    volumes:
-      - *sertifikat-volum
-      - ./tokenx:/tokenx
-    ports:
-      - "127.0.0.1:8041:8080"
-    healthcheck:
-      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/internal/health/isReady" ]
-      interval: 3s
-      timeout: 5s
-      retries: 30
-      start_period: 5s
-    depends_on:
-      fpinntektsmelding:
-        condition: service_healthy
-      vtp:
-        condition: service_healthy
-
   wonderwall-fpinntektsmelding-frontend:
     <<: *default-konfigurasjon
     image: $WONDERWALL_IMAGE

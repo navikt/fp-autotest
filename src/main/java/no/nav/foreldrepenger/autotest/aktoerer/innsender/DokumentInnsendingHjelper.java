@@ -38,8 +38,8 @@ abstract class DokumentInnsendingHjelper implements Innsender {
      * Hvis inntektsmeldingen er sendt inn før søknad, venter vi på oppretting av fagsak.
      * Hvis inntektsmeldingen er sendt inn mens det foreligger en sak, venter vi på at saken oppdateres med VEDLEGG_MOTTATT
      */
-    protected Saksnummer ventTilAlleInntekstmeldingeneErMottatt(Fødselsnummer fnr, Saksnummer saksnummer, Integer antallNyeInntektsmeldinger, Integer antallGamleInntekstmeldinger, String innsendingsmetode) {
-        LOG.info("Sender inn {} inntektsmelding(er) på fnr {} via {} ...", antallNyeInntektsmeldinger, fnr.value(), innsendingsmetode);
+    protected Saksnummer ventTilAlleInntekstmeldingeneErMottatt(Fødselsnummer fnr, Saksnummer saksnummer, Integer antallNyeInntektsmeldinger, Integer antallGamleInntekstmeldinger) {
+        LOG.info("Sender inn {} inntektsmelding(er) på fnr {} ...", antallNyeInntektsmeldinger, fnr.value());
         if (saksnummer != null) {
             final var saksnummerTemp = saksnummer;
             var forventetAntallInnteksmeldinger = antallGamleInntekstmeldinger + antallNyeInntektsmeldinger;

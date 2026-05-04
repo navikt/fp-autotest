@@ -39,7 +39,7 @@ jobs:
         id: setup
         shell: bash
         run: |
-          services=("fpsak" "fpformidling" "fpdokgen" "fpoppdrag" "fptilbake" "fprisk" "fpmottak" "fpsoknad" "fpoversikt" "fpkalkulus" "fpinntektsmelding" "fplos" "fpinntektsmeldingapi)
+          services=("fpsak" "fpformidling" "fpdokgen" "fpoppdrag" "fptilbake" "fprisk" "fpmottak" "fpsoknad" "fpoversikt" "fpkalkulus" "fpinntektsmelding" "fplos")
           cd pipeline
           ./update-versions.sh
           echo "Kjører docker compose up på følgende applikasjoner: ${services[*]}"

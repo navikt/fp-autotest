@@ -163,10 +163,6 @@ public abstract class Arbeidsgiver {
         return innsender.sendInnInntektsmelding(inntektsmelding.build(), arbeidstaker.aktørId(), arbeidstaker.fødselsnummer(), saksnummer);
     }
 
-    public Saksnummer sendInntektsmeldingViaApi(Saksnummer saksnummer, InntektsmeldingBuilder inntektsmelding) {
-        return innsender.sendInnInntektsmeldingViaApi(inntektsmelding.build(), saksnummer);
-    }
-
     private List<Inntektsmelding> buildInntektsmeldinger(List<InntektsmeldingBuilder> inntektsmeldingStream) {
         return inntektsmeldingStream.stream().map(InntektsmeldingBuilder::build).toList();
     }

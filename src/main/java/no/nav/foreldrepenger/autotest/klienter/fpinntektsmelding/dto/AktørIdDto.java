@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.autotest.klienter.fpinntektsmelding.dto.arbeidsgiverportal;
+package no.nav.foreldrepenger.autotest.klienter.fpinntektsmelding.dto;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 import jakarta.validation.constraints.Digits;

@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
 public record Inntektsmelding(@NotNull YtelseType ytelseType,
@@ -13,8 +12,7 @@ public record Inntektsmelding(@NotNull YtelseType ytelseType,
                               @NotNull Arbeidsforhold arbeidsforhold,
                               Refusjon refusjon,
                               List<OpphørAvNaturalytelse> opphørAvNaturalytelseList,
-                              AvsenderSysten avsender,
-                              List<Endringsårsaker> endringer) {
+                              AvsenderSysten avsender) {
 
     public enum YtelseType {
         FORELDREPENGER,
@@ -85,28 +83,6 @@ public record Inntektsmelding(@NotNull YtelseType ytelseType,
 
     public record AvsenderSysten(String system,
                                  String versjon) {
-    }
-
-    public record Endringsårsaker(Endringsårsak årsak,
-                                  LocalDate fom,
-                                  LocalDate tom,
-                                  LocalDate bleKjentFom) {
-
-        public enum Endringsårsak {
-            PERMITTERING,
-            NY_STILLING,
-            NY_STILLINGSPROSENT,
-            SYKEFRAVÆR,
-            BONUS,
-            FERIETREKK_ELLER_UTBETALING_AV_FERIEPENGER,
-            NYANSATT,
-            MANGELFULL_RAPPORTERING_AORDNING,
-            INNTEKT_IKKE_RAPPORTERT_ENDA_AORDNING,
-            TARIFFENDRING,
-            FERIE,
-            VARIG_LØNNSENDRING,
-            PERMISJON
-        }
     }
 
 }

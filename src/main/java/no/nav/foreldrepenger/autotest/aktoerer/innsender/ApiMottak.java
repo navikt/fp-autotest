@@ -9,7 +9,7 @@ import java.util.List;
 
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.klienter.fpinntektsmelding.InntektsmeldingKlient;
-import no.nav.foreldrepenger.autotest.klienter.fpinntektsmelding.dto.arbeidsgiverportal.SendInntektsmeldingDto;
+import no.nav.foreldrepenger.autotest.klienter.fpinntektsmelding.dto.SendInntektsmeldingDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsoknad.FpsoknadKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.pdl.PdlLeesahKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
@@ -76,18 +76,6 @@ public class ApiMottak extends DokumentInnsendingHjelper {
     }
 
     @Override
-    public Saksnummer sendInnInntektsmeldingViaApi(Inntektsmelding inntektsmelding, Saksnummer saksnummer) {
-        var forespørsler = InntektsmeldingKlient.søkEtterForespørslerFraApi(inntektsmelding.arbeidsgiver().arbeidsgiverIdentifikator(), inntektsmelding.arbeidstakerFnr());
-        if (forespørsler.isEmpty()) {
-            fail("Forventer å finne enn forespørsel for AG: %s", inntektsmelding.arbeidsgiver().arbeidsgiverIdentifikator());
-        }
-        var request = InntektsmeldingPortalMapper.mapForApi(inntektsmelding, forespørsler.getFirst());
-        var antallGamleInntekstmeldinger = antallInntektsmeldingerMottattPåSak(saksnummer);
-        InntektsmeldingKlient.sendInntektsmeldingTilApi(request, forespørsler.getFirst().orgnr(), new Fødselsnummer(inntektsmelding.arbeidstakerFnr()));
-        return ventTilAlleInntekstmeldingeneErMottatt(new Fødselsnummer(inntektsmelding.arbeidstakerFnr()), saksnummer, 1, antallGamleInntekstmeldinger, "api");
-    }
-
-    @Override
     public Saksnummer sendInnInntektsmelding(List<Inntektsmelding> inntektsmeldinger,
                                              AktørId aktørId,
                                              Fødselsnummer fnr,
@@ -120,7 +108,7 @@ public class ApiMottak extends DokumentInnsendingHjelper {
     private Saksnummer sendInnInntektsmelding(SendInntektsmeldingDto request, Fødselsnummer fnr, Saksnummer saksnummer) {
         var antallGamleInntekstmeldinger = antallInntektsmeldingerMottattPåSak(saksnummer);
         InntektsmeldingKlient.sendInntektsmelding(request, fnr);
-        return ventTilAlleInntekstmeldingeneErMottatt(fnr, saksnummer, 1, antallGamleInntekstmeldinger, "arbeidsgiverportal");
+        return ventTilAlleInntekstmeldingeneErMottatt(fnr, saksnummer, 1, antallGamleInntekstmeldinger);
     }
 
     @Override
