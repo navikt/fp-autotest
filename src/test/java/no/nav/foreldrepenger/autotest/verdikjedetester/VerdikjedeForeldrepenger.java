@@ -544,7 +544,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         inntektsmeldingFar.medRefusjonBeløpPerMnd(Prosent.valueOf(100));
 
         ventPåInntektsmeldingForespørsel(saksnummerFar);
-        arbeidsgiver.sendInntektsmelding(saksnummerFar, inntektsmeldingFar);
+        arbeidsgiver.sendInntektsmeldingViaApi(saksnummerFar, inntektsmeldingFar);
 
         saksbehandler.hentFagsak(saksnummerFar);
         saksbehandler.bekreftAksjonspunkt(saksbehandler.hentAksjonspunktbekreftelse(new VurderUttakDokumentasjonBekreftelse())
