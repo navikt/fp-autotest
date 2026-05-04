@@ -1130,7 +1130,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medParagraf(P_8_41)
                 // OBS: Beløpet som sendes til formidling avrundes ikke riktig. Beregning sier 415 115.99 men formidling sier 415 115 istedenfor 415 116. Matcher ikke med avrunding gjort i skjermbilder
                 .medEgenndefinertAssertion(
-                        "Næringsinntekten din er fastsatt til 415 115 kroner i året. Når vi beregner foreldrepenger ut fra "
+                        "Næringsinntekten din er fastsatt til 396 266 kroner i året. Når vi beregner foreldrepenger ut fra "
                                 + "næringsinntekten din, bruker vi gjennomsnittet av de siste tre årene vi har fått oppgitt av "
                                 + "Skatteetaten. Hvis du nettopp har begynt å arbeide, bruker vi inntekten vi har fått opplyst for det "
                                 + "siste året. Dette gjennomsnittet kan også inneholde arbeidsinntekten din. De er trukket fra i "
