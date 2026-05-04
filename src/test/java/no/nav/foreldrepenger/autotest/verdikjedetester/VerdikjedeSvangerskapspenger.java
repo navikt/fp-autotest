@@ -42,7 +42,7 @@ import no.nav.foreldrepenger.kontrakter.felles.typer.Orgnummer;
 import no.nav.foreldrepenger.kontrakter.fpoversikt.BehandlingTilstand;
 import no.nav.foreldrepenger.soknad.kontrakt.builder.TilretteleggingBehovBuilder;
 import no.nav.foreldrepenger.soknad.kontrakt.svangerskapspenger.AvtaltFerieDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.FamilierelasjonModellDto;
 
 @Tag("verdikjede")
 class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {

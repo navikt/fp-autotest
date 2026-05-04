@@ -4,7 +4,7 @@ import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.medmor;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
 import static no.nav.foreldrepenger.generator.soknad.maler.SøknadEngangsstønadMaler.lagEngangstønadFødsel;
-import static no.nav.foreldrepenger.vtp.kontrakter.v2.ArbeidsavtaleDto.arbeidsavtale;
+import static no.nav.foreldrepenger.vtp.kontrakter.person.ArbeidsavtaleDto.arbeidsavtale;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
@@ -32,10 +32,10 @@ import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
 import no.nav.foreldrepenger.soknad.kontrakt.builder.BarnBuilder;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.ArenaSakerDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.MedlemskapDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.PersonstatusDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.ArenaSakerDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.FamilierelasjonModellDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.MedlemskapDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.PersonstatusDto;
 
 @Tag("fpsak")
 @Tag("engangsstonad")

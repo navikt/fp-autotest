@@ -2,25 +2,29 @@ package no.nav.foreldrepenger.generator.familie.generator;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.neovisionaries.i18n.CountryCode;
 
-import no.nav.foreldrepenger.vtp.kontrakter.v2.AdresseDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.GeografiskTilknytningDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.Kjønn;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.MedlemskapDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.PersonDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.PersonstatusDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.Rolle;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.SivilstandDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.StatsborgerskapDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.AdresseDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.GeografiskTilknytningDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.Kjønn;
+import no.nav.foreldrepenger.vtp.kontrakter.person.MedlemskapDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.PersonDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.PersonstatusDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.Rolle;
+import no.nav.foreldrepenger.vtp.kontrakter.person.SivilstandDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.Språk;
+import no.nav.foreldrepenger.vtp.kontrakter.person.StatsborgerskapDto;
 
 public class PersonGenerator {
 
+    private static final Set<String> BRUKTE_FØDSELSNUMMER = new HashSet<>();
     private static final LocalDate DEFAULT_FØRDSELSDATO_MOR = LocalDate.now().minusYears(32);
     private static final LocalDate DEFAULT_FØDSELSDATO_FAR = LocalDate.now().minusYears(34);
-    private static final String DEFAULT_SPRÅK = "NB";
+    private static final Språk DEFAULT_SPRÅK = Språk.NB;
 
     private PersonGenerator() {
         // Statisk implementasjon

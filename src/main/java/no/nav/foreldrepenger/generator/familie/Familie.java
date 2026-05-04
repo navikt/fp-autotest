@@ -16,13 +16,13 @@ import no.nav.foreldrepenger.autotest.aktoerer.innsender.Innsender;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
 import no.nav.foreldrepenger.kontrakter.felles.typer.AktørId;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Fødselsnummer;
-import no.nav.foreldrepenger.vtp.kontrakter.DødfødselhendelseDto;
-import no.nav.foreldrepenger.vtp.kontrakter.DødshendelseDto;
-import no.nav.foreldrepenger.vtp.kontrakter.FødselshendelseDto;
-import no.nav.foreldrepenger.vtp.kontrakter.PersonhendelseDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.PersonDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.Rolle;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.TilordnetIdentDto;
+import no.nav.foreldrepenger.vtp.kontrakter.hendelser.DødfødselhendelseDto;
+import no.nav.foreldrepenger.vtp.kontrakter.hendelser.DødshendelseDto;
+import no.nav.foreldrepenger.vtp.kontrakter.hendelser.FødselshendelseDto;
+import no.nav.foreldrepenger.vtp.kontrakter.hendelser.PersonhendelseDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.PersonDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.Rolle;
+import no.nav.foreldrepenger.vtp.kontrakter.person.TilordnetIdentDto;
 
 public class Familie {
 
@@ -54,8 +54,8 @@ public class Familie {
         if (medmorPerson.isEmpty()) {
             return;
         }
-        var morIdent = identer.get(medmorPerson.get().id());
-        var annenpartIdent = parter.stream().filter(p -> p.rolle().equals(Rolle.MOR)).findFirst().map(ap -> identer.get(ap.id()));
+        var morIdent = identer.get(medmorPerson.get().uuid());
+        var annenpartIdent = parter.stream().filter(p -> p.rolle().equals(Rolle.MOR)).findFirst().map(ap -> identer.get(ap.uuid()));
         medmor = new Mor(new Fødselsnummer(morIdent.fnr()), new AktørId(morIdent.aktørId()),
                 annenpartIdent.map(TilordnetIdentDto::aktørId).map(AktørId::new).orElse(null), medmorPerson.get(), identer, innsender);
     }
@@ -65,22 +65,22 @@ public class Familie {
         if (farPerson.isEmpty()) {
             return;
         }
-        var morIdent = identer.get(farPerson.get().id());
-        var annenpartIdent = parter.stream().filter(p -> p.rolle().equals(Rolle.MOR)).findFirst().map(ap -> identer.get(ap.id()));
+        var morIdent = identer.get(farPerson.get().uuid());
+        var annenpartIdent = parter.stream().filter(p -> p.rolle().equals(Rolle.MOR)).findFirst().map(ap -> identer.get(ap.uuid()));
         far = new Far(new Fødselsnummer(morIdent.fnr()), new AktørId(morIdent.aktørId()),
                 annenpartIdent.map(TilordnetIdentDto::aktørId).map(AktørId::new).orElse(null), farPerson.get(), identer, innsender);
     }
 
     private void initMor() {
-        var morPerson = parter.stream().filter(p -> p.rolle().equals(no.nav.foreldrepenger.vtp.kontrakter.v2.Rolle.MOR)).findFirst();
+        var morPerson = parter.stream().filter(p -> p.rolle().equals(Rolle.MOR)).findFirst();
         if (morPerson.isEmpty()) {
             return;
         }
-        var morIdent = identer.get(morPerson.get().id());
+        var morIdent = identer.get(morPerson.get().uuid());
         var annenpartIdent = parter.stream()
                 .filter(p -> p.rolle().equals(Rolle.FAR) || p.rolle().equals(Rolle.MEDMOR))
                 .findFirst()
-                .map(ap -> identer.get(ap.id()));
+                .map(ap -> identer.get(ap.uuid()));
         mor = new Mor(new Fødselsnummer(morIdent.fnr()), new AktørId(morIdent.aktørId()),
                 annenpartIdent.map(TilordnetIdentDto::aktørId).map(AktørId::new).orElse(null), morPerson.get(), identer, innsender);
     }
@@ -133,5 +133,4 @@ public class Familie {
     private void sendInnHendelse(PersonhendelseDto personhendelseDto) {
         innsender.sendInnHendelse(personhendelseDto);
     }
-
 }

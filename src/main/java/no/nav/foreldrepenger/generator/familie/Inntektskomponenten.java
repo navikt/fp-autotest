@@ -7,10 +7,10 @@ import java.util.UUID;
 
 import no.nav.foreldrepenger.kontrakter.felles.typer.Fødselsnummer;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Orgnummer;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.InntektkomponentDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.InntektsperiodeDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.PrivatArbeidsgiver;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.TilordnetIdentDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.InntektkomponentDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.InntektsperiodeDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.PrivatArbeidsgiver;
+import no.nav.foreldrepenger.vtp.kontrakter.person.TilordnetIdentDto;
 
 final class Inntektskomponenten {
 

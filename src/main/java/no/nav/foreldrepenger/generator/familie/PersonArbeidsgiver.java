@@ -33,3 +33,4 @@ class PersonArbeidsgiver extends Arbeidsgiver {
         return lagInntektsmeldingPrivateArbeidsgiver(arbeidstaker.fødselsnummer(), månedsinntekt, fnrArbeidsgiver);
     }
 }
+

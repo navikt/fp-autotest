@@ -28,11 +28,11 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.ArenaSakerDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.GeografiskTilknytningDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.MedlemskapDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.PersonstatusDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.ArenaSakerDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.FamilierelasjonModellDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.GeografiskTilknytningDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.MedlemskapDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.PersonstatusDto;
 
 @Tag("fpsak")
 @Tag("engangsstonad")
