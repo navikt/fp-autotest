@@ -111,7 +111,7 @@ class Fodsel extends VerdikjedeTestBase {
                 .leggTilEndretInntektÅrsak(Inntektsmelding.Endringsårsaker.Endringsårsak.BONUS)
                 .medRefusjonBeløpPerMnd(refusjon);
         ventPåInntektsmeldingForespørsel(saksnummer);
-        arbeidsgiver.sendInntektsmelding(saksnummer, inntektsmelding);
+        arbeidsgiver.sendInntektsmeldingViaApi(saksnummer, inntektsmelding);
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.VEDLEGG_MOTTATT);
