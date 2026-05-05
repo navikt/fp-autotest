@@ -30,7 +30,8 @@ public final class MaskinportenKlient {
     }
 
     public static String hentAccessToken(String scope, List<AuthorizationDetails> authorizationDetails) {
-        return accessTokens.computeIfAbsent(scope, s -> hentMaskinportenToken(s, authorizationDetails));
+        var key = authorizationDetails.getFirst().systemuser_org().id();
+        return accessTokens.computeIfAbsent(key, k -> hentMaskinportenToken(scope, authorizationDetails));
     }
 
     private static String hentMaskinportenToken(String scope, List<AuthorizationDetails> authorizationDetails) {
