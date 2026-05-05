@@ -112,60 +112,59 @@ public class InntektsmeldingPortalMapper {
                 inntektsmelding.arbeidstakerFnr(),
                 forespørsel.foersteUttaksdato(),
                 mapYtelseType(inntektsmelding.ytelseType()),
-                new InntektsmeldingRequest.Kontaktperson(inntektsmelding.arbeidsgiver().navn(), inntektsmelding.arbeidsgiver().kontaktnummer()),
-                inntektsmelding.arbeidsforhold().beregnetInntekt(),
+                new InntektsmeldingRequest.InntektInfo(inntektsmelding.arbeidsforhold().beregnetInntekt(), mapEndringsårsakerTilApi(inntektsmelding)),
                 mapRefusjonTilApi(inntektsmelding),
                 mapBortfalteNaturalytelserTilApi(inntektsmelding),
-                mapEndringsårsakerTilApi(inntektsmelding),
-                new InntektsmeldingRequest.AvsenderSystem("Autotest-LPS", "1.0.0"));
+                inntektsmelding.arbeidsgiver().navn(),
+                inntektsmelding.arbeidsgiver().kontaktnummer(),
+                new InntektsmeldingRequest.Avsender("Autotest-LPS", "1.0.0"));
     }
 
-    private static List<InntektsmeldingRequest.Endringsårsaker> mapEndringsårsakerTilApi(Inntektsmelding inntektsmelding) {
+    private static List<InntektsmeldingRequest.InntektInfo.Endringsårsak> mapEndringsårsakerTilApi(Inntektsmelding inntektsmelding) {
         if (inntektsmelding.endringer() == null) {
             return List.of();
         }
         return inntektsmelding.endringer().stream()
-                .map(e -> new InntektsmeldingRequest.Endringsårsaker(mapEndringsårsak(e.årsak()), e.fom(), e.tom(), e.bleKjentFom()))
+                .map(e -> new InntektsmeldingRequest.InntektInfo.Endringsårsak(mapEndringsårsak(e.årsak()), e.fom(), e.tom(), e.bleKjentFom()))
                 .toList();
     }
 
-    private static InntektsmeldingRequest.Endringsårsaker.Endringsårsak mapEndringsårsak(Inntektsmelding.Endringsårsaker.Endringsårsak årsak) {
+    private static InntektsmeldingRequest.InntektInfo.Endringsårsak.EndringsårsakType mapEndringsårsak(Inntektsmelding.Endringsårsaker.Endringsårsak årsak) {
         return switch (årsak) {
-            case PERMITTERING -> InntektsmeldingRequest.Endringsårsaker.Endringsårsak.PERMITTERING;
-            case NY_STILLING -> InntektsmeldingRequest.Endringsårsaker.Endringsårsak.NY_STILLING;
-            case NY_STILLINGSPROSENT -> InntektsmeldingRequest.Endringsårsaker.Endringsårsak.NY_STILLINGSPROSENT;
-            case SYKEFRAVÆR -> InntektsmeldingRequest.Endringsårsaker.Endringsårsak.SYKEFRAVÆR;
-            case BONUS -> InntektsmeldingRequest.Endringsårsaker.Endringsårsak.BONUS;
-            case FERIETREKK_ELLER_UTBETALING_AV_FERIEPENGER -> InntektsmeldingRequest.Endringsårsaker.Endringsårsak.FERIETREKK_ELLER_UTBETALING_AV_FERIEPENGER;
-            case NYANSATT -> InntektsmeldingRequest.Endringsårsaker.Endringsårsak.NYANSATT;
-            case MANGELFULL_RAPPORTERING_AORDNING -> InntektsmeldingRequest.Endringsårsaker.Endringsårsak.MANGELFULL_RAPPORTERING_AORDNING;
-            case INNTEKT_IKKE_RAPPORTERT_ENDA_AORDNING -> InntektsmeldingRequest.Endringsårsaker.Endringsårsak.INNTEKT_IKKE_RAPPORTERT_ENDA_AORDNING;
-            case TARIFFENDRING -> InntektsmeldingRequest.Endringsårsaker.Endringsårsak.TARIFFENDRING;
-            case FERIE -> InntektsmeldingRequest.Endringsårsaker.Endringsårsak.FERIE;
-            case VARIG_LØNNSENDRING -> InntektsmeldingRequest.Endringsårsaker.Endringsårsak.VARIG_LØNNSENDRING;
-            case PERMISJON -> InntektsmeldingRequest.Endringsårsaker.Endringsårsak.PERMISJON;
+            case PERMITTERING -> InntektsmeldingRequest.InntektInfo.Endringsårsak.EndringsårsakType.PERMITTERING;
+            case NY_STILLING -> InntektsmeldingRequest.InntektInfo.Endringsårsak.EndringsårsakType.NY_STILLING;
+            case NY_STILLINGSPROSENT -> InntektsmeldingRequest.InntektInfo.Endringsårsak.EndringsårsakType.NY_STILLINGSPROSENT;
+            case SYKEFRAVÆR -> InntektsmeldingRequest.InntektInfo.Endringsårsak.EndringsårsakType.SYKEFRAVÆR;
+            case BONUS -> InntektsmeldingRequest.InntektInfo.Endringsårsak.EndringsårsakType.BONUS;
+            case FERIETREKK_ELLER_UTBETALING_AV_FERIEPENGER -> InntektsmeldingRequest.InntektInfo.Endringsårsak.EndringsårsakType.FERIETREKK_ELLER_UTBETALING_AV_FERIEPENGER;
+            case NYANSATT -> InntektsmeldingRequest.InntektInfo.Endringsårsak.EndringsårsakType.NYANSATT;
+            case MANGELFULL_RAPPORTERING_AORDNING -> InntektsmeldingRequest.InntektInfo.Endringsårsak.EndringsårsakType.MANGELFULL_RAPPORTERING_AORDNING;
+            case INNTEKT_IKKE_RAPPORTERT_ENDA_AORDNING -> InntektsmeldingRequest.InntektInfo.Endringsårsak.EndringsårsakType.INNTEKT_IKKE_RAPPORTERT_ENDA_AORDNING;
+            case TARIFFENDRING -> InntektsmeldingRequest.InntektInfo.Endringsårsak.EndringsårsakType.TARIFFENDRING;
+            case FERIE -> InntektsmeldingRequest.InntektInfo.Endringsårsak.EndringsårsakType.FERIE;
+            case VARIG_LØNNSENDRING -> InntektsmeldingRequest.InntektInfo.Endringsårsak.EndringsårsakType.VARIG_LØNNSENDRING;
+            case PERMISJON -> InntektsmeldingRequest.InntektInfo.Endringsårsak.EndringsårsakType.PERMISJON;
         };
     }
 
-    private static List<InntektsmeldingRequest.Refusjon> mapRefusjonTilApi(Inntektsmelding inntektsmelding) {
-        List<InntektsmeldingRequest.Refusjon> refusjonsendringer = new ArrayList<>();
+    private static InntektsmeldingRequest.Refusjon mapRefusjonTilApi(Inntektsmelding inntektsmelding) {
         if (inntektsmelding.refusjon() == null) {
-            return refusjonsendringer;
+            return null;
         }
-        refusjonsendringer.add(new InntektsmeldingRequest.Refusjon(inntektsmelding.arbeidsforhold().førsteFraværsdag(), inntektsmelding.refusjon().refusjonBeløpPrMnd()));
+        List<InntektsmeldingRequest.Refusjon.RefusjonEndring> refusjonsendringer = new ArrayList<>();
         if (inntektsmelding.refusjon().refusjonOpphørsdato() != null){
-            refusjonsendringer.add(new InntektsmeldingRequest.Refusjon(inntektsmelding.refusjon().refusjonOpphørsdato(), BigDecimal.ZERO));
+            refusjonsendringer.add(new InntektsmeldingRequest.Refusjon.RefusjonEndring(BigDecimal.ZERO, inntektsmelding.refusjon().refusjonOpphørsdato()));
         }
-        inntektsmelding.refusjon().refusjonEndringList().stream().map(r -> new InntektsmeldingRequest.Refusjon(r.fom(), r.beloepPrMnd())).forEach(refusjonsendringer::add);
-        return refusjonsendringer;
+        inntektsmelding.refusjon().refusjonEndringList().stream().map(r -> new InntektsmeldingRequest.Refusjon.RefusjonEndring(r.beloepPrMnd(), r.fom())).forEach(refusjonsendringer::add);
+        return new InntektsmeldingRequest.Refusjon(inntektsmelding.refusjon().refusjonBeløpPrMnd(), refusjonsendringer);
     }
 
-    private static List<InntektsmeldingRequest.BortfaltNaturalytelse> mapBortfalteNaturalytelserTilApi(Inntektsmelding inntektsmelding) {
+    private static List<InntektsmeldingRequest.Naturalytelse> mapBortfalteNaturalytelserTilApi(Inntektsmelding inntektsmelding) {
         if (inntektsmelding.opphørAvNaturalytelseList() == null) {
             return Collections.emptyList();
         }
         return inntektsmelding.opphørAvNaturalytelseList().stream()
-                .map(naturalytelse -> new InntektsmeldingRequest.BortfaltNaturalytelse(
+                .map(naturalytelse -> new InntektsmeldingRequest.Naturalytelse(
                         naturalytelse.fom(),
                         naturalytelse.tom(),
                         mapNaturalytelseTypeTilApi(naturalytelse.natyralYtelseType()),
@@ -173,27 +172,27 @@ public class InntektsmeldingPortalMapper {
                 .toList();
     }
 
-    private static InntektsmeldingRequest.BortfaltNaturalytelse.Naturalytelsetype mapNaturalytelseTypeTilApi(Inntektsmelding.NaturalytelseType naturalytelseType) {
+    private static InntektsmeldingRequest.Naturalytelse.Naturalytelsetype mapNaturalytelseTypeTilApi(Inntektsmelding.NaturalytelseType naturalytelseType) {
         return switch (naturalytelseType) {
-            case BIL -> InntektsmeldingRequest.BortfaltNaturalytelse.Naturalytelsetype.BIL;
-            case KOST_DAGER -> InntektsmeldingRequest.BortfaltNaturalytelse.Naturalytelsetype.KOST_DAGER;
-            case FRI_TRANSPORT -> InntektsmeldingRequest.BortfaltNaturalytelse.Naturalytelsetype.FRI_TRANSPORT;
-            case ANNET -> InntektsmeldingRequest.BortfaltNaturalytelse.Naturalytelsetype.ANNET;
-            case BOLIG -> InntektsmeldingRequest.BortfaltNaturalytelse.Naturalytelsetype.BOLIG;
-            case LOSJI -> InntektsmeldingRequest.BortfaltNaturalytelse.Naturalytelsetype.LOSJI;
-            case OPSJONER -> InntektsmeldingRequest.BortfaltNaturalytelse.Naturalytelsetype.OPSJONER;
-            case ELEKTRISK_KOMMUNIKASJON -> InntektsmeldingRequest.BortfaltNaturalytelse.Naturalytelsetype.ELEKTRISK_KOMMUNIKASJON;
-            case KOST_DOEGN -> InntektsmeldingRequest.BortfaltNaturalytelse.Naturalytelsetype.KOST_DOEGN;
-            case BEDRIFTSBARNEHAGEPLASS -> InntektsmeldingRequest.BortfaltNaturalytelse.Naturalytelsetype.BEDRIFTSBARNEHAGEPLASS;
-            case RENTEFORDEL_LÅN -> InntektsmeldingRequest.BortfaltNaturalytelse.Naturalytelsetype.RENTEFORDEL_LÅN;
-            case TILSKUDD_BARNEHAGEPLASS -> InntektsmeldingRequest.BortfaltNaturalytelse.Naturalytelsetype.TILSKUDD_BARNEHAGEPLASS;
-            case KOSTBESPARELSE_I_HJEMMET -> InntektsmeldingRequest.BortfaltNaturalytelse.Naturalytelsetype.KOSTBESPARELSE_I_HJEMMET;
-            case BESØKSREISER_HJEMMET_ANNET -> InntektsmeldingRequest.BortfaltNaturalytelse.Naturalytelsetype.BESØKSREISER_HJEMMET_ANNET;
-            case SKATTEPLIKTIG_DEL_FORSIKRINGER -> InntektsmeldingRequest.BortfaltNaturalytelse.Naturalytelsetype.SKATTEPLIKTIG_DEL_FORSIKRINGER;
-            case YRKEBIL_TJENESTLIGBEHOV_KILOMETER -> InntektsmeldingRequest.BortfaltNaturalytelse.Naturalytelsetype.YRKEBIL_TJENESTLIGBEHOV_KILOMETER;
-            case YRKEBIL_TJENESTLIGBEHOV_LISTEPRIS -> InntektsmeldingRequest.BortfaltNaturalytelse.Naturalytelsetype.YRKEBIL_TJENESTLIGBEHOV_LISTEPRIS;
-            case AKSJER_GRUNNFONDSBEVIS_TIL_UNDERKURS -> InntektsmeldingRequest.BortfaltNaturalytelse.Naturalytelsetype.AKSJER_GRUNNFONDSBEVIS_TIL_UNDERKURS;
-            case INNBETALING_TIL_UTENLANDSK_PENSJONSORDNING -> InntektsmeldingRequest.BortfaltNaturalytelse.Naturalytelsetype.INNBETALING_TIL_UTENLANDSK_PENSJONSORDNING;
+            case BIL -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.BIL;
+            case KOST_DAGER -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.KOST_DAGER;
+            case FRI_TRANSPORT -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.FRI_TRANSPORT;
+            case ANNET -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.ANNET;
+            case BOLIG -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.BOLIG;
+            case LOSJI -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.LOSJI;
+            case OPSJONER -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.OPSJONER;
+            case ELEKTRISK_KOMMUNIKASJON -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.ELEKTRISK_KOMMUNIKASJON;
+            case KOST_DOEGN -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.KOST_DOEGN;
+            case BEDRIFTSBARNEHAGEPLASS -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.BEDRIFTSBARNEHAGEPLASS;
+            case RENTEFORDEL_LÅN -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.RENTEFORDEL_LÅN;
+            case TILSKUDD_BARNEHAGEPLASS -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.TILSKUDD_BARNEHAGEPLASS;
+            case KOSTBESPARELSE_I_HJEMMET -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.KOSTBESPARELSE_I_HJEMMET;
+            case BESØKSREISER_HJEMMET_ANNET -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.BESØKSREISER_HJEMMET_ANNET;
+            case SKATTEPLIKTIG_DEL_FORSIKRINGER -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.SKATTEPLIKTIG_DEL_FORSIKRINGER;
+            case YRKEBIL_TJENESTLIGBEHOV_KILOMETER -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.YRKEBIL_TJENESTLIGBEHOV_KILOMETER;
+            case YRKEBIL_TJENESTLIGBEHOV_LISTEPRIS -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.YRKEBIL_TJENESTLIGBEHOV_LISTEPRIS;
+            case AKSJER_GRUNNFONDSBEVIS_TIL_UNDERKURS -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.AKSJER_GRUNNFONDSBEVIS_TIL_UNDERKURS;
+            case INNBETALING_TIL_UTENLANDSK_PENSJONSORDNING -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.INNBETALING_TIL_UTENLANDSK_PENSJONSORDNING;
         };
     }
 }
