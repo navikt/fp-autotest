@@ -165,10 +165,10 @@ public class InntektsmeldingPortalMapper {
         }
         return inntektsmelding.opphørAvNaturalytelseList().stream()
                 .map(naturalytelse -> new InntektsmeldingRequest.Naturalytelse(
-                        naturalytelse.fom(),
-                        naturalytelse.tom(),
                         mapNaturalytelseTypeTilApi(naturalytelse.natyralYtelseType()),
-                        naturalytelse.beloepPrMnd()))
+                        naturalytelse.beloepPrMnd(),
+                        naturalytelse.fom(),
+                        naturalytelse.tom()))
                 .toList();
     }
 
