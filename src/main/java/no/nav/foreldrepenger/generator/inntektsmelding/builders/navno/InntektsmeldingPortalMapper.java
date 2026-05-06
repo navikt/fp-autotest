@@ -110,7 +110,7 @@ public class InntektsmeldingPortalMapper {
     public static InntektsmeldingRequest mapForApi(Inntektsmelding inntektsmelding, InntektsmeldingKlient.ForespørselDto forespørsel) {
         return new InntektsmeldingRequest(forespørsel.forespoerselId(),
                 inntektsmelding.arbeidstakerFnr(),
-                forespørsel.foersteUttaksdato(),
+                forespørsel.startdato(),
                 mapYtelseType(inntektsmelding.ytelseType()),
                 new InntektsmeldingRequest.InntektInfo(inntektsmelding.arbeidsforhold().beregnetInntekt(), mapEndringsårsakerTilApi(inntektsmelding)),
                 mapRefusjonTilApi(inntektsmelding),

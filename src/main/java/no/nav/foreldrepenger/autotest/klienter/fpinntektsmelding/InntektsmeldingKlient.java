@@ -79,7 +79,7 @@ public class InntektsmeldingKlient {
                                                 LocalDate startDato) {
     }
 
-    public record ForespørselDto(UUID forespoerselId, String orgnr, String fnr, LocalDate foersteUttaksdato,
+    public record ForespørselDto(UUID forespoerselId, String orgnr, String fnr, LocalDate startdato,
                                  LocalDate inntektsdato, StatusDto status, YtelseTypeDto ytelseType, LocalDateTime opprettetTid) {
         public enum StatusDto {
             AKTIV,

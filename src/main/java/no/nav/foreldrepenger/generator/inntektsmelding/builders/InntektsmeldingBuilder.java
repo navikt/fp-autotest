@@ -167,7 +167,7 @@ public class InntektsmeldingBuilder {
         if (this.refusjonBeløpPrMnd != null
                 || CollectionUtils.isNotEmpty(this.refusjonEndringList)
                 || this.refusjonOpphørdato != null) {
-            Objects.requireNonNull(refusjonBeløpPrMnd, "Refusjon beloep pr mnd kan ikke være null.");
+            Objects.requireNonNull(refusjonBeløpPrMnd, "Refusjon beloepPerMaaned pr mnd kan ikke være null.");
             refusjon = new Inntektsmelding.Refusjon(this.refusjonBeløpPrMnd, this.refusjonEndringList, this.refusjonOpphørdato);
         }
 
