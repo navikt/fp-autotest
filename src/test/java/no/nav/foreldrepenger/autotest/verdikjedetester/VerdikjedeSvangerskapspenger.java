@@ -13,6 +13,10 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
+import no.nav.foreldrepenger.generator.familie.Arbeidsgiver;
+import no.nav.foreldrepenger.generator.inntektsmelding.builders.Inntektsmelding;
+import no.nav.foreldrepenger.generator.inntektsmelding.builders.InntektsmeldingBuilder;
+
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -70,7 +74,8 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
 
         var arbeidsgiver = mor.arbeidsgiver();
         ventPåInntektsmeldingForespørsel(saksnummer);
-        arbeidsgiver.sendInntektsmeldingerSVP(saksnummer);
+        var inntektsmeldinger = arbeidsgiver.lagInntektsmeldingerSVP();
+        inntektsmeldinger.forEach(im -> arbeidsgiver.sendInntektsmeldingViaApi(saksnummer, im));
 
         var harRefusjon = false;
         validerInnsendtInntektsmeldingSvangerskapspenger(mor.fødselsnummer(), LocalDate.now(), mor.månedsinntekt(), harRefusjon);
@@ -287,7 +292,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         var arbeidsgiver = mor.arbeidsgiver();
         var inntektsmelding = arbeidsgiver.lagInntektsmeldingSVP().medRefusjonBeløpPerMnd(HUNDRE_PROSENT_AV_BEREGNET_INNTEKT);
         ventPåInntektsmeldingForespørsel(saksnummer1);
-        arbeidsgiver.sendInntektsmelding(saksnummer1, inntektsmelding);
+        arbeidsgiver.sendInntektsmeldingViaApi(saksnummer1, inntektsmelding);
 
         var harRefusjon = true;
         validerInnsendtInntektsmeldingSvangerskapspenger(mor.fødselsnummer(), LocalDate.now().minusMonths(2), mor.månedsinntekt(),
