@@ -73,6 +73,8 @@ import java.util.List;
 
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.Inntektsmelding;
 
+import no.nav.foreldrepenger.generator.inntektsmelding.builders.InntektsmeldingBuilder;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -730,7 +732,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medRefusjonBeløpPerMnd(Prosent.valueOf(100));
 
         ventPåInntektsmeldingForespørsel(saksnummerFar);
-        arbeidsgiver1.sendInntektsmelding(saksnummerFar, inntektsmelding1);
+        arbeidsgiver1.sendInntektsmeldingViaApi(saksnummerFar, inntektsmelding1);
 
         var arbeidsgiver2 = far.arbeidsgiver(TestOrganisasjoner.NAV_BERGEN.orgnummer().value());
         var orgNummerFar2 = arbeidsgiver2.arbeidsgiverIdentifikator();
@@ -1030,7 +1032,9 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var arbeidsgiverMor = mor.arbeidsgiver();
 
         ventPåInntektsmeldingForespørsel(saksnummerMor);
-        arbeidsgiverMor.sendInntektsmeldingerFP(saksnummerMor, fpStartdatoMor);
+        var inntektsmelding1 = arbeidsgiverMor.lagInntektsmeldingFP(fpStartdatoMor);
+
+        arbeidsgiverMor.sendInntektsmeldingViaApi(saksnummerMor, inntektsmelding1);
 
         saksbehandler.hentFagsak(saksnummerMor);
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
@@ -1290,7 +1294,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var inntektsmeldingEndringFar = arbeidsgiver.lagInntektsmeldingFP(fpStartdatoFar).medRefusjonBeløpPerMnd(Prosent.valueOf(50));
 
         ventPåInntektsmeldingForespørsel(saksnummerFar);
-        arbeidsgiver.sendInntektsmelding(saksnummerFar, inntektsmeldingEndringFar);
+        arbeidsgiver.sendInntektsmeldingViaApi(saksnummerFar, inntektsmeldingEndringFar);
 
         // Revurdering / Berørt sak til far
         saksbehandler.ventPåOgVelgRevurderingBehandling();
@@ -1435,7 +1439,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var arbeidsgiverMor = mor.arbeidsgiver();
 
         ventPåInntektsmeldingForespørsel(saksnummerMor);
-        arbeidsgiverMor.sendInntektsmeldingerFP(saksnummerMor, fpStartdatoMor);
+        var inntektsmeldingMor = arbeidsgiverMor.lagInntektsmeldingFP(fpStartdatoMor);
+        arbeidsgiverMor.sendInntektsmeldingViaApi(saksnummerMor, inntektsmeldingMor);
 
         saksbehandler.hentFagsak(saksnummerMor);
         var vurderOmsorgsovertakelseMor = saksbehandler.hentAksjonspunktbekreftelse(new VurderOmsorgsovertakelseVilkårAksjonspunktDto())
@@ -1664,7 +1669,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var arbeidsgiver = mor.arbeidsgiver();
 
         ventPåInntektsmeldingForespørsel(saksnummer);
-        arbeidsgiver.sendInntektsmeldingerFP(saksnummer, fpStartdatoMor);
+        var inntektsmeldingMor = arbeidsgiver.lagInntektsmeldingFP(fpStartdatoMor);
+        arbeidsgiver.sendInntektsmeldingViaApi(saksnummer, inntektsmeldingMor);
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
@@ -1966,7 +1972,9 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var arbeidsgiver = far.arbeidsgiver();
 
         ventPåInntektsmeldingForespørsel(saksnummerFar);
-        arbeidsgiver.sendInntektsmeldingerFP(saksnummerFar, fpStartdatoFar);
+        var inntektsmelding = arbeidsgiver.lagInntektsmeldingFP(fpStartdatoFar)
+                .leggTilEndretInntektÅrsak(Inntektsmelding.Endringsårsaker.Endringsårsak.BONUS);
+        arbeidsgiver.sendInntektsmeldingViaApi(saksnummerFar, inntektsmelding);
 
         saksbehandler.hentFagsak(saksnummerFar);
         brevAssertionsBuilder = BrevAssertionBuilder.ny()
@@ -2109,7 +2117,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         ventPåInntektsmeldingForespørsel(saksnummerMor);
         var startdatoForeldrepengerMor = termindato.minusWeeks(3);
-        mor.arbeidsgiver().sendInntektsmeldingerFP(saksnummerMor, startdatoForeldrepengerMor);
+        var inntektsmelding = mor.arbeidsgiver().lagInntektsmeldingFP(startdatoForeldrepengerMor);
+        mor.arbeidsgiver().sendInntektsmeldingViaApi(saksnummerMor, inntektsmelding);
 
         saksbehandler.hentFagsak(saksnummerMor);
         validerInnsendtInntektsmeldingForeldrepenger(mor.fødselsnummer(), startdatoForeldrepengerMor, mor.månedsinntekt(), false);
@@ -2236,7 +2245,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         ventPåInntektsmeldingForespørsel(saksnummerMor);
         var startdatoForeldrepengerMor = termindato.minusWeeks(3);
-        mor.arbeidsgiver().sendInntektsmeldingerFP(saksnummerMor, startdatoForeldrepengerMor);
+        var inntektsmelding = mor.arbeidsgiver().lagInntektsmeldingFP(startdatoForeldrepengerMor);
+        mor.arbeidsgiver().sendInntektsmeldingViaApi(saksnummerMor, inntektsmelding);
 
         saksbehandler.hentFagsak(saksnummerMor);
         validerInnsendtInntektsmeldingForeldrepenger(mor.fødselsnummer(), startdatoForeldrepengerMor, mor.månedsinntekt(), false);
@@ -2355,7 +2365,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         var arbeidsgiver = far.arbeidsgiver();
         ventPåInntektsmeldingForespørsel(saksnummer);
-        arbeidsgiver.sendInntektsmeldingerFP(saksnummer, termindato.plusWeeks(3));
+        var inntektsmelding = arbeidsgiver.lagInntektsmeldingFP(termindato.plusWeeks(3));
+        arbeidsgiver.sendInntektsmeldingViaApi(saksnummer, inntektsmelding);
 
         validerInnsendtInntektsmeldingForeldrepenger(far.fødselsnummer(), termindato.plusWeeks(9).plusDays(2), far.månedsinntekt(),
                 false);
@@ -2515,7 +2526,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         ventPåInntektsmeldingForespørsel(saksnummer);
         var arbeidsgiver = far.arbeidsgiver();
-        arbeidsgiver.sendInntektsmeldingerFP(saksnummer, startdatoForeldrepenger);
+        var inntektsmelding = arbeidsgiver.lagInntektsmeldingFP(startdatoForeldrepenger);
+        arbeidsgiver.sendInntektsmeldingViaApi(saksnummer, inntektsmelding);
 
         validerInnsendtInntektsmeldingForeldrepenger(far.fødselsnummer(), startdatoForeldrepenger, far.månedsinntekt(), false);
 
