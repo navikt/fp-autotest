@@ -115,8 +115,8 @@ public class InntektsmeldingPortalMapper {
                 new InntektsmeldingRequest.InntektInfo(inntektsmelding.arbeidsforhold().beregnetInntekt(), mapEndringsårsakerTilApi(inntektsmelding)),
                 mapRefusjonTilApi(inntektsmelding),
                 mapBortfalteNaturalytelserTilApi(inntektsmelding),
-                inntektsmelding.arbeidsgiver().navn(),
-                inntektsmelding.arbeidsgiver().kontaktnummer(),
+                new InntektsmeldingRequest.Kontaktinformasjon(inntektsmelding.arbeidsgiver().navn(),
+                inntektsmelding.arbeidsgiver().kontaktnummer()),
                 new InntektsmeldingRequest.Avsender("Autotest-LPS", "1.0.0"));
     }
 

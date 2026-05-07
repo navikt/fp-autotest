@@ -13,18 +13,17 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
-public record InntektsmeldingRequest(@NotNull @Valid UUID foresporselId,
+public record InntektsmeldingRequest(@NotNull @Valid UUID forespoerselId,
                                      @Pattern(
                                              regexp = "^\\d{11}$",
                                              message = "Fødselsnummer må bestå av 11 siffer"
-                                     ) @NotNull String fnr,
+                                     ) @NotNull String soekerFnr,
                                      @NotNull LocalDate startdato,
                                      @NotNull YtelseType ytelse,
                                      @NotNull @Valid InntektInfo inntekt,
                                      @Valid Refusjon refusjon,
                                      @NotNull List<@Valid Naturalytelse> naturalytelser,
-                                     @NotNull String kontaktinformasjon,
-                                     @NotNull String arbeidsgiverTlf,
+                                     @NotNull Kontaktinformasjon kontaktinformasjon,
                                      @NotNull @Valid Avsender avsender) {
 
 
@@ -32,6 +31,8 @@ public record InntektsmeldingRequest(@NotNull @Valid UUID foresporselId,
                            @NotNull @Valid List<RefusjonEndring> endringer) {
         public record RefusjonEndring(@NotNull @Min(0) @Max(Integer.MAX_VALUE) @Digits(integer = 20, fraction = 2) BigDecimal beloepPerMaaned, @NotNull LocalDate stardato) {}
     }
+
+    public record Kontaktinformasjon(@NotNull String arbeidsgiverNavn,  @NotNull String arbeidsgiverTlf) {}
 
 
     public record Naturalytelse(@NotNull Naturalytelsetype naturalytelse,
