@@ -6,7 +6,7 @@
     <parent>
         <groupId>no.nav.foreldrepenger.felles</groupId>
         <artifactId>fp-parent-app</artifactId>
-        <version>5.3.1</version>
+        <version>5.3.2</version>
     </parent>
 
     <groupId>no.nav.foreldrepenger.autotest</groupId>
@@ -25,14 +25,14 @@
     <properties>
         <vtp.versjon>2.2.0</vtp.versjon>
 
-        <fp-felles.versjon>7.7.2</fp-felles.versjon>
+        <fp-felles.versjon>7.8.0</fp-felles.versjon>
         <fp-prosesstask.version>5.2.5</fp-prosesstask.version>
-        <fp-kontrakter.version>9.4.32</fp-kontrakter.version>
+        <fp-kontrakter.version>9.4.33</fp-kontrakter.version>
 
         <ftberegning.version>6.5.5</ftberegning.version>
         <fpkalkulus.kontrakt.version>1.0.2</fpkalkulus.kontrakt.version>
 
-        <fpsoknad-kontrakt.version>1.0.2</fpsoknad-kontrakt.version>
+        <fpsoknad-kontrakt.version>1.0.4</fpsoknad-kontrakt.version>
 
         <pdfbox.version>3.0.7</pdfbox.version>
         <allure.version>2.33.0</allure.version>
