@@ -79,7 +79,7 @@ public class InntektsmeldingKlient {
                                                 LocalDate startDato) {
     }
 
-    public record ForespørselDto(UUID forespoerselId, String orgnr, String fnr, LocalDate startdato,
+    public record ForespørselDto(UUID forespoerselId, String orgnr, String soekerFnr, LocalDate startdato,
                                  LocalDate inntektsdato, StatusDto status, YtelseTypeDto ytelseType, LocalDateTime opprettetTid) {
         public enum StatusDto {
             AKTIV,
@@ -92,6 +92,6 @@ public class InntektsmeldingKlient {
         }
     }
     public record ForespørselFilter(@NotNull @Pattern(regexp = "^\\d{9}$") String orgnr,
-                                    @Pattern(regexp = "^\\d{11}$") String fnr) {}
+                                    @Pattern(regexp = "^\\d{11}$") String soekerFnr) {}
 
 }
