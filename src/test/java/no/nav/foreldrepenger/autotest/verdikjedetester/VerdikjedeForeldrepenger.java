@@ -470,7 +470,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
             + "og hele fedrekvoten med gradert uttak. Far starter med opphold og har også opphold mellom uttak av"
             + "fellesperioden og fedrekvoten. Far har to arbeidsforhold i samme virksomhet, samme org.nr, men ulik"
             + "arbeidsforholdsID. To inntekstmeldinger sendes inn med refusjon på begge. Far søker med aktivitetskrav arbeid."
-            + "Mor har permisjon som trigger deling av fellesperioden og aksjonspunkt om uttaksdokumentasjon")
+            + "Mor har stillingsprosent over 75% slik at aktivitetskravet vurderes til oppfylt, selv hun ligger med permisjoner")
     void farSøkerForeldrepengerTest() {
         var fødselsdato = LocalDate.now().minusWeeks(25);
         var fpStartdatoMor = fødselsdato.minusWeeks(3);
@@ -549,10 +549,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         arbeidsgiver.sendInntektsmeldingViaApi(saksnummerFar, inntektsmeldingFar);
 
         saksbehandler.hentFagsak(saksnummerFar);
-        saksbehandler.bekreftAksjonspunkt(saksbehandler.hentAksjonspunktbekreftelse(new VurderUttakDokumentasjonBekreftelse())
-                .ikkeGodkjenn(new ÅpenPeriodeDto(gradertFellesperiode.fom(), morsPermisjonsTom)));
+        saksbehandler.ventTilAvsluttetBehandling();
 
-        foreslårOgFatterVedtakVenterTilAvsluttetBehandling(saksnummerFar, false, false);
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat()).as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);
 
@@ -577,7 +575,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
         brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(far.fødselsnummer(), saksnummerFar).medTekstOmDuFårXKronerPerDagFørSkatt(dagsatsFar)
                 .medKapittelDetteHarViInnvilget()
-                .medParagrafer(P_14_9, P_14_12, P_14_13, P_14_16)
+                .medParagrafer(P_14_9, P_14_12, P_14_16)
                 .medTekstOmGjennomsnittInntektFraTreSisteMåndene()
                 .medParagraf(P_8_30);
         hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET, HistorikkType.BREV_SENDT);
