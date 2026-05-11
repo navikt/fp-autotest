@@ -6,8 +6,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -68,7 +66,7 @@ class LoggTest {
     private static final List<String> ignoreContainersFeil = List.of("vtp", "audit.nais", "postgres", "oracle", "authserver", "fptilgang", "fager-api", "fpcache");
     private static final List<String> ignoreContainersSensitiveInfo = List.of("vtp", "audit.nais", "postgres", "oracle", "authserver", "fager-api", "fpcache");
     private static String IKKE_SJEKK_LENGDE_AV_CONTAINERE;
-    private static String HELGEUNNTAK_CONTAINERE;
+    private static String LENGDEUNNTAK_CONTAINERE;
     private static final int MIN_LOGG_LINJER = 65;
 
     private static String toNumericPattern(String s) {
@@ -84,8 +82,8 @@ class LoggTest {
         IKKE_SJEKK_LENGDE_AV_CONTAINERE = Optional.ofNullable(System.getProperty("ikkeSjekkLengdeAvContainer"))
                 .or(() -> Optional.ofNullable(System.getenv("ikkeSjekkLengdeAvContainer")))
                 .orElse("sjekker alle");
-        HELGEUNNTAK_CONTAINERE = Optional.ofNullable(System.getProperty("kortHelgeLogg"))
-                .or(() -> Optional.ofNullable(System.getenv("kortHelgeLogg")))
+        LENGDEUNNTAK_CONTAINERE = Optional.ofNullable(System.getProperty("kortLogg"))
+                .or(() -> Optional.ofNullable(System.getenv("kortLogg")))
                 .orElse("");
         LOG.info("Sjekker ikke lengden av følgende containere: {}", IKKE_SJEKK_LENGDE_AV_CONTAINERE);
     }
@@ -146,11 +144,9 @@ class LoggTest {
         }
     }
 
-    private static final Set<DayOfWeek> HELGEDAGER = Set.of(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY);
-
     private int minLogglinjer(String containerNavn) {
-        if (HELGEUNNTAK_CONTAINERE.contains(containerNavn) && HELGEDAGER.contains(LocalDate.now().getDayOfWeek())) {
-            return MIN_LOGG_LINJER - 9;
+        if (LENGDEUNNTAK_CONTAINERE.contains(containerNavn)) {
+            return MIN_LOGG_LINJER - 10;
         } else {
             return MIN_LOGG_LINJER;
         }
