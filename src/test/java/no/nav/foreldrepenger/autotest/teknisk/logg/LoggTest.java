@@ -66,7 +66,6 @@ class LoggTest {
     private static final List<String> ignoreContainersFeil = List.of("vtp", "audit.nais", "postgres", "oracle", "authserver", "fptilgang", "fager-api", "fpcache");
     private static final List<String> ignoreContainersSensitiveInfo = List.of("vtp", "audit.nais", "postgres", "oracle", "authserver", "fager-api", "fpcache");
     private static String IKKE_SJEKK_LENGDE_AV_CONTAINERE;
-    private static String LENGDEUNNTAK_CONTAINERE;
     private static final int MIN_LOGG_LINJER = 65;
 
     private static String toNumericPattern(String s) {
@@ -82,9 +81,6 @@ class LoggTest {
         IKKE_SJEKK_LENGDE_AV_CONTAINERE = Optional.ofNullable(System.getProperty("ikkeSjekkLengdeAvContainer"))
                 .or(() -> Optional.ofNullable(System.getenv("ikkeSjekkLengdeAvContainer")))
                 .orElse("sjekker alle");
-        LENGDEUNNTAK_CONTAINERE = Optional.ofNullable(System.getProperty("kortLogg"))
-                .or(() -> Optional.ofNullable(System.getenv("kortLogg")))
-                .orElse("");
         LOG.info("Sjekker ikke lengden av følgende containere: {}", IKKE_SJEKK_LENGDE_AV_CONTAINERE);
     }
 
@@ -123,7 +119,6 @@ class LoggTest {
     @MethodSource("hentContainerNavn")
     void sjekkFeilILogger(String containerNavn) {
         if (!ignoreContainersFeil.contains(containerNavn)) {
-            var minLogglinjer = minLogglinjer(containerNavn);
             var log = DockerUtils.hentLoggForContainer(containerNavn);
             try (var scanner = new Scanner(log)) {
                 int linePos = 0;
@@ -136,19 +131,11 @@ class LoggTest {
                     }
                 }
 
-                if (!IKKE_SJEKK_LENGDE_AV_CONTAINERE.contains(containerNavn) && linePos < minLogglinjer) {
+                if (!IKKE_SJEKK_LENGDE_AV_CONTAINERE.contains(containerNavn) && linePos < MIN_LOGG_LINJER) {
                     fail(String.format("Det forventes minst %s linjer i loggen for applikasjon: %s, men var %s.",
-                            minLogglinjer, containerNavn, linePos));
+                            MIN_LOGG_LINJER, containerNavn, linePos));
                 }
             }
-        }
-    }
-
-    private int minLogglinjer(String containerNavn) {
-        if (LENGDEUNNTAK_CONTAINERE.contains(containerNavn)) {
-            return MIN_LOGG_LINJER - 10;
-        } else {
-            return MIN_LOGG_LINJER;
         }
     }
 
