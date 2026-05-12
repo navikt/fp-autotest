@@ -1236,6 +1236,7 @@
                     "vedtaksDagsats": null,
                     "ytelseAnvist": [],
                     "relatertYtelseType": "FP",
+                    "ytelseKilde": "FPSAK",
                     "periode": {
                         "fom": "2019-03-05",
                         "tom": "2020-01-08"
@@ -1255,6 +1256,7 @@
                         }
                     ],
                     "relatertYtelseType": "SVP",
+                    "ytelseKilde": "FPSAK",
                     "periode": {
                         "fom": "2019-02-01",
                         "tom": "2019-03-04"

@@ -3,7 +3,6 @@ package no.nav.foreldrepenger.autotest.fpsak.engangsstonad;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
 import static no.nav.foreldrepenger.generator.soknad.maler.SøknadEngangsstønadMaler.lagEngangstønadFødsel;
-import static no.nav.foreldrepenger.vtp.kontrakter.person.ArbeidsavtaleDto.arbeidsavtale;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
@@ -21,7 +20,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.SjekkManglendeFødselBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
-import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 import no.nav.foreldrepenger.vtp.kontrakter.person.FamilierelasjonModellDto;
 
 @Tag("foreldrepenger")
@@ -32,14 +30,7 @@ class Soknadsfrist extends VerdikjedeTestBase {
     @Description("Behandle søknadsfrist og sent tilbake på grunn av søknadsfrist. Manglende fødsel.")
     void behandleSøknadsfristOgSentTilbakePåGrunnAvSøknadsfrist() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
-                                .arbeidsforhold(LocalDate.now().minusYears(4),
-                                        arbeidsavtale(LocalDate.now().minusYears(4), LocalDate.now().minusDays(60)).build(),
-                                        arbeidsavtale(LocalDate.now().minusDays(59)).stillingsprosent(50).build()
-                                )
-                                .build())
-                        .build())
+                .forelder(mor().build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
                 .build();
@@ -84,14 +75,7 @@ class Soknadsfrist extends VerdikjedeTestBase {
     @Description("Behandle søknadsfrist og sent tilbake på grunn av fødsel - tester tilbakesending")
     void behandleSøknadsfristOgSentTilbakePåGrunnAvFodsel() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
-                                .arbeidsforhold(LocalDate.now().minusYears(4),
-                                        arbeidsavtale(LocalDate.now().minusYears(4), LocalDate.now().minusDays(60)).build(),
-                                        arbeidsavtale(LocalDate.now().minusDays(59)).stillingsprosent(50).build()
-                                )
-                                .build())
-                        .build())
+                .forelder(mor().build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
                 .build();

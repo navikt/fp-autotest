@@ -257,6 +257,7 @@
                         }
                     ],
                     "relatertYtelseType": "SP",
+                    "ytelseKilde": "INFOTRYGD",
                     "periode": {
                         "fom": "2019-03-01",
                         "tom": "2020-01-15"

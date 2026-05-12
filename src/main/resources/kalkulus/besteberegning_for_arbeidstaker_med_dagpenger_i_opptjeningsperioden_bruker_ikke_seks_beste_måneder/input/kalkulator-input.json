@@ -248,6 +248,7 @@
                         }
                     ],
                     "relatertYtelseType": "DAG",
+                    "ytelseKilde": "ARENA",
                     "periode": {
                         "fom": "2019-01-01",
                         "tom": "2019-06-30"

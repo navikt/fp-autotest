@@ -20,10 +20,9 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.VurderMedlemskapsvilkårForutgåendeBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.DokumentTag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkType;
-import no.nav.foreldrepenger.kontrakter.fpoversikt.BehandlingTilstand;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
-import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 import no.nav.foreldrepenger.generator.soknad.maler.SøknadEngangsstønadMaler;
+import no.nav.foreldrepenger.kontrakter.fpoversikt.BehandlingTilstand;
 import no.nav.foreldrepenger.vtp.kontrakter.person.FamilierelasjonModellDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.StatsborgerskapDto;
 
@@ -36,7 +35,6 @@ class VerdikjedeEngangsstonad extends VerdikjedeTestBase {
     void MorTredjelandsborgerSøkerEngangsStønadTest() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor().statsborgerskap(List.of(new StatsborgerskapDto(CountryCode.US)))
-                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
                         .build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
@@ -74,7 +72,6 @@ class VerdikjedeEngangsstonad extends VerdikjedeTestBase {
     void mor_innsyn_verifsere() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor().statsborgerskap(List.of(new StatsborgerskapDto(CountryCode.US)))
-                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
                         .build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)

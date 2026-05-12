@@ -724,6 +724,7 @@
                         }
                     ],
                     "relatertYtelseType": "FP",
+                    "ytelseKilde": "FPSAK",
                     "periode": {
                         "fom": "2020-01-08",
                         "tom": "2020-11-10"
@@ -733,6 +734,7 @@
                     "vedtaksDagsats": null,
                     "ytelseAnvist": [],
                     "relatertYtelseType": "SVP",
+                    "ytelseKilde": "FPSAK",
                     "periode": {
                         "fom": "2019-09-19",
                         "tom": "2020-01-07"
@@ -742,6 +744,7 @@
                     "vedtaksDagsats": null,
                     "ytelseAnvist": [],
                     "relatertYtelseType": "FP",
+                    "ytelseKilde": "FPSAK",
                     "periode": {
                         "fom": "2020-01-08",
                         "tom": "2020-01-08"

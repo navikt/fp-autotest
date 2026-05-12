@@ -1601,6 +1601,7 @@
                         }
                     ],
                     "relatertYtelseType": "FP",
+                    "ytelseKilde": "FPSAK",
                     "periode": {
                         "fom": "2020-01-01",
                         "tom": "2020-05-29"

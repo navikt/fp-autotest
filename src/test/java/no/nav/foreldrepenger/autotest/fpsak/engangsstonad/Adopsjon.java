@@ -3,7 +3,6 @@ package no.nav.foreldrepenger.autotest.fpsak.engangsstonad;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
 import static no.nav.foreldrepenger.generator.soknad.maler.SøknadEngangsstønadMaler.lagEngangstønadAdopsjon;
-import static no.nav.foreldrepenger.vtp.kontrakter.person.ArbeidsavtaleDto.arbeidsavtale;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
@@ -23,11 +22,9 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.VilkarTypeKoder;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
-import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 import no.nav.foreldrepenger.soknad.kontrakt.EngangsstønadDto;
 import no.nav.foreldrepenger.soknad.kontrakt.SøknadDto;
 import no.nav.foreldrepenger.soknad.kontrakt.barn.AdopsjonDto;
-import no.nav.foreldrepenger.vtp.kontrakter.person.ArenaSakerDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.FamilierelasjonModellDto;
 
 @Tag("fpsak")
@@ -39,14 +36,7 @@ class Adopsjon extends VerdikjedeTestBase {
     @Description("Mor søker adopsjon - godkjent happy case")
     void morSøkerAdopsjonGodkjent() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
-                                .arbeidsforhold(LocalDate.now().minusYears(4),
-                                        arbeidsavtale(LocalDate.now().minusYears(4), LocalDate.now().minusDays(60)).build(),
-                                        arbeidsavtale(LocalDate.now().minusDays(59)).stillingsprosent(50).build()
-                                )
-                                .build())
-                        .build())
+                .forelder(mor().build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
                 .build();
@@ -78,14 +68,7 @@ class Adopsjon extends VerdikjedeTestBase {
     @Description("Mor søker adopsjon - avvist - barn er over 15 år og blir dermed avlått")
     void morSøkerAdopsjonAvvist() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
-                                .arbeidsforhold(LocalDate.now().minusYears(4),
-                                        arbeidsavtale(LocalDate.now().minusYears(4), LocalDate.now().minusDays(60)).build(),
-                                        arbeidsavtale(LocalDate.now().minusDays(59)).stillingsprosent(50).build()
-                                )
-                                .build())
-                        .build())
+                .forelder(mor().build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
                 .build();
@@ -119,14 +102,7 @@ class Adopsjon extends VerdikjedeTestBase {
     @Description("Mor søker adopsjon med overstyrt vilkår som tar behandlingen fra innvilget til avslått")
     void morSøkerAdopsjonOverstyrt() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
-                                .arbeidsforhold(LocalDate.now().minusYears(4),
-                                        arbeidsavtale(LocalDate.now().minusYears(4), LocalDate.now().minusDays(60)).build(),
-                                        arbeidsavtale(LocalDate.now().minusDays(59)).stillingsprosent(50).build()
-                                )
-                                .build())
-                        .build())
+                .forelder(mor().build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
                 .build();
@@ -170,11 +146,7 @@ class Adopsjon extends VerdikjedeTestBase {
     @Description("Far søker adopsjon - godkjent happy case")
     void farSøkerAdopsjonGodkjent() {
         var familie = FamilieGenerator.ny()
-                .forelder(far()
-                        .inntektytelse(InntektYtelseGenerator.ny()
-                                .arena(ArenaSakerDto.YtelseTema.AAP, LocalDate.now().minusMonths(1), LocalDate.now().plusMonths(2), 10_000)
-                                .build())
-                        .build())
+                .forelder(far().build())
                 .forelder(mor().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
                 .build();
@@ -207,11 +179,7 @@ class Adopsjon extends VerdikjedeTestBase {
     @Description("Far søker adopsjon av ektefelles barn fører til avvist behandling")
     void farSøkerAdopsjonAvvist() {
         var familie = FamilieGenerator.ny()
-                .forelder(far()
-                        .inntektytelse(InntektYtelseGenerator.ny()
-                                .arena(ArenaSakerDto.YtelseTema.AAP, LocalDate.now().minusMonths(1), LocalDate.now().plusMonths(2), 10_000)
-                                .build())
-                        .build())
+                .forelder(far().build())
                 .forelder(mor().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
                 .build();
