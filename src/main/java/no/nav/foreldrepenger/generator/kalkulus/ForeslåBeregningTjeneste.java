@@ -43,18 +43,18 @@ public class ForeslåBeregningTjeneste {
         var inntektPrAndelList = årsinntektPrArbeidstakerAndel.entrySet().stream()
                 .map(e -> new InntektPrAndelDto(e.getValue(), e.getKey()))
                 .toList();
-        return new FastsettBeregningsgrunnlagATFLHåndteringDto(inntektPrAndelList, null, List.of());
+        return new FastsettBeregningsgrunnlagATFLHåndteringDto(inntektPrAndelList, null);
     }
 
     public static FastsettBeregningsgrunnlagATFLHåndteringDto fastsettInntektVedAvvik(Map<Long, Integer> årsinntektPrArbeidstakerAndel, Integer frilansinnekt) {
         var inntektPrAndelList = årsinntektPrArbeidstakerAndel.entrySet().stream()
                 .map(e -> new InntektPrAndelDto(e.getValue(), e.getKey()))
                 .toList();
-        return new FastsettBeregningsgrunnlagATFLHåndteringDto(inntektPrAndelList, frilansinnekt, List.of());
+        return new FastsettBeregningsgrunnlagATFLHåndteringDto(inntektPrAndelList, frilansinnekt);
     }
 
     public static FastsettBeregningsgrunnlagATFLHåndteringDto fastsettInntektVedAvvik(Integer frilansinntekt) {
-        return new FastsettBeregningsgrunnlagATFLHåndteringDto(Collections.emptyList(), frilansinntekt, List.of());
+        return new FastsettBeregningsgrunnlagATFLHåndteringDto(Collections.emptyList(), frilansinntekt);
     }
 
     public static VurderVarigEndringEllerNyoppstartetSNHåndteringDto fastsettInntektVarigEndring(Integer beløpPrÅr, boolean erVarigEndring) {

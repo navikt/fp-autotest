@@ -4,7 +4,6 @@ import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.medmor;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
 import static no.nav.foreldrepenger.generator.soknad.maler.SøknadEngangsstønadMaler.lagEngangstønadFødsel;
-import static no.nav.foreldrepenger.vtp.kontrakter.person.ArbeidsavtaleDto.arbeidsavtale;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
@@ -29,10 +28,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr.OverstyrFodselsvilkaaret;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.Beregningsresultat;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
-import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
-import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
 import no.nav.foreldrepenger.soknad.kontrakt.builder.BarnBuilder;
-import no.nav.foreldrepenger.vtp.kontrakter.person.ArenaSakerDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.FamilierelasjonModellDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.MedlemskapDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.PersonstatusDto;
@@ -46,9 +42,7 @@ class Fodsel extends VerdikjedeTestBase {
     @Description("Mor søker fødsel - godkjent happy case")
     void morSøkerFødselGodkjent() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningOver6G().build())
-                        .build())
+                .forelder(mor().build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusMonths(1))
@@ -72,14 +66,7 @@ class Fodsel extends VerdikjedeTestBase {
     @Description("Mor søker fødsel - avvist fordi dokumentasjon mangler og barn er ikke registrert i freg")
     void morSøkerFødselAvvist() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
-                                .arbeidsforhold(LocalDate.now().minusYears(4),
-                                        arbeidsavtale(LocalDate.now().minusYears(4), LocalDate.now().minusDays(60)).build(),
-                                        arbeidsavtale(LocalDate.now().minusDays(59)).stillingsprosent(50).build()
-                                )
-                                .build())
-                        .build())
+                .forelder(mor().build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
                 .build();
@@ -115,12 +102,7 @@ class Fodsel extends VerdikjedeTestBase {
     @Description("Far søker registrert fødsel og blir avvist fordi far søker")
     void farSøkerFødselRegistrert() {
         var familie = FamilieGenerator.ny()
-                .forelder(far()
-                        .inntektytelse(InntektYtelseGenerator.ny()
-                                .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-001", LocalDate.now().minusYears(4), LocalDate.now().minusMonths(4))
-                                .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-002", LocalDate.now().minusMonths(4))
-                                .build())
-                        .build())
+                .forelder(far().build())
                 .forelder(mor().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusMonths(1))
@@ -148,14 +130,7 @@ class Fodsel extends VerdikjedeTestBase {
     @Description("Mor søker fødsel overstyrt vilkår adopsjon fra godkjent til avslått")
     void morSøkerFødselOverstyrt() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
-                                .arbeidsforhold(LocalDate.now().minusYears(4),
-                                        arbeidsavtale(LocalDate.now().minusYears(4), LocalDate.now().minusDays(60)).build(),
-                                        arbeidsavtale(LocalDate.now().minusDays(59)).stillingsprosent(50).build()
-                                )
-                                .build())
-                        .build())
+                .forelder(mor().build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
                 .build();
@@ -202,7 +177,6 @@ class Fodsel extends VerdikjedeTestBase {
                 .forelder(mor()
                         .personstatus(List.of(new PersonstatusDto(PersonstatusDto.Personstatuser.UTVA, LocalDate.now().minusYears(30), null)))
                         .medlemskap(List.of(new MedlemskapDto(LocalDate.now().minusYears(1), LocalDate.now().plusYears(3), CountryCode.DE, MedlemskapDto.DekningsType.IHT_AVTALE)))
-                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningOver6G().build())
                         .build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
@@ -245,11 +219,6 @@ class Fodsel extends VerdikjedeTestBase {
                 .forelder(mor(LocalDate.now().minusYears(17))
                         .personstatus(List.of(new PersonstatusDto(PersonstatusDto.Personstatuser.UTVA, LocalDate.now().minusYears(30), null)))
                         .medlemskap(List.of(new MedlemskapDto(LocalDate.now().minusYears(1), LocalDate.now().plusYears(3), CountryCode.DE, MedlemskapDto.DekningsType.IHT_AVTALE)))
-                        .inntektytelse(InntektYtelseGenerator.ny()
-                                .arena(ArenaSakerDto.YtelseTema.AAP, LocalDate.now().minusMonths(1), LocalDate.now().plusMonths(2), 100_00)
-                                .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-001", LocalDate.now().minusYears(4), LocalDate.now().minusMonths(4))
-                                .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-002", LocalDate.now().minusMonths(4))
-                                .build())
                         .build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
@@ -289,14 +258,7 @@ class Fodsel extends VerdikjedeTestBase {
     @Description("Mor søker uregistrert fødsel mindre enn 14 dager etter fødsel. Behandlingen skal bli satt på vent")
     void morSøkerUregistrertFødselMindreEnn14DagerEtter() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
-                                .arbeidsforhold(LocalDate.now().minusYears(4),
-                                        arbeidsavtale(LocalDate.now().minusYears(4), LocalDate.now().minusDays(60)).build(),
-                                        arbeidsavtale(LocalDate.now().minusDays(59)).stillingsprosent(50).build()
-                                )
-                                .build())
-                        .build())
+                .forelder(mor().build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
                 .build();
@@ -316,9 +278,7 @@ class Fodsel extends VerdikjedeTestBase {
     void medmorSøkerFødsel() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor().build())
-                .forelder(medmor()
-                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
-                        .build())
+                .forelder(medmor().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusDays(30))
                 .build();

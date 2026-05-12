@@ -22,7 +22,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderingAvKlageNfpBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
-import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Saksnummer;
 import no.nav.foreldrepenger.vtp.kontrakter.person.FamilierelasjonModellDto;
 
@@ -35,9 +34,7 @@ class Klage extends VerdikjedeTestBase {
     @Description("Behandle klage via NFP - vurdert til medhold")
     void klageMedholdNFP() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningOver6G().build())
-                        .build())
+                .forelder(mor().build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusMonths(1))
@@ -89,9 +86,7 @@ class Klage extends VerdikjedeTestBase {
     @Description("Behandle klage via NFP - medhold av NFP avvist av beslutter send tilbake til NFP vurdert til delvist gunst")
     void avvistAvBelutterNFP() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningOver6G().build())
-                        .build())
+                .forelder(mor().build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusMonths(1))

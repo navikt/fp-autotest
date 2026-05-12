@@ -17,10 +17,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatType;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
-import no.nav.foreldrepenger.kontrakter.fpoversikt.Inntektskilde;
-
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -31,6 +27,7 @@ import no.nav.foreldrepenger.autotest.base.VerdikjedeTestBase;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.AktivitetStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Inntektskategori;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FordelBeregningsgrunnlagBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
@@ -41,6 +38,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkType;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
@@ -49,9 +47,10 @@ import no.nav.foreldrepenger.generator.inntektsmelding.builders.Inntektsmelding;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.Prosent;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
 import no.nav.foreldrepenger.generator.soknad.maler.OpptjeningMaler;
-import no.nav.foreldrepenger.soknad.kontrakt.BrukerRolle;
-import no.nav.foreldrepenger.kontrakter.felles.typer.Orgnummer;
 import no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType;
+import no.nav.foreldrepenger.kontrakter.felles.typer.Orgnummer;
+import no.nav.foreldrepenger.kontrakter.fpoversikt.Inntektskilde;
+import no.nav.foreldrepenger.soknad.kontrakt.BrukerRolle;
 import no.nav.foreldrepenger.vtp.kontrakter.person.ArenaSakerDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.FamilierelasjonModellDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.GrunnlagDto;
@@ -161,6 +160,7 @@ class BeregningVerdikjede extends VerdikjedeTestBase {
                 lagBGAndelMedFordelt(aapAndel.getAktivitetStatus().getKode(), totaltBg, 0, 0));
         verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(1),
                 lagBGAndelMedFordelt(new Orgnummer(arbeidsgiver.arbeidsgiverIdentifikator()), 0, totaltBg, totaltBg, inntektPerMåned * 12));
+        assertThat(aapAndel.getDagsats()).isEqualTo(1000);
     }
 
 
@@ -209,7 +209,7 @@ class BeregningVerdikjede extends VerdikjedeTestBase {
                 .filter(a -> a.getAktivitetStatus().equals(AktivitetStatus.ARBEIDSAVKLARINGSPENGER))
                 .findFirst().orElseThrow();
         assertThat(arbeidsandel.getDagsats()).isEqualTo(1731);
-        assertThat(aapAndel.getDagsats()).isEqualTo(1000);
+        assertThat(aapAndel.getDagsats()).isEqualTo(500);
     }
 
 

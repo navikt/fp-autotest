@@ -3,7 +3,6 @@ package no.nav.foreldrepenger.autotest.fpsak.engangsstonad;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
 import static no.nav.foreldrepenger.generator.soknad.maler.SøknadEngangsstønadMaler.lagEngangstønadTermin;
-import static no.nav.foreldrepenger.vtp.kontrakter.person.ArbeidsavtaleDto.arbeidsavtale;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
@@ -25,8 +24,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr.OverstyrFodselsvilkaaret;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
-import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
-import no.nav.foreldrepenger.vtp.kontrakter.person.ArenaSakerDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.FamilierelasjonModellDto;
 
 @Tag("fpsak")
@@ -38,14 +35,7 @@ class Termin extends VerdikjedeTestBase {
     @Description("Mor søker termin - godkjent happy case")
     void morSøkerTerminGodkjent() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
-                                .arbeidsforhold(LocalDate.now().minusYears(4),
-                                        arbeidsavtale(LocalDate.now().minusYears(4), LocalDate.now().minusDays(60)).build(),
-                                        arbeidsavtale(LocalDate.now().minusDays(59)).stillingsprosent(50).build()
-                                )
-                                .build())
-                        .build())
+                .forelder(mor().build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
                 .build();
@@ -80,14 +70,7 @@ class Termin extends VerdikjedeTestBase {
     @Description("Mor søker termin overstyrt vilkår fødsel fra oppfylt til avvist")
     void morSøkerTerminOvertyrt() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
-                                .arbeidsforhold(LocalDate.now().minusYears(4),
-                                        arbeidsavtale(LocalDate.now().minusYears(4), LocalDate.now().minusDays(60)).build(),
-                                        arbeidsavtale(LocalDate.now().minusDays(59)).stillingsprosent(50).build()
-                                )
-                                .build())
-                        .build())
+                .forelder(mor().build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
                 .build();
@@ -132,11 +115,7 @@ class Termin extends VerdikjedeTestBase {
     @Description("Far søker termin avslått pga søker er far")
     void farSøkerTermin() {
         var familie = FamilieGenerator.ny()
-                .forelder(far()
-                        .inntektytelse(InntektYtelseGenerator.ny()
-                                .arena(ArenaSakerDto.YtelseTema.AAP, LocalDate.now().minusMonths(1), LocalDate.now().plusMonths(2), 10_000)
-                                .build())
-                        .build())
+                .forelder(far().build())
                 .forelder(mor().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
                 .build();
@@ -162,14 +141,7 @@ class Termin extends VerdikjedeTestBase {
     @Description("Setter behandling på vent og gjennoptar og henlegger")
     void settBehandlingPåVentOgGjenopptaOgHenlegg() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
-                                .arbeidsforhold(LocalDate.now().minusYears(4),
-                                        arbeidsavtale(LocalDate.now().minusYears(4), LocalDate.now().minusDays(60)).build(),
-                                        arbeidsavtale(LocalDate.now().minusDays(59)).stillingsprosent(50).build()
-                                )
-                                .build())
-                        .build())
+                .forelder(mor().build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
                 .build();
@@ -204,14 +176,7 @@ class Termin extends VerdikjedeTestBase {
     @Description("Mor søker termin 25 dager etter fødsel - Får aksjonpunkt om manglende fødsel - godkjent")
     void morSøkerTermin25DagerTilbakeITid() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
-                                .arbeidsforhold(LocalDate.now().minusYears(4),
-                                        arbeidsavtale(LocalDate.now().minusYears(4), LocalDate.now().minusDays(60)).build(),
-                                        arbeidsavtale(LocalDate.now().minusDays(59)).stillingsprosent(50).build()
-                                )
-                                .build())
-                        .build())
+                .forelder(mor().build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
                 .build();

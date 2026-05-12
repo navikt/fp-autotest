@@ -1178,6 +1178,7 @@
                         }
                     ],
                     "relatertYtelseType": "FP",
+                    "ytelseKilde": "FPSAK",
                     "periode": {
                         "fom": "2019-12-16",
                         "tom": "2020-08-07"
@@ -1197,6 +1198,7 @@
                         }
                     ],
                     "relatertYtelseType": "SP",
+                    "ytelseKilde": "VLSP",
                     "periode": {
                         "fom": "2019-06-12",
                         "tom": "2019-06-18"
@@ -1206,6 +1208,7 @@
                     "vedtaksDagsats": null,
                     "ytelseAnvist": [],
                     "relatertYtelseType": "SP",
+                    "ytelseKilde": "VLSP",
                     "periode": {
                         "fom": "2019-08-14",
                         "tom": "2019-08-16"
@@ -1252,6 +1255,7 @@
                         }
                     ],
                     "relatertYtelseType": "SP",
+                    "ytelseKilde": "VLSP",
                     "periode": {
                         "fom": "2019-09-27",
                         "tom": "2019-12-13"

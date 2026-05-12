@@ -71,10 +71,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.List;
 
-import no.nav.foreldrepenger.generator.inntektsmelding.builders.Inntektsmelding;
-
-import no.nav.foreldrepenger.generator.inntektsmelding.builders.InntektsmeldingBuilder;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -131,6 +127,7 @@ import no.nav.foreldrepenger.generator.familie.Familie;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
+import no.nav.foreldrepenger.generator.inntektsmelding.builders.Inntektsmelding;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.Prosent;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
 import no.nav.foreldrepenger.generator.soknad.maler.OpptjeningMaler;
@@ -881,7 +878,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var familie = FamilieGenerator.ny()
                 .forelder(mor().inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningOver6G().build()).build())
                 .forelder(far().inntektytelse(InntektYtelseGenerator.ny()
-                        .arena(ArenaSakerDto.YtelseTema.AAP, LocalDate.now().minusMonths(12), LocalDate.now().plusMonths(2), ytelseFar)
+                        .arena(ArenaSakerDto.YtelseTema.AAP, LocalDate.now().minusMonths(12), LocalDate.now().plusMonths(2), 10000)
                         .build()).build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusWeeks(6))
@@ -1176,11 +1173,10 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
     @Description("Mor søker med dagpenger som grunnlag. Kvalifiserer til automatisk besteberegning."
             + "Beregning etter etter §14-7, 3. ledd gir høyere inntekt enn beregning etter §14-7, 1. ledd")
     void MorSøkerMedDagpengerTest() {
-        var ytelseMor = 260_000;
         var familie = FamilieGenerator.ny()
                 .forelder(mor().inntektytelse(InntektYtelseGenerator.ny()
                         .arbeidsforhold(LocalDate.now().minusMonths(10), LocalDate.now().minusMonths(5).minusDays(1))
-                        .arena(ArenaSakerDto.YtelseTema.DAG, LocalDate.now().minusMonths(5), LocalDate.now().minusWeeks(5), ytelseMor)
+                        .arena(ArenaSakerDto.YtelseTema.DAG, LocalDate.now().minusMonths(5), LocalDate.now().minusWeeks(5), 10000)
                         .build()).build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
