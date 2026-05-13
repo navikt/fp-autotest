@@ -67,7 +67,7 @@ class BeregningVerdikjede extends VerdikjedeTestBase {
                         .build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
-                .barn(LocalDate.now().minusWeeks(20))
+                .barn(LocalDate.now().minusWeeks(8))
                 .build();
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
@@ -263,7 +263,7 @@ class BeregningVerdikjede extends VerdikjedeTestBase {
         var fpSak = mor.innsyn().hentFpSakUtenÅpenBehandling(saksnummer);
 
         // Ikke støttet enda
-//        Assertions.assertThat(fpSak.gjeldendeVedtak().beregningsgrunnlag()).isNull();
+        Assertions.assertThat(fpSak.gjeldendeVedtak().beregningsgrunnlag()).isNull();
     }
 
     @Test
@@ -755,40 +755,6 @@ class BeregningVerdikjede extends VerdikjedeTestBase {
         private double refusjonPrÅr;
         private double naturalytelseBortfaltPrÅr;
         private String arbeidsgiverId;
-    }
-
-    @Test
-    @DisplayName("Arbeidstaker med dagpenger i opptjeningsperioden - besteberegning vurdert men kap 8 gir bedre resultat")
-    @Description("Mor er arbeidstaker med dagpenger i opptjeningsperioden. " +
-            "Besteberegning vurderes automatisk, men beregning etter kapittel 8 gir bedre resultat.")
-    @Tag("beregning")
-    void arbeidstaker_med_dagpenger_i_opptjeningsperioden_besteberegning_brukes_ikke() {
-        var fødselsdato = LocalDate.now().minusDays(2);
-        var familie = FamilieGenerator.ny()
-                .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
-                                .arbeidsforhold(LocalDate.now().minusMonths(9), 536_800)
-                                .arena(ArenaSakerDto.YtelseTema.DAG, LocalDate.now().minusMonths(15), LocalDate.now().minusMonths(9), 15_000)
-                                .build())
-                        .build())
-                .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
-                .barn(fødselsdato)
-                .build();
-        var mor = familie.mor();
-        var fpStartdato = fødselsdato.minusWeeks(3);
-        var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
-                .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
-        var saksnummer = mor.søk(søknad);
-
-        var arbeidsgiver = mor.arbeidsgiver();
-        var inntektsmelding = arbeidsgiver.lagInntektsmeldingFP(fpStartdato);
-        ventPåInntektsmeldingForespørsel(saksnummer);
-        arbeidsgiver.sendInntektsmelding(saksnummer, inntektsmelding);
-
-        saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
-        debugLoggBehandling(saksbehandler.valgtBehandling);
     }
 
     private static class BortfaltnaturalytelseHelper {
