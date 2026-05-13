@@ -89,11 +89,11 @@ public class BrevTestBase {
 
     protected static BrevAssertionBuilder foreldrepengerAnnuleringAssertionsBuilder(Fødselsnummer fnr, Saksnummer saksnummer) {
         return alleYtelserFellesAssertionsBuilder(fnr, saksnummer).medOverskriftOmInnvilgetAnnuleringAvForeldrepenger()
-                .medDuTarIkkeUtForeldrepengerFør()
-                .medTekstKanIkkeBehandleFørSenere()
+                .medDuTarUtForeldrepengerFra()
+                .medTekstNårDenNyeSøknadenBehandles()
                 .medEgenndefinertAssertion("Du har valgt å ikke ta ut din tidligere innvilgede periode med foreldrepenger")
                 .medEgenndefinertAssertion(
-                        "Når det er 4 uker igjen til du skal ta ut foreldrepenger, må arbeidsgiveren din sende inn ny inntektsmelding.")
+                        "Når det er 4 uker eller mindre igjen til du skal ta ut foreldrepenger, må arbeidsgiveren din sende inn ny inntektsmelding.")
                 .medTekstOmVedtaketEtterFolketrygdloven()
                 .medParagraf(P_14_6)
                 .medParagraf(P_14_7)
