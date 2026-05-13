@@ -160,15 +160,13 @@ public class BrevAssertionBuilder {
         return this;
     }
 
-    public BrevAssertionBuilder medDuTarIkkeUtForeldrepengerFør() {
-        brevAssertions.add("Du tar ikke ut foreldrepenger før ");
+    public BrevAssertionBuilder medDuTarUtForeldrepengerFra() {
+        brevAssertions.add("Du tar ut foreldrepenger fra ");
         return this;
     }
 
-    public BrevAssertionBuilder medTekstKanIkkeBehandleFørSenere() {
-        brevAssertions.add("Søknaden din om foreldrepenger");
-        brevAssertions.add("kan ikke behandles før");
-        brevAssertions.add("fordi foreldrepenger skal beregnes ut fra den inntekten du har når du starter uttaket ditt");
+    public BrevAssertionBuilder medTekstNårDenNyeSøknadenBehandles() {
+        brevAssertions.add("Når den nye søknaden din behandles, blir foreldrepengene dine beregnet ut fra den inntekten du har når du starter uttaket ditt");
         return this;
     }
 
