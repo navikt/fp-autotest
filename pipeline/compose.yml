@@ -250,24 +250,24 @@ services:
         {
             "apis": [
                 {
-                    "path": "/fpsak/api",
+                    "path": "/fpsak",
                     "scopes": "api://vtp.teamforeldrepenger.fpsak/.default",
-                    "url": "http://fpsak:8080"
+                    "url": "http://fpsak:8080/fpsak"
                 },
                 {
-                    "path": "/fptilbake/api",
+                    "path": "/fptilbake",
                     "scopes": "api://vtp.teamforeldrepenger.fptilbake/.default",
-                    "url": "http://fptilbake:8080"
+                    "url": "http://fptilbake:8080/fptilbake"
                 },
                 {
-                    "path": "/fplos/api",
+                    "path": "/fplos",
                     "scopes": "api://vtp.teamforeldrepenger.fplos/.default",
-                    "url": "http://fplos:8080"
+                    "url": "http://fplos:8080/fplos"
                 },
                 {
-                    "path": "/fpmottak/api",
+                    "path": "/fpmottak",
                     "scopes": "api://vtp.teamforeldrepenger.fpmottak/.default",
-                    "url": "http://fpmottak:8080"
+                    "url": "http://fpmottak:8080/fpmottak"
                 }
             ]
         }
@@ -321,9 +321,9 @@ services:
         {
             "apis": [
                 {
-                    "path": "/fplos/api",
+                    "path": "/fplos",
                     "scopes": "api://vtp.teamforeldrepenger.fplos/.default",
-                    "url": "http://fplos:8080"
+                    "url": "http://fplos:8080/fplos"
                 }
             ]
         }
@@ -374,9 +374,9 @@ services:
         {
             "apis": [
                 {
-                    "path": "/fpmottak/api",
+                    "path": "/fpmottak",
                     "scopes": "api://vtp.teamforeldrepenger.fpmottak/.default",
-                    "url": "http://fpmottak:8080"
+                    "url": "http://fpmottak:8080/fpmottak"
                 }
             ]
         }
@@ -895,63 +895,63 @@ services:
         {
             "apis": [
                 {
-                    "path": "/fpsak/forvaltning/api",
+                    "path": "/fpsak",
                     "scopes": "api://vtp.teamforeldrepenger.fpsak/swagger",
-                    "url": "http://fpsak:8080",
+                    "url": "http://fpsak:8080/fpsak",
                     "name": "fp-sak"
                 },
                 {
-                    "path": "/fptilbake/forvaltning/api",
+                    "path": "/fptilbake",
                     "scopes": "api://vtp.teamforeldrepenger.fptilbake/swagger",
-                    "url": "http://fptilbake:8080",
+                    "url": "http://fptilbake:8080/fptilbake",
                     "name": "fp-tilbake"
                 },
                 {
-                    "path": "/fpformidling/forvaltning/api",
+                    "path": "/fpformidling",
                     "scopes": "api://vtp.teamforeldrepenger.fpformidling/swagger",
-                    "url": "http://fpformidling:8080",
+                    "url": "http://fpformidling:8080/fpformidling",
                     "name": "fp-formidling"
                 },
                 {
-                    "path": "/fplos/forvaltning/api",
+                    "path": "/fplos",
                     "scopes": "api://vtp.teamforeldrepenger.fplos/swagger",
-                    "url": "http://fplos:8080",
+                    "url": "http://fplos:8080/fplos",
                     "name": "fp-los"
                 },
                 {
-                    "path": "/fpabakus/forvaltning/api",
+                    "path": "/fpabakus",
                     "scopes": "api://vtp.teamforeldrepenger.fpabakus/swagger",
-                    "url": "http://fpabakus:8080",
+                    "url": "http://fpabakus:8080/fpabakus",
                     "name": "fp-abakus"
                 },
                 {
-                    "path": "/fprisk/forvaltning/api",
+                    "path": "/fprisk",
                     "scopes": "api://vtp.teamforeldrepenger.fprisk/swagger",
-                    "url": "http://fprisk:8080",
+                    "url": "http://fprisk:8080/fprisk",
                     "name": "fp-risk"
                 },
                 {
-                    "path": "/fpinntektsmelding/forvaltning/api",
+                    "path": "/fpinntektsmelding",
                     "scopes": "api://vtp.teamforeldrepenger.fpinntektsmelding/swagger",
-                    "url": "http://fpinntektsmelding:8080",
+                    "url": "http://fpinntektsmelding:8080/fpinntektsmelding",
                     "name": "fp-inntektsmelding"
                 },
                 {
-                    "path": "/fpoversikt/forvaltning/api",
+                    "path": "/fpoversikt",
                     "scopes": "api://vtp.teamforeldrepenger.fpoversikt/swagger",
-                    "url": "http://fpoversikt:8080",
+                    "url": "http://fpoversikt:8080/fpoversikt",
                     "name": "fp-oversikt"
                 },
                 {
-                    "path": "/fpsoknad/forvaltning/api",
+                    "path": "/fpsoknad",
                     "scopes": "api://vtp.teamforeldrepenger.fpsoknad/swagger",
-                    "url": "http://fpsoknad:8080",
+                    "url": "http://fpsoknad:8080/fpsoknad",
                     "name": "fp-soknad"
                 },
                 {
-                    "path": "/fpmottak/forvaltning/api",
+                    "path": "/fpmottak",
                     "scopes": "api://vtp.teamforeldrepenger.fpmottak/swagger",
-                    "url": "http://fpmottak:8080",
+                    "url": "http://fpmottak:8080/fpmottak",
                     "name": "fp-mottak"
                 }
             ]
