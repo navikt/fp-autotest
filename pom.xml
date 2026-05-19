@@ -36,7 +36,7 @@
 
         <pdfbox.version>3.0.7</pdfbox.version>
         <allure.version>2.34.0</allure.version>
-        <allure.maven.version>3.0.0</allure.maven.version>
+        <allure.maven.version>3.0.1</allure.maven.version>
         <aspectj.version>1.9.25.1</aspectj.version>
     </properties>
 
