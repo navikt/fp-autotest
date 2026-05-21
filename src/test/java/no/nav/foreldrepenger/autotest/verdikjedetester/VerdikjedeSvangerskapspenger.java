@@ -203,11 +203,11 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
                 .matches(l -> Objects.equals(l.tom(), avtaltFerie.tom()), "tom datoer er like");
     }
 
+    @Disabled
     @Test
     @DisplayName("3: Mor søk fullt uttak for ett av to arbeidsforhold i samme virksomhet")
-    @Description("Mor søker ingen tilrettelegging for ett av to arbeidsforhold i samme virksomhet. Arbeidsgiver leverer to"
-            + "inntektsmeldinger med forskjellig arbeidsforholdID, med ulik lønn.")
-    @Disabled
+    @Description("Mor søker delvis tilrettelegging for en arbeidsgiver med to arbeidsforhold. Arbeidsgiver leverer en"
+            + "inntektsmelding. Saksbehandlet må splitte arbeidsforholdet for å håndtere ulik lønn i stillingene ")
     void morSøkerFulltUttakForEttAvToArbeidsforholdTest() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor().inntektytelse(InntektYtelseGenerator.ny()
@@ -224,13 +224,14 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         var tilrettelegginsprosent = 0.0;
         var tilrettelegging = new TilretteleggingBehovBuilder(
                 ArbeidsforholdMaler.virksomhet(new Orgnummer(orgnummer1)),
-                LocalDate.now()).ingen(LocalDate.now()).build();
+                LocalDate.now()).delvis(LocalDate.now(), 20.00).build();
         var søknad = SøknadSvangerskapspengerMaler.lagSvangerskapspengerSøknad(termindato, List.of(tilrettelegging));
         var saksnummer = mor.søk(søknad);
 
-        var arbeidsgivere = mor.arbeidsgivere();
+        var arbeidsgiver = mor.arbeidsgivere().arbeidgiver(new Orgnummer(orgnummer1));
         ventPåInntektsmeldingForespørsel(saksnummer);
-        arbeidsgivere.sendDefaultInnteksmeldingerSVP(saksnummer);
+        var inntektsmelding = arbeidsgiver.lagInntektsmeldingSVP().medRefusjonBeløpPerMnd(new Prosent(90.00));
+        arbeidsgiver.sendInntektsmeldingViaApi(saksnummer, inntektsmelding);
 
         saksbehandler.hentFagsak(saksnummer);
         var avklarFaktaFødselOgTilrettelegging = saksbehandler.hentAksjonspunktbekreftelse(new AvklarFaktaFødselOgTilrettelegging());
