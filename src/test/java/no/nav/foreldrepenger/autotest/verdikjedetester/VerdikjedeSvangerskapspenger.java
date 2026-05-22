@@ -166,9 +166,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
                 .matches(l -> Objects.equals(l.tom(), sluttdatoFerie), "tom datoer er like");
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
-        int dagsats = BigDecimal.valueOf(Math.min(SEKS_G_2025, mor.månedsinntekt() * 12))
-                .divide(BigDecimal.valueOf(260), RoundingMode.HALF_UP)
-                .intValue(); //3004
+        int dagsats = DAGSATS_VED_6_G_2026;
         int dagsatsAvkortet = (int) (dagsats * (100 - tilrettelegginsprosent) / 100);
         int snittPerMånedAvkortet = dagsatsAvkortet * 260 / 12;
 
@@ -448,7 +446,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
                 .isEqualTo(BehandlingResultatType.INNVILGET);
 
         // var beregnetDagsats = regnUtForventetDagsats(månedsinntekt1 + månedsinntekt2, tilrettelegginsprosent);  Pga 2 andeler med akkurat 1/3 og 2/3 av grunnlaget vil vanlig "enkel" utregning gi 1 krone avvik med årets (2025) G. Setter derfor dagsats manuelt
-        var beregnetDagsats = 3003; // "Skulle" blitt 3004
+        var beregnetDagsats = DAGSATS_VED_6_G_2026;
         var beregningsgrunnlagPeriode = saksbehandler.valgtBehandling.getBeregningsgrunnlag().getBeregningsgrunnlagPeriode(0);
         assertThat(beregningsgrunnlagPeriode.getDagsats()).as(
                         "Forventer at dagsatsen blir justert ut i fra 6G og utbeatlinsggrad, og IKKE arbeidstakers årsinntekt!")
@@ -559,7 +557,14 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         if (!harFlereArbeidsgivere && !harFlereUtbetalingsperioder) {
             brevAssertionsBuilder.medTekstOmDuFårIGjennomsnittXKronerIMånedenFørSkatt(snittUtbetalingPerMåned);
         }
-        if (månedsinntektMor * 12 > SEKS_G_2025) {
+        if (månedsinntektMor * 12 > SEKS_G_2026) {
+            brevAssertionsBuilder.medEgenndefinertAssertion(
+                    "Svangerskapspengene dine er fastsatt til %s kroner i året, som er seks ganger grunnbeløpet i ".formatted(
+                            formaterKroner(SEKS_G_2026))
+                            + "folketrygden. Du tjener mer enn dette, men du får ikke svangerskapspenger for den delen av "
+                            + "inntekten som overstiger seks ganger grunnbeløpet.");
+        }
+        else if (månedsinntektMor * 12 > SEKS_G_2025) {
             brevAssertionsBuilder.medEgenndefinertAssertion(
                     "Svangerskapspengene dine er fastsatt til %s kroner i året, som er seks ganger grunnbeløpet i ".formatted(
                             formaterKroner(SEKS_G_2025))
