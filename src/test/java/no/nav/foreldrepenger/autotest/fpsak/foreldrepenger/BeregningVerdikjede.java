@@ -275,7 +275,7 @@ class BeregningVerdikjede extends VerdikjedeTestBase {
                 .forelder(mor()
                         .inntektytelse(InntektYtelseGenerator.ny()
                                 .arbeidMedOpptjeningOver6G()
-                                .selvstendigNæringsdrivende(1_000_000)
+                                .selvstendigNæringsdrivende(900_000)
                                 .build())
                         .build())
                 .forelder(far().build())
