@@ -31,16 +31,6 @@ import no.nav.foreldrepenger.kontrakter.felles.typer.Saksnummer;
 import no.nav.foreldrepenger.kontrakter.risk.kodeverk.RisikoklasseType;
 
 public abstract class VerdikjedeTestBase extends BrevTestBase {
-
-    protected static final Integer G_2024 = 124_028;
-    protected static final Integer G_2025 = 130_160;
-    protected static final Integer G_2026 = 136_549;
-    protected static final Integer SEKS_G_2024 = G_2024 * 6;
-    protected static final Integer SEKS_G_2025 = G_2025 * 6;
-    protected static final Integer SEKS_G_2026 = G_2026 * 6;
-    protected static final Integer DAGSATS_VED_6_G_2025 = BigDecimal.valueOf(SEKS_G_2025).divide(BigDecimal.valueOf(260), RoundingMode.HALF_EVEN).intValue();
-    protected static final Integer DAGSATS_VED_6_G_2026 = BigDecimal.valueOf(SEKS_G_2026).divide(BigDecimal.valueOf(260), RoundingMode.HALF_EVEN).intValue();
-
     protected static final Logger LOG = LoggerFactory.getLogger(VerdikjedeTestBase.class);
 
     /*
@@ -207,5 +197,16 @@ public abstract class VerdikjedeTestBase extends BrevTestBase {
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.MIN_SIDE_ARBEIDSGIVER);
     }
 
+    protected int grunnbeløp() {
+        return saksbehandler.valgtBehandling.getBeregningsgrunnlag().getGrunnbeløp().intValue();
+    }
+
+    protected int seksG() {
+        return grunnbeløp() * 6;
+    }
+
+    protected int dagsatsVed6G() {
+        return BigDecimal.valueOf(seksG()).divide(BigDecimal.valueOf(260), RoundingMode.HALF_EVEN).intValue();
+    }
 
 }
