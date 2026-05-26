@@ -613,11 +613,11 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
         var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(familie.mor().fødselsnummer(), saksnummerMor)
-                .medTekstOmDuFårXKronerPerDagFørSkatt(DAGSATS_VED_6_G_2025)
+                .medTekstOmDuFårXKronerPerDagFørSkatt(dagsatsVed6G())
                 .medTekstOmForeldrepengerUtbetaltForAlleDagerMenVarierer()
                 .medParagrafer(P_14_9, P_14_10, P_14_12)
                 .medTekstOmGjennomsnittInntektFraTreSisteMåndene()
-                .medTekstOmInntektOverSeksGBeløp(SEKS_G_2025)
+                .medTekstOmInntektOverSeksGBeløp(seksG())
                 .medParagraf(P_8_30)
                 .medTekstOmAutomatiskVedtakUtenUndferskrift();
         //hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET, HistorikkType.BREV_SENDT);
@@ -897,11 +897,11 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
 
-        var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(familie.mor().fødselsnummer(), saksnummerMor).medTekstOmDuFårXKronerPerDagFørSkatt(DAGSATS_VED_6_G_2025)
+        var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(familie.mor().fødselsnummer(), saksnummerMor).medTekstOmDuFårXKronerPerDagFørSkatt(dagsatsVed6G())
                 .medTekstOmForeldrepengerUtbetaltForAlleDagerMenVarierer()
                 .medParagrafer(P_14_9, P_14_10, P_14_12)
                 .medTekstOmGjennomsnittInntektFraTreSisteMåndene()
-                .medTekstOmInntektOverSeksGBeløp(SEKS_G_2025)
+                .medTekstOmInntektOverSeksGBeløp(seksG())
                 .medParagraf(P_8_30)
                 .medTekstOmAutomatiskVedtakUtenUndferskrift();
         hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET, HistorikkType.BREV_SENDT);
@@ -1122,7 +1122,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
         brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(far.fødselsnummer(), saksnummerFar)
-                .medTekstOmDuFårXKronerPerDagFørSkatt(DAGSATS_VED_6_G_2026)
+                .medTekstOmDuFårXKronerPerDagFørSkatt(dagsatsVed6G())
                 .medTekstOmForeldrepengerUtbetaltForAlleDagerMenVarierer()
                 .medParagraf(P_14_9)
                 .medParagraf(P_14_12)
@@ -1275,12 +1275,12 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
         var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(far.fødselsnummer(), saksnummerFar)
-                .medTekstOmDuFårXKronerPerDagFørSkatt(DAGSATS_VED_6_G_2025)
+                .medTekstOmDuFårXKronerPerDagFørSkatt(dagsatsVed6G())
                 .medTekstOmForeldrepengerUtbetaltForAlleDagerMenVarierer()
                 .medTekstOmAleneomsorg()
                 .medParagraf(P_14_15)
                 .medTekstOmGjennomsnittInntektFraTreSisteMåndene()
-                .medTekstOmInntektOverSeksGBeløp(SEKS_G_2025)
+                .medTekstOmInntektOverSeksGBeløp(seksG())
                 .medParagraf(P_8_30);
         hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET, HistorikkType.BREV_SENDT);
 
@@ -1413,11 +1413,11 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
         var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(far.fødselsnummer(), saksnummerFar)
-                .medTekstOmDuFårXKronerPerDagFørSkatt(DAGSATS_VED_6_G_2025)
+                .medTekstOmDuFårXKronerPerDagFørSkatt(dagsatsVed6G())
                 .medTekstOmForeldrepengerUtbetaltForAlleDagerMenVarierer()
                 .medParagrafer(P_14_9, P_14_12, P_14_13)
                 .medTekstOmGjennomsnittInntektFraTreSisteMåndene()
-                .medTekstOmInntektOverSeksGBeløp(SEKS_G_2025)
+                .medTekstOmInntektOverSeksGBeløp(seksG())
                 .medParagraf(P_8_30);
         hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET, HistorikkType.BREV_SENDT);
 
@@ -1572,7 +1572,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
         var brevAssertionsBuilder = foreldrepengerAvslagAssertionsBuilder(familie.mor().fødselsnummer(), saksnummer).medEgenndefinertAssertion(
                         "Du har ikke rett til foreldrepenger, fordi inntekten din er lavere enn %s kroner i året før skatt.".formatted(
-                                formaterKroner(G_2025 / 2)));
+                                formaterKroner(grunnbeløp() / 2)));
         hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_AVSLAG, HistorikkType.BREV_SENDT);
 
         mor.sendInnKlage();
@@ -2120,12 +2120,12 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
-        var dagsatsMor = Math.min(DAGSATS_VED_6_G_2025, (mor.månedsinntekt() * 12) / 260);
+        var dagsatsMor = Math.min(dagsatsVed6G(), (mor.månedsinntekt() * 12) / 260);
         var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(mor.fødselsnummer(), saksnummerMor).medTekstOmDuFårXKronerPerDagFørSkatt(dagsatsMor)
                 .medTekstOmForeldrepengerUtbetaltForAlleDagerMenVarierer()
                 .medParagrafer(P_14_9, P_14_10, P_14_12)
                 .medTekstOmGjennomsnittInntektFraTreSisteMåndene()
-                .medTekstOmInntektOverSeksGBeløp(SEKS_G_2025)
+                .medTekstOmInntektOverSeksGBeløp(seksG())
                 .medParagraf(P_8_30)
                 .medTekstOmAutomatiskVedtakUtenUndferskrift();
         hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET, HistorikkType.BREV_SENDT);
@@ -2157,11 +2157,11 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
-        brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(far.fødselsnummer(), saksnummerFar).medTekstOmDuFårXKronerPerDagFørSkatt(DAGSATS_VED_6_G_2026)
+        brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(far.fødselsnummer(), saksnummerFar).medTekstOmDuFårXKronerPerDagFørSkatt(dagsatsVed6G())
                 .medTekstOmForeldrepengerUtbetaltForAlleDagerMenVarierer()
                 .medParagraf(P_14_12)
                 .medTekstOmGjennomsnittInntektFraTreSisteMåndene()
-                .medTekstOmInntektOverSeksGBeløp(SEKS_G_2026)
+                .medTekstOmInntektOverSeksGBeløp(seksG())
                 .medParagraf(P_8_30)
                 .medTekstOmAutomatiskVedtakUtenUndferskrift();
         hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET, HistorikkType.BREV_SENDT);
@@ -2249,11 +2249,11 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         saksbehandler.ventTilAvsluttetBehandling();
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
-        var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(mor.fødselsnummer(), saksnummerMor).medTekstOmDuFårXKronerPerDagFørSkatt(DAGSATS_VED_6_G_2025)
+        var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(mor.fødselsnummer(), saksnummerMor).medTekstOmDuFårXKronerPerDagFørSkatt(dagsatsVed6G())
                 .medTekstOmForeldrepengerUtbetaltForAlleDagerMenVarierer()
                 .medParagrafer(P_14_9, P_14_10, P_14_12)
                 .medTekstOmGjennomsnittInntektFraTreSisteMåndene()
-                .medTekstOmInntektOverSeksGBeløp(SEKS_G_2025)
+                .medTekstOmInntektOverSeksGBeløp(seksG())
                 .medParagraf(P_8_30)
                 .medTekstOmAutomatiskVedtakUtenUndferskrift();
         hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET, HistorikkType.BREV_SENDT);
@@ -2283,11 +2283,11 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
-        brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(far.fødselsnummer(), saksnummerFar).medTekstOmDuFårXKronerPerDagFørSkatt(DAGSATS_VED_6_G_2026)
+        brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(far.fødselsnummer(), saksnummerFar).medTekstOmDuFårXKronerPerDagFørSkatt(dagsatsVed6G())
                 .medTekstOmForeldrepengerUtbetaltForAlleDagerMenVarierer()
                 .medParagraf(P_14_12)
                 .medTekstOmGjennomsnittInntektFraTreSisteMåndene()
-                .medTekstOmInntektOverSeksGBeløp(SEKS_G_2026)
+                .medTekstOmInntektOverSeksGBeløp(seksG())
                 .medParagraf(P_8_30)
                 .medTekstOmAutomatiskVedtakUtenUndferskrift();
         hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET, HistorikkType.BREV_SENDT);
@@ -2387,7 +2387,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         foreslårOgFatterVedtakVenterTilAvsluttetBehandling(saksnummer, false, false);
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
-        var dagsatsFar = Math.min(SEKS_G_2025, far.månedsinntekt() * 12) / 260;
+        var dagsatsFar = Math.min(seksG(), far.månedsinntekt() * 12) / 260;
         var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(far.fødselsnummer(), saksnummer).medTekstOmDuFårXKronerPerDagFørSkatt(dagsatsFar)
                 .medTekstOmForeldrepengerUtbetaltForAlleDagerMenVarierer()
                 .medEgenndefinertAssertion("Det er 45 dager igjen av kvoten din, og 80 dager som begge kan ta ut.")
@@ -2560,7 +2560,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         foreslårOgFatterVedtakVenterTilAvsluttetBehandling(saksnummer, false, false);
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
-        var dagsatsFar = DAGSATS_VED_6_G_2026;
+        var dagsatsFar = dagsatsVed6G();
         var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(far.fødselsnummer(), saksnummer)
                 .medTekstOmDuFårXKronerPerDagFørSkatt(dagsatsFar)
                 .medTekstOmForeldrepengerUtbetaltForAlleDagerMenVarierer()

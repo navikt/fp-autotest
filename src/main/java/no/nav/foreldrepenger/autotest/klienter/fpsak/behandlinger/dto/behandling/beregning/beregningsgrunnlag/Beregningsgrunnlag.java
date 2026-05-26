@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -19,9 +20,7 @@ public class Beregningsgrunnlag {
     private RefusjonTilVurderingDto refusjonTilVurdering;
     private List<BeregningsgrunnlagPrStatusOgAndelDto> andelerMedGraderingUtenBG;
     private FaktaOmFordelingDto faktaOmFordeling;
-    private String ledetekstAvkortet;
-    private String ledetekstBrutto;
-    private String ledetekstRedusert;
+    private BigDecimal grunnbeløp;
 
     public int antallAktivitetStatus() {
         return aktivitetStatus.size();
@@ -66,5 +65,9 @@ public class Beregningsgrunnlag {
 
     public RefusjonTilVurderingDto getRefusjonTilVurdering() {
         return refusjonTilVurdering;
+    }
+
+    public BigDecimal getGrunnbeløp() {
+        return grunnbeløp;
     }
 }
