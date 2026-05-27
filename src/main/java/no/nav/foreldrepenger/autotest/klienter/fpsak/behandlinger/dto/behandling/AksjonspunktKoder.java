@@ -85,6 +85,8 @@ public class AksjonspunktKoder {
 
     public static final String AVKLAR_UTTAK_I_EØS_FOR_ANNENPART_KODE = "5103";
 
+    public static final String MANUELL_KONTROLL_AAP_KOMBINERT_ATFL_KODE = "5104";
+
     private AksjonspunktKoder() {
     }
 }
