@@ -131,19 +131,19 @@ public class InntektsmeldingPortalMapper {
 
     private static InntektsmeldingRequest.InntektInfo.Endringsårsak.EndringsårsakType mapEndringsårsak(Inntektsmelding.Endringsårsaker.Endringsårsak årsak) {
         return switch (årsak) {
-            case PERMITTERING -> InntektsmeldingRequest.InntektInfo.Endringsårsak.EndringsårsakType.PERMITTERING;
-            case NY_STILLING -> InntektsmeldingRequest.InntektInfo.Endringsårsak.EndringsårsakType.NY_STILLING;
-            case NY_STILLINGSPROSENT -> InntektsmeldingRequest.InntektInfo.Endringsårsak.EndringsårsakType.NY_STILLINGSPROSENT;
-            case SYKEFRAVÆR -> InntektsmeldingRequest.InntektInfo.Endringsårsak.EndringsårsakType.SYKEFRAVÆR;
-            case BONUS -> InntektsmeldingRequest.InntektInfo.Endringsårsak.EndringsårsakType.BONUS;
-            case FERIETREKK_ELLER_UTBETALING_AV_FERIEPENGER -> InntektsmeldingRequest.InntektInfo.Endringsårsak.EndringsårsakType.FERIETREKK_ELLER_UTBETALING_AV_FERIEPENGER;
-            case NYANSATT -> InntektsmeldingRequest.InntektInfo.Endringsårsak.EndringsårsakType.NYANSATT;
-            case MANGELFULL_RAPPORTERING_AORDNING -> InntektsmeldingRequest.InntektInfo.Endringsårsak.EndringsårsakType.MANGELFULL_RAPPORTERING_AORDNING;
-            case INNTEKT_IKKE_RAPPORTERT_ENDA_AORDNING -> InntektsmeldingRequest.InntektInfo.Endringsårsak.EndringsårsakType.INNTEKT_IKKE_RAPPORTERT_ENDA_AORDNING;
-            case TARIFFENDRING -> InntektsmeldingRequest.InntektInfo.Endringsårsak.EndringsårsakType.TARIFFENDRING;
-            case FERIE -> InntektsmeldingRequest.InntektInfo.Endringsårsak.EndringsårsakType.FERIE;
-            case VARIG_LØNNSENDRING -> InntektsmeldingRequest.InntektInfo.Endringsårsak.EndringsårsakType.VARIG_LØNNSENDRING;
-            case PERMISJON -> InntektsmeldingRequest.InntektInfo.Endringsårsak.EndringsårsakType.PERMISJON;
+            case PERMITTERING -> InntektsmeldingRequest.InntektInfo.Endringsårsak.EndringsårsakType.Permittering;
+            case NY_STILLING -> InntektsmeldingRequest.InntektInfo.Endringsårsak.EndringsårsakType.NyStilling;
+            case NY_STILLINGSPROSENT -> InntektsmeldingRequest.InntektInfo.Endringsårsak.EndringsårsakType.NyStillingsprosent;
+            case SYKEFRAVÆR -> InntektsmeldingRequest.InntektInfo.Endringsårsak.EndringsårsakType.Sykefravaer;
+            case BONUS -> InntektsmeldingRequest.InntektInfo.Endringsårsak.EndringsårsakType.Bonus;
+            case FERIETREKK_ELLER_UTBETALING_AV_FERIEPENGER -> InntektsmeldingRequest.InntektInfo.Endringsårsak.EndringsårsakType.Ferietrekk;
+            case NYANSATT -> InntektsmeldingRequest.InntektInfo.Endringsårsak.EndringsårsakType.Nyansatt;
+            case MANGELFULL_RAPPORTERING_AORDNING -> InntektsmeldingRequest.InntektInfo.Endringsårsak.EndringsårsakType.MangelfullRapporteringAordning;
+            case INNTEKT_IKKE_RAPPORTERT_ENDA_AORDNING -> InntektsmeldingRequest.InntektInfo.Endringsårsak.EndringsårsakType.InntektIkkeRapportertEndaAordning;
+            case TARIFFENDRING -> InntektsmeldingRequest.InntektInfo.Endringsårsak.EndringsårsakType.Tariffendring;
+            case FERIE -> InntektsmeldingRequest.InntektInfo.Endringsårsak.EndringsårsakType.Ferie;
+            case VARIG_LØNNSENDRING -> InntektsmeldingRequest.InntektInfo.Endringsårsak.EndringsårsakType.VarigLoennsendring;
+            case PERMISJON -> InntektsmeldingRequest.InntektInfo.Endringsårsak.EndringsårsakType.Permisjon;
         };
     }
 
@@ -174,25 +174,25 @@ public class InntektsmeldingPortalMapper {
 
     private static InntektsmeldingRequest.Naturalytelse.Naturalytelsetype mapNaturalytelseTypeTilApi(Inntektsmelding.NaturalytelseType naturalytelseType) {
         return switch (naturalytelseType) {
-            case BIL -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.BIL;
-            case KOST_DAGER -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.KOST_DAGER;
-            case FRI_TRANSPORT -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.FRI_TRANSPORT;
-            case ANNET -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.ANNET;
-            case BOLIG -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.BOLIG;
-            case LOSJI -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.LOSJI;
-            case OPSJONER -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.OPSJONER;
-            case ELEKTRISK_KOMMUNIKASJON -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.ELEKTRISK_KOMMUNIKASJON;
-            case KOST_DOEGN -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.KOST_DOEGN;
-            case BEDRIFTSBARNEHAGEPLASS -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.BEDRIFTSBARNEHAGEPLASS;
-            case RENTEFORDEL_LÅN -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.RENTEFORDEL_LÅN;
-            case TILSKUDD_BARNEHAGEPLASS -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.TILSKUDD_BARNEHAGEPLASS;
-            case KOSTBESPARELSE_I_HJEMMET -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.KOSTBESPARELSE_I_HJEMMET;
-            case BESØKSREISER_HJEMMET_ANNET -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.BESØKSREISER_HJEMMET_ANNET;
-            case SKATTEPLIKTIG_DEL_FORSIKRINGER -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.SKATTEPLIKTIG_DEL_FORSIKRINGER;
-            case YRKEBIL_TJENESTLIGBEHOV_KILOMETER -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.YRKEBIL_TJENESTLIGBEHOV_KILOMETER;
-            case YRKEBIL_TJENESTLIGBEHOV_LISTEPRIS -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.YRKEBIL_TJENESTLIGBEHOV_LISTEPRIS;
-            case AKSJER_GRUNNFONDSBEVIS_TIL_UNDERKURS -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.AKSJER_GRUNNFONDSBEVIS_TIL_UNDERKURS;
-            case INNBETALING_TIL_UTENLANDSK_PENSJONSORDNING -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.INNBETALING_TIL_UTENLANDSK_PENSJONSORDNING;
+            case BIL -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.Bil;
+            case KOST_DAGER -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.KostDager;
+            case FRI_TRANSPORT -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.FriTransport;
+            case ANNET -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.Annet;
+            case BOLIG -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.Bolig;
+            case LOSJI -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.Losji;
+            case OPSJONER -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.Opsjoner;
+            case ELEKTRISK_KOMMUNIKASJON -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.ElektroniskKommunikasjon;
+            case KOST_DOEGN -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.KostDoegn;
+            case BEDRIFTSBARNEHAGEPLASS -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.Bedriftsbarnehageplass;
+            case RENTEFORDEL_LÅN -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.RentefordelLaan;
+            case TILSKUDD_BARNEHAGEPLASS -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.TilskuddBarnehageplass;
+            case KOSTBESPARELSE_I_HJEMMET -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.KostbesparelseIHjemmet;
+            case BESØKSREISER_HJEMMET_ANNET -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.BesoeksreiserHjemmetAnnet;
+            case SKATTEPLIKTIG_DEL_FORSIKRINGER -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.SkattepliktigDelForsikringer;
+            case YRKEBIL_TJENESTLIGBEHOV_KILOMETER -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.YrkebilTjenestligbehovKilometer;
+            case YRKEBIL_TJENESTLIGBEHOV_LISTEPRIS -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.YrkebilTjenestligbehovListepris;
+            case AKSJER_GRUNNFONDSBEVIS_TIL_UNDERKURS -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.AksjerGrunnfondsbevisTilUnderkurs;
+            case INNBETALING_TIL_UTENLANDSK_PENSJONSORDNING -> InntektsmeldingRequest.Naturalytelse.Naturalytelsetype.InnbetalingTilUtenlandskPensjonsordning;
         };
     }
 }
