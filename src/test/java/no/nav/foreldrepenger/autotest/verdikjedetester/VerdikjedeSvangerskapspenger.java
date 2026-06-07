@@ -8,14 +8,9 @@ import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
-
-import no.nav.foreldrepenger.generator.familie.Arbeidsgiver;
-import no.nav.foreldrepenger.generator.inntektsmelding.builders.Inntektsmelding;
-import no.nav.foreldrepenger.generator.inntektsmelding.builders.InntektsmeldingBuilder;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -49,6 +44,7 @@ import no.nav.foreldrepenger.soknad.kontrakt.svangerskapspenger.AvtaltFerieDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.FamilierelasjonModellDto;
 
 @Tag("verdikjede")
+@Tag("svangerskapspenger")
 class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
 
     protected static final Prosent HUNDRE_PROSENT_AV_BEREGNET_INNTEKT = Prosent.valueOf(100);

@@ -27,6 +27,7 @@ import no.nav.foreldrepenger.vtp.kontrakter.person.FamilierelasjonModellDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.StatsborgerskapDto;
 
 @Tag("verdikjede")
+@Tag("engangsstonad")
 class VerdikjedeEngangsstonad extends VerdikjedeTestBase {
 
     @Test

@@ -20,6 +20,7 @@ import no.nav.foreldrepenger.autotest.fpkalkulus.Beregner;
 import no.nav.foreldrepenger.generator.kalkulus.ForeslåBeregningTjeneste;
 
 @Tag("fpkalkulus")
+@Tag("foreldrepenger")
 class BesteberegningTest extends Beregner {
 
     @DisplayName("Besteberegning - Arbeidstaker med dagpenger i opptjeningsperioden. Beregning etter kap 8 gir bedre resultat.")

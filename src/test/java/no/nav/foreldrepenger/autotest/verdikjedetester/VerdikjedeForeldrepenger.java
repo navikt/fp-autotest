@@ -162,6 +162,7 @@ import no.nav.foreldrepenger.vtp.kontrakter.person.Permisjonstype;
 
 
 @Tag("verdikjede")
+@Tag("foreldrepenger")
 class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
     @Test

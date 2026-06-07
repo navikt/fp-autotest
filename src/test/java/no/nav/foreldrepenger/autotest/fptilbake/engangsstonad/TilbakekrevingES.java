@@ -39,6 +39,7 @@ import no.nav.foreldrepenger.vtp.kontrakter.person.PersonstatusDto;
 
 @Tag("tilbakekreving")
 @Tag("fptilbake")
+@Tag("engangsstonad")
 class TilbakekrevingES extends FptilbakeTestBase {
 
     private static final String ytelseType = "ES";

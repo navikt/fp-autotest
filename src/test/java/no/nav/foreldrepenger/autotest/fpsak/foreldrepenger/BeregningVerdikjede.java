@@ -56,6 +56,7 @@ import no.nav.foreldrepenger.vtp.kontrakter.person.FamilierelasjonModellDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.GrunnlagDto;
 
 @Tag("fpsak")
+@Tag("foreldrepenger")
 class BeregningVerdikjede extends VerdikjedeTestBase {
 
     @Test
