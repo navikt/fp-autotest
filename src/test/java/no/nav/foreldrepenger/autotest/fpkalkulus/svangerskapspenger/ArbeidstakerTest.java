@@ -12,6 +12,7 @@ import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
 import no.nav.foreldrepenger.autotest.fpkalkulus.Beregner;
 
 @Tag("fpkalkulus")
+@Tag("svangerskapspenger")
 class ArbeidstakerTest extends Beregner {
 
 

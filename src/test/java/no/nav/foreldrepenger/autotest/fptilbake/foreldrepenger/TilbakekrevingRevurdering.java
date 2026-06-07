@@ -23,15 +23,16 @@ import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjon
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.FattVedtakTilbakekreving;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.Kravgrunnlag;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
-import no.nav.foreldrepenger.soknad.kontrakt.BrukerRolle;
-import no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
+import no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType;
+import no.nav.foreldrepenger.soknad.kontrakt.BrukerRolle;
 import no.nav.foreldrepenger.vtp.kontrakter.person.FamilierelasjonModellDto;
 
 @Tag("tilbakekreving")
 @Tag("fptilbake")
+@Tag("foreldrepenger")
 class TilbakekrevingRevurdering extends FptilbakeTestBase {
 
     private static final String ytelseType = "FP";

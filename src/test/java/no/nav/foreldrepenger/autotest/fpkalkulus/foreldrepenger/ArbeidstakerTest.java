@@ -19,24 +19,23 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
-import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
-
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.BeregningsgrunnlagPrStatusOgAndelDto;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 
 import io.qameta.allure.Description;
-import no.nav.foreldrepenger.kalkulus.kontrakt.request.EnkelBeregnRequestDto;
+import no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningSteg;
-import no.nav.foreldrepenger.kalkulus.kontrakt.response.TilstandResponse;
+import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.BeregningsgrunnlagPrStatusOgAndelDto;
 import no.nav.foreldrepenger.autotest.fpkalkulus.Beregner;
 import no.nav.foreldrepenger.generator.kalkulus.FaktaBeregningLagreDtoBuilder;
 import no.nav.foreldrepenger.generator.kalkulus.VurderRefusjonTjeneste;
+import no.nav.foreldrepenger.kalkulus.kontrakt.request.EnkelBeregnRequestDto;
+import no.nav.foreldrepenger.kalkulus.kontrakt.response.TilstandResponse;
 
 @Tag("fpkalkulus")
+@Tag("foreldrepenger")
 class ArbeidstakerTest extends Beregner {
 
     @DisplayName("Foreldrepenger - ett arbeidsforhold og frilans med avvik")

@@ -5,7 +5,7 @@ applyTo: "src/test/java/**/*.java"
 # fp-autotest Test Conventions
 
 ## Test Structure
-- Tests use JUnit 5 with `@Tag` annotations for suite membership
+- Tests use JUnit with `@Tag` annotations for suite membership
 - Test classes extend `VerdikjedeTestBase`
 - Tests use "aktører" (actors like `Saksbehandler`) to interact with applications via API clients
 
@@ -25,10 +25,10 @@ applyTo: "src/test/java/**/*.java"
 - `fpsak/foreldrepenger/` — foreldrepenger benefit tests (tagged fpsak + foreldrepenger)
 - `fpsak/engangsstonad/` — engangsstønad benefit tests (tagged fpsak + engangsstonad)
 - `fpsak/svangerskapspenger/` — svangerskapspenger benefit tests (tagged fpsak + svangerskapspenger)
-- `fptilbake/` — tilbakekreving tests (tagged fptilbake + tilbakekreving)
+- `fptilbake/` — tilbakekreving tests (tagged fptilbake + tilbakekreving and benefit)
 - `fpkalkulus/` — beregning/calculation tests (tagged fpkalkulus)
 - `fplos/` — oppgavestyring/LOS tests (tagged fplos)
-- `verdikjedetester/` — end-to-end value chain tests (tagged verdikjede)
+- `verdikjedetester/` — end-to-end value chain tests (tagged verdikjede and benefit)
 
 ## Running Tests
 ```bash

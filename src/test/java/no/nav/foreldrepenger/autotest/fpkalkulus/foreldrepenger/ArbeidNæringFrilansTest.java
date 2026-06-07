@@ -17,10 +17,11 @@ import org.junit.jupiter.api.TestInfo;
 
 import io.qameta.allure.Description;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningSteg;
-import no.nav.foreldrepenger.kalkulus.kontrakt.response.TilstandResponse;
 import no.nav.foreldrepenger.autotest.fpkalkulus.Beregner;
+import no.nav.foreldrepenger.kalkulus.kontrakt.response.TilstandResponse;
 
 @Tag("fpkalkulus")
+@Tag("foreldrepenger")
 class ArbeidNæringFrilansTest extends Beregner {
 
     @DisplayName("Foreldrepenger - arbeidsforhold og selvstendig næringsdrivende")
