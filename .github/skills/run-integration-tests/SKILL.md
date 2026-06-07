@@ -92,13 +92,12 @@ When a developer wants to test local changes to an application:
 
 ## Filtering by ytelse
 
-All suites support ytelse sub-filtering via JUnit tags:
+All suites support ytelse sub-filtering via JUnit tags: foreldrepenger, engangsstonad, svangerskapspenger
 
  ```bash
  mvn test -P <suite> -Dgroups="foreldrepenger"
  mvn test -P <suite> -Dgroups="foreldrepenger | svangerskapspenger"
-
-Available tags: foreldrepenger, engangsstonad, svangerskapspenger
+```
 
 ## Prerequisites
 
