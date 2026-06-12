@@ -214,7 +214,7 @@ class BeregningVerdikjede extends VerdikjedeTestBase {
                 .filter(a -> a.getAktivitetStatus().equals(AktivitetStatus.ARBEIDSAVKLARINGSPENGER))
                 .findFirst().orElseThrow();
         assertThat(arbeidsandel.getDagsats()).isEqualTo(1731);
-        assertThat(aapAndel.getDagsats()).isEqualTo(500);
+        assertThat(aapAndel.getDagsats()).isEqualTo(1000);
     }
 
 
