@@ -9,7 +9,7 @@ import java.net.http.HttpRequest;
 import java.time.Duration;
 
 import io.qameta.allure.Step;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.BeregningsgrunnlagDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.BeregningsgrunnlagDto;
 import no.nav.foreldrepenger.kalkulus.kontrakt.request.EnkelFpkalkulusRequestDto;
 import no.nav.foreldrepenger.kalkulus.kontrakt.request.EnkelHentBeregningsgrunnlagGUIRequest;
 import no.nav.foreldrepenger.kalkulus.kontrakt.request.EnkelHåndterBeregningRequestDto;

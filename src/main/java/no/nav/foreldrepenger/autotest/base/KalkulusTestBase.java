@@ -2,7 +2,7 @@ package no.nav.foreldrepenger.autotest.base;
 
 import java.io.IOException;
 
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.BeregningsgrunnlagDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.BeregningsgrunnlagDto;
 import no.nav.foreldrepenger.kalkulus.kontrakt.request.EnkelBeregnRequestDto;
 
 import no.nav.foreldrepenger.kalkulus.kontrakt.response.beregningsgrunnlag.detaljert.BeregningsgrunnlagGrunnlagDto;

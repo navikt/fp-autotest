@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.BeregningsgrunnlagDto;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.BeregningsgrunnlagPrStatusOgAndelDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.BeregningsgrunnlagDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.BeregningsgrunnlagPrStatusOgAndelDto;
 import no.nav.foreldrepenger.kalkulus.kontrakt.request.EnkelBeregnRequestDto;
 import no.nav.foreldrepenger.kalkulus.kontrakt.request.EnkelHåndterBeregningRequestDto;
 import no.nav.foreldrepenger.kalkulus.kontrakt.request.håndtering.fordeling.FaktaOmFordelingHåndteringDto;
@@ -59,7 +59,7 @@ public class FaktaOmFordelingTjeneste {
         return new FaktaOmFordelingHåndteringDto(fordelBeregningsgrunnlagDto);
     }
 
-    private static List<FordelBeregningsgrunnlagAndelDto> mapTilFastsatteAndeler(List<no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.FordelBeregningsgrunnlagAndelDto> fordelBeregningsgrunnlagAndeler,
+    private static List<FordelBeregningsgrunnlagAndelDto> mapTilFastsatteAndeler(List<no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.FordelBeregningsgrunnlagAndelDto> fordelBeregningsgrunnlagAndeler,
                                                                                  List<BeregningsgrunnlagPrStatusOgAndelDto> andeler,
                                                                                  Map<Long, Integer> andelsnrBeløpMap, Map<Long, Inntektskategori> inntektskategoriMap, Map<Long, Integer> refusjonskravMap) {
         return fordelBeregningsgrunnlagAndeler.stream()
@@ -74,7 +74,7 @@ public class FaktaOmFordelingTjeneste {
                 }).toList();
     }
 
-    private static FordelRedigerbarAndelDto lagRedigerbarAndel(no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.FordelBeregningsgrunnlagAndelDto a, BeregningsgrunnlagPrStatusOgAndelDto bgAndel) {
+    private static FordelRedigerbarAndelDto lagRedigerbarAndel(no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.FordelBeregningsgrunnlagAndelDto a, BeregningsgrunnlagPrStatusOgAndelDto bgAndel) {
         return new FordelRedigerbarAndelDto(
                 a.getAndelsnr(),
                 a.getArbeidsforhold() == null ? null : a.getArbeidsforhold().getArbeidsgiverIdent(),

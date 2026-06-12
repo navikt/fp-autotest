@@ -14,7 +14,7 @@ import org.junit.jupiter.api.TestInfo;
 
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningSteg;
 import no.nav.folketrygdloven.kalkulus.kodeverk.FagsakYtelseType;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.BeregningsgrunnlagDto;
+import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.BeregningsgrunnlagDto;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.kalkulus.kontrakt.request.EnkelBeregnRequestDto;
 import no.nav.foreldrepenger.kalkulus.kontrakt.request.input.KalkulatorInputDto;
