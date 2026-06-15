@@ -1,19 +1,19 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta;
 
-import java.time.LocalDate;
-import java.util.List;
-
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.svangerskapspenger.Arbeidsforhold;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.generator.familie.ArbeidsforholdId;
 
+import java.time.LocalDate;
+import java.util.List;
+
 public class AvklarFaktaFødselOgTilrettelegging extends AksjonspunktBekreftelse {
 
     protected LocalDate termindato;
     protected LocalDate fødselsdato;
-    protected List<Arbeidsforhold> bekreftetSvpArbeidsforholdList;
+    protected List<BekreftTilrettelegging> bekreftetSvpArbeidsforholdList;
 
     @Override
     public String aksjonspunktKode() {
@@ -24,10 +24,22 @@ public class AvklarFaktaFødselOgTilrettelegging extends AksjonspunktBekreftelse
     public void oppdaterMedDataFraBehandling(Fagsak fagsak, Behandling behandling) {
         this.termindato = behandling.getTilrettelegging().getTermindato();
         this.fødselsdato = behandling.getTilrettelegging().getFødselsdato();
-        this.bekreftetSvpArbeidsforholdList = behandling.getTilrettelegging().getArbeidsforholdList();
+        this.bekreftetSvpArbeidsforholdList = behandling.getTilrettelegging().getArbeidsforholdList().stream().map(this::mapTilArbeidsforhold).toList();
     }
 
-    public List<Arbeidsforhold> getBekreftetSvpArbeidsforholdList() {
+    private BekreftTilrettelegging mapTilArbeidsforhold(Arbeidsforhold a) {
+        var tilrettelegging = new BekreftTilrettelegging();
+        tilrettelegging.setArbeidsgiverReferanse(a.getArbeidsgiverReferanse());
+        tilrettelegging.setTilretteleggingId(a.getTilretteleggingId());
+        tilrettelegging.setSkalBrukes(a.getSkalBrukes());
+        tilrettelegging.setTilretteleggingBehovFom(a.getTilretteleggingBehovFom());
+        tilrettelegging.setTilretteleggingDatoer(a.getTilretteleggingDatoer());
+        tilrettelegging.setAvklarteOppholdPerioder(a.getAvklarteOppholdPerioder());
+        tilrettelegging.setInternArbeidsforholdReferanse(a.getInternArbeidsforholdReferanse());
+        return tilrettelegging;
+    }
+
+    public List<BekreftTilrettelegging> getBekreftetSvpArbeidsforholdList() {
         return bekreftetSvpArbeidsforholdList;
     }
 

@@ -1,9 +1,9 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.svangerskapspenger;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -11,19 +11,34 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class Arbeidsforhold {
 
     protected List<AvklartOpphold> avklarteOppholdPerioder;
-    protected Integer tilretteleggingId;
+    protected Long tilretteleggingId;
     protected LocalDate tilretteleggingBehovFom;
     protected List<Tilretteleggingsdato> tilretteleggingDatoer = new ArrayList<>();
-    protected String arbeidsgiverNavn;
-    protected String arbeidsgiverIdent;
-    protected String opplysningerOmRisiko;
-    protected String opplysningerOmTilrettelegging;
-    protected Boolean kopiertFraTidligereBehandling;
-    protected LocalDateTime mottattTidspunkt;
-    protected String internArbeidsforholdReferanse;
+    protected String arbeidsgiverReferanse;
+    protected UUID internArbeidsforholdReferanse;
     protected String eksternArbeidsforholdReferanse;
     protected Boolean skalBrukes;
     protected String begrunnelse;
+
+    public List<Tilretteleggingsdato> getTilretteleggingDatoer() {
+        return tilretteleggingDatoer;
+    }
+
+    public void setTilretteleggingDatoer(List<Tilretteleggingsdato> tilretteleggingDatoer) {
+        this.tilretteleggingDatoer = tilretteleggingDatoer;
+    }
+
+    public LocalDate getTilretteleggingBehovFom() {
+        return tilretteleggingBehovFom;
+    }
+
+    public void setTilretteleggingBehovFom(LocalDate tilretteleggingBehovFom) {
+        this.tilretteleggingBehovFom = tilretteleggingBehovFom;
+    }
+
+    public Long getTilretteleggingId() {
+        return tilretteleggingId;
+    }
 
     public Boolean getSkalBrukes() {
         return skalBrukes;
@@ -33,17 +48,15 @@ public class Arbeidsforhold {
         this.skalBrukes = skalBrukes;
     }
 
+    public String getArbeidsgiverReferanse() {
+        return arbeidsgiverReferanse;
+    }
+
     public String getEksternArbeidsforholdReferanse() {
         return eksternArbeidsforholdReferanse;
     }
 
-    public void setTilretteleggingBehovFom(LocalDate tilretteleggingBehovFom) {this.tilretteleggingBehovFom = tilretteleggingBehovFom;}
-
-    public void setTilretteleggingDatoer(List<Tilretteleggingsdato> tilretteleggingDatoer) {
-        this.tilretteleggingDatoer = tilretteleggingDatoer;
-    }
-
-    public String getInternArbeidsforholdReferanse() {
+    public UUID getInternArbeidsforholdReferanse() {
         return internArbeidsforholdReferanse;
     }
 
