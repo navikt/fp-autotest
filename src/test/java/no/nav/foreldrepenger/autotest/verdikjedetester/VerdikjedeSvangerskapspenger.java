@@ -6,23 +6,12 @@ import static no.nav.foreldrepenger.autotest.brev.BrevFormateringUtils.formaterK
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.in;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Inntektskategori;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FordelBeregningsgrunnlagBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.BekreftTilrettelegging;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.BeregningsresultatPeriodeAndel;
-import no.nav.foreldrepenger.generator.familie.Arbeidsforhold;
-import no.nav.foreldrepenger.generator.familie.ArbeidsforholdId;
-import no.nav.foreldrepenger.generator.familie.Arbeidsgiver;
-import no.nav.foreldrepenger.generator.inntektsmelding.builders.Inntektsmelding;
-import no.nav.foreldrepenger.generator.inntektsmelding.builders.InntektsmeldingBuilder;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -33,9 +22,12 @@ import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.VerdikjedeTestBase;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.AktivitetStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Inntektskategori;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FordelBeregningsgrunnlagBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakManueltBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaFødselOgTilrettelegging;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.BekreftSvangerskapspengervilkår;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.BekreftTilrettelegging;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.svangerskapspenger.AvklartOpphold;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.svangerskapspenger.TilretteleggingType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.svangerskapspenger.Tilretteleggingsdato;
@@ -44,6 +36,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkType
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
+import no.nav.foreldrepenger.generator.inntektsmelding.builders.Inntektsmelding;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.Prosent;
 import no.nav.foreldrepenger.generator.soknad.maler.ArbeidsforholdMaler;
 import no.nav.foreldrepenger.generator.soknad.maler.OpptjeningMaler;
@@ -209,11 +202,11 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
                 .matches(l -> Objects.equals(l.tom(), avtaltFerie.tom()), "tom datoer er like");
     }
 
-    @Disabled
     @Test
-    @DisplayName("3: Mor søk fullt uttak for ett av to arbeidsforhold i samme virksomhet")
-    @Description("Mor søker delvis tilrettelegging for en arbeidsgiver med to arbeidsforhold. Arbeidsgiver leverer en"
-            + "inntektsmelding. Saksbehandlet må splitte arbeidsforholdet for å håndtere ulik lønn i stillingene ")
+    @DisplayName("3: Mor søk delvi i ett arbeidsforhold hvor hun er registrert med flere arbeidsforhold under samme underenhet")
+    @Description("Mor søker delvis tilrettelegging for en arbeidsgiver med tre arbeidsforhold. Arbeidsgiver leverer en"
+            + "inntektsmelding. Saksbehandler må splitte arbeidsforhold, og angi hvordan svangerskapspengene, "
+            + "og hvordan grunnlag og refusjon skal fordeles for å håndtere ulik lønn i stillingene ")
     void morSøkerFulltUttakForEttAvToArbeidsforholdTest() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor().inntektytelse(InntektYtelseGenerator.ny()
@@ -228,7 +221,6 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         var arbeidsforhold1 = arbeidsforholdene.getFirst();
         var orgnummer1 = arbeidsforhold1.arbeidsgiverIdentifikasjon();
         var termindato = LocalDate.now().plusMonths(3);
-        var tilrettelegginsprosent = 0.0;
         var tilrettelegging = new TilretteleggingBehovBuilder(
                 ArbeidsforholdMaler.virksomhet(new Orgnummer(orgnummer1)),
                 LocalDate.now()).delvis(LocalDate.now(), 40.00).build();
