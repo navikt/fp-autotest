@@ -6,12 +6,18 @@ import static no.nav.foreldrepenger.autotest.brev.BrevFormateringUtils.formaterK
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.in;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Inntektskategori;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FordelBeregningsgrunnlagBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.BekreftTilrettelegging;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.BeregningsresultatPeriodeAndel;
 import no.nav.foreldrepenger.generator.familie.Arbeidsforhold;
 import no.nav.foreldrepenger.generator.familie.ArbeidsforholdId;
 import no.nav.foreldrepenger.generator.familie.Arbeidsgiver;
@@ -212,7 +218,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         var familie = FamilieGenerator.ny()
                 .forelder(mor().inntektytelse(InntektYtelseGenerator.ny()
                         .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-001", 100, LocalDate.now().minusYears(2), 480_000)
-                        .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-002", 0, LocalDate.now().minusYears(4), null)
+                        .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-002", 0, LocalDate.now().minusYears(4), 20_000)
                         .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-003", 0, LocalDate.now().minusYears(4), null)
                         .build()).build())
                 .build();
@@ -231,16 +237,39 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
 
         var arbeidsgiver = mor.arbeidsgivere().arbeidgiver(new Orgnummer(orgnummer1));
         ventPåInntektsmeldingForespørsel(saksnummer);
-        var inntektsmelding = arbeidsgiver.lagInntektsmeldingSVP().medRefusjonBeløpPerMnd(new Prosent(80.00));
+        var inntektsmelding = arbeidsgiver.lagInntektsmeldingSVP()
+                .medBeregnetInntekt(41_666)
+                .leggTilEndretInntektÅrsak(Inntektsmelding.Endringsårsaker.Endringsårsak.BONUS)
+                .medRefusjonBeløpPerMnd(40_000);
         arbeidsgiver.sendInntektsmeldingViaApi(saksnummer, inntektsmelding);
 
         saksbehandler.hentFagsak(saksnummer);
-        var arbeidsforholdIdIkkeBrukes = new ArbeidsforholdId("ARB001-003");
-        var arbeidsforholdsIdDelvisTilrettelegging = new ArbeidsforholdId("ARB001-001");
-        var arbeidsforholdsIdFullTilrettelegging = new ArbeidsforholdId("ARB001-002");
+        var arbeidsforholdListe = saksbehandler.valgtBehandling.getArbeidOgInntektsmeldingDto().arbeidsforhold();
+        var internRef001 = arbeidsforholdListe.stream()
+            .filter(a -> "ARB001-001".equals(a.eksternArbeidsforholdId()))
+            .map(a -> UUID.fromString(a.internArbeidsforholdId()))
+            .findFirst().orElse(null);
+        var internRef002 = arbeidsforholdListe.stream()
+            .filter(a -> "ARB001-002".equals(a.eksternArbeidsforholdId()))
+            .map(a -> UUID.fromString(a.internArbeidsforholdId()))
+            .findFirst().orElse(null);
+        var delvisTilrettelegging = new BekreftTilrettelegging(
+            null, LocalDate.now(),
+            List.of(new Tilretteleggingsdato(LocalDate.now(), TilretteleggingType.DELVIS_TILRETTELEGGING, new BigDecimal("40.00"), Tilretteleggingsdato.SvpTilretteleggingFomKilde.SØKNAD)),
+            orgnummer1, internRef001, "ARB001-001",
+            true, true, BigDecimal.valueOf(100), List.of(), "Begrunnelse");
+        var ingenTilrettelegging = new BekreftTilrettelegging(
+            null, LocalDate.now(),
+            List.of(new Tilretteleggingsdato(LocalDate.now(), TilretteleggingType.INGEN_TILRETTELEGGING, BigDecimal.ZERO, Tilretteleggingsdato.SvpTilretteleggingFomKilde.SØKNAD)),
+            orgnummer1, internRef002, "ARB001-002",
+            true, true, BigDecimal.valueOf(100), List.of(), "Begrunnelse");
+        var skalIkkeBrukes = new BekreftTilrettelegging(
+                null, LocalDate.now(),
+                List.of(new Tilretteleggingsdato(LocalDate.now(), TilretteleggingType.INGEN_TILRETTELEGGING, BigDecimal.ZERO, Tilretteleggingsdato.SvpTilretteleggingFomKilde.SØKNAD)),
+                orgnummer1, internRef002, "ARB001-003",
+                false, false, BigDecimal.ZERO, List.of(), "Begrunnelse");
         var avklarFaktaFødselOgTilrettelegging = saksbehandler.hentAksjonspunktbekreftelse(new AvklarFaktaFødselOgTilrettelegging());
-        avklarFaktaFødselOgTilrettelegging.setSkalBrukesTilFalseForArbeidsforhold(arbeidsforholdIdIkkeBrukes);
-        avklarFaktaFødselOgTilrettelegging.setOverstyrtUtbetalingsgrad(arbeidsforholdsIdDelvisTilrettelegging, new BigDecimal("60.00"));
+        avklarFaktaFødselOgTilrettelegging.leggTilSplittetTilrettelegging(List.of(skalIkkeBrukes, delvisTilrettelegging, ingenTilrettelegging));
         avklarFaktaFødselOgTilrettelegging.setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaFødselOgTilrettelegging);
 
@@ -248,24 +277,35 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         bekreftSvangerskapspengervilkår.godkjenn().setBegrunnelse("Godkjenner vilkår");
         saksbehandler.bekreftAksjonspunkt(bekreftSvangerskapspengervilkår);
 
+        var fordelBeregning = saksbehandler
+                .hentAksjonspunktbekreftelse(new FordelBeregningsgrunnlagBekreftelse())
+                .settFastsattBeløpOgInntektskategoriMedRefusjon(LocalDate.now(), 480_000, 480_000,
+                        Inntektskategori.ARBEIDSTAKER, 1)
+                .settFastsattBeløpOgInntektskategori(LocalDate.now(), 20_000,
+                        Inntektskategori.ARBEIDSTAKER, 2);
+        saksbehandler.bekreftAksjonspunkt(fordelBeregning);
+
         foreslårOgFatterVedtakVenterTilAvsluttetBehandling(saksnummer, true, false);
 
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat()).as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);
 
-        var månedsinntekt1 = mor.månedsinntekt(new Orgnummer(orgnummer1), arbeidsforhold1.arbeidsforholdId());
-        var årsinntekt = (double) månedsinntekt1 * 12;
-        var utbetalingProsentFaktor = (double) (100 - tilrettelegginsprosent) / 100;
-        var beregnetDagsats = regnUtForventetDagsats(månedsinntekt1, tilrettelegginsprosent);
+        // ARB001-001: 480_000/år, delvis tilrettelegging 40% → utbetalingsgrad 60%
+        // ARB001-002: 20_000/år, ingen tilrettelegging → utbetalingsgrad 100%
+        // Samlet redusert: 480_000 * 0.6 + 20_000 * 1.0 = 288_000 + 20_000 = 308_000
         var beregningsgrunnlagPeriode = saksbehandler.valgtBehandling.getBeregningsgrunnlag().getBeregningsgrunnlagPeriode(0);
+        var forventetRedusertPrÅr = 480_000 * 0.6 + 20_000 * 1.0;
+        var forventetDagsats = (int) Math.round(forventetRedusertPrÅr / 260);
         assertThat(beregningsgrunnlagPeriode.getRedusertPrAar()).as(
-                        "Forventer at redusertPrAar er det samme som årsinntekten for den gjeldende arbeidsforhold x utbetalingsgrad")
-                .isEqualTo(årsinntekt * utbetalingProsentFaktor);
+                        "Forventer at redusertPrAar er summen av redusert inntekt per arbeidsforhold")
+                .isEqualTo(forventetRedusertPrÅr);
         assertThat(beregningsgrunnlagPeriode.getDagsats()).as(
-                        "Forventer at dagsatsen bare beregnes ut i fra årsinntekten til det ene arbeidsforholdet og dens utbetalingsgrad!")
-                .isEqualTo(beregnetDagsats);
-        assertThat(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForAllePeriode(new Orgnummer(orgnummer1), 0)).as(
-                "Foventer at hele den utbetalte dagsatsen går til søker!").isTrue();
+                        "Forventer at dagsats er sum av redusert inntekt / 260 virkedager")
+                .isEqualTo(forventetDagsats);
+        var andeler = saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger().getPerioder().getFirst().getAndeler();
+        assertThat(andeler).hasSize(2);
+        assertThat(andeler.stream().anyMatch(a -> a.getRefusjon() == 1108 && a.getTilSøker() == 0));
+        assertThat(andeler.stream().anyMatch(a -> a.getRefusjon() == 0 && a.getTilSøker() == 77));
 
     }
 

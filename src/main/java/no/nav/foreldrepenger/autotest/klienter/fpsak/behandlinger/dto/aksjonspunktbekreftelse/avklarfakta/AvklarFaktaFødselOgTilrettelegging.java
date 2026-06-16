@@ -71,4 +71,8 @@ public class AvklarFaktaFødselOgTilrettelegging extends AksjonspunktBekreftelse
             }
         }
     }
+
+    public void leggTilSplittetTilrettelegging(List<BekreftTilrettelegging> bekreftTilrettelegginger) {
+        this.bekreftetSvpArbeidsforholdList = bekreftTilrettelegginger;
+    }
 }

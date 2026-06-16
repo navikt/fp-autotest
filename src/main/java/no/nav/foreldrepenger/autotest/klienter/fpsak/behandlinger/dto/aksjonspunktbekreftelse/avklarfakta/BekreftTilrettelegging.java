@@ -25,6 +25,35 @@ public class BekreftTilrettelegging {
 
     private String begrunnelse;
 
+    public BekreftTilrettelegging() {
+    }
+
+    public BekreftTilrettelegging(Long tilretteleggingId,
+                                  LocalDate tilretteleggingBehovFom,
+                                  List<Tilretteleggingsdato> tilretteleggingDatoer,
+                                  String arbeidsgiverReferanse,
+                                  UUID internArbeidsforholdReferanse,
+                                  String eksternArbeidsforholdReferanse,
+                                  boolean skalBrukes,
+                                  boolean kanTilrettelegges,
+                                  BigDecimal stillingsprosentStartTilrettelegging,
+                                  List<AvklartOpphold> avklarteOppholdPerioder,
+                                  String begrunnelse) {
+        this.tilretteleggingId = tilretteleggingId;
+        this.tilretteleggingBehovFom = tilretteleggingBehovFom;
+        this.tilretteleggingDatoer = tilretteleggingDatoer != null ? tilretteleggingDatoer : new ArrayList<>();
+        this.arbeidsgiverReferanse = arbeidsgiverReferanse;
+        this.internArbeidsforholdReferanse = internArbeidsforholdReferanse;
+        this.eksternArbeidsforholdReferanse = eksternArbeidsforholdReferanse;
+        this.skalBrukes = skalBrukes;
+        this.kanTilrettelegges = kanTilrettelegges;
+        this.stillingsprosentStartTilrettelegging = stillingsprosentStartTilrettelegging;
+        this.avklarteOppholdPerioder = avklarteOppholdPerioder != null ? avklarteOppholdPerioder : new ArrayList<>();
+        this.begrunnelse = begrunnelse;
+    }
+
+
+
     public LocalDate getTilretteleggingBehovFom() {
         return tilretteleggingBehovFom;
     }
