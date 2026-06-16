@@ -12,6 +12,12 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
+import no.nav.foreldrepenger.generator.familie.Arbeidsforhold;
+import no.nav.foreldrepenger.generator.familie.ArbeidsforholdId;
+import no.nav.foreldrepenger.generator.familie.Arbeidsgiver;
+import no.nav.foreldrepenger.generator.inntektsmelding.builders.Inntektsmelding;
+import no.nav.foreldrepenger.generator.inntektsmelding.builders.InntektsmeldingBuilder;
+
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -205,8 +211,9 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
     void morSøkerFulltUttakForEttAvToArbeidsforholdTest() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor().inntektytelse(InntektYtelseGenerator.ny()
-                        .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-001", 40, LocalDate.now().minusYears(2), 480_000)
-                        .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-002", 60, LocalDate.now().minusYears(4), null)
+                        .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-001", 100, LocalDate.now().minusYears(2), 480_000)
+                        .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-002", 0, LocalDate.now().minusYears(4), null)
+                        .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-003", 0, LocalDate.now().minusYears(4), null)
                         .build()).build())
                 .build();
 
@@ -218,18 +225,22 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         var tilrettelegginsprosent = 0.0;
         var tilrettelegging = new TilretteleggingBehovBuilder(
                 ArbeidsforholdMaler.virksomhet(new Orgnummer(orgnummer1)),
-                LocalDate.now()).delvis(LocalDate.now(), 20.00).build();
+                LocalDate.now()).delvis(LocalDate.now(), 40.00).build();
         var søknad = SøknadSvangerskapspengerMaler.lagSvangerskapspengerSøknad(termindato, List.of(tilrettelegging));
         var saksnummer = mor.søk(søknad);
 
         var arbeidsgiver = mor.arbeidsgivere().arbeidgiver(new Orgnummer(orgnummer1));
         ventPåInntektsmeldingForespørsel(saksnummer);
-        var inntektsmelding = arbeidsgiver.lagInntektsmeldingSVP().medRefusjonBeløpPerMnd(new Prosent(90.00));
+        var inntektsmelding = arbeidsgiver.lagInntektsmeldingSVP().medRefusjonBeløpPerMnd(new Prosent(80.00));
         arbeidsgiver.sendInntektsmeldingViaApi(saksnummer, inntektsmelding);
 
         saksbehandler.hentFagsak(saksnummer);
+        var arbeidsforholdIdIkkeBrukes = new ArbeidsforholdId("ARB001-003");
+        var arbeidsforholdsIdDelvisTilrettelegging = new ArbeidsforholdId("ARB001-001");
+        var arbeidsforholdsIdFullTilrettelegging = new ArbeidsforholdId("ARB001-002");
         var avklarFaktaFødselOgTilrettelegging = saksbehandler.hentAksjonspunktbekreftelse(new AvklarFaktaFødselOgTilrettelegging());
-        avklarFaktaFødselOgTilrettelegging.setSkalBrukesTilFalseForArbeidsforhold(arbeidsforholdene.get(1).arbeidsforholdId());
+        avklarFaktaFødselOgTilrettelegging.setSkalBrukesTilFalseForArbeidsforhold(arbeidsforholdIdIkkeBrukes);
+        avklarFaktaFødselOgTilrettelegging.setOverstyrtUtbetalingsgrad(arbeidsforholdsIdDelvisTilrettelegging, new BigDecimal("60.00"));
         avklarFaktaFødselOgTilrettelegging.setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaFødselOgTilrettelegging);
 

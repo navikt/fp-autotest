@@ -56,12 +56,23 @@ public class Arbeidsforhold {
         return eksternArbeidsforholdReferanse;
     }
 
-    public UUID getInternArbeidsforholdReferanse() {
-        return internArbeidsforholdReferanse;
+    public void setTilretteleggingBehovFom(LocalDate tilretteleggingBehovFom) {this.tilretteleggingBehovFom = tilretteleggingBehovFom;}
+
+    public void setTilretteleggingDatoer(List<Tilretteleggingsdato> tilretteleggingDatoer) {
+        this.tilretteleggingDatoer = tilretteleggingDatoer;
     }
 
+    public List<Tilretteleggingsdato> getTilretteleggingDatoer() {
+        return tilretteleggingDatoer;
+    }
+
+    public String getInternArbeidsforholdReferanse() {
+    }
     public List<AvklartOpphold> getAvklarteOppholdPerioder() {
         return avklarteOppholdPerioder;
     }
+        public UUID getInternArbeidsforholdReferanse() {
+            return internArbeidsforholdReferanse;
+        }
 
 }

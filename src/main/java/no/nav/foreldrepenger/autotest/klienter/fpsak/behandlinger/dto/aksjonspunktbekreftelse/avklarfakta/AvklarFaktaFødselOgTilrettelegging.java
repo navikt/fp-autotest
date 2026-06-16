@@ -1,5 +1,9 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.svangerskapspenger.Arbeidsforhold;
@@ -51,6 +55,19 @@ public class AvklarFaktaFødselOgTilrettelegging extends AksjonspunktBekreftelse
         for (var arbeidsforhold : getBekreftetSvpArbeidsforholdList()) {
             if (arbeidsforholdId.contains(new ArbeidsforholdId(arbeidsforhold.getEksternArbeidsforholdReferanse()))) {
                 arbeidsforhold.setSkalBrukes(false);
+            }
+        }
+    }
+
+    public void setUtbetalingsgrad(ArbeidsforholdId arbeidsforholdId) {
+
+    }
+
+    public void setOverstyrtUtbetalingsgrad(ArbeidsforholdId arbeidsforholdId, BigDecimal overstyrtUtbetalingsgrad) {
+        for (var arbeidsforhold : getBekreftetSvpArbeidsforholdList()) {
+            if (arbeidsforholdId.equals(new ArbeidsforholdId(arbeidsforhold.getEksternArbeidsforholdReferanse()))) {
+                arbeidsforhold.getTilretteleggingDatoer()
+                    .forEach(dato -> dato.setOverstyrtUtbetalingsgrad(overstyrtUtbetalingsgrad));
             }
         }
     }
