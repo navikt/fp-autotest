@@ -24,12 +24,12 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatTy
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Inntektskategori;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FordelBeregningsgrunnlagBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakManueltBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaFødselOgTilrettelegging;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.BekreftSvangerskapspengerDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.BekreftSvangerskapspengervilkår;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.BekreftTilrettelegging;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.svangerskapspenger.AvklartOpphold;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.svangerskapspenger.SvpAvklartOppholdPeriodeDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.svangerskapspenger.TilretteleggingType;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.svangerskapspenger.Tilretteleggingsdato;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.svangerskapspenger.SvpTilretteleggingDatoDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.DokumentTag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkType;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
@@ -81,7 +81,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         validerInnsendtInntektsmeldingSvangerskapspenger(mor.fødselsnummer(), LocalDate.now(), mor.månedsinntekt(), harRefusjon);
 
         saksbehandler.hentFagsak(saksnummer);
-        var avklarFaktaFødselOgTilrettelegging = saksbehandler.hentAksjonspunktbekreftelse(new AvklarFaktaFødselOgTilrettelegging());
+        var avklarFaktaFødselOgTilrettelegging = saksbehandler.hentAksjonspunktbekreftelse(new BekreftSvangerskapspengerDto());
         avklarFaktaFødselOgTilrettelegging.setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaFødselOgTilrettelegging);
 
@@ -136,7 +136,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         validerInnsendtInntektsmeldingSvangerskapspenger(mor.fødselsnummer(), LocalDate.now(), mor.månedsinntekt(), harRefusjon);
 
         saksbehandler.hentFagsak(saksnummer);
-        var avklarFaktaFødselOgTilrettelegging = saksbehandler.hentAksjonspunktbekreftelse(new AvklarFaktaFødselOgTilrettelegging());
+        var avklarFaktaFødselOgTilrettelegging = saksbehandler.hentAksjonspunktbekreftelse(new BekreftSvangerskapspengerDto());
         avklarFaktaFødselOgTilrettelegging.setBegrunnelse("En begrunnelse fra autotest");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaFødselOgTilrettelegging);
 
@@ -160,8 +160,8 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
                 .getFirst()
                 .getAvklarteOppholdPerioder();
         assertThat(avklarteOppholdsperioder).first()
-                .matches(not(AvklartOpphold::forVisning), "avklart opphold skal være redigerbart, dvs ikke for visning")
-                .matches(l -> l.oppholdKilde() == AvklartOpphold.SvpOppholdKilde.SØKNAD, "søknad er kilde til oppholdet")
+                .matches(not(SvpAvklartOppholdPeriodeDto::forVisning), "avklart opphold skal være redigerbart, dvs ikke for visning")
+                .matches(l -> l.oppholdKilde() == SvpAvklartOppholdPeriodeDto.SvpOppholdKilde.SØKNAD, "søknad er kilde til oppholdet")
                 .matches(l -> Objects.equals(l.fom(), startDatoFerie), "fom datoer er like")
                 .matches(l -> Objects.equals(l.tom(), sluttdatoFerie), "tom datoer er like");
 
@@ -180,7 +180,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
 
         saksbehandler.hentFagsak(saksnummer2);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
-        var avklarFaktaFødselOgTilrettelegging2 = saksbehandler.hentAksjonspunktbekreftelse(new AvklarFaktaFødselOgTilrettelegging());
+        var avklarFaktaFødselOgTilrettelegging2 = saksbehandler.hentAksjonspunktbekreftelse(new BekreftSvangerskapspengerDto());
         avklarFaktaFødselOgTilrettelegging2.setBegrunnelse("Ny Periode og ferie skal være lik som forrige behandling");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaFødselOgTilrettelegging2);
 
@@ -195,8 +195,8 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
                 .getFirst()
                 .getAvklarteOppholdPerioder();
         assertThat(avklarteOppholdsperioderBeh2).first()
-                .matches(not(AvklartOpphold::forVisning), "avklart opphold skal være redigerbart, dvs ikke for visning")
-                .matches(l -> l.oppholdKilde() == AvklartOpphold.SvpOppholdKilde.TIDLIGERE_VEDTAK, "søknad er kilde til oppholdet")
+                .matches(not(SvpAvklartOppholdPeriodeDto::forVisning), "avklart opphold skal være redigerbart, dvs ikke for visning")
+                .matches(l -> l.oppholdKilde() == SvpAvklartOppholdPeriodeDto.SvpOppholdKilde.TIDLIGERE_VEDTAK, "søknad er kilde til oppholdet")
                 .matches(l -> Objects.equals(l.fom(), startDatoFerie), "fom datoer er like")
                 .matches(l -> Objects.equals(l.tom(), avtaltFerie.tom()), "tom datoer er like");
     }
@@ -246,20 +246,20 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
             .findFirst().orElse(null);
         var delvisTilrettelegging = new BekreftTilrettelegging(
             null, LocalDate.now(),
-            List.of(new Tilretteleggingsdato(LocalDate.now(), TilretteleggingType.DELVIS_TILRETTELEGGING, new BigDecimal("40.00"), Tilretteleggingsdato.SvpTilretteleggingFomKilde.SØKNAD)),
+            List.of(new SvpTilretteleggingDatoDto(LocalDate.now(), TilretteleggingType.DELVIS_TILRETTELEGGING, new BigDecimal("40.00"), SvpTilretteleggingDatoDto.SvpTilretteleggingFomKilde.SØKNAD)),
             orgnummer1, internRef001, "ARB001-001",
             true, true, BigDecimal.valueOf(100), List.of(), "Begrunnelse");
         var ingenTilrettelegging = new BekreftTilrettelegging(
             null, LocalDate.now(),
-            List.of(new Tilretteleggingsdato(LocalDate.now(), TilretteleggingType.INGEN_TILRETTELEGGING, BigDecimal.ZERO, Tilretteleggingsdato.SvpTilretteleggingFomKilde.SØKNAD)),
+            List.of(new SvpTilretteleggingDatoDto(LocalDate.now(), TilretteleggingType.INGEN_TILRETTELEGGING, BigDecimal.ZERO, SvpTilretteleggingDatoDto.SvpTilretteleggingFomKilde.SØKNAD)),
             orgnummer1, internRef002, "ARB001-002",
             true, true, BigDecimal.valueOf(100), List.of(), "Begrunnelse");
         var skalIkkeBrukes = new BekreftTilrettelegging(
                 null, LocalDate.now(),
-                List.of(new Tilretteleggingsdato(LocalDate.now(), TilretteleggingType.INGEN_TILRETTELEGGING, BigDecimal.ZERO, Tilretteleggingsdato.SvpTilretteleggingFomKilde.SØKNAD)),
+                List.of(new SvpTilretteleggingDatoDto(LocalDate.now(), TilretteleggingType.INGEN_TILRETTELEGGING, BigDecimal.ZERO, SvpTilretteleggingDatoDto.SvpTilretteleggingFomKilde.SØKNAD)),
                 orgnummer1, internRef002, "ARB001-003",
                 false, false, BigDecimal.ZERO, List.of(), "Begrunnelse");
-        var avklarFaktaFødselOgTilrettelegging = saksbehandler.hentAksjonspunktbekreftelse(new AvklarFaktaFødselOgTilrettelegging());
+        var avklarFaktaFødselOgTilrettelegging = saksbehandler.hentAksjonspunktbekreftelse(new BekreftSvangerskapspengerDto());
         avklarFaktaFødselOgTilrettelegging.leggTilSplittedeTilrettelegginger(List.of(skalIkkeBrukes, delvisTilrettelegging, ingenTilrettelegging));
         avklarFaktaFødselOgTilrettelegging.setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaFødselOgTilrettelegging);
@@ -336,7 +336,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
                 harRefusjon);
 
         saksbehandler.hentFagsak(saksnummer1);
-        var avklarFaktaFødselOgTilrettelegging = saksbehandler.hentAksjonspunktbekreftelse(new AvklarFaktaFødselOgTilrettelegging());
+        var avklarFaktaFødselOgTilrettelegging = saksbehandler.hentAksjonspunktbekreftelse(new BekreftSvangerskapspengerDto());
         avklarFaktaFødselOgTilrettelegging.setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaFødselOgTilrettelegging);
 
@@ -374,7 +374,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
 
         saksbehandler.hentFagsak(saksnummer2);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
-        var avklarFaktaFødselOgTilrettelegging2 = saksbehandler.hentAksjonspunktbekreftelse(new AvklarFaktaFødselOgTilrettelegging());
+        var avklarFaktaFødselOgTilrettelegging2 = saksbehandler.hentAksjonspunktbekreftelse(new BekreftSvangerskapspengerDto());
         avklarFaktaFødselOgTilrettelegging2.setBegrunnelse("Begrunnelse");
         avklarFaktaFødselOgTilrettelegging2.getBekreftetSvpArbeidsforholdList()
                 .get(0)
@@ -382,8 +382,8 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         avklarFaktaFødselOgTilrettelegging2.getBekreftetSvpArbeidsforholdList()
                 .get(0)
                 .setTilretteleggingDatoer(
-                        List.of(new Tilretteleggingsdato(LocalDate.now().minusDays(7), TilretteleggingType.INGEN_TILRETTELEGGING,
-                                BigDecimal.valueOf(100), Tilretteleggingsdato.SvpTilretteleggingFomKilde.ENDRET_AV_SAKSBEHANDLER)));
+                        List.of(new SvpTilretteleggingDatoDto(LocalDate.now().minusDays(7), TilretteleggingType.INGEN_TILRETTELEGGING,
+                                BigDecimal.valueOf(100), SvpTilretteleggingDatoDto.SvpTilretteleggingFomKilde.ENDRET_AV_SAKSBEHANDLER)));
         saksbehandler.bekreftAksjonspunkt(avklarFaktaFødselOgTilrettelegging2);
 
         var bekreftSvangerskapspengervilkår2 = saksbehandler.hentAksjonspunktbekreftelse(new BekreftSvangerskapspengervilkår());
@@ -470,7 +470,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         var månedsinntekt2 = mor.månedsinntekt(orgnummer2);
         validerInnsendtInntektsmeldingSvangerskapspenger(mor.fødselsnummer(), LocalDate.now(), månedsinntekt2, harRefusjon, 1);
 
-        var avklarFaktaFødselOgTilrettelegging = saksbehandler.hentAksjonspunktbekreftelse(new AvklarFaktaFødselOgTilrettelegging());
+        var avklarFaktaFødselOgTilrettelegging = saksbehandler.hentAksjonspunktbekreftelse(new BekreftSvangerskapspengerDto());
         avklarFaktaFødselOgTilrettelegging.setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaFødselOgTilrettelegging);
 
@@ -531,7 +531,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         var harRefusjon = false;
         validerInnsendtInntektsmeldingSvangerskapspenger(mor.fødselsnummer(), LocalDate.now(), månedsinntektMor, harRefusjon);
 
-        var avklarFaktaFødselOgTilrettelegging = saksbehandler.hentAksjonspunktbekreftelse(new AvklarFaktaFødselOgTilrettelegging());
+        var avklarFaktaFødselOgTilrettelegging = saksbehandler.hentAksjonspunktbekreftelse(new BekreftSvangerskapspengerDto());
         var svpSak = mor.innsyn().hentSvpSakMedÅpenBehandlingTilstand(saksnummer, BehandlingTilstand.UNDER_BEHANDLING);
         assertThat(svpSak.saksnummer().value()).isEqualTo(saksnummer.value());
         assertThat(svpSak.sakAvsluttet()).isFalse();
