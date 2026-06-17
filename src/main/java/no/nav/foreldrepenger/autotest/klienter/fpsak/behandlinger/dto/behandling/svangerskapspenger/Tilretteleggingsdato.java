@@ -11,7 +11,6 @@ public class Tilretteleggingsdato {
     protected LocalDate fom;
     protected TilretteleggingType type;
     protected BigDecimal stillingsprosent;
-    protected BigDecimal overstyrtUtbetalingsgrad;
     protected SvpTilretteleggingFomKilde kilde = SvpTilretteleggingFomKilde.SØKNAD;
 
 
@@ -20,14 +19,6 @@ public class Tilretteleggingsdato {
         this.fom = fom;
         this.type = type;
         this.stillingsprosent = stillingsprosent;
-    }
-
-    public BigDecimal getOverstyrtUtbetalingsgrad() {
-        return overstyrtUtbetalingsgrad;
-    }
-
-    public void setOverstyrtUtbetalingsgrad(BigDecimal overstyrtUtbetalingsgrad) {
-        this.overstyrtUtbetalingsgrad = overstyrtUtbetalingsgrad;
     }
 
     public enum SvpTilretteleggingFomKilde {

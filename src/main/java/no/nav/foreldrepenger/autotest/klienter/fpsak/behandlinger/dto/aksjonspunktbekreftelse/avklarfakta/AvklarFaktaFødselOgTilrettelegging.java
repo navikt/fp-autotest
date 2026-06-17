@@ -10,9 +10,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.generator.familie.ArbeidsforholdId;
 
-import java.time.LocalDate;
-import java.util.List;
-
 public class AvklarFaktaFødselOgTilrettelegging extends AksjonspunktBekreftelse {
 
     protected LocalDate termindato;
@@ -47,32 +44,7 @@ public class AvklarFaktaFødselOgTilrettelegging extends AksjonspunktBekreftelse
         return bekreftetSvpArbeidsforholdList;
     }
 
-    public void setSkalBrukesTilFalseForArbeidsforhold(ArbeidsforholdId arbeidsforholdId) {
-        setSkalBrukesTilFalseForAngitteArbeidsforhold(List.of(arbeidsforholdId));
-    }
-
-    public void setSkalBrukesTilFalseForAngitteArbeidsforhold(List<ArbeidsforholdId> arbeidsforholdId) {
-        for (var arbeidsforhold : getBekreftetSvpArbeidsforholdList()) {
-            if (arbeidsforholdId.contains(new ArbeidsforholdId(arbeidsforhold.getEksternArbeidsforholdReferanse()))) {
-                arbeidsforhold.setSkalBrukes(false);
-            }
-        }
-    }
-
-    public void setUtbetalingsgrad(ArbeidsforholdId arbeidsforholdId) {
-
-    }
-
-    public void setOverstyrtUtbetalingsgrad(ArbeidsforholdId arbeidsforholdId, BigDecimal overstyrtUtbetalingsgrad) {
-        for (var arbeidsforhold : getBekreftetSvpArbeidsforholdList()) {
-            if (arbeidsforholdId.equals(new ArbeidsforholdId(arbeidsforhold.getEksternArbeidsforholdReferanse()))) {
-                arbeidsforhold.getTilretteleggingDatoer()
-                    .forEach(dato -> dato.setOverstyrtUtbetalingsgrad(overstyrtUtbetalingsgrad));
-            }
-        }
-    }
-
-    public void leggTilSplittetTilrettelegging(List<BekreftTilrettelegging> bekreftTilrettelegginger) {
+    public void leggTilSplittedeTilrettelegginger(List<BekreftTilrettelegging> bekreftTilrettelegginger) {
         this.bekreftetSvpArbeidsforholdList = bekreftTilrettelegginger;
     }
 }

@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -203,9 +202,9 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
     }
 
     @Test
-    @DisplayName("3: Mor søk delvi i ett arbeidsforhold hvor hun er registrert med flere arbeidsforhold under samme underenhet")
+    @DisplayName("3: Mor søk delvis svangerskapspenger i ett arbeidsforhold hvor hun er registrert med flere arbeidsforhold under samme underenhet. Splitting av arbeidsforhold må vurderes")
     @Description("Mor søker delvis tilrettelegging for en arbeidsgiver med tre arbeidsforhold. Arbeidsgiver leverer en"
-            + "inntektsmelding. Saksbehandler må splitte arbeidsforhold, og angi hvordan svangerskapspengene, "
+            + "inntektsmelding. Saksbehandler splitter arbeidsforholdet, og må angi hvordan svangerskapspengene, "
             + "og hvordan grunnlag og refusjon skal fordeles for å håndtere ulik lønn i stillingene ")
     void morSøkerFulltUttakForEttAvToArbeidsforholdTest() {
         var familie = FamilieGenerator.ny()
@@ -261,7 +260,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
                 orgnummer1, internRef002, "ARB001-003",
                 false, false, BigDecimal.ZERO, List.of(), "Begrunnelse");
         var avklarFaktaFødselOgTilrettelegging = saksbehandler.hentAksjonspunktbekreftelse(new AvklarFaktaFødselOgTilrettelegging());
-        avklarFaktaFødselOgTilrettelegging.leggTilSplittetTilrettelegging(List.of(skalIkkeBrukes, delvisTilrettelegging, ingenTilrettelegging));
+        avklarFaktaFødselOgTilrettelegging.leggTilSplittedeTilrettelegginger(List.of(skalIkkeBrukes, delvisTilrettelegging, ingenTilrettelegging));
         avklarFaktaFødselOgTilrettelegging.setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaFødselOgTilrettelegging);
 
