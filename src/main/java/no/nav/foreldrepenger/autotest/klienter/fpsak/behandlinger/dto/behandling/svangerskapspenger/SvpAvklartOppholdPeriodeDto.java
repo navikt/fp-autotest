@@ -4,8 +4,8 @@ import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 
-public record AvklartOpphold(@NotNull LocalDate fom, @NotNull LocalDate tom, @NotNull String oppholdÅrsak,
-                             @NotNull SvpOppholdKilde oppholdKilde, boolean forVisning) {
+public record SvpAvklartOppholdPeriodeDto(@NotNull LocalDate fom, @NotNull LocalDate tom, @NotNull String oppholdÅrsak,
+                                          @NotNull SvpOppholdKilde oppholdKilde, boolean forVisning) {
 
     public enum SvpOppholdKilde {
         SØKNAD,

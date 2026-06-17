@@ -1,8 +1,8 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta;
 
 import jakarta.validation.Valid;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.svangerskapspenger.AvklartOpphold;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.svangerskapspenger.Tilretteleggingsdato;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.svangerskapspenger.SvpAvklartOppholdPeriodeDto;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.svangerskapspenger.SvpTilretteleggingDatoDto;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -14,14 +14,14 @@ public class BekreftTilrettelegging {
 
     private Long tilretteleggingId;
     private LocalDate tilretteleggingBehovFom;
-    private List<@Valid Tilretteleggingsdato> tilretteleggingDatoer = new ArrayList<>();
+    private List<@Valid SvpTilretteleggingDatoDto> tilretteleggingDatoer = new ArrayList<>();
     private String arbeidsgiverReferanse;
     private UUID internArbeidsforholdReferanse;
     private String eksternArbeidsforholdReferanse;
     private boolean skalBrukes = true;
     private boolean kanTilrettelegges = true;
     private BigDecimal stillingsprosentStartTilrettelegging;
-    private List<@Valid AvklartOpphold> avklarteOppholdPerioder = new ArrayList<>();
+    private List<@Valid SvpAvklartOppholdPeriodeDto> avklarteOppholdPerioder = new ArrayList<>();
 
     private String begrunnelse;
 
@@ -30,14 +30,14 @@ public class BekreftTilrettelegging {
 
     public BekreftTilrettelegging(Long tilretteleggingId,
                                   LocalDate tilretteleggingBehovFom,
-                                  List<Tilretteleggingsdato> tilretteleggingDatoer,
+                                  List<SvpTilretteleggingDatoDto> tilretteleggingDatoer,
                                   String arbeidsgiverReferanse,
                                   UUID internArbeidsforholdReferanse,
                                   String eksternArbeidsforholdReferanse,
                                   boolean skalBrukes,
                                   boolean kanTilrettelegges,
                                   BigDecimal stillingsprosentStartTilrettelegging,
-                                  List<AvklartOpphold> avklarteOppholdPerioder,
+                                  List<SvpAvklartOppholdPeriodeDto> avklarteOppholdPerioder,
                                   String begrunnelse) {
         this.tilretteleggingId = tilretteleggingId;
         this.tilretteleggingBehovFom = tilretteleggingBehovFom;
@@ -62,11 +62,11 @@ public class BekreftTilrettelegging {
         this.tilretteleggingBehovFom = tilretteleggingBehovFom;
     }
 
-    public List<Tilretteleggingsdato> getTilretteleggingDatoer() {
+    public List<SvpTilretteleggingDatoDto> getTilretteleggingDatoer() {
         return tilretteleggingDatoer;
     }
 
-    public void setTilretteleggingDatoer(List<Tilretteleggingsdato> tilretteleggingDatoer) {
+    public void setTilretteleggingDatoer(List<SvpTilretteleggingDatoDto> tilretteleggingDatoer) {
         this.tilretteleggingDatoer = tilretteleggingDatoer;
     }
 
@@ -102,11 +102,11 @@ public class BekreftTilrettelegging {
         this.skalBrukes = skalBrukes;
     }
 
-    public List<AvklartOpphold> getAvklarteOppholdPerioder() {
+    public List<SvpAvklartOppholdPeriodeDto> getAvklarteOppholdPerioder() {
         return avklarteOppholdPerioder;
     }
 
-    public void setAvklarteOppholdPerioder(List<AvklartOpphold> avklarteOppholdPerioder) {
+    public void setAvklarteOppholdPerioder(List<SvpAvklartOppholdPeriodeDto> avklarteOppholdPerioder) {
         this.avklarteOppholdPerioder = avklarteOppholdPerioder;
     }
 
@@ -127,7 +127,7 @@ public class BekreftTilrettelegging {
     }
 
 
-    public void leggTilAvklarteOppholdPerioder(List<AvklartOpphold> avklarteOppholdPerioder) {
+    public void leggTilAvklarteOppholdPerioder(List<SvpAvklartOppholdPeriodeDto> avklarteOppholdPerioder) {
         avklarteOppholdPerioder.forEach(oppholdPeriode -> this.avklarteOppholdPerioder.add(oppholdPeriode));
     }
 

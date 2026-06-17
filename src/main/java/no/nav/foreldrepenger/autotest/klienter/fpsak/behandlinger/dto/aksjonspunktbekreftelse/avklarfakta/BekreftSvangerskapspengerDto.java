@@ -2,15 +2,17 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspu
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
+import jakarta.validation.Valid;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.svangerskapspenger.Arbeidsforhold;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.svangerskapspenger.SvpTilrettelegging;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
-import no.nav.foreldrepenger.generator.familie.ArbeidsforholdId;
 
-public class AvklarFaktaFødselOgTilrettelegging extends AksjonspunktBekreftelse {
+public class BekreftSvangerskapspengerDto extends AksjonspunktBekreftelse {
 
     protected LocalDate termindato;
     protected LocalDate fødselsdato;
@@ -28,7 +30,7 @@ public class AvklarFaktaFødselOgTilrettelegging extends AksjonspunktBekreftelse
         this.bekreftetSvpArbeidsforholdList = behandling.getTilrettelegging().getArbeidsforholdList().stream().map(this::mapTilArbeidsforhold).toList();
     }
 
-    private BekreftTilrettelegging mapTilArbeidsforhold(Arbeidsforhold a) {
+    private BekreftTilrettelegging mapTilArbeidsforhold(SvpTilrettelegging a) {
         var tilrettelegging = new BekreftTilrettelegging();
         tilrettelegging.setArbeidsgiverReferanse(a.getArbeidsgiverReferanse());
         tilrettelegging.setTilretteleggingId(a.getTilretteleggingId());

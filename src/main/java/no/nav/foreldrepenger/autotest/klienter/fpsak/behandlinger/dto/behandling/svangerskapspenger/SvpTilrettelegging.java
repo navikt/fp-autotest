@@ -8,23 +8,23 @@ import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Arbeidsforhold {
+public class SvpTilrettelegging {
 
-    protected List<AvklartOpphold> avklarteOppholdPerioder;
+    protected List<SvpAvklartOppholdPeriodeDto> avklarteOppholdPerioder;
     protected Long tilretteleggingId;
     protected LocalDate tilretteleggingBehovFom;
-    protected List<Tilretteleggingsdato> tilretteleggingDatoer = new ArrayList<>();
+    protected List<SvpTilretteleggingDatoDto> tilretteleggingDatoer = new ArrayList<>();
     protected String arbeidsgiverReferanse;
     protected UUID internArbeidsforholdReferanse;
     protected String eksternArbeidsforholdReferanse;
     protected Boolean skalBrukes;
     protected String begrunnelse;
 
-    public List<Tilretteleggingsdato> getTilretteleggingDatoer() {
+    public List<SvpTilretteleggingDatoDto> getTilretteleggingDatoer() {
         return tilretteleggingDatoer;
     }
 
-    public void setTilretteleggingDatoer(List<Tilretteleggingsdato> tilretteleggingDatoer) {
+    public void setTilretteleggingDatoer(List<SvpTilretteleggingDatoDto> tilretteleggingDatoer) {
         this.tilretteleggingDatoer = tilretteleggingDatoer;
     }
 
@@ -60,7 +60,7 @@ public class Arbeidsforhold {
         return internArbeidsforholdReferanse;
     }
 
-    public List<AvklartOpphold> getAvklarteOppholdPerioder() {
+    public List<SvpAvklartOppholdPeriodeDto> getAvklarteOppholdPerioder() {
         return avklarteOppholdPerioder;
     }
 

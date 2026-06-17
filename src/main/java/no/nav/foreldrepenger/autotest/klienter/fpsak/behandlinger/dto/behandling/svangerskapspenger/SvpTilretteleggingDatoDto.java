@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Tilretteleggingsdato {
+public class SvpTilretteleggingDatoDto {
 
     protected LocalDate fom;
     protected TilretteleggingType type;
@@ -14,8 +14,8 @@ public class Tilretteleggingsdato {
     protected SvpTilretteleggingFomKilde kilde = SvpTilretteleggingFomKilde.SØKNAD;
 
 
-    public Tilretteleggingsdato(LocalDate fom, TilretteleggingType type, BigDecimal stillingsprosent,
-                                SvpTilretteleggingFomKilde kilde) {
+    public SvpTilretteleggingDatoDto(LocalDate fom, TilretteleggingType type, BigDecimal stillingsprosent,
+                                     SvpTilretteleggingFomKilde kilde) {
         this.fom = fom;
         this.type = type;
         this.stillingsprosent = stillingsprosent;

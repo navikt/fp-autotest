@@ -21,7 +21,7 @@ import no.nav.foreldrepenger.autotest.base.VerdikjedeTestBase;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakManueltBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaFødselOgTilrettelegging;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.BekreftSvangerskapspengerDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.BekreftSvangerskapspengervilkår;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.BehandlingÅrsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
@@ -75,7 +75,7 @@ class Førstegangsbehandling extends VerdikjedeTestBase {
         arbeidsgivere.sendDefaultInnteksmeldingerSVP(saksnummer);
 
         saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(new AvklarFaktaFødselOgTilrettelegging());
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(new BekreftSvangerskapspengerDto());
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(new BekreftSvangerskapspengervilkår());
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(new ForeslåVedtakManueltBekreftelse());
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
@@ -163,7 +163,7 @@ class Førstegangsbehandling extends VerdikjedeTestBase {
         arbeidsgiver3.sendInntektsmelding(saksnummer, inntektsmelding3);
 
         saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(new AvklarFaktaFødselOgTilrettelegging());
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(new BekreftSvangerskapspengerDto());
         saksbehandler.bekreftAksjonspunkt(new BekreftSvangerskapspengervilkår());
         saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakManueltBekreftelse());
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
@@ -229,7 +229,7 @@ class Førstegangsbehandling extends VerdikjedeTestBase {
         arbeidsgivere.sendDefaultInnteksmeldingerSVP(saksnummerSVP);
 
         saksbehandler.hentFagsak(saksnummerSVP);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(new AvklarFaktaFødselOgTilrettelegging());
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(new BekreftSvangerskapspengerDto());
         saksbehandler.bekreftAksjonspunkt(new BekreftSvangerskapspengervilkår());
         saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakManueltBekreftelse());
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
@@ -242,7 +242,7 @@ class Førstegangsbehandling extends VerdikjedeTestBase {
 
         saksbehandler.hentFagsak(saksnummerSVP);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(new AvklarFaktaFødselOgTilrettelegging());
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(new BekreftSvangerskapspengerDto());
         saksbehandler.bekreftAksjonspunkt(new BekreftSvangerskapspengervilkår());
         saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakManueltBekreftelse());
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
@@ -312,7 +312,7 @@ class Førstegangsbehandling extends VerdikjedeTestBase {
         arbeidsgivere.sendDefaultInnteksmeldingerSVP(saksnummerSVP);
 
         saksbehandler.hentFagsak(saksnummerSVP);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(new AvklarFaktaFødselOgTilrettelegging());
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(new BekreftSvangerskapspengerDto());
         saksbehandler.bekreftAksjonspunkt(new BekreftSvangerskapspengervilkår());
         saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakManueltBekreftelse());
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();

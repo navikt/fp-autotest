@@ -10,7 +10,7 @@ public class Tilrettelegging {
 
     protected LocalDate termindato;
     protected LocalDate fødselsdato;
-    protected List<Arbeidsforhold> arbeidsforholdListe;
+    protected List<SvpTilrettelegging> arbeidsforholdListe;
 
     public LocalDate getTermindato() {
         return this.termindato;
@@ -20,7 +20,7 @@ public class Tilrettelegging {
         return this.fødselsdato;
     }
 
-    public List<Arbeidsforhold> getArbeidsforholdList() {
+    public List<SvpTilrettelegging> getArbeidsforholdList() {
         return this.arbeidsforholdListe;
     }
 
