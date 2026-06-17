@@ -1,13 +1,14 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.svangerskapspenger.Arbeidsforhold;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.generator.familie.ArbeidsforholdId;
-
-import java.time.LocalDate;
-import java.util.List;
 
 public class AvklarFaktaFødselOgTilrettelegging extends AksjonspunktBekreftelse {
 
@@ -43,15 +44,7 @@ public class AvklarFaktaFødselOgTilrettelegging extends AksjonspunktBekreftelse
         return bekreftetSvpArbeidsforholdList;
     }
 
-    public void setSkalBrukesTilFalseForArbeidsforhold(ArbeidsforholdId arbeidsforholdId) {
-        setSkalBrukesTilFalseForAngitteArbeidsforhold(List.of(arbeidsforholdId));
-    }
-
-    public void setSkalBrukesTilFalseForAngitteArbeidsforhold(List<ArbeidsforholdId> arbeidsforholdId) {
-        for (var arbeidsforhold : getBekreftetSvpArbeidsforholdList()) {
-            if (arbeidsforholdId.contains(new ArbeidsforholdId(arbeidsforhold.getEksternArbeidsforholdReferanse()))) {
-                arbeidsforhold.setSkalBrukes(false);
-            }
-        }
+    public void leggTilSplittedeTilrettelegginger(List<BekreftTilrettelegging> bekreftTilrettelegginger) {
+        this.bekreftetSvpArbeidsforholdList = bekreftTilrettelegginger;
     }
 }
