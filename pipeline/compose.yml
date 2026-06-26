@@ -663,7 +663,8 @@ services:
     mem_limit: 512mb
     environment:
       NAIS_APP_NAME: fpsoknad
-      KRYPTERING_PASSWORD: testnokkelforvtp
+      KRYPTERING_PASSWORD: LqLt3JtCDXs6msZP5QhygZXdAP1n8CBNF884ZWNUIU64hCRZqmA9soK7zpk=
+      PT_GRUPPE_HMAC_SECRET: Fgl48QEOyC/feE//1ECu/8F97rbhLDEFx/vyqSOCIs0=
     env_file:
       - *common-properties
       - fpsoknad_datasource.env
