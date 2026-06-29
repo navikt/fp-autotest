@@ -65,6 +65,12 @@ public class BrevAssertionBuilder {
         return this;
     }
 
+    public BrevAssertionBuilder medFratrekkPgaPleiepenger() {
+        brevAssertions.add("Du kan ikke utsette foreldrepengene");
+        brevAssertions.add("fordi du får pleiepenger i denne perioden");
+        return this;
+    }
+
     public BrevAssertionBuilder medTekstOmAtViHarBedtArbeidsgiverenOmInntektsmelding() {
         brevAssertions.add("Vi har bedt denne arbeidsgiveren om å sende inntektsmelding");
         return this;

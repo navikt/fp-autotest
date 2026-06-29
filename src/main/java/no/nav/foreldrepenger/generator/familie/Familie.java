@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.generator.familie;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,8 @@ import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.autotest.aktoerer.innsender.ApiMottak;
 import no.nav.foreldrepenger.autotest.aktoerer.innsender.Innsender;
+import no.nav.foreldrepenger.autotest.klienter.vtp.hendelser.YtelsevedtakKlient;
+import no.nav.foreldrepenger.autotest.klienter.vtp.pdl.PdlLeesahKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
 import no.nav.foreldrepenger.kontrakter.felles.typer.AktørId;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Fødselsnummer;
@@ -20,6 +23,7 @@ import no.nav.foreldrepenger.vtp.kontrakter.hendelser.DødfødselhendelseDto;
 import no.nav.foreldrepenger.vtp.kontrakter.hendelser.DødshendelseDto;
 import no.nav.foreldrepenger.vtp.kontrakter.hendelser.FødselshendelseDto;
 import no.nav.foreldrepenger.vtp.kontrakter.hendelser.PersonhendelseDto;
+import no.nav.foreldrepenger.vtp.kontrakter.hendelser.YtelsevedtakDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.PersonDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.Rolle;
 import no.nav.foreldrepenger.vtp.kontrakter.person.TilordnetIdentDto;
@@ -32,6 +36,8 @@ public class Familie {
     private final List<PersonDto> parter;
     private final Map<UUID, TilordnetIdentDto> identer;
     private final Innsender innsender;
+    private final PdlLeesahKlient pdlLeesahKlient;
+    private final YtelsevedtakKlient ytelsevedtakKlient;
     private static final String ENDRINGSTYPE_OPPRETTET = "OPPRETTET";
 
     private Mor mor;
@@ -42,6 +48,8 @@ public class Familie {
         this.parter = parter;
         this.identer = identer.stream().collect(Collectors.toMap(TilordnetIdentDto::id, Function.identity()));
         this.innsender = new ApiMottak(saksbehandlerRolle);
+        this.pdlLeesahKlient = new PdlLeesahKlient();
+        this.ytelsevedtakKlient = new YtelsevedtakKlient();
         initMor();
         initFar();
         initMedmor();
@@ -130,7 +138,19 @@ public class Familie {
         sendInnHendelse(fødselshendelseDto);
     }
 
+    /**
+     * Simulerer at søker har fått innvilget en ekstern ytelse i et annet NAV-system.
+     * @param ytelseType      type ytelse søker har mottatt
+     * @param fom             første dag i vedtaksperioden
+     * @param tom             siste dag i vedtaksperioden
+     * @param utbetalingsgrad utbetalingsgrad i prosent (0–100)
+     */
+    public void nyttVedtakOmYtelse(YtelsevedtakDto.YtelseType ytelseType, LocalDate fom, LocalDate tom, BigDecimal utbetalingsgrad) {
+        var dto = new YtelsevedtakDto(mor().fødselsnummer().value(), ytelseType, fom, tom, utbetalingsgrad);
+        ytelsevedtakKlient.sendYtelsevedtak(dto);
+    }
+
     private void sendInnHendelse(PersonhendelseDto personhendelseDto) {
-        innsender.sendInnHendelse(personhendelseDto);
+        pdlLeesahKlient.opprettHendelse(personhendelseDto);
     }
 }

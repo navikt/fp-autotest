@@ -14,8 +14,6 @@ import no.nav.foreldrepenger.soknad.kontrakt.EndringssøknadForeldrepengerDto;
 import no.nav.foreldrepenger.soknad.kontrakt.SøknadDto;
 import no.nav.foreldrepenger.soknad.kontrakt.ettersendelse.YtelseType;
 import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.VedleggDto;
-import no.nav.foreldrepenger.vtp.kontrakter.hendelser.PersonhendelseDto;
-
 public interface Innsender {
     Logger LOG = LoggerFactory.getLogger(Innsender.class);
 
@@ -31,6 +29,5 @@ public interface Innsender {
     Saksnummer sendInnInntektsmeldingViaApi(Inntektsmelding inntektsmelding, Saksnummer saksnummer);
     Saksnummer sendInnInntektsmelding(List<Inntektsmelding> inntektsmeldingBuilder, AktørId aktørId, Fødselsnummer fnr, Saksnummer saksnummer);
     Saksnummer sendInnInntektsmeldingUtenForespørsel(Inntektsmelding inntektsmelding, LocalDate startDato, AktørId aktørId, Fødselsnummer fødselsnummer, Saksnummer saksnummer, boolean registrertIAareg);
-    void sendInnHendelse(PersonhendelseDto personhendelseDto);
 
 }

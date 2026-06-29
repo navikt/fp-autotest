@@ -11,19 +11,17 @@ import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.klienter.fpinntektsmelding.InntektsmeldingKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpinntektsmelding.dto.arbeidsgiverportal.SendInntektsmeldingDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsoknad.FpsoknadKlient;
-import no.nav.foreldrepenger.autotest.klienter.vtp.pdl.PdlLeesahKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
-import no.nav.foreldrepenger.kontrakter.felles.typer.AktørId;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.Inntektsmelding;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.navno.InntektsmeldingPortalMapper;
-import no.nav.foreldrepenger.soknad.kontrakt.EndringssøknadForeldrepengerDto;
+import no.nav.foreldrepenger.kontrakter.felles.typer.AktørId;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Fødselsnummer;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Saksnummer;
+import no.nav.foreldrepenger.soknad.kontrakt.EndringssøknadForeldrepengerDto;
 import no.nav.foreldrepenger.soknad.kontrakt.SøknadDto;
 import no.nav.foreldrepenger.soknad.kontrakt.ettersendelse.YtelseType;
 import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.VedleggDto;
-import no.nav.foreldrepenger.vtp.kontrakter.hendelser.PersonhendelseDto;
 import no.nav.foreldrepenger.vtp.kontrakter.journalpost.DokumentModell;
 import no.nav.foreldrepenger.vtp.kontrakter.journalpost.DokumentVariantInnhold;
 import no.nav.foreldrepenger.vtp.kontrakter.journalpost.JournalpostBruker;
@@ -41,12 +39,10 @@ import no.nav.foreldrepenger.vtp.kontrakter.journalpost.koder.Variantformat;
 public class ApiMottak extends DokumentInnsendingHjelper {
 
     private final FpsoknadKlient fpsoknadKlient;
-    private final PdlLeesahKlient pdlLeesahKlient;
 
     public ApiMottak(SaksbehandlerRolle saksbehandlerRolle) {
         super(saksbehandlerRolle);
         fpsoknadKlient = new FpsoknadKlient();
-        pdlLeesahKlient = new PdlLeesahKlient();
     }
 
     @Override
@@ -248,13 +244,5 @@ public class ApiMottak extends DokumentInnsendingHjelper {
         dokumentModell.getDokumentVariantInnholdListe()
                 .add(new DokumentVariantInnhold(Arkivfiltype.PDF, Variantformat.ARKIV, new byte[0]));
         return dokumentModell;
-    }
-
-    /*
-     * Opretter en personhendelse
-     */
-    @Override
-    public void sendInnHendelse(PersonhendelseDto personhendelseDto) {
-        pdlLeesahKlient.opprettHendelse(personhendelseDto);
     }
 }
