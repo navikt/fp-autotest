@@ -2,9 +2,7 @@ package no.nav.foreldrepenger.generator.familie.generator;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import com.neovisionaries.i18n.CountryCode;
 
@@ -21,9 +19,6 @@ import no.nav.foreldrepenger.vtp.kontrakter.person.StatsborgerskapDto;
 
 public class PersonGenerator {
 
-    private static final Set<String> BRUKTE_FØDSELSNUMMER = new HashSet<>();
-    private static final LocalDate DEFAULT_FØRDSELSDATO_MOR = LocalDate.now().minusYears(32);
-    private static final LocalDate DEFAULT_FØDSELSDATO_FAR = LocalDate.now().minusYears(34);
     private static final Språk DEFAULT_SPRÅK = Språk.NB;
 
     private PersonGenerator() {
@@ -31,11 +26,36 @@ public class PersonGenerator {
     }
 
     public static PersonDto.Builder mor() {
-        return mor(DEFAULT_FØRDSELSDATO_MOR);
+        return kvinne(Rolle.MOR);
     }
+
     public static PersonDto.Builder mor(LocalDate fødselsdato) {
+        return kvinne(Rolle.MOR, fødselsdato);
+    }
+
+    public static PersonDto.Builder medmor() {
+        return kvinne(Rolle.MEDMOR);
+    }
+
+    public static PersonDto.Builder medmor(LocalDate fødselsdato) {
+        return kvinne(Rolle.MEDMOR, fødselsdato);
+    }
+
+    public static PersonDto.Builder far() {
+        return mann(Rolle.FAR);
+    }
+
+    public static PersonDto.Builder far(LocalDate fødselsdato) {
+        return mann(Rolle.FAR, fødselsdato);
+    }
+
+    public static PersonDto.Builder kvinne(Rolle rolle) {
+        return kvinne(rolle, FødselsdatoGenerator.tilfeldig());
+    }
+
+    public static PersonDto.Builder kvinne(Rolle rolle, LocalDate fødselsdato) {
         return PersonDto.builder()
-                .rolle(Rolle.MOR)
+                .rolle(rolle)
                 .kjønn(Kjønn.K)
                 .fødselsdato(fødselsdato)
                 .språk(DEFAULT_SPRÅK)
@@ -48,13 +68,13 @@ public class PersonGenerator {
                 ;
     }
 
-    public static PersonDto.Builder far() {
-        return far(DEFAULT_FØDSELSDATO_FAR);
+    public static PersonDto.Builder mann(Rolle rolle) {
+        return mann(rolle, FødselsdatoGenerator.tilfeldig());
     }
 
-    public static PersonDto.Builder far(LocalDate fødselsdato) {
+    public static PersonDto.Builder mann(Rolle rolle, LocalDate fødselsdato) {
         return PersonDto.builder()
-                .rolle(Rolle.FAR)
+                .rolle(rolle)
                 .kjønn(Kjønn.M)
                 .fødselsdato(fødselsdato)
                 .språk(DEFAULT_SPRÅK)
@@ -66,26 +86,6 @@ public class PersonGenerator {
                 .statsborgerskap(norskStatsborgerskap())
                 ;
     }
-
-    public static PersonDto.Builder medmor() {
-        return medmor(DEFAULT_FØRDSELSDATO_MOR);
-    }
-
-    public static PersonDto.Builder medmor(LocalDate fødselsdato) {
-        return PersonDto.builder()
-                .rolle(Rolle.MEDMOR)
-                .kjønn(Kjønn.K)
-                .fødselsdato(fødselsdato)
-                .språk(DEFAULT_SPRÅK)
-                .geografiskTilknytning(GeografiskTilknytningDto.norsk())
-                .adresser(norskAdresse())
-                .personstatus(bosattFra(fødselsdato))
-                .sivilstand(ugift())
-                .medlemskap(norskMedlemskap())
-                .statsborgerskap(norskStatsborgerskap())
-                ;
-    }
-
 
     public static List<StatsborgerskapDto> norskStatsborgerskap() {
         return new ArrayList<>(List.of(new StatsborgerskapDto(CountryCode.NO)));
