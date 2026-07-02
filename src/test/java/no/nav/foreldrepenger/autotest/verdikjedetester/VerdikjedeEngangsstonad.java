@@ -23,8 +23,8 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkType
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.soknad.maler.SøknadEngangsstønadMaler;
 import no.nav.foreldrepenger.kontrakter.fpoversikt.BehandlingTilstand;
-import no.nav.foreldrepenger.vtp.kontrakter.person.FamilierelasjonModellDto;
-import no.nav.foreldrepenger.vtp.kontrakter.person.StatsborgerskapDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.FamilierelasjonDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.StatsborgerskapDto;
 
 @Tag("verdikjede")
 @Tag("engangsstonad")
@@ -38,7 +38,7 @@ class VerdikjedeEngangsstonad extends VerdikjedeTestBase {
                 .forelder(mor().statsborgerskap(List.of(new StatsborgerskapDto(CountryCode.US)))
                         .build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .build();
         var termindato = LocalDate.now().plusWeeks(3);
         var søknad = SøknadEngangsstønadMaler.lagEngangstønadTermin(termindato);
@@ -75,7 +75,7 @@ class VerdikjedeEngangsstonad extends VerdikjedeTestBase {
                 .forelder(mor().statsborgerskap(List.of(new StatsborgerskapDto(CountryCode.US)))
                         .build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .build();
         var termindato = LocalDate.now().plusWeeks(3);
         var søknad = SøknadEngangsstønadMaler.lagEngangstønadTermin(termindato);

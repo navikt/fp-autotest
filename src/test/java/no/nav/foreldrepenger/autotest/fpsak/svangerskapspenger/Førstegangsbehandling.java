@@ -33,7 +33,7 @@ import no.nav.foreldrepenger.generator.soknad.util.VirkedagUtil;
 import no.nav.foreldrepenger.soknad.kontrakt.BrukerRolle;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Orgnummer;
 import no.nav.foreldrepenger.soknad.kontrakt.builder.TilretteleggingBehovBuilder;
-import no.nav.foreldrepenger.vtp.kontrakter.person.FamilierelasjonModellDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.FamilierelasjonDto;
 
 @Tag("fpsak")
 @Tag("svangerskapspenger")
@@ -53,7 +53,7 @@ class Førstegangsbehandling extends VerdikjedeTestBase {
                                 .build())
                         .build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .build();
 
         var mor = familie.mor();
@@ -122,7 +122,7 @@ class Førstegangsbehandling extends VerdikjedeTestBase {
                                 .build())
                         .build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .build();
 
         var mor = familie.mor();
@@ -211,7 +211,7 @@ class Førstegangsbehandling extends VerdikjedeTestBase {
                         .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningOver6G().build())
                         .build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .build();
 
         var mor = familie.mor();
@@ -292,7 +292,7 @@ class Førstegangsbehandling extends VerdikjedeTestBase {
                         .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningOver6G().build())
                         .build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .build();
         var mor = familie.mor();
         var termindato = LocalDate.now().plusWeeks(6);

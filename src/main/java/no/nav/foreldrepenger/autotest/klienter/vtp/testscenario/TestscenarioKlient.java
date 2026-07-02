@@ -15,8 +15,8 @@ import org.slf4j.LoggerFactory;
 
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
-import no.nav.foreldrepenger.vtp.kontrakter.person.PersonDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.TilordnetIdentDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.PersonDto;
 import tools.jackson.core.type.TypeReference;
 
 public class TestscenarioKlient {
@@ -27,7 +27,7 @@ public class TestscenarioKlient {
     public List<TilordnetIdentDto> opprettTestscenario(List<PersonDto> personer) {
         var personerJson = toJson(personer);
         var request = requestMedBasicHeadere()
-                .uri(fromUri(BaseUriProvider.VTP_API_BASE).path("/testscenarios/v2/opprett").build())
+                .uri(fromUri(BaseUriProvider.VTP_API_BASE).path("/testscenarios/v2/personer").build())
                 .POST(HttpRequest.BodyPublishers.ofString(personerJson));
         var identer = Optional.ofNullable(send(request.build(), new TypeReference<List<TilordnetIdentDto>>() {})).orElseGet(List::of);
         debugJson(personerJson);

@@ -20,9 +20,9 @@ import no.nav.foreldrepenger.vtp.kontrakter.hendelser.DødfødselhendelseDto;
 import no.nav.foreldrepenger.vtp.kontrakter.hendelser.DødshendelseDto;
 import no.nav.foreldrepenger.vtp.kontrakter.hendelser.FødselshendelseDto;
 import no.nav.foreldrepenger.vtp.kontrakter.hendelser.PersonhendelseDto;
-import no.nav.foreldrepenger.vtp.kontrakter.person.PersonDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.Rolle;
 import no.nav.foreldrepenger.vtp.kontrakter.person.TilordnetIdentDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.PersonDto;
 
 public class Familie {
 
@@ -50,37 +50,37 @@ public class Familie {
     }
 
     private void initMedmor() {
-        var medmorPerson = parter.stream().filter(p -> p.rolle().equals(Rolle.MEDMOR)).findFirst();
+        var medmorPerson = parter.stream().filter(p -> p.personopplysninger().rolle().equals(Rolle.MEDMOR)).findFirst();
         if (medmorPerson.isEmpty()) {
             return;
         }
-        var morIdent = identer.get(medmorPerson.get().uuid());
-        var annenpartIdent = parter.stream().filter(p -> p.rolle().equals(Rolle.MOR)).findFirst().map(ap -> identer.get(ap.uuid()));
+        var morIdent = identer.get(medmorPerson.get().personopplysninger().uuid());
+        var annenpartIdent = parter.stream().filter(p -> p.personopplysninger().rolle().equals(Rolle.MOR)).findFirst().map(ap -> identer.get(ap.personopplysninger().uuid()));
         medmor = new Mor(new Fødselsnummer(morIdent.fnr()), new AktørId(morIdent.aktørId()),
                 annenpartIdent.map(TilordnetIdentDto::aktørId).map(AktørId::new).orElse(null), medmorPerson.get(), identer, innsender);
     }
 
     private void initFar() {
-        var farPerson = parter.stream().filter(p -> p.rolle().equals(Rolle.FAR)).findFirst();
+        var farPerson = parter.stream().filter(p -> p.personopplysninger().rolle().equals(Rolle.FAR)).findFirst();
         if (farPerson.isEmpty()) {
             return;
         }
-        var morIdent = identer.get(farPerson.get().uuid());
-        var annenpartIdent = parter.stream().filter(p -> p.rolle().equals(Rolle.MOR)).findFirst().map(ap -> identer.get(ap.uuid()));
+        var morIdent = identer.get(farPerson.get().personopplysninger().uuid());
+        var annenpartIdent = parter.stream().filter(p -> p.personopplysninger().rolle().equals(Rolle.MOR)).findFirst().map(ap -> identer.get(ap.personopplysninger().uuid()));
         far = new Far(new Fødselsnummer(morIdent.fnr()), new AktørId(morIdent.aktørId()),
                 annenpartIdent.map(TilordnetIdentDto::aktørId).map(AktørId::new).orElse(null), farPerson.get(), identer, innsender);
     }
 
     private void initMor() {
-        var morPerson = parter.stream().filter(p -> p.rolle().equals(Rolle.MOR)).findFirst();
+        var morPerson = parter.stream().filter(p -> p.personopplysninger().rolle().equals(Rolle.MOR)).findFirst();
         if (morPerson.isEmpty()) {
             return;
         }
-        var morIdent = identer.get(morPerson.get().uuid());
+        var morIdent = identer.get(morPerson.get().personopplysninger().uuid());
         var annenpartIdent = parter.stream()
-                .filter(p -> p.rolle().equals(Rolle.FAR) || p.rolle().equals(Rolle.MEDMOR))
+                .filter(p -> p.personopplysninger().rolle().equals(Rolle.FAR) || p.personopplysninger().rolle().equals(Rolle.MEDMOR))
                 .findFirst()
-                .map(ap -> identer.get(ap.uuid()));
+                .map(ap -> identer.get(ap.personopplysninger().uuid()));
         mor = new Mor(new Fødselsnummer(morIdent.fnr()), new AktørId(morIdent.aktørId()),
                 annenpartIdent.map(TilordnetIdentDto::aktørId).map(AktørId::new).orElse(null), morPerson.get(), identer, innsender);
     }
@@ -107,11 +107,11 @@ public class Familie {
     }
 
     public Barn barn() {
-        var barn = parter.stream().filter(p -> p.rolle().equals(Rolle.BARN)).toList();
+        var barn = parter.stream().filter(p -> p.personopplysninger().rolle().equals(Rolle.BARN)).toList();
         if (barn.isEmpty()) {
             throw new IllegalStateException("Barn er enda ikke født for familie");
         }
-        return new Barn(barn.stream().map(PersonDto::fødselsdato).findFirst().orElse(null));
+        return new Barn(barn.stream().map(p -> p.personopplysninger().fødselsdato()).findFirst().orElse(null));
     }
 
     public void sendInnDødshendelse(Fødselsnummer fnr, LocalDate dødsdato) {

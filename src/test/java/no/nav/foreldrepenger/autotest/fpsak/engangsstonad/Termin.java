@@ -24,7 +24,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr.OverstyrFodselsvilkaaret;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
-import no.nav.foreldrepenger.vtp.kontrakter.person.FamilierelasjonModellDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.FamilierelasjonDto;
 
 @Tag("fpsak")
 @Tag("engangsstonad")
@@ -37,7 +37,7 @@ class Termin extends VerdikjedeTestBase {
         var familie = FamilieGenerator.ny()
                 .forelder(mor().build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .build();
         var mor = familie.mor();
         var termindato = LocalDate.now().plusWeeks(3);
@@ -72,7 +72,7 @@ class Termin extends VerdikjedeTestBase {
         var familie = FamilieGenerator.ny()
                 .forelder(mor().build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .build();
         var mor = familie.mor();
         var termindato = LocalDate.now().plusWeeks(3);
@@ -117,7 +117,7 @@ class Termin extends VerdikjedeTestBase {
         var familie = FamilieGenerator.ny()
                 .forelder(far().build())
                 .forelder(mor().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .build();
         var far = familie.far();
         var termindato = LocalDate.now().plusWeeks(3);
@@ -143,7 +143,7 @@ class Termin extends VerdikjedeTestBase {
         var familie = FamilieGenerator.ny()
                 .forelder(mor().build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .build();
         var mor = familie.mor();
         var termindato = LocalDate.now().plusWeeks(3);
@@ -178,7 +178,7 @@ class Termin extends VerdikjedeTestBase {
         var familie = FamilieGenerator.ny()
                 .forelder(mor().build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .build();
         var mor = familie.mor();
         var termindato = LocalDate.now().minusDays(26);

@@ -1,8 +1,9 @@
 package no.nav.foreldrepenger.generator.familie;
 
 import java.util.Comparator;
+import java.util.List;
 
-import no.nav.foreldrepenger.vtp.kontrakter.person.SigrunDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.SkatteopplysningDto;
 
 
 final class Sigrun {
@@ -10,20 +11,20 @@ final class Sigrun {
     private Sigrun() {
     }
 
-    static double hentNæringsinntekt(SigrunDto sigrunModell, int beregnFraOgMedÅr) {
-        double gjennomsnittDeTreSisteÅrene = sigrunModell.inntektår().stream()
-                .sorted(Comparator.comparing(SigrunDto.InntektsårDto::år).reversed())
+    static double hentNæringsinntekt(List<SkatteopplysningDto> skatteopplysninger, int beregnFraOgMedÅr) {
+        double gjennomsnittDeTreSisteÅrene = skatteopplysninger.stream()
+                .sorted(Comparator.comparing(SkatteopplysningDto::år).reversed())
                 .filter(inntektsår -> inntektsår.år() <= beregnFraOgMedÅr)
                 .mapToDouble(oppføring -> oppføring.beløp().doubleValue())
                 .limit(3)
                 .sum();
-        return gjennomsnittDeTreSisteÅrene/3;
+        return gjennomsnittDeTreSisteÅrene / 3;
     }
 
-    static Integer startdato(SigrunDto modell) {
-        return modell.inntektår().stream()
-                .sorted(Comparator.comparing(SigrunDto.InntektsårDto::år))
-                .map(SigrunDto.InntektsårDto::år)
+    static Integer startdato(List<SkatteopplysningDto> skatteopplysninger) {
+        return skatteopplysninger.stream()
+                .sorted(Comparator.comparing(SkatteopplysningDto::år))
+                .map(SkatteopplysningDto::år)
                 .findFirst()
                 .orElseThrow();
     }

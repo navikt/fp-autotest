@@ -20,7 +20,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkType;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
-import no.nav.foreldrepenger.vtp.kontrakter.person.FamilierelasjonModellDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.FamilierelasjonDto;
 
 @Tag("fpsak")
 @Tag("engangsstonad")
@@ -33,7 +33,7 @@ class Innsyn extends VerdikjedeTestBase {
         var familie = FamilieGenerator.ny()
                 .forelder(mor().build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusMonths(1))
                 .build();
         var mor = familie.mor();
@@ -77,7 +77,7 @@ class Innsyn extends VerdikjedeTestBase {
         var familie = FamilieGenerator.ny()
                 .forelder(mor().build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusMonths(1))
                 .build();
         var mor = familie.mor();

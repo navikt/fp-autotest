@@ -41,7 +41,7 @@ import no.nav.foreldrepenger.generator.soknad.maler.UttakMaler;
 import no.nav.foreldrepenger.soknad.kontrakt.BrukerRolle;
 import no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType;
 import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.UtsettelsesÅrsak;
-import no.nav.foreldrepenger.vtp.kontrakter.person.FamilierelasjonModellDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.FamilierelasjonDto;
 
 @Tag("fpsak")
 @Tag("foreldrepenger")
@@ -64,7 +64,7 @@ class SammenhengendeUttak extends VerdikjedeTestBase {
                                 .arbeidsforhold(LocalDate.of(2018, 1, 1))
                                 .build())
                         .build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(LocalDate.of(2019, 11, 1))
                 .build();
         var mor = familie.mor();
@@ -155,7 +155,7 @@ class SammenhengendeUttak extends VerdikjedeTestBase {
                                 .arbeidsforhold(LocalDate.of(2018, 1, 1))
                                 .build())
                         .build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(LocalDate.of(2019, 11, 1))
                 .build();
         var mor = familie.mor();
@@ -271,7 +271,7 @@ class SammenhengendeUttak extends VerdikjedeTestBase {
                                 .arbeidsforhold(LocalDate.of(2018, 1, 1))
                                 .build())
                         .build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(LocalDate.of(2019, 11, 1))
                 .build();
         var mor = familie.mor();
@@ -361,7 +361,7 @@ class SammenhengendeUttak extends VerdikjedeTestBase {
                                 .arbeidsforhold(LocalDate.of(2018, 1, 1))
                                 .build())
                         .build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(LocalDate.of(2019, 11, 1))
                 .build();
         var mor = familie.mor();

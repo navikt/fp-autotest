@@ -54,7 +54,7 @@ import no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Orgnummer;
 import no.nav.foreldrepenger.soknad.kontrakt.BrukerRolle;
 import no.nav.foreldrepenger.soknad.kontrakt.builder.TilretteleggingBehovBuilder;
-import no.nav.foreldrepenger.vtp.kontrakter.person.FamilierelasjonModellDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.FamilierelasjonDto;
 
 @Tag("fplos")
 class Fplos extends VerdikjedeTestBase {
@@ -76,7 +76,7 @@ class Fplos extends VerdikjedeTestBase {
                         .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningOver6G().build())
                         .build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .build();
 
         var mor = familie.mor();
@@ -124,7 +124,7 @@ class Fplos extends VerdikjedeTestBase {
                 .forelder(mor().inntektytelse(
                         InntektYtelseGenerator.ny().arbeidMedOpptjeningOver6G().selvstendigNæringsdrivende(1_000_000).build()).build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusDays(2))
                 .build();
         var mor = familie.mor();
@@ -188,7 +188,7 @@ class Fplos extends VerdikjedeTestBase {
                                 .build())
                         .build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(LocalDate.now())
                 .build();
         var mor = familie.mor();
