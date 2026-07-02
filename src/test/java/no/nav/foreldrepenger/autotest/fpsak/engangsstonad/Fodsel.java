@@ -29,9 +29,9 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.Beregningsresultat;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.soknad.kontrakt.builder.BarnBuilder;
-import no.nav.foreldrepenger.vtp.kontrakter.person.FamilierelasjonModellDto;
-import no.nav.foreldrepenger.vtp.kontrakter.person.MedlemskapDto;
-import no.nav.foreldrepenger.vtp.kontrakter.person.PersonstatusDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.FamilierelasjonDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.MedlemskapDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.PersonstatusDto;
 
 @Tag("fpsak")
 @Tag("engangsstonad")
@@ -44,7 +44,7 @@ class Fodsel extends VerdikjedeTestBase {
         var familie = FamilieGenerator.ny()
                 .forelder(mor().build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusMonths(1))
                 .build();
 
@@ -68,7 +68,7 @@ class Fodsel extends VerdikjedeTestBase {
         var familie = FamilieGenerator.ny()
                 .forelder(mor().build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .build();
 
         var mor = familie.mor();
@@ -104,7 +104,7 @@ class Fodsel extends VerdikjedeTestBase {
         var familie = FamilieGenerator.ny()
                 .forelder(far().build())
                 .forelder(mor().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusMonths(1))
                 .build();
 
@@ -132,7 +132,7 @@ class Fodsel extends VerdikjedeTestBase {
         var familie = FamilieGenerator.ny()
                 .forelder(mor().build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .build();
         var mor = familie.mor();
         var fødselsdato = LocalDate.now().minusDays(30L);
@@ -179,7 +179,7 @@ class Fodsel extends VerdikjedeTestBase {
                         .medlemskap(List.of(new MedlemskapDto(LocalDate.now().minusYears(1), LocalDate.now().plusYears(3), CountryCode.DE, MedlemskapDto.DekningsType.IHT_AVTALE)))
                         .build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusMonths(1))
                 .barn(LocalDate.now().minusMonths(1))
                 .build();
@@ -221,7 +221,7 @@ class Fodsel extends VerdikjedeTestBase {
                         .medlemskap(List.of(new MedlemskapDto(LocalDate.now().minusYears(1), LocalDate.now().plusYears(3), CountryCode.DE, MedlemskapDto.DekningsType.IHT_AVTALE)))
                         .build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusMonths(1))
                 .build();
 
@@ -260,7 +260,7 @@ class Fodsel extends VerdikjedeTestBase {
         var familie = FamilieGenerator.ny()
                 .forelder(mor().build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .build();
         var mor = familie.mor();
         var fødselsdato = LocalDate.now().minusWeeks(1);
@@ -279,7 +279,7 @@ class Fodsel extends VerdikjedeTestBase {
         var familie = FamilieGenerator.ny()
                 .forelder(mor().build())
                 .forelder(medmor().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusDays(30))
                 .build();
 

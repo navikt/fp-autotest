@@ -45,7 +45,7 @@ import no.nav.foreldrepenger.kontrakter.felles.typer.Orgnummer;
 import no.nav.foreldrepenger.kontrakter.fpoversikt.BehandlingTilstand;
 import no.nav.foreldrepenger.soknad.kontrakt.builder.TilretteleggingBehovBuilder;
 import no.nav.foreldrepenger.soknad.kontrakt.svangerskapspenger.AvtaltFerieDto;
-import no.nav.foreldrepenger.vtp.kontrakter.person.FamilierelasjonModellDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.FamilierelasjonDto;
 
 @Tag("verdikjede")
 @Tag("svangerskapspenger")
@@ -60,7 +60,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         var familie = FamilieGenerator.ny()
                 .forelder(mor().inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build()).build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .build();
         var mor = familie.mor();
         var tilrettelegginsprosent = 0.0;

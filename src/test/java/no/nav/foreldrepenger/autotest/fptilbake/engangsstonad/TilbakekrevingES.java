@@ -33,9 +33,9 @@ import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.Kravgrunnla
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.soknad.kontrakt.EngangsstønadDto;
 import no.nav.foreldrepenger.soknad.kontrakt.barn.AdopsjonDto;
-import no.nav.foreldrepenger.vtp.kontrakter.person.FamilierelasjonModellDto;
-import no.nav.foreldrepenger.vtp.kontrakter.person.MedlemskapDto;
-import no.nav.foreldrepenger.vtp.kontrakter.person.PersonstatusDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.FamilierelasjonDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.MedlemskapDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.PersonstatusDto;
 
 @Tag("tilbakekreving")
 @Tag("fptilbake")
@@ -51,7 +51,7 @@ class TilbakekrevingES extends FptilbakeTestBase {
         var familie = FamilieGenerator.ny()
                 .forelder(mor().build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .build();
         var mor = familie.mor();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1).plusWeeks(1);
@@ -151,7 +151,7 @@ class TilbakekrevingES extends FptilbakeTestBase {
                         .medlemskap(List.of(new MedlemskapDto(LocalDate.now().minusYears(1), LocalDate.now().plusYears(3), CountryCode.DE, MedlemskapDto.DekningsType.IHT_AVTALE)))
                         .build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusMonths(1))
                 .build(); // Bypasser selvbetjeing + 18 års aldergrense for innsending
 
@@ -206,7 +206,7 @@ class TilbakekrevingES extends FptilbakeTestBase {
         var vergeFamilie = FamilieGenerator.ny()
                 .forelder(mor().build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .build();
         vergeFakta.setVerge(vergeFamilie);
         tbksaksbehandler.behandleAksjonspunkt(vergeFakta);

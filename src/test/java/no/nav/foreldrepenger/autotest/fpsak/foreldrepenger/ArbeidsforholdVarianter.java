@@ -39,7 +39,7 @@ import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
 import no.nav.foreldrepenger.soknad.kontrakt.BrukerRolle;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Orgnummer;
-import no.nav.foreldrepenger.vtp.kontrakter.person.FamilierelasjonModellDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.FamilierelasjonDto;
 
 @Tag("fpsak")
 @Tag("foreldrepenger")
@@ -57,7 +57,7 @@ class ArbeidsforholdVarianter extends VerdikjedeTestBase {
                                 .build())
                         .build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(LocalDate.now())
                 .build();
 
@@ -107,7 +107,7 @@ class ArbeidsforholdVarianter extends VerdikjedeTestBase {
                                 .build())
                         .build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(LocalDate.now())
                 .build();
         var mor = familie.mor();

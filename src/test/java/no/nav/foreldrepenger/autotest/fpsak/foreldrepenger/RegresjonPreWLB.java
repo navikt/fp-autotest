@@ -37,7 +37,8 @@ import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
 import no.nav.foreldrepenger.soknad.kontrakt.BrukerRolle;
 import no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType;
 import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.UtsettelsesÅrsak;
-import no.nav.foreldrepenger.vtp.kontrakter.person.FamilierelasjonModellDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.FamilierelasjonDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.YtelseDto;
 
 @Tag("fpsak")
 @Tag("foreldrepenger")
@@ -59,11 +60,9 @@ class RegresjonPreWLB extends VerdikjedeTestBase {
                                 .build())
                         .build())
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
-                                .harUføretrygd()
-                                .build())
+                        .ytelse(YtelseDto.YtelseType.UFØREPENSJON, LocalDate.now().minusYears(5), null)
                         .build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(LocalDate.of(2021, 10, 15))
                 .build();
         var far = familie.far();
@@ -182,11 +181,9 @@ class RegresjonPreWLB extends VerdikjedeTestBase {
                                 .build())
                         .build())
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
-                                .harUføretrygd()
-                                .build())
+                        .ytelse(YtelseDto.YtelseType.UFØREPENSJON, LocalDate.now().minusYears(5), null)
                         .build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(LocalDate.of(2021, 10, 15))
                 .build();
         var far = familie.far();
