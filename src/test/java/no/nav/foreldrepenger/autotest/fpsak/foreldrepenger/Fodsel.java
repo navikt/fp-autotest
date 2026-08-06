@@ -59,7 +59,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriodeAktivitet;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkType;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
-import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
+import no.nav.foreldrepenger.generator.familie.generator.InntektGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.Prosent;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
@@ -85,7 +85,7 @@ class Fodsel extends VerdikjedeTestBase {
     void morSøkerFødselMedEttArbeidsforholdOgFrilans_VurderOpptjening_VurderFaktaOmBeregning_AvvikIBeregning() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
+                        .inntekt(InntektGenerator.ny()
                                 .arbeidsforhold(NAV_OSLO, 75, LocalDate.now().minusYears(1), 480_000)
                                 .frilans(NAV_STORD, "arb", 25, LocalDate.now().minusYears(3), LocalDate.now().minusMonths(1), 120_000)
                                 .build())
@@ -171,7 +171,7 @@ class Fodsel extends VerdikjedeTestBase {
     void morSøkerFødselMedToArbeidsforhold_AvvikIBeregning() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
+                        .inntekt(InntektGenerator.ny()
                                 .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-001", 40, LocalDate.now().minusYears(2), 490_000)
                                 .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-002", 60, LocalDate.now().minusYears(3), null)
                                 .build())
@@ -226,7 +226,7 @@ class Fodsel extends VerdikjedeTestBase {
     void morSøkerFødselMedEttArbeidsforhold_AvvikIBeregning() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
+                        .inntekt(InntektGenerator.ny().arbeidMedOpptjeningUnder6G().build())
                         .build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
@@ -277,7 +277,7 @@ class Fodsel extends VerdikjedeTestBase {
     void morSøkerFødselMedToArbeidsforholdISammeOrganisasjon() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
+                        .inntekt(InntektGenerator.ny()
                                 .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-001", 40, LocalDate.now().minusYears(2), 490_000)
                                 .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-002", 60, LocalDate.now().minusYears(3), null)
                                 .build())
@@ -317,7 +317,7 @@ class Fodsel extends VerdikjedeTestBase {
     void morSøkerFødselMedEttArbeidsforhold() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
+                        .inntekt(InntektGenerator.ny().arbeidMedOpptjeningUnder6G().build())
                         .build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
@@ -350,7 +350,7 @@ class Fodsel extends VerdikjedeTestBase {
     void morSøkerFødselMedToArbeidsforhold() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
+                        .inntekt(InntektGenerator.ny()
                                 .arbeidMedOpptjeningUnder6G()
                                 .arbeidMedOpptjeningUnder6G()
                                 .build())
@@ -385,7 +385,7 @@ class Fodsel extends VerdikjedeTestBase {
     void farSøkerFødselMedEttArbeidsforhold() {
         var familie = FamilieGenerator.ny()
                 .forelder(far()
-                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
+                        .inntekt(InntektGenerator.ny().arbeidMedOpptjeningUnder6G().build())
                         .build())
                 .forelder(mor().build())
                 .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
@@ -430,7 +430,7 @@ class Fodsel extends VerdikjedeTestBase {
     void morSøkerFødselMedToArbeidsforholdISammeOrganisasjonEnInntektsmelding() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
+                        .inntekt(InntektGenerator.ny()
                                 .arbeidsforhold(TestOrganisasjoner.NAV, 50, LocalDate.now().minusYears(2), null)
                                 .arbeidsforhold(TestOrganisasjoner.NAV, 50, LocalDate.now().minusYears(3), 540_000)
                                 .build())
@@ -470,7 +470,7 @@ class Fodsel extends VerdikjedeTestBase {
     void morSøkerFødselMedEttArbeidsforhold_papirsøknad() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningOver6G().build())
+                        .inntekt(InntektGenerator.ny().arbeidMedOpptjeningOver6G().build())
                         .build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
@@ -551,7 +551,7 @@ class Fodsel extends VerdikjedeTestBase {
         var fnrArbeidsgiver = UUID.randomUUID();
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                    .inntektytelse(InntektYtelseGenerator.ny()
+                    .inntekt(InntektGenerator.ny()
                         .arbeidsforhold(new PrivatArbeidsgiverDto(fnrArbeidsgiver), "ARB001-000", 0, LocalDate.now().minusMonths(12), LocalDate.now().minusMonths(11), 360_000)
                         .arbeidsforhold(new PrivatArbeidsgiverDto(fnrArbeidsgiver), "ARB001-001", 0, LocalDate.now().minusMonths(10), LocalDate.now().minusMonths(9), 360_000)
                         .arbeidsforhold(new PrivatArbeidsgiverDto(fnrArbeidsgiver), "ARB001-002", 0, LocalDate.now().minusMonths(7), LocalDate.now().minusMonths(6), 360_000)
@@ -632,7 +632,7 @@ class Fodsel extends VerdikjedeTestBase {
     void farSøkerFødselAleneomsorgMenErGiftOgBorMedAnnenpart() {
         var familie = FamilieGenerator.ny()
                 .forelder(far()
-                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
+                        .inntekt(InntektGenerator.ny().arbeidMedOpptjeningUnder6G().build())
                         .build())
                 .forelder(mor().build())
                 .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
@@ -681,7 +681,7 @@ class Fodsel extends VerdikjedeTestBase {
     void morSøkerFødselStillingsprosent0() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
+                        .inntekt(InntektGenerator.ny()
                                 .arbeidsforhold(0, LocalDate.now().minusMonths(12), 360_000)
                                 .build())
                         .build())
@@ -724,7 +724,7 @@ class Fodsel extends VerdikjedeTestBase {
     void morSøkerGraderingOgUtsettelseMedToArbeidsforhold_utenAvvikendeInntektsmeldinger() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
+                        .inntekt(InntektGenerator.ny()
                                 .arbeidMedOpptjeningUnder6G()
                                 .arbeidMedOpptjeningUnder6G()
                                 .build())
@@ -835,7 +835,7 @@ class Fodsel extends VerdikjedeTestBase {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
                         .sivilstand(List.of(new SivilstandDto(SivilstandDto.Sivilstander.UGIF, null, null)))
-                        .inntektytelse(InntektYtelseGenerator.ny()
+                        .inntekt(InntektGenerator.ny()
                                 .arbeidMedOpptjeningUnder6G()
                                 .build())
                         .build())
@@ -912,7 +912,7 @@ class Fodsel extends VerdikjedeTestBase {
     void morSøker2Barn1Registrert() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningOver6G().build())
+                        .inntekt(InntektGenerator.ny().arbeidMedOpptjeningOver6G().build())
                         .build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
@@ -954,7 +954,7 @@ class Fodsel extends VerdikjedeTestBase {
     void morSøkerUregistrertEtterFør2Uker() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
+                        .inntekt(InntektGenerator.ny()
                                 .arbeidsforhold(LocalDate.now().minusYears(4),
                                         arbeidsavtale(LocalDate.now().minusYears(4), LocalDate.now().minusDays(60)).build(),
                                         arbeidsavtale(LocalDate.now().minusDays(59)).stillingsprosent(50).build()

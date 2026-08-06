@@ -31,7 +31,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.FordelingDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.PermisjonPeriodeDto;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
-import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
+import no.nav.foreldrepenger.generator.familie.generator.InntektGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.Prosent;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
@@ -53,7 +53,7 @@ class Aksjonspunkter extends VerdikjedeTestBase {
     void aksjonspunkt_FOEDSELSSOKNAD_FORELDREPENGER_5040() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
+                        .inntekt(InntektGenerator.ny().arbeidMedOpptjeningUnder6G().build())
                         .build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
@@ -123,7 +123,7 @@ class Aksjonspunkter extends VerdikjedeTestBase {
     void aksjonspunkt_ADOPSJONSSOKNAD_ENGANGSSTONAD_5011() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
+                        .inntekt(InntektGenerator.ny()
                                 .arbeidsforhold(LocalDate.now().minusYears(4),
                                         arbeidsavtale(LocalDate.now().minusYears(4), LocalDate.now().minusDays(60)).build(),
                                         arbeidsavtale(LocalDate.now().minusDays(59)).stillingsprosent(50).build()
@@ -153,7 +153,7 @@ class Aksjonspunkter extends VerdikjedeTestBase {
     void aksjonspunkt_FOEDSELSSOKNAD_FORELDREPENGER_5089() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
+                        .inntekt(InntektGenerator.ny()
                                 .arbeidsforhold(LocalDate.now().minusMonths(2))
                                 .build())
                         .build())
@@ -179,7 +179,7 @@ class Aksjonspunkter extends VerdikjedeTestBase {
     void aksjonspunkt_MOR_FOEDSELSSOKNAD_FORELDREPENGER() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
+                        .inntekt(InntektGenerator.ny().arbeidMedOpptjeningUnder6G().build())
                         .build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
@@ -226,7 +226,7 @@ class Aksjonspunkter extends VerdikjedeTestBase {
     void aksjonspunkt_MOR_FOEDSELSSOKNAD_FORELDREPENGER_() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
+                        .inntekt(InntektGenerator.ny().arbeidMedOpptjeningUnder6G().build())
                         .build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
@@ -256,7 +256,7 @@ class Aksjonspunkter extends VerdikjedeTestBase {
     void aksjonspunkt_MOR_FOEDSELSSOKNAD_FORELDREPENGER_5027() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
+                        .inntekt(InntektGenerator.ny().arbeidMedOpptjeningUnder6G().build())
                         .build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
@@ -285,7 +285,7 @@ class Aksjonspunkter extends VerdikjedeTestBase {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
                         .ytelse(YtelseDto.YtelseType.SYKEPENGER, LocalDate.now().minusMonths(9), LocalDate.now(), 462, 100)
-                        .inntektytelse(InntektYtelseGenerator.ny()
+                        .inntekt(InntektGenerator.ny()
                                 .arbeidsforhold(TestOrganisasjoner.NYLIG_OPPSTATET, LocalDate.now())
                                 .arbeidMedOpptjeningUnder6G().build())
                         .build())

@@ -34,7 +34,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeidInntektsmelding.ManueltArbeidsforholdDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.ArbeidstakerandelUtenIMMottarYtelse;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
-import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
+import no.nav.foreldrepenger.generator.familie.generator.InntektGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
 import no.nav.foreldrepenger.soknad.kontrakt.BrukerRolle;
@@ -52,7 +52,7 @@ class ArbeidsforholdVarianter extends VerdikjedeTestBase {
     void utenArbeidsforholdMenMedInntektsmelding() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
+                        .inntekt(InntektGenerator.ny()
                                 .inntektsperiode(TestOrganisasjoner.NAV, LocalDate.now().minusYears(2), LocalDate.now(), 360_000)
                                 .build())
                         .build())
@@ -101,7 +101,7 @@ class ArbeidsforholdVarianter extends VerdikjedeTestBase {
     void morSøkerTerminUtenAktiviteterIAareg() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
+                        .inntekt(InntektGenerator.ny()
                                 .inntektsperiode(TestOrganisasjoner.NAV_BERGEN, LocalDate.now().minusMonths(24), LocalDate.now().minusMonths(23), 150_000)
                                 .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-001", 0, LocalDate.now().minusYears(4), LocalDate.now().minusYears(1), null)
                                 .build())

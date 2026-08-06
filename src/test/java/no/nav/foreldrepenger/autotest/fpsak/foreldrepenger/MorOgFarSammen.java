@@ -56,7 +56,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.FagsakStatus;
 import no.nav.foreldrepenger.generator.familie.Familie;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
-import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
+import no.nav.foreldrepenger.generator.familie.generator.InntektGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
 import no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler;
@@ -81,8 +81,8 @@ class MorOgFarSammen extends VerdikjedeTestBase {
             + "Ingen overlapp, med unntak av de to ukene ifm med fødsel. Verifiserer at sakene er koblet og at det ikke opprettes revurdering berørt sak.")
     void morOgFar_fødsel_ettArbeidsforholdHver_kobletsak_kantTilKant() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor().inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build()).build())
-                .forelder(far().inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build()).build())
+                .forelder(mor().inntekt(InntektGenerator.ny().arbeidMedOpptjeningUnder6G().build()).build())
+                .forelder(far().inntekt(InntektGenerator.ny().arbeidMedOpptjeningUnder6G().build()).build())
                 .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusWeeks(8))
                 .build();
@@ -149,8 +149,8 @@ class MorOgFarSammen extends VerdikjedeTestBase {
             + "Mor søker om perioden på nytt får å ta tilbake den tapte perioden.")
     void far_skal_ikke_miste_perioder_til_mor_ved_sniking() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor().inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build()).build())
-                .forelder(far().inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build()).build())
+                .forelder(mor().inntekt(InntektGenerator.ny().arbeidMedOpptjeningUnder6G().build()).build())
+                .forelder(far().inntekt(InntektGenerator.ny().arbeidMedOpptjeningUnder6G().build()).build())
                 .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusWeeks(8))
                 .build();
@@ -269,8 +269,8 @@ class MorOgFarSammen extends VerdikjedeTestBase {
             + "berørt sak på far.")
     void farOgMor_fødsel_ettArbeidsforholdHver_overlappendePeriode() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor().inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build()).build())
-                .forelder(far().inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build()).build())
+                .forelder(mor().inntekt(InntektGenerator.ny().arbeidMedOpptjeningUnder6G().build()).build())
+                .forelder(far().inntekt(InntektGenerator.ny().arbeidMedOpptjeningUnder6G().build()).build())
                 .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusWeeks(8))
                 .build();
@@ -354,11 +354,11 @@ class MorOgFarSammen extends VerdikjedeTestBase {
             + "førstegangsbehandlingen. Verifiserer at det ikke blir berørt sak på far.")
     void kobletSakIngenEndring() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor().inntektytelse(InntektYtelseGenerator.ny()
+                .forelder(mor().inntekt(InntektGenerator.ny()
                         .arbeidsforhold(LocalDate.now().minusYears(4), LocalDate.now().minusMonths(4), 900_000)
                         .arbeidsforhold(LocalDate.now().minusMonths(4), 900_000)
                         .build()).build())
-                .forelder(far().inntektytelse(InntektYtelseGenerator.ny()
+                .forelder(far().inntekt(InntektGenerator.ny()
                         .arbeidsforhold(LocalDate.now().minusYears(4), LocalDate.now().minusMonths(4), 900_000)
                         .arbeidsforhold(LocalDate.now().minusMonths(4), 900_000)
                         .build()).build())
@@ -397,11 +397,11 @@ class MorOgFarSammen extends VerdikjedeTestBase {
         var farOpprinneligStartdato = fødselsdato.plusWeeks(10).plusDays(1);
         var farUtsattStartDato = fødselsdato.plusWeeks(50).plusDays(1);
         var familie = FamilieGenerator.ny()
-                .forelder(mor().inntektytelse(InntektYtelseGenerator.ny()
+                .forelder(mor().inntekt(InntektGenerator.ny()
                         .arbeidsforhold(LocalDate.now().minusYears(4), LocalDate.now().minusMonths(4), 900_000)
                         .arbeidsforhold(LocalDate.now().minusMonths(4), 900_000)
                         .build()).build())
-                .forelder(far().inntektytelse(InntektYtelseGenerator.ny()
+                .forelder(far().inntekt(InntektGenerator.ny()
                         .arbeidsforhold(LocalDate.now().minusYears(4), LocalDate.now().minusMonths(4), 900_000)
                         .arbeidsforhold(LocalDate.now().minusMonths(4), 900_000)
                         .build()).build())
@@ -445,8 +445,8 @@ class MorOgFarSammen extends VerdikjedeTestBase {
             + "og blir innvilget uten berørt behandling hos mor.")
     void farUtsetterOppstartRundtFødsel() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor().inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build()).build())
-                .forelder(far().inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build()).build())
+                .forelder(mor().inntekt(InntektGenerator.ny().arbeidMedOpptjeningUnder6G().build()).build())
+                .forelder(far().inntekt(InntektGenerator.ny().arbeidMedOpptjeningUnder6G().build()).build())
                 .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusWeeks(8))
                 .build();
@@ -504,11 +504,11 @@ class MorOgFarSammen extends VerdikjedeTestBase {
         var farOpprinneligStartdato = fødselsdato.plusWeeks(10).plusDays(1);
         var farUtsattStartDato = LocalDate.now().plusWeeks(5).plusDays(2);
         var familie = FamilieGenerator.ny()
-                .forelder(mor().inntektytelse(InntektYtelseGenerator.ny()
+                .forelder(mor().inntekt(InntektGenerator.ny()
                         .arbeidsforhold(LocalDate.now().minusYears(4), LocalDate.now().minusMonths(4), 900_000)
                         .arbeidsforhold(LocalDate.now().minusMonths(4), 900_000)
                         .build()).build())
-                .forelder(far().inntektytelse(InntektYtelseGenerator.ny()
+                .forelder(far().inntekt(InntektGenerator.ny()
                         .arbeidsforhold(LocalDate.now().minusYears(4), LocalDate.now().minusMonths(4), 900_000)
                         .arbeidsforhold(LocalDate.now().minusMonths(4), 900_000)
                         .build()).build())
@@ -555,11 +555,11 @@ class MorOgFarSammen extends VerdikjedeTestBase {
     @Description("Mor får revurdering fra endringssøknad vedtak opphører - far får revurdering")
     void berørtSakOpphør() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor().inntektytelse(InntektYtelseGenerator.ny()
+                .forelder(mor().inntekt(InntektGenerator.ny()
                         .arbeidsforhold(LocalDate.now().minusYears(4), LocalDate.now().minusMonths(4), 900_000)
                         .arbeidsforhold(LocalDate.now().minusMonths(4), 900_000)
                         .build()).build())
-                .forelder(far().inntektytelse(InntektYtelseGenerator.ny()
+                .forelder(far().inntekt(InntektGenerator.ny()
                         .arbeidsforhold(LocalDate.now().minusYears(4), LocalDate.now().minusMonths(4), 900_000)
                         .arbeidsforhold(LocalDate.now().minusMonths(4), 900_000)
                         .build()).build())
@@ -620,11 +620,11 @@ class MorOgFarSammen extends VerdikjedeTestBase {
     @Description("Far søker. Blir satt på vent pga for tidlig søknad. Mor søker og får innvilget. Oppretter manuell revurdering på mor.")
     void kobletSakMorSøkerEtterFar() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor().inntektytelse(InntektYtelseGenerator.ny()
+                .forelder(mor().inntekt(InntektGenerator.ny()
                         .arbeidsforhold(LocalDate.now().minusYears(4), LocalDate.now().minusMonths(4), 900_000)
                         .arbeidsforhold(LocalDate.now().minusMonths(4), 900_000)
                         .build()).build())
-                .forelder(far().inntektytelse(InntektYtelseGenerator.ny()
+                .forelder(far().inntekt(InntektGenerator.ny()
                         .arbeidsforhold(LocalDate.now().minusYears(4), LocalDate.now().minusMonths(4), 900_000)
                         .arbeidsforhold(LocalDate.now().minusMonths(4), 900_000)
                         .build()).build())
@@ -656,15 +656,15 @@ class MorOgFarSammen extends VerdikjedeTestBase {
         var tomMor50Prosent = fødselsdato.plusWeeks(10).minusDays(1);
         var morPermisjonTom = fødselsdato.plusWeeks(11).minusDays(1);
         var familie = FamilieGenerator.ny()
-                .forelder(mor().inntektytelse(
-                        InntektYtelseGenerator.ny()
+                .forelder(mor().inntekt(
+                        InntektGenerator.ny()
                                 .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-001", null, fødselsdato.minusYears(5), null, årslønn,
                                         List.of(new PermisjonDto(100, fødselsdato.minusWeeks(3), morPermisjonTom,
                                                 Permisjonstype.PERMISJON_MED_FORELDREPENGER)),
                                         arbeidsavtale(fødselsdato.minusYears(5)).tomGyldighetsperiode(tomMor50Prosent).stillingsprosent(50).build(),
                                         arbeidsavtale(tomMor50Prosent.plusDays(1)).stillingsprosent(100).build())
                                 .build()).build())
-                .forelder(far().inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningOver6G().build()).build())
+                .forelder(far().inntekt(InntektGenerator.ny().arbeidMedOpptjeningOver6G().build()).build())
                 .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(fødselsdato)
                 .build();

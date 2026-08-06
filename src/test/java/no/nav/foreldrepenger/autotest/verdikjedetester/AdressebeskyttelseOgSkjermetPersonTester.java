@@ -23,7 +23,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.FagsakKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkType;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
-import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
+import no.nav.foreldrepenger.generator.familie.generator.InntektGenerator;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
 import no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler;
 import no.nav.foreldrepenger.generator.soknad.maler.UttaksperiodeType;
@@ -68,11 +68,11 @@ class AdressebeskyttelseOgSkjermetPersonTester {
     void adressebeskyttet_strengt_fortrolig_kun_saksbehandles_av_sakbehanlder_med_strengt_fortrolig_ad_gruppe() {
         var familie = FamilieGenerator.ny(SaksbehandlerRolle.SAKSBEHANDLER_KODE_6)
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
+                        .inntekt(InntektGenerator.ny().arbeidMedOpptjeningUnder6G().build())
                         .addressebeskyttelse(Adressebeskyttelse.STRENGT_FORTROLIG)
                         .build())
                 .forelder(far()
-                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
+                        .inntekt(InntektGenerator.ny().arbeidMedOpptjeningUnder6G().build())
                         .addressebeskyttelse(Adressebeskyttelse.UGRADERT)
                         .build())
                 .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
@@ -148,7 +148,7 @@ class AdressebeskyttelseOgSkjermetPersonTester {
     void skjermet_person_må_behandles_av_saksbehandler_med_egen_ansatt_ad_rolle() {
         var familie = FamilieGenerator.ny(SaksbehandlerRolle.SAKSBEHANDLER_EGEN_ANSATT)
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
+                        .inntekt(InntektGenerator.ny().arbeidMedOpptjeningUnder6G().build())
                         .erSkjermet(true)
                         .build())
                 .forelder(far().build())

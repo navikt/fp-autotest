@@ -31,7 +31,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.VurderUttakDokumentasjonBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
-import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
+import no.nav.foreldrepenger.generator.familie.generator.InntektGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
 import no.nav.foreldrepenger.soknad.kontrakt.BrukerRolle;
@@ -54,7 +54,7 @@ class RegresjonPreWLB extends VerdikjedeTestBase {
     void BFHRMorUføreTrekkerDagerFortløpendeNårVilkårIkkeErOppfylt() {
         var familie = FamilieGenerator.ny()
                 .forelder(far()
-                        .inntektytelse(InntektYtelseGenerator.ny()
+                        .inntekt(InntektGenerator.ny()
                                 .arbeidsforhold(TestOrganisasjoner.NAV_STORD, "ARB001-001", LocalDate.of(2021, 07, 1))
                                 .arbeidsforhold(TestOrganisasjoner.NAV_STORD, "ARB001-002", LocalDate.of(2017, 11, 1), LocalDate.of(2021, 7,1))
                                 .build())
@@ -175,7 +175,7 @@ class RegresjonPreWLB extends VerdikjedeTestBase {
     void farSøkerImfFødselMenMorErIkkeSykEllerInnlagt() {
         var familie = FamilieGenerator.ny()
                 .forelder(far()
-                        .inntektytelse(InntektYtelseGenerator.ny()
+                        .inntekt(InntektGenerator.ny()
                                 .arbeidsforhold(TestOrganisasjoner.NAV_STORD, "ARB001-001", LocalDate.of(2021, 07, 1))
                                 .arbeidsforhold(TestOrganisasjoner.NAV_STORD, "ARB001-002", LocalDate.of(2017, 11, 1), LocalDate.of(2021, 7,1))
                                 .build())

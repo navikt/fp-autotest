@@ -29,7 +29,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
-import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
+import no.nav.foreldrepenger.generator.familie.generator.InntektGenerator;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.FamilierelasjonDto;
 
@@ -46,7 +46,7 @@ class Termin extends VerdikjedeTestBase {
     void MorSøkerMedEttArbeidsforholdInntektsmeldingFørSøknad() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
+                        .inntekt(InntektGenerator.ny()
                                 .arbeidsforhold(LocalDate.now().minusYears(4),
                                         arbeidsavtale(LocalDate.now().minusYears(4), LocalDate.now().minusDays(60)).build(),
                                         arbeidsavtale(LocalDate.now().minusDays(59)).stillingsprosent(50).build()
@@ -91,7 +91,7 @@ class Termin extends VerdikjedeTestBase {
     void MorSøkerMedEttArbeidsforholdInntektsmeldingPåGjennopptattSøknad() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
+                        .inntekt(InntektGenerator.ny()
                                 .arbeidsforhold(LocalDate.now().minusYears(4),
                                         arbeidsavtale(LocalDate.now().minusMonths(4), LocalDate.now().minusDays(60)).stillingsprosent(50).build(),
                                         arbeidsavtale(LocalDate.now().minusDays(59)).sisteLønnsendringsdato(LocalDate.now().minusMonths(1)).build()
@@ -148,7 +148,7 @@ class Termin extends VerdikjedeTestBase {
     void morSøkerTerminEttArbeidsforhold_avvikIGradering() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
+                        .inntekt(InntektGenerator.ny()
                                 .arbeidsforhold(40, LocalDate.now().minusYears(4), 120_000)
                                 .arbeidsforhold(60, LocalDate.now().minusYears(2), 300_000)
                                 .build())
@@ -225,7 +225,7 @@ class Termin extends VerdikjedeTestBase {
     void morSokerTerminUtenFPFFperiode() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
+                        .inntekt(InntektGenerator.ny()
                                 .arbeidsforhold(LocalDate.now().minusYears(4),
                                         arbeidsavtale(LocalDate.now().minusYears(4), LocalDate.now().minusDays(60)).build(),
                                         arbeidsavtale(LocalDate.now().minusDays(59)).stillingsprosent(50).build()

@@ -42,7 +42,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkType;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
-import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
+import no.nav.foreldrepenger.generator.familie.generator.InntektGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.Inntektsmelding;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.Prosent;
@@ -64,7 +64,7 @@ class BeregningVerdikjede extends VerdikjedeTestBase {
     void morSøkerFødselMedEttArbeidsforhold() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
+                        .inntekt(InntektGenerator.ny().arbeidMedOpptjeningUnder6G().build())
                         .build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
@@ -122,7 +122,7 @@ class BeregningVerdikjede extends VerdikjedeTestBase {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
                         .ytelse(YtelseDto.YtelseType.ARBEIDSAVKLARINGSPENGER, LocalDate.now().minusMonths(12), LocalDate.now().minusWeeks(12), 1000, 100)
-                        .inntektytelse(InntektYtelseGenerator.ny()
+                        .inntekt(InntektGenerator.ny()
                                 .arbeidsforholdUtenInntekt(LocalDate.now().plusMonths(1), LocalDate.now().plusMonths(12))
                                 .build())
                         .build())
@@ -171,7 +171,7 @@ class BeregningVerdikjede extends VerdikjedeTestBase {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
                         .ytelse(YtelseDto.YtelseType.ARBEIDSAVKLARINGSPENGER, LocalDate.now().minusMonths(12), LocalDate.now().plusMonths(2), 1000, 100)
-                        .inntektytelse(InntektYtelseGenerator.ny()
+                        .inntekt(InntektGenerator.ny()
                                 .arbeidsforhold(LocalDate.now().minusMonths(15), LocalDate.now().plusMonths(12), 450_000)
                                 .build())
                         .build())
@@ -275,7 +275,7 @@ class BeregningVerdikjede extends VerdikjedeTestBase {
     void SN_med_gradering_og_arbeidsforhold_som_søker_refusjon_over_6G() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
+                        .inntekt(InntektGenerator.ny()
                                 .arbeidMedOpptjeningOver6G()
                                 .selvstendigNæringsdrivende(900_000)
                                 .build())
@@ -399,7 +399,7 @@ class BeregningVerdikjede extends VerdikjedeTestBase {
     void morFødselForSentRefusjonskrav() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
+                        .inntekt(InntektGenerator.ny()
                                 .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-001", LocalDate.now().minusYears(4), LocalDate.now().minusMonths(4), 900_000)
                                 .build())
                         .build())
@@ -474,7 +474,7 @@ class BeregningVerdikjede extends VerdikjedeTestBase {
     void ATFL_samme_org_med_lønnendring_uten_inntektsmelding() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
+                        .inntekt(InntektGenerator.ny()
                                 .arbeidsforhold(LocalDate.now().minusYears(1), 300_000,
                                         arbeidsavtale(LocalDate.now().minusYears(1))
                                                 .sisteLønnsendringsdato(LocalDate.now().minusMonths(2))
@@ -523,7 +523,7 @@ class BeregningVerdikjede extends VerdikjedeTestBase {
     @Description("Uten inntektsmelding, med lønnsendring de siste 3 månedene")
     void vurder_mottar_ytelse_vurder_lonnsendring() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor().inntektytelse(InntektYtelseGenerator.ny()
+                .forelder(mor().inntekt(InntektGenerator.ny()
                                 .arbeidsforhold(LocalDate.now().minusYears(1),
                                         arbeidsavtale(LocalDate.now().minusYears(1))
                                                 .sisteLønnsendringsdato(LocalDate.now().minusMonths(2))
@@ -564,7 +564,7 @@ class BeregningVerdikjede extends VerdikjedeTestBase {
     void toArbeidsforholdSammeOrgEttStarterEtterStp() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
+                        .inntekt(InntektGenerator.ny()
                                 .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-001", LocalDate.now().minusMonths(12), LocalDate.now().minusMonths(1), 360_000)
                                 .arbeidsforholdUtenInntekt(TestOrganisasjoner.NAV, "ARB001-002", LocalDate.now().minusMonths(12), LocalDate.now())
                                 .arbeidsforholdUtenInntekt(TestOrganisasjoner.NAV, "ARB001-003", LocalDate.now().plusWeeks(1), LocalDate.now().plusMonths(2))
@@ -610,7 +610,7 @@ class BeregningVerdikjede extends VerdikjedeTestBase {
     void morSøkerFødselMedEttArbeidsforholdOgFrilans_VurderOpptjening_VurderFaktaOmBeregning_AvvikIBeregning() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
+                        .inntekt(InntektGenerator.ny()
                                 .frilans(100, LocalDate.now().minusYears(3), LocalDate.now().plusMonths(3), 504_000)
                                 .build())
                         .build())

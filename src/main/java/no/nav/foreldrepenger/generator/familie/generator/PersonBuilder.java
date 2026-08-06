@@ -122,7 +122,7 @@ public class PersonBuilder {
         return this;
     }
 
-    public PersonBuilder inntektytelse(InntektYtelseBundle bundle) {
+    public PersonBuilder inntekt(InntektYtelseBundle bundle) {
         this.arbeidsforhold = new ArrayList<>(bundle.arbeidsforhold());
         this.inntekt = new ArrayList<>(bundle.inntekt());
         this.skatteopplysninger = new ArrayList<>(bundle.skatteopplysninger());

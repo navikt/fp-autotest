@@ -12,7 +12,7 @@ import no.nav.foreldrepenger.vtp.kontrakter.person.v2.PermisjonDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.SkatteopplysningDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.Arbeidsforholdstype;
 
-public class InntektYtelseGenerator {
+public class InntektGenerator {
 
     private final List<ArbeidsforholdDto> arbeidsforhold = new ArrayList<>();
     private final List<InntektsperiodeDto> inntekt = new ArrayList<>();
@@ -21,114 +21,114 @@ public class InntektYtelseGenerator {
     private static final int DEFAULT_ÅRSLØNN = 600_000;
     private static final int DEFAULT_STILLINGSPROSENT = 100;
 
-    public static InntektYtelseGenerator ny() {
-        return new InntektYtelseGenerator();
+    public static InntektGenerator ny() {
+        return new InntektGenerator();
     }
 
-    public InntektYtelseGenerator arbeidMedOpptjeningOver6G() {
+    public InntektGenerator arbeidMedOpptjeningOver6G() {
         return arbeidsforhold(LocalDate.now().minusYears(3), 900_000);
     }
 
-    public InntektYtelseGenerator arbeidMedOpptjeningUnder6G() {
+    public InntektGenerator arbeidMedOpptjeningUnder6G() {
         return arbeidsforhold(LocalDate.now().minusYears(3), 480_000);
     }
 
-    public InntektYtelseGenerator arbeidsforholdUtenInntekt(LocalDate fom, ArbeidsavtaleDto... arbeidsavtaler) {
+    public InntektGenerator arbeidsforholdUtenInntekt(LocalDate fom, ArbeidsavtaleDto... arbeidsavtaler) {
         return arbeidsforholdUtenInntekt(testOrganisasjoner.tilfeldigOrg(), fom, null, arbeidsavtaler);
     }
 
-    public InntektYtelseGenerator arbeidsforholdUtenInntekt(LocalDate fom, LocalDate tom, ArbeidsavtaleDto... arbeidsavtaler) {
+    public InntektGenerator arbeidsforholdUtenInntekt(LocalDate fom, LocalDate tom, ArbeidsavtaleDto... arbeidsavtaler) {
         return arbeidsforholdUtenInntekt(testOrganisasjoner.tilfeldigOrg(), fom, tom, arbeidsavtaler);
     }
 
-    public InntektYtelseGenerator arbeidsforholdUtenInntekt(ArbeidsgiverDto arbeidsgiver, LocalDate fom, ArbeidsavtaleDto... arbeidsavtaler) {
+    public InntektGenerator arbeidsforholdUtenInntekt(ArbeidsgiverDto arbeidsgiver, LocalDate fom, ArbeidsavtaleDto... arbeidsavtaler) {
         return arbeidsforholdUtenInntekt(arbeidsgiver, fom, null, arbeidsavtaler);
     }
 
-    public InntektYtelseGenerator arbeidsforholdUtenInntekt(ArbeidsgiverDto arbeidsgiver, LocalDate fom, LocalDate tom, ArbeidsavtaleDto... arbeidsavtaler) {
+    public InntektGenerator arbeidsforholdUtenInntekt(ArbeidsgiverDto arbeidsgiver, LocalDate fom, LocalDate tom, ArbeidsavtaleDto... arbeidsavtaler) {
         return arbeidsforhold(arbeidsgiver, testOrganisasjoner.arbeidsforholdId(), fom, tom, null, arbeidsavtaler);
     }
 
-    public InntektYtelseGenerator arbeidsforholdUtenInntekt(ArbeidsgiverDto arbeidsgiver, String arbeidsforholdId, LocalDate fom, LocalDate tom, ArbeidsavtaleDto... arbeidsavtaler) {
+    public InntektGenerator arbeidsforholdUtenInntekt(ArbeidsgiverDto arbeidsgiver, String arbeidsforholdId, LocalDate fom, LocalDate tom, ArbeidsavtaleDto... arbeidsavtaler) {
         return arbeidsforhold(arbeidsgiver, arbeidsforholdId, fom, tom, null, arbeidsavtaler);
     }
 
-    public InntektYtelseGenerator arbeidsforhold(LocalDate fom, ArbeidsavtaleDto... arbeidsavtaler) {
+    public InntektGenerator arbeidsforhold(LocalDate fom, ArbeidsavtaleDto... arbeidsavtaler) {
         return arbeidsforhold(DEFAULT_STILLINGSPROSENT, fom, DEFAULT_ÅRSLØNN, arbeidsavtaler);
     }
 
-    public InntektYtelseGenerator arbeidsforhold(Integer stillingsprosent, LocalDate fom, Integer årslønn, ArbeidsavtaleDto... arbeidsavtaler) {
+    public InntektGenerator arbeidsforhold(Integer stillingsprosent, LocalDate fom, Integer årslønn, ArbeidsavtaleDto... arbeidsavtaler) {
         return arbeidsforhold(stillingsprosent, fom, null, årslønn, arbeidsavtaler);
     }
 
-    public InntektYtelseGenerator arbeidsforhold(LocalDate fom, LocalDate tom, ArbeidsavtaleDto... arbeidsavtaler) {
+    public InntektGenerator arbeidsforhold(LocalDate fom, LocalDate tom, ArbeidsavtaleDto... arbeidsavtaler) {
         return arbeidsforhold(DEFAULT_STILLINGSPROSENT, fom, tom, DEFAULT_ÅRSLØNN, arbeidsavtaler);
     }
 
-    public InntektYtelseGenerator arbeidsforhold(LocalDate fom, Integer årslønn, ArbeidsavtaleDto... arbeidsavtaler) {
+    public InntektGenerator arbeidsforhold(LocalDate fom, Integer årslønn, ArbeidsavtaleDto... arbeidsavtaler) {
         return arbeidsforhold(DEFAULT_STILLINGSPROSENT, fom, null, årslønn, arbeidsavtaler);
     }
 
-    public InntektYtelseGenerator arbeidsforhold(LocalDate fom, LocalDate tom, Integer årslønn, ArbeidsavtaleDto... arbeidsavtaler) {
+    public InntektGenerator arbeidsforhold(LocalDate fom, LocalDate tom, Integer årslønn, ArbeidsavtaleDto... arbeidsavtaler) {
         return arbeidsforhold(DEFAULT_STILLINGSPROSENT, fom, tom, årslønn, arbeidsavtaler);
     }
 
-    public InntektYtelseGenerator arbeidsforhold(Integer stillingsprosent, LocalDate fom, LocalDate tom, ArbeidsavtaleDto... arbeidsavtaler) {
+    public InntektGenerator arbeidsforhold(Integer stillingsprosent, LocalDate fom, LocalDate tom, ArbeidsavtaleDto... arbeidsavtaler) {
         return arbeidsforhold(stillingsprosent, fom, tom, DEFAULT_ÅRSLØNN, arbeidsavtaler);
     }
 
-    public InntektYtelseGenerator arbeidsforhold(Integer stillingsprosent, LocalDate fom, LocalDate tom, Integer årslønn, ArbeidsavtaleDto... arbeidsavtaler) {
+    public InntektGenerator arbeidsforhold(Integer stillingsprosent, LocalDate fom, LocalDate tom, Integer årslønn, ArbeidsavtaleDto... arbeidsavtaler) {
         return arbeidsforhold(testOrganisasjoner.tilfeldigOrg(), testOrganisasjoner.arbeidsforholdId(), stillingsprosent, fom, tom, årslønn, null, arbeidsavtaler);
     }
 
-    public InntektYtelseGenerator arbeidsforhold(ArbeidsgiverDto arbeidsgiver, LocalDate fom, ArbeidsavtaleDto... arbeidsavtaler) {
+    public InntektGenerator arbeidsforhold(ArbeidsgiverDto arbeidsgiver, LocalDate fom, ArbeidsavtaleDto... arbeidsavtaler) {
         return arbeidsforhold(arbeidsgiver, testOrganisasjoner.arbeidsforholdId(), fom, null, arbeidsavtaler);
     }
 
-    public InntektYtelseGenerator arbeidsforhold(ArbeidsgiverDto arbeidsgiver, LocalDate fom, Integer årslønn, ArbeidsavtaleDto... arbeidsavtaler) {
+    public InntektGenerator arbeidsforhold(ArbeidsgiverDto arbeidsgiver, LocalDate fom, Integer årslønn, ArbeidsavtaleDto... arbeidsavtaler) {
         return arbeidsforhold(arbeidsgiver, testOrganisasjoner.arbeidsforholdId(), fom, null, årslønn, arbeidsavtaler);
     }
 
-    public InntektYtelseGenerator arbeidsforhold(ArbeidsgiverDto arbeidsgiver, String arbeidsforholdId, LocalDate fom, ArbeidsavtaleDto... arbeidsavtaler) {
+    public InntektGenerator arbeidsforhold(ArbeidsgiverDto arbeidsgiver, String arbeidsforholdId, LocalDate fom, ArbeidsavtaleDto... arbeidsavtaler) {
         return arbeidsforhold(arbeidsgiver, arbeidsforholdId, fom, null, arbeidsavtaler);
     }
 
-    public InntektYtelseGenerator arbeidsforhold(ArbeidsgiverDto arbeidsgiver, String arbeidsforholdId, LocalDate fom, LocalDate tom, ArbeidsavtaleDto... arbeidsavtaler) {
+    public InntektGenerator arbeidsforhold(ArbeidsgiverDto arbeidsgiver, String arbeidsforholdId, LocalDate fom, LocalDate tom, ArbeidsavtaleDto... arbeidsavtaler) {
         return arbeidsforhold(arbeidsgiver, arbeidsforholdId, fom, tom, DEFAULT_ÅRSLØNN, arbeidsavtaler);
     }
 
-    public InntektYtelseGenerator arbeidsforhold(ArbeidsgiverDto arbeidsgiver, String arbeidsforholdId, LocalDate fom, LocalDate tom, Integer årslønn, ArbeidsavtaleDto... arbeidsavtaler) {
+    public InntektGenerator arbeidsforhold(ArbeidsgiverDto arbeidsgiver, String arbeidsforholdId, LocalDate fom, LocalDate tom, Integer årslønn, ArbeidsavtaleDto... arbeidsavtaler) {
         return arbeidsforhold(arbeidsgiver, arbeidsforholdId, DEFAULT_STILLINGSPROSENT, fom, tom, årslønn, null, arbeidsavtaler);
     }
 
-    public InntektYtelseGenerator arbeidsforhold(ArbeidsgiverDto arbeidsgiver, Integer stillingsprosent, LocalDate fom, Integer årslønn, ArbeidsavtaleDto... arbeidsavtaler) {
+    public InntektGenerator arbeidsforhold(ArbeidsgiverDto arbeidsgiver, Integer stillingsprosent, LocalDate fom, Integer årslønn, ArbeidsavtaleDto... arbeidsavtaler) {
         return arbeidsforhold(arbeidsgiver, testOrganisasjoner.arbeidsforholdId(), stillingsprosent, fom, null, årslønn, null, arbeidsavtaler);
     }
 
-    public InntektYtelseGenerator arbeidsforhold(ArbeidsgiverDto arbeidsgiver, Integer stillingsprosent, LocalDate fom, LocalDate tom, Integer årslønn, ArbeidsavtaleDto... arbeidsavtaler) {
+    public InntektGenerator arbeidsforhold(ArbeidsgiverDto arbeidsgiver, Integer stillingsprosent, LocalDate fom, LocalDate tom, Integer årslønn, ArbeidsavtaleDto... arbeidsavtaler) {
         return arbeidsforhold(arbeidsgiver, testOrganisasjoner.arbeidsforholdId(), stillingsprosent, fom, tom, årslønn, null, arbeidsavtaler);
     }
 
-    public InntektYtelseGenerator arbeidsforhold(ArbeidsgiverDto arbeidsgiver, String arbeidsforholdId, Integer stillingsprosent, LocalDate fom, Integer årslønn, ArbeidsavtaleDto... arbeidsavtaler) {
+    public InntektGenerator arbeidsforhold(ArbeidsgiverDto arbeidsgiver, String arbeidsforholdId, Integer stillingsprosent, LocalDate fom, Integer årslønn, ArbeidsavtaleDto... arbeidsavtaler) {
         return arbeidsforhold(arbeidsgiver, arbeidsforholdId, stillingsprosent, fom, null, årslønn, null, arbeidsavtaler);
     }
 
-    public InntektYtelseGenerator arbeidsforhold(LocalDate fom, Integer årslønn, List<PermisjonDto> permisjoner) {
+    public InntektGenerator arbeidsforhold(LocalDate fom, Integer årslønn, List<PermisjonDto> permisjoner) {
         return arbeidsforhold(testOrganisasjoner.tilfeldigOrg(), testOrganisasjoner.arbeidsforholdId(), DEFAULT_STILLINGSPROSENT, fom, null, årslønn, permisjoner);
     }
 
-    public InntektYtelseGenerator arbeidsforhold(ArbeidsgiverDto arbeidsgiver, String arbeidsforholdId, Integer stillingsprosent, LocalDate fom, LocalDate tom, Integer årslønn, ArbeidsavtaleDto... arbeidsavtaler) {
+    public InntektGenerator arbeidsforhold(ArbeidsgiverDto arbeidsgiver, String arbeidsforholdId, Integer stillingsprosent, LocalDate fom, LocalDate tom, Integer årslønn, ArbeidsavtaleDto... arbeidsavtaler) {
         return arbeidsforhold(arbeidsgiver, arbeidsforholdId, stillingsprosent, fom, tom, årslønn, null, arbeidsavtaler);
     }
 
-    public InntektYtelseGenerator arbeidsforhold(ArbeidsgiverDto arbeidsgiver,
-                                                 String arbeidsforholdId,
-                                                 Integer stillingsprosent,
-                                                 LocalDate fom,
-                                                 LocalDate tom,
-                                                 Integer årslønn,
-                                                 List<PermisjonDto> permisjoner,
-                                                 ArbeidsavtaleDto... arbeidsavtaler) {
+    public InntektGenerator arbeidsforhold(ArbeidsgiverDto arbeidsgiver,
+                                           String arbeidsforholdId,
+                                           Integer stillingsprosent,
+                                           LocalDate fom,
+                                           LocalDate tom,
+                                           Integer årslønn,
+                                           List<PermisjonDto> permisjoner,
+                                           ArbeidsavtaleDto... arbeidsavtaler) {
         var arbeidsforholdDto = ArbeidsforholdDto.builder()
                 .arbeidsgiver(arbeidsgiver)
                 .arbeidsforholdId(arbeidsforholdId)
@@ -141,43 +141,43 @@ public class InntektYtelseGenerator {
         return arbeidsforhold(arbeidsforholdDto, årslønn);
     }
 
-    public InntektYtelseGenerator frilans(LocalDate fom, ArbeidsavtaleDto... arbeidsavtaler) {
+    public InntektGenerator frilans(LocalDate fom, ArbeidsavtaleDto... arbeidsavtaler) {
         return frilans(fom, DEFAULT_ÅRSLØNN, arbeidsavtaler);
     }
 
-    public InntektYtelseGenerator frilans(Integer stillingsprosent, LocalDate fom, ArbeidsavtaleDto... arbeidsavtaler) {
+    public InntektGenerator frilans(Integer stillingsprosent, LocalDate fom, ArbeidsavtaleDto... arbeidsavtaler) {
         return frilans(fom, DEFAULT_ÅRSLØNN, arbeidsavtaler);
     }
 
-    public InntektYtelseGenerator frilans(LocalDate fom, Integer årslønn, ArbeidsavtaleDto... arbeidsavtaler) {
+    public InntektGenerator frilans(LocalDate fom, Integer årslønn, ArbeidsavtaleDto... arbeidsavtaler) {
         return frilans(fom, null, årslønn, arbeidsavtaler);
     }
 
-    public InntektYtelseGenerator frilans(LocalDate fom, LocalDate tom, ArbeidsavtaleDto... arbeidsavtaler) {
+    public InntektGenerator frilans(LocalDate fom, LocalDate tom, ArbeidsavtaleDto... arbeidsavtaler) {
         return frilans(fom, tom, DEFAULT_ÅRSLØNN, arbeidsavtaler);
     }
 
-    public InntektYtelseGenerator frilans(LocalDate fom, LocalDate tom, Integer årslønn, ArbeidsavtaleDto... arbeidsavtaler) {
+    public InntektGenerator frilans(LocalDate fom, LocalDate tom, Integer årslønn, ArbeidsavtaleDto... arbeidsavtaler) {
         return frilans(DEFAULT_STILLINGSPROSENT, fom, tom, årslønn, arbeidsavtaler);
     }
 
-    public InntektYtelseGenerator frilans(Integer stillingsprosent, LocalDate fom, Integer årslønn, ArbeidsavtaleDto... arbeidsavtaler) {
+    public InntektGenerator frilans(Integer stillingsprosent, LocalDate fom, Integer årslønn, ArbeidsavtaleDto... arbeidsavtaler) {
         return frilans(stillingsprosent, fom, null, årslønn, arbeidsavtaler);
     }
 
-    public InntektYtelseGenerator frilans(Integer stillingsprosent, LocalDate fom, LocalDate tom, Integer årslønn, ArbeidsavtaleDto... arbeidsavtaler) {
+    public InntektGenerator frilans(Integer stillingsprosent, LocalDate fom, LocalDate tom, Integer årslønn, ArbeidsavtaleDto... arbeidsavtaler) {
         return frilans(testOrganisasjoner.tilfeldigOrg(), testOrganisasjoner.arbeidsforholdId(), stillingsprosent, fom, tom, årslønn, arbeidsavtaler);
     }
 
-    public InntektYtelseGenerator frilans(ArbeidsgiverDto arbeidsgiver, String arbeidsforholdId, LocalDate fom, ArbeidsavtaleDto... arbeidsavtaler) {
+    public InntektGenerator frilans(ArbeidsgiverDto arbeidsgiver, String arbeidsforholdId, LocalDate fom, ArbeidsavtaleDto... arbeidsavtaler) {
         return frilans(arbeidsgiver, arbeidsforholdId, fom, null, arbeidsavtaler);
     }
 
-    public InntektYtelseGenerator frilans(ArbeidsgiverDto arbeidsgiver, String arbeidsforholdId, LocalDate fom, LocalDate tom, ArbeidsavtaleDto... arbeidsavtaler) {
+    public InntektGenerator frilans(ArbeidsgiverDto arbeidsgiver, String arbeidsforholdId, LocalDate fom, LocalDate tom, ArbeidsavtaleDto... arbeidsavtaler) {
         return frilans(arbeidsgiver, arbeidsforholdId, DEFAULT_STILLINGSPROSENT, fom, tom, DEFAULT_ÅRSLØNN, arbeidsavtaler);
     }
 
-    public InntektYtelseGenerator frilans(ArbeidsgiverDto arbeidsgiver, String arbeidsforholdId, Integer stillingsprosent, LocalDate fom, LocalDate tom, Integer årslønn, ArbeidsavtaleDto... arbeidsavtaler) {
+    public InntektGenerator frilans(ArbeidsgiverDto arbeidsgiver, String arbeidsforholdId, Integer stillingsprosent, LocalDate fom, LocalDate tom, Integer årslønn, ArbeidsavtaleDto... arbeidsavtaler) {
         var frilansArbeidsforhold = ArbeidsforholdDto.builder()
                 .arbeidsgiver(arbeidsgiver)
                 .arbeidsforholdId(arbeidsforholdId)
@@ -195,7 +195,7 @@ public class InntektYtelseGenerator {
                 .build();
     }
 
-    private InntektYtelseGenerator arbeidsforhold(ArbeidsforholdDto arbeidsforholdDto, Integer årslønn) {
+    private InntektGenerator arbeidsforhold(ArbeidsforholdDto arbeidsforholdDto, Integer årslønn) {
         arbeidsforhold.add(arbeidsforholdDto);
         if (årslønn != null) {
             return inntektsperiode(arbeidsforholdDto, årslønn / 12);
@@ -203,7 +203,7 @@ public class InntektYtelseGenerator {
         return this;
     }
 
-    public InntektYtelseGenerator inntektsperiode(ArbeidsforholdDto fraArbeidsforhold, Integer beløpPerMnd) {
+    public InntektGenerator inntektsperiode(ArbeidsforholdDto fraArbeidsforhold, Integer beløpPerMnd) {
         var inntektsperiode = new InntektsperiodeDto(
                 fraArbeidsforhold.arbeidsgiver(),
                 fraArbeidsforhold.ansettelsesperiodeFom(),
@@ -215,7 +215,7 @@ public class InntektYtelseGenerator {
         return inntektsperiode(inntektsperiode);
     }
 
-    public InntektYtelseGenerator inntektsperiode(no.nav.foreldrepenger.vtp.kontrakter.person.v2.OrganisasjonDto organisasjon, LocalDate fom, LocalDate tom, Integer beløp) {
+    public InntektGenerator inntektsperiode(no.nav.foreldrepenger.vtp.kontrakter.person.v2.OrganisasjonDto organisasjon, LocalDate fom, LocalDate tom, Integer beløp) {
         var inntektsperiode = new InntektsperiodeDto(
                 organisasjon,
                 fom,
@@ -227,12 +227,12 @@ public class InntektYtelseGenerator {
         return inntektsperiode(inntektsperiode);
     }
 
-    public InntektYtelseGenerator inntektsperiode(InntektsperiodeDto inntektsperiode) {
+    public InntektGenerator inntektsperiode(InntektsperiodeDto inntektsperiode) {
         inntekt.add(inntektsperiode);
         return this;
     }
 
-    public InntektYtelseGenerator selvstendigNæringsdrivende(Integer gjennomsnittligNæringsinntekt) {
+    public InntektGenerator selvstendigNæringsdrivende(Integer gjennomsnittligNæringsinntekt) {
         var now = LocalDate.now().minusYears(1);
         for (int i = 0; i < 5; i++) {
             skatteopplysninger.add(new SkatteopplysningDto(now.getYear(), gjennomsnittligNæringsinntekt));
