@@ -23,13 +23,13 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.FagsakKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkType;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
-import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
+import no.nav.foreldrepenger.generator.familie.generator.InntektGenerator;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
 import no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler;
 import no.nav.foreldrepenger.generator.soknad.maler.UttaksperiodeType;
 import no.nav.foreldrepenger.soknad.kontrakt.BrukerRolle;
 import no.nav.foreldrepenger.vtp.kontrakter.person.Adressebeskyttelse;
-import no.nav.foreldrepenger.vtp.kontrakter.person.FamilierelasjonModellDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.FamilierelasjonDto;
 import no.nav.vedtak.exception.ManglerTilgangException;
 
 @Tag("verdikjede")
@@ -68,14 +68,14 @@ class AdressebeskyttelseOgSkjermetPersonTester {
     void adressebeskyttet_strengt_fortrolig_kun_saksbehandles_av_sakbehanlder_med_strengt_fortrolig_ad_gruppe() {
         var familie = FamilieGenerator.ny(SaksbehandlerRolle.SAKSBEHANDLER_KODE_6)
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
+                        .inntekt(InntektGenerator.ny().arbeidMedOpptjeningUnder6G().build())
                         .addressebeskyttelse(Adressebeskyttelse.STRENGT_FORTROLIG)
                         .build())
                 .forelder(far()
-                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
+                        .inntekt(InntektGenerator.ny().arbeidMedOpptjeningUnder6G().build())
                         .addressebeskyttelse(Adressebeskyttelse.UGRADERT)
                         .build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .build();
         var termindato = LocalDate.now().minusWeeks(2);
         var søknadMor = SøknadForeldrepengerMaler.lagSøknadForeldrepengerTermin(termindato, BrukerRolle.MOR)
@@ -148,7 +148,7 @@ class AdressebeskyttelseOgSkjermetPersonTester {
     void skjermet_person_må_behandles_av_saksbehandler_med_egen_ansatt_ad_rolle() {
         var familie = FamilieGenerator.ny(SaksbehandlerRolle.SAKSBEHANDLER_EGEN_ANSATT)
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
+                        .inntekt(InntektGenerator.ny().arbeidMedOpptjeningUnder6G().build())
                         .erSkjermet(true)
                         .build())
                 .forelder(far().build())

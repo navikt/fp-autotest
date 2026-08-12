@@ -10,7 +10,7 @@ import static no.nav.foreldrepenger.soknad.kontrakt.BrukerRolle.MOR;
 import static no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType.FELLESPERIODE;
 import static no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType.FORELDREPENGER_FØR_FØDSEL;
 import static no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType.MØDREKVOTE;
-import static no.nav.foreldrepenger.vtp.kontrakter.person.ArbeidsavtaleDto.arbeidsavtale;
+import static no.nav.foreldrepenger.vtp.kontrakter.person.v2.ArbeidsavtaleDto.arbeidsavtale;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
@@ -29,9 +29,9 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
-import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
+import no.nav.foreldrepenger.generator.familie.generator.InntektGenerator;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
-import no.nav.foreldrepenger.vtp.kontrakter.person.FamilierelasjonModellDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.FamilierelasjonDto;
 
 @Tag("fpsak")
 @Tag("foreldrepenger")
@@ -46,7 +46,7 @@ class Termin extends VerdikjedeTestBase {
     void MorSøkerMedEttArbeidsforholdInntektsmeldingFørSøknad() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
+                        .inntekt(InntektGenerator.ny()
                                 .arbeidsforhold(LocalDate.now().minusYears(4),
                                         arbeidsavtale(LocalDate.now().minusYears(4), LocalDate.now().minusDays(60)).build(),
                                         arbeidsavtale(LocalDate.now().minusDays(59)).stillingsprosent(50).build()
@@ -54,7 +54,7 @@ class Termin extends VerdikjedeTestBase {
                                 .build())
                         .build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .build();
         var mor = familie.mor();
         var termindato = LocalDate.now().plusWeeks(3);
@@ -91,7 +91,7 @@ class Termin extends VerdikjedeTestBase {
     void MorSøkerMedEttArbeidsforholdInntektsmeldingPåGjennopptattSøknad() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
+                        .inntekt(InntektGenerator.ny()
                                 .arbeidsforhold(LocalDate.now().minusYears(4),
                                         arbeidsavtale(LocalDate.now().minusMonths(4), LocalDate.now().minusDays(60)).stillingsprosent(50).build(),
                                         arbeidsavtale(LocalDate.now().minusDays(59)).sisteLønnsendringsdato(LocalDate.now().minusMonths(1)).build()
@@ -99,7 +99,7 @@ class Termin extends VerdikjedeTestBase {
                                 .build())
                         .build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .build();
         var mor = familie.mor();
         var termindato = LocalDate.now().minusWeeks(1);
@@ -148,13 +148,13 @@ class Termin extends VerdikjedeTestBase {
     void morSøkerTerminEttArbeidsforhold_avvikIGradering() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
+                        .inntekt(InntektGenerator.ny()
                                 .arbeidsforhold(40, LocalDate.now().minusYears(4), 120_000)
                                 .arbeidsforhold(60, LocalDate.now().minusYears(2), 300_000)
                                 .build())
                         .build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .build();
         var mor = familie.mor();
         var termindato = LocalDate.now().plusWeeks(6);
@@ -225,7 +225,7 @@ class Termin extends VerdikjedeTestBase {
     void morSokerTerminUtenFPFFperiode() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
+                        .inntekt(InntektGenerator.ny()
                                 .arbeidsforhold(LocalDate.now().minusYears(4),
                                         arbeidsavtale(LocalDate.now().minusYears(4), LocalDate.now().minusDays(60)).build(),
                                         arbeidsavtale(LocalDate.now().minusDays(59)).stillingsprosent(50).build()
@@ -233,7 +233,7 @@ class Termin extends VerdikjedeTestBase {
                                 .build())
                         .build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .build();
         var mor = familie.mor();
         var termindato = LocalDate.now().plusWeeks(3);

@@ -31,13 +31,14 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.VurderUttakDokumentasjonBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
-import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
+import no.nav.foreldrepenger.generator.familie.generator.InntektGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
 import no.nav.foreldrepenger.soknad.kontrakt.BrukerRolle;
 import no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType;
 import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.UtsettelsesÅrsak;
-import no.nav.foreldrepenger.vtp.kontrakter.person.FamilierelasjonModellDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.FamilierelasjonDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.YtelseDto;
 
 @Tag("fpsak")
 @Tag("foreldrepenger")
@@ -53,17 +54,15 @@ class RegresjonPreWLB extends VerdikjedeTestBase {
     void BFHRMorUføreTrekkerDagerFortløpendeNårVilkårIkkeErOppfylt() {
         var familie = FamilieGenerator.ny()
                 .forelder(far()
-                        .inntektytelse(InntektYtelseGenerator.ny()
+                        .inntekt(InntektGenerator.ny()
                                 .arbeidsforhold(TestOrganisasjoner.NAV_STORD, "ARB001-001", LocalDate.of(2021, 07, 1))
                                 .arbeidsforhold(TestOrganisasjoner.NAV_STORD, "ARB001-002", LocalDate.of(2017, 11, 1), LocalDate.of(2021, 7,1))
                                 .build())
                         .build())
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
-                                .harUføretrygd()
-                                .build())
+                        .ytelse(YtelseDto.YtelseType.UFØREPENSJON, LocalDate.now().minusYears(5), null)
                         .build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(LocalDate.of(2021, 10, 15))
                 .build();
         var far = familie.far();
@@ -176,17 +175,15 @@ class RegresjonPreWLB extends VerdikjedeTestBase {
     void farSøkerImfFødselMenMorErIkkeSykEllerInnlagt() {
         var familie = FamilieGenerator.ny()
                 .forelder(far()
-                        .inntektytelse(InntektYtelseGenerator.ny()
+                        .inntekt(InntektGenerator.ny()
                                 .arbeidsforhold(TestOrganisasjoner.NAV_STORD, "ARB001-001", LocalDate.of(2021, 07, 1))
                                 .arbeidsforhold(TestOrganisasjoner.NAV_STORD, "ARB001-002", LocalDate.of(2017, 11, 1), LocalDate.of(2021, 7,1))
                                 .build())
                         .build())
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
-                                .harUføretrygd()
-                                .build())
+                        .ytelse(YtelseDto.YtelseType.UFØREPENSJON, LocalDate.now().minusYears(5), null)
                         .build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(LocalDate.of(2021, 10, 15))
                 .build();
         var far = familie.far();
