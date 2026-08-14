@@ -524,6 +524,9 @@
 #### 1. `opprettTilbakekrevingManuelt`
 - **DisplayName:** "1. Oppretter en tilbakekreving manuelt etter Fpsak-førstegangsbehandling og revurdering"
 
+#### 1b. `opprettTilbakekrevingManueltMedForeldelse`
+- **DisplayName:** "1b. Oppretter en tilbakekreving manuelt med en feilutbetalingsperiode som er foreldet"
+
 #### 2. `opprettTilbakekrevingAutomatisk`
 - **DisplayName:** "2. Oppretter en tilbakekreving automatisk etter negativ simulering på fpsak revurdering"
 

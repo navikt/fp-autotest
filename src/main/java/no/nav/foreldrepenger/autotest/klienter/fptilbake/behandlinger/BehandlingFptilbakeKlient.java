@@ -26,6 +26,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BehandlingIdBasicDto;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BehandlingOpprett;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BrukerresponsDto;
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunkt.DetaljerteFeilutbetalingsperioderDto;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunkt.FeilutbetalingDto;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Saksnummer;
@@ -45,6 +46,7 @@ public class BehandlingFptilbakeKlient implements BehandlingerKlient {
     private static final String AKSJONSPUNKT_FPTILBAKE_PATH = BEHANDLING_URL + "/aksjonspunkt";
 
     private static final String FEILUTBETALING_FAKTA_URL = "/behandlingfakta/hent-fakta/feilutbetaling";
+    private static final String VILKARSVURDERING_PERIODER_URL = "/vilkarsvurdering/perioder";
 
 
     private final SaksbehandlerRolle saksbehandlerRolle;
@@ -139,6 +141,17 @@ public class BehandlingFptilbakeKlient implements BehandlingerKlient {
                         .build())
                 .GET();
         return send(request.build(), FeilutbetalingDto.class);
+    }
+
+    @Description("Henter perioder som skal vurderes for vilkårsvurdering - aksjonspunkt 5002")
+    public DetaljerteFeilutbetalingsperioderDto hentVilkårsvurderingPerioder(UUID behandlingUuid) {
+        var request = requestMedInnloggetSaksbehandler(this.saksbehandlerRolle, API_NAME)
+                .uri(fromUri(FPTILBAKE_BASE)
+                        .path(VILKARSVURDERING_PERIODER_URL)
+                        .queryParam(UUID_NAME, behandlingUuid)
+                        .build())
+                .GET();
+        return send(request.build(), DetaljerteFeilutbetalingsperioderDto.class);
     }
 
     @Override

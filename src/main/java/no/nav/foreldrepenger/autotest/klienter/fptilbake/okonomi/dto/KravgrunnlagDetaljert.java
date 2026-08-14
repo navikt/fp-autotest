@@ -14,6 +14,12 @@ import no.nav.foreldrepenger.kontrakter.felles.typer.Saksnummer;
 
 public class KravgrunnlagDetaljert {
 
+    /**
+     * Perioder eldre enn foreldelsesfristen i fptilbake (P30M) utleder aksjonspunkt 5003 VURDER_FORELDELSE.
+     */
+    public static final int DEFAULT_ANTALL_MÅNEDER_TILBAKE = 6;
+    public static final int ANTALL_MÅNEDER_TILBAKE_FORELDET = 36;
+
     protected Long vedtakId;
     protected Long kravgrunnlagId; // TODO: Erstatt med uuid
     protected String kravStatusKode;
@@ -74,10 +80,14 @@ public class KravgrunnlagDetaljert {
         this.kontrollFelt = (LocalDateTime.now().minusMonths(3).withDayOfMonth(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd-hh.mm.ss.SSSSSS")));
     }
     public void leggTilPeriode(PeriodeType periodeType) {
+        leggTilPeriode(periodeType, DEFAULT_ANTALL_MÅNEDER_TILBAKE);
+    }
+
+    public void leggTilPeriode(PeriodeType periodeType, int antallMånederTilbake) {
+        var måned = LocalDate.now().minusMonths(antallMånederTilbake);
         KravgrunnlagPeriode kravgrunnlagPeriode = new KravgrunnlagPeriode(
-                LocalDate.now().minusMonths(6).withDayOfMonth(1).toString(),
-                LocalDate.now().minusMonths(6).withDayOfMonth(LocalDate.now().minusMonths(6).lengthOfMonth())
-                        .toString(),
+                måned.withDayOfMonth(1).toString(),
+                måned.withDayOfMonth(måned.lengthOfMonth()).toString(),
                 BigDecimal.valueOf(412));
         if (periodeType.equals(PeriodeType.SMÅ_BELØP)){
             kravgrunnlagPeriode.leggTilPosteringMedLiteBeløp();

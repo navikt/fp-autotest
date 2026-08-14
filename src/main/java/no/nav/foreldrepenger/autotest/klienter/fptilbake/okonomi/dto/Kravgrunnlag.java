@@ -15,6 +15,15 @@ public class Kravgrunnlag {
         this.kravGrunnlag.leggTilPeriode();
     }
 
+    /**
+     * Legger til en periode som er eldre enn foreldelsesfristen, slik at fptilbake utleder
+     * aksjonspunkt 5003 VURDER_FORELDELSE.
+     */
+    public void leggTilForeldetPeriode() {
+        this.kravGrunnlag.leggTilPeriode(KravgrunnlagDetaljert.PeriodeType.GENERISK,
+                KravgrunnlagDetaljert.ANTALL_MÅNEDER_TILBAKE_FORELDET);
+    }
+
     public void leggTilPeriodeMedSmåBeløp() {
         this.kravGrunnlag.leggTilPeriodeMedSmåBeløp();
     }
