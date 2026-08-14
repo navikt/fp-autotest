@@ -40,21 +40,6 @@ public class ApForeldelse extends AksjonspunktBekreftelse {
         }
     }
 
-    /**
-     * Vurderer perioder som starter før foreldelsesfristen med tilleggsfrist (10-årsregelen), slik at
-     * de fortsatt går videre til vilkårsvurdering. Øvrige perioder settes til ikke foreldet.
-     */
-    public void addVurderingMedTilleggsfrist(LocalDate oppdagelsesDato) {
-        var frist = LocalDate.now().minus(FORELDELSESFRIST);
-        for (ApForeldelseDetaljer periode : foreldelsePerioder) {
-            if (periode.getFraDato().isBefore(frist)) {
-                periode.settTilleggsfrist(oppdagelsesDato);
-            } else {
-                periode.settIkkeForeldet();
-            }
-        }
-    }
-
     @Override
     public String aksjonspunktKode() {
         return "5003";

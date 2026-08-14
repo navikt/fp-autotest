@@ -33,10 +33,4 @@ public class ApForeldelseDetaljer {
         this.foreldelsesfrist = tilDato.plusYears(3);
         this.oppdagelsesDato = null;
     }
-
-    public void settTilleggsfrist(LocalDate oppdagelsesDato) {
-        this.foreldelseVurderingType = ForeldelseVurderingType.TILLEGGSFRIST;
-        this.oppdagelsesDato = oppdagelsesDato;
-        this.foreldelsesfrist = oppdagelsesDato.plusYears(1);
-    }
 }

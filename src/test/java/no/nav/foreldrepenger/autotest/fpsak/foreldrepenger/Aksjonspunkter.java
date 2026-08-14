@@ -3,11 +3,13 @@ package no.nav.foreldrepenger.autotest.fpsak.foreldrepenger;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.OmsorgsovertakelseVilkårType.ES_OMSORGSVILKÅRET;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
+import static no.nav.foreldrepenger.generator.soknad.maler.SøknadEndringMaler.lagEndringssøknad;
 import static no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler.lagSøknadForeldrepengerFødsel;
 import static no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler.lagSøknadForeldrepengerTermin;
 import static no.nav.foreldrepenger.generator.soknad.maler.UttakMaler.fordeling;
 import static no.nav.foreldrepenger.generator.soknad.maler.UttaksperioderMaler.uttaksperiode;
 import static no.nav.foreldrepenger.vtp.kontrakter.person.v2.ArbeidsavtaleDto.arbeidsavtale;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,7 +21,8 @@ import org.junit.jupiter.api.Test;
 
 import com.neovisionaries.i18n.CountryCode;
 
-import no.nav.foreldrepenger.autotest.base.VerdikjedeTestBase;
+import io.qameta.allure.Description;
+import no.nav.foreldrepenger.autotest.base.FptilbakeTestBase;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderBeregnetInntektsAvvikBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderFaktaOmBeregningBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderFaresignalerDto;
@@ -30,6 +33,12 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.FordelingDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.PermisjonPeriodeDto;
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ApFaktaFeilutbetaling;
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ApForeldelse;
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ApVilkårsvurdering;
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.FattVedtakTilbakekreving;
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.Kravgrunnlag;
+import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
@@ -46,7 +55,7 @@ import no.nav.foreldrepenger.vtp.kontrakter.person.v2.YtelseDto;
 
 @Tag("util")
 @Tag("foreldrepenger")
-class Aksjonspunkter extends VerdikjedeTestBase {
+class Aksjonspunkter extends FptilbakeTestBase {
 
     @Test
     @DisplayName("REGISTRER_PAPIRSØKNAD_FORELDREPENGER")
@@ -315,5 +324,93 @@ class Aksjonspunkter extends VerdikjedeTestBase {
 //        vurderFaresignalerDto.setHarInnvirketBehandlingen(true);
 //        vurderFaresignalerDto.setBegrunnelse("HELLO");
 //        saksbehandler.bekreftAksjonspunkt(vurderFaresignalerDto);
+    }
+
+
+    @Test
+    @DisplayName("1b. Oppretter en tilbakekreving manuelt med en feilutbetalingsperiode som er foreldet")
+    @Description("To perioder, en eldre enn foreldelsesfristen på 30 måneder som utleder aksjonspunkt 5003 "
+            + "Vurder foreldelse, og en fersk periode som går videre til vilkårsvurdering.")
+    void opprettTilbakekrevingManueltMedForeldelse() {
+        var ytelseType = "FP";
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntekt(InntektGenerator.ny().arbeidMedOpptjeningOver6G().build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
+                .barn(LocalDate.now().minusMonths(1))
+                .build();
+        var mor = familie.mor();
+        var fødselsdato = familie.barn().fødselsdato();
+        var fpStartdato = fødselsdato.minusWeeks(3);
+        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
+                .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
+        var saksnummer = mor.søk(søknad);
+
+        ventPåInntektsmeldingForespørsel(saksnummer);
+        var arbeidsgiver = mor.arbeidsgiver();
+        arbeidsgiver.sendInntektsmelding(saksnummer, arbeidsgiver.lagInntektsmeldingFP(fpStartdato));
+        saksbehandler.hentFagsak(saksnummer);
+        saksbehandler.ventPåOgVelgFørstegangsbehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
+        AllureHelper.debugFritekst("Ferdig med førstegangsbehandling");
+
+        var fordeling = fordeling(
+                uttaksperiode(KontoType.FELLESPERIODE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1))
+        );
+        var søknadE = lagEndringssøknad(søknad.build(), saksnummer, fordeling);
+        mor.søk(søknadE);
+
+        saksbehandler.hentFagsak(saksnummer);
+        saksbehandler.ventPåOgVelgRevurderingBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
+
+        tbksaksbehandler.opprettTilbakekreving(saksnummer, saksbehandler.valgtBehandling.uuid, ytelseType);
+        tbksaksbehandler.hentSisteBehandling(saksnummer);
+        tbksaksbehandler.ventTilBehandlingErPåVent();
+        assertThat(tbksaksbehandler.valgtBehandling.venteArsakKode)
+                .as("Venteårsak")
+                .isEqualTo("VENT_PÅ_TILBAKEKREVINGSGRUNNLAG");
+
+        var kravgrunnlag = new Kravgrunnlag(saksnummer, mor.fødselsnummer().value(),
+                saksbehandler.valgtBehandling.id, ytelseType, "NY");
+        kravgrunnlag.leggTilForeldetPeriode();
+        kravgrunnlag.leggTilGeneriskPeriode();
+        tbksaksbehandler.sendNyttKravgrunnlag(kravgrunnlag, saksnummer, saksbehandler.valgtBehandling.id);
+        tbksaksbehandler.ventTilBehandlingHarAktivtAksjonspunkt(7003);
+
+        var vurderFakta = (ApFaktaFeilutbetaling) tbksaksbehandler.hentAksjonspunktbehandling(7003);
+        vurderFakta.addGeneriskVurdering(ytelseType);
+        tbksaksbehandler.behandleAksjonspunkt(vurderFakta);
+        tbksaksbehandler.ventTilBehandlingHarAktivtAksjonspunkt(5003);
+
+        var vurderForeldelse = (ApForeldelse) tbksaksbehandler.hentAksjonspunktbehandling(5003);
+        vurderForeldelse.addGeneriskVurdering();
+        tbksaksbehandler.behandleAksjonspunkt(vurderForeldelse);
+        tbksaksbehandler.ventTilBehandlingHarAktivtAksjonspunkt(5002);
+
+        var vurderVilkår = (ApVilkårsvurdering) tbksaksbehandler.hentAksjonspunktbehandling(5002);
+        vurderVilkår.addGeneriskVurdering();
+        tbksaksbehandler.behandleAksjonspunkt(vurderVilkår);
+        tbksaksbehandler.ventTilBehandlingHarAktivtAksjonspunkt(5004);
+
+        tbksaksbehandler.behandleAksjonspunkt(tbksaksbehandler.hentAksjonspunktbehandling(5004));
+        tbksaksbehandler.ventTilBehandlingHarAktivtAksjonspunkt(5005);
+
+        tbkbeslutter.hentSisteBehandling(saksnummer);
+        tbkbeslutter.ventTilBehandlingHarAktivtAksjonspunkt(5005);
+
+        var fattVedtak = (FattVedtakTilbakekreving) tbkbeslutter.hentAksjonspunktbehandling(5005);
+        fattVedtak.godkjennAksjonspunkt(7003);
+        fattVedtak.godkjennAksjonspunkt(5003);
+        fattVedtak.godkjennAksjonspunkt(5002);
+        fattVedtak.godkjennAksjonspunkt(5004);
+        tbkbeslutter.behandleAksjonspunkt(fattVedtak);
+        tbkbeslutter.ventTilAvsluttetBehandling();
+
+        assertThat(tbksaksbehandler.hentResultat(tbksaksbehandler.valgtBehandling.uuid).getTilbakekrevingBeløp())
+                .as("Tilbakekrevingsbeløp i beregningsresultat, kun perioden som ikke er foreldet")
+                .isEqualTo(1616);
     }
 }
