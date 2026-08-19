@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import no.nav.vedtak.mapper.json.DefaultJson3Mapper;
+import no.nav.vedtak.mapper.json.DefaultJsonMapper;
 
 
 public class SerializationTestBase {
@@ -22,11 +22,11 @@ public class SerializationTestBase {
             if (log) {
                 LOG.info("{}", obj);
             }
-            var serialized = DefaultJson3Mapper.toJson(obj);
+            var serialized = DefaultJsonMapper.toJson(obj);
             if (log) {
                 LOG.info("Serialized as {}", serialized);
             }
-            var deserialized = DefaultJson3Mapper.fromJson(serialized, obj.getClass());
+            var deserialized = DefaultJsonMapper.fromJson(serialized, obj.getClass());
             if (log) {
                 LOG.info("{}", deserialized);
             }
