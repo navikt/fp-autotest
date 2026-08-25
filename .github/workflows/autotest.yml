@@ -1,10 +1,6 @@
 name: Utfører tester mot SUT
 on:
   workflow_call:
-    secrets:
-      NAIS_WORKLOAD_IDENTITY_PROVIDER:
-        description: 'Identity provider for NAIS workload identity (brukes ved innlogging mot GAR)'
-        required: true
     inputs:
       build-version:
         description: 'Docker tag (from repository)'
@@ -65,8 +61,6 @@ jobs:
       - name: Login GAR
         uses: nais/login@40b72a35a18ddf2ad74b632461139ab838cc2a2f # ratchet:nais/login@v0
         with:
-          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
-          identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
           team: teamforeldrepenger
       - name: Setup keystore
         shell: bash

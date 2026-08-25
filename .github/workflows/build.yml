@@ -19,8 +19,6 @@ jobs:
     uses: navikt/fp-autotest/.github/workflows/autotest.yml@master # ratchet:exclude
     with:
       test-suite: fpsak
-    secrets:
-      NAIS_WORKLOAD_IDENTITY_PROVIDER: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
 
   fptilbake-tester:
     name: Fptilbake tester
@@ -31,8 +29,6 @@ jobs:
     uses: navikt/fp-autotest/.github/workflows/autotest.yml@master # ratchet:exclude
     with:
       test-suite: fptilbake
-    secrets:
-      NAIS_WORKLOAD_IDENTITY_PROVIDER: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
 
   verdikjede-tester:
     name: Verdikjedetester
@@ -42,5 +38,3 @@ jobs:
     uses: navikt/fp-autotest/.github/workflows/autotest.yml@master # ratchet:exclude
     with:
       test-suite: verdikjede
-    secrets:
-      NAIS_WORKLOAD_IDENTITY_PROVIDER: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
