@@ -24,6 +24,7 @@ jobs:
   autotest:
     name: Kjører ${{ inputs.test-suite }}-tester mot ${{ github.repository }} ${{ inputs.build-version }}
     permissions:
+      contents: read
       id-token: write
     runs-on: ${{ ((github.actor == 'dependabot[bot]' || inputs.test-suite == 'fpkalkulus' || inputs.test-suite == 'fplos') && 'ubuntu-latest') || 'ubuntu-latest-8-cores' }}
     timeout-minutes: 15
@@ -32,6 +33,10 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       GITHUB_ACTOR: ${{ github.actor }}
+      TEST_SUITE: ${{ inputs.test-suite }}
+      PARALLELLITET: ${{ inputs.parallellitet }}
+      BUILD_VERSION: ${{ inputs.build-version }}
+      REPO: ${{ github.repository }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # ratchet:actions/checkout@v7.0.1
         if: github.repository == 'navikt/fp-autotest'
@@ -56,8 +61,6 @@ jobs:
       - name: Login GAR
         uses: nais/login@40b72a35a18ddf2ad74b632461139ab838cc2a2f # ratchet:nais/login@v0
         with:
-          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
-          identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
           team: teamforeldrepenger
       - name: Setup keystore
         shell: bash
@@ -68,15 +71,15 @@ jobs:
         shell: bash
         working-directory: pipeline
         run: |
-          if [[ ${{ inputs.test-suite }} == 'fpkalkulus' ]]; then
+          if [[ "$TEST_SUITE" == 'fpkalkulus' ]]; then
             services=("fpkalkulus")
-          elif [[ ${{ inputs.test-suite }} == 'fplos' ]]; then
+          elif [[ "$TEST_SUITE" == 'fplos' ]]; then
             services=("fplos" "fpsak" "fpformidling" "fpdokgen" "fpoppdrag" "fptilbake" "fprisk" "fpmottak" "fpsoknad" "fpkalkulus" "fpinntektsmelding" "fpinntektsmeldingapi")
           else
             services=("fpsak" "fpformidling" "fpdokgen" "fpoppdrag" "fptilbake" "fprisk" "fpmottak" "fpsoknad" "fpoversikt" "fpkalkulus" "fpinntektsmelding" "fpinntektsmeldingapi")
           fi
 
-          ./update-versions.sh ${{ github.repository }} ${{ inputs.build-version }}
+          ./update-versions.sh "$REPO" "$BUILD_VERSION"
           echo "Kjører docker compose up på følgende applikasjoner: ${services[*]}"
           docker compose -f compose.yml -f compose-github.yml pull --quiet "${services[@]}"
           docker stop $(docker ps -a -q) || docker rm $rm $(docker ps -a -q)
@@ -84,22 +87,22 @@ jobs:
       - name: Utfører tester fra test suite ${{ inputs.test-suite }} mot SUT
         id: tester
         shell: bash
-        run: mvn test -e --batch-mode -Djuipter.parallelism=${{ inputs.parallellitet }} -P ${{ inputs.test-suite }} > >(tee test-result-log.txt)
+        run: mvn test -e --batch-mode -Djuipter.parallelism="$PARALLELLITET" -P "$TEST_SUITE" > >(tee test-result-log.txt)
       - name: Sjekker loggen etter feil
         if: (success() || failure()) && steps.setup.outcome == 'success'
         id: logger
         shell: bash
         run: |
-          if [[ ${{ inputs.test-suite }} == 'fptilbake' ]]; then
-            mvn test -e --batch-mode -Djuipter.parallelism=${{ inputs.parallellitet }} -P loggfeil -DikkeSjekkLengdeAvContainer=fpdokgen,fpoppdrag
-          elif [[ ${{ inputs.test-suite }} == 'verdikjede' ]]; then
-            mvn test -e --batch-mode -Djuipter.parallelism=${{ inputs.parallellitet }} -P logger -DikkeSjekkLengdeAvContainer=fpdokgen
-          elif [[ ${{ inputs.test-suite }} == 'fplos' ]]; then
-            mvn test -e --batch-mode -Djuipter.parallelism=${{ inputs.parallellitet }} -P logger -DikkeSjekkLengdeAvContainer=fpdokgen,fpoppdrag
-          elif [[ ${{ inputs.test-suite }} == 'fpsak' ]]; then
-            mvn test -e --batch-mode -Djuipter.parallelism=${{ inputs.parallellitet }} -P logger -DikkeSjekkLengdeAvContainer=fpdokgen
+          if [[ "$TEST_SUITE" == 'fptilbake' ]]; then
+            mvn test -e --batch-mode -Djuipter.parallelism="$PARALLELLITET" -P loggfeil -DikkeSjekkLengdeAvContainer=fpdokgen,fpoppdrag
+          elif [[ "$TEST_SUITE" == 'verdikjede' ]]; then
+            mvn test -e --batch-mode -Djuipter.parallelism="$PARALLELLITET" -P logger -DikkeSjekkLengdeAvContainer=fpdokgen
+          elif [[ "$TEST_SUITE" == 'fplos' ]]; then
+            mvn test -e --batch-mode -Djuipter.parallelism="$PARALLELLITET" -P logger -DikkeSjekkLengdeAvContainer=fpdokgen,fpoppdrag
+          elif [[ "$TEST_SUITE" == 'fpsak' ]]; then
+            mvn test -e --batch-mode -Djuipter.parallelism="$PARALLELLITET" -P logger -DikkeSjekkLengdeAvContainer=fpdokgen
           else
-            mvn test -e --batch-mode -Djuipter.parallelism=${{ inputs.parallellitet }} -P loggfeil
+            mvn test -e --batch-mode -Djuipter.parallelism="$PARALLELLITET" -P loggfeil
           fi
       - name: Sjekker minneforbruk
         if: failure() || cancelled()
