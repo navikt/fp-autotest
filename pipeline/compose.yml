@@ -415,6 +415,7 @@ services:
     container_name: fpmottak
     environment:
       NAIS_APP_NAME: fpmottak
+      JAVA_TOOL_OPTIONS: -Dorg.apache.avro.SERIALIZABLE_PACKAGES=no.nav.joarkjournalfoeringhendelser,no.nav.person.pdl.leesah
     env_file:
       - *common-properties
       - fpmottak_datasource.env
@@ -617,6 +618,7 @@ services:
     mem_limit: 512mb
     environment:
       NAIS_APP_NAME: fpoversikt
+      JAVA_TOOL_OPTIONS: -Dorg.apache.avro.SERIALIZABLE_PACKAGES=no.nav.joarkjournalfoeringhendelser,no.nav.person.pdl.leesah
     env_file:
       - *common-properties
       - fpoversikt_datasource.env
