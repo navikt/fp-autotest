@@ -30,9 +30,9 @@
         <fp-kontrakter.version>9.4.37</fp-kontrakter.version>
 
         <ftberegning.version>7.1.6</ftberegning.version>
-        <fpkalkulus.kontrakt.version>1.2.0</fpkalkulus.kontrakt.version>
+        <fpkalkulus.kontrakt.version>1.2.1</fpkalkulus.kontrakt.version>
 
-        <fpsoknad-kontrakt.version>1.0.6</fpsoknad-kontrakt.version>
+        <fpsoknad-kontrakt.version>1.0.7</fpsoknad-kontrakt.version>
 
         <pdfbox.version>3.0.8</pdfbox.version>
         <allure.version>2.35.4</allure.version>
