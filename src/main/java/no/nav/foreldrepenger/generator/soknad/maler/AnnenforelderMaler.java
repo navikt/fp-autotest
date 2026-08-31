@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.generator.soknad.maler;
 
-import com.neovisionaries.i18n.CountryCode;
-
 import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.annenpart.AnnenForelderDto;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Fødselsnummer;
 import no.nav.foreldrepenger.generator.familie.Søker;
@@ -26,7 +24,7 @@ public class AnnenforelderMaler {
                 .build();
     }
 
-    public static AnnenForelderDto utenlandskMedRettighetEØS(String annenpartFnr, CountryCode land) {
+    public static AnnenForelderDto utenlandskMedRettighetEØS(String annenpartFnr, String land) {
         return AnnenforelderBuilder.utenlandskForelderRettEØS(new Fødselsnummer(annenpartFnr), land)
                 .medHarMorUføretrygd(false) // Fix: utenlandskForelderRettEØS
                 .build();

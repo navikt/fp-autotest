@@ -33,6 +33,7 @@ import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.beh
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer.SaldoVisningStønadskontoType.MINSTERETT;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
+import static no.nav.foreldrepenger.generator.soknad.Landkoder.SWE;
 import static no.nav.foreldrepenger.generator.soknad.maler.SøknadEndringMaler.lagEndringssøknad;
 import static no.nav.foreldrepenger.generator.soknad.maler.SøknadEngangsstønadMaler.lagEngangstønadFødsel;
 import static no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler.lagSøknadForeldrepengerAdopsjon;
@@ -74,8 +75,6 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-
-import com.neovisionaries.i18n.CountryCode;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.saksbehandler.fptilbake.TilbakekrevingSaksbehandler;
@@ -2511,7 +2510,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medUttaksplan(fordeling(
                         uttaksperiode(FEDREKVOTE, startdatoForeldrepenger, startdatoForeldrepenger.plusWeeks(15).minusDays(1)), fellesperiodeFar
                 ))
-                .medAnnenForelder(AnnenforelderMaler.utenlandskMedRettighetEØS("999999999999", CountryCode.SE));
+                .medAnnenForelder(AnnenforelderMaler.utenlandskMedRettighetEØS("999999999999", SWE));
 
         var saksnummer = far.søk(søknad);
         saksbehandler.hentFagsak(saksnummer);
