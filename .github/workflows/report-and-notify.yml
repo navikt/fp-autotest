@@ -56,7 +56,9 @@ jobs:
       - name: Henter ut historie til trigger
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # ratchet:actions/checkout@v7.0.1
         with:
-          persist-credentials: false
+          # Beholder credentials fordi neste steg gjor `git fetch` mot repoet,
+          # noe som krever autentisering for private/interne repoer.
+          persist-credentials: true
           repository: ${{ github.repository }}
           path: ${{ github.repository }}
           fetch-depth: 5
