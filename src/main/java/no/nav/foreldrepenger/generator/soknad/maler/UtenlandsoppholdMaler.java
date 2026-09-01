@@ -1,9 +1,9 @@
 package no.nav.foreldrepenger.generator.soknad.maler;
 
+import static no.nav.foreldrepenger.generator.soknad.Landkoder.USA;
+
 import java.time.LocalDate;
 import java.util.List;
-
-import com.neovisionaries.i18n.CountryCode;
 
 import no.nav.foreldrepenger.soknad.kontrakt.UtenlandsoppholdsperiodeDto;
 
@@ -18,6 +18,6 @@ public final class UtenlandsoppholdMaler {
     }
 
     public static List<UtenlandsoppholdsperiodeDto> oppholdIUtlandetForrige12mnd() {
-        return List.of(new UtenlandsoppholdsperiodeDto(LocalDate.now().minusYears(2), LocalDate.now(), CountryCode.US));
+        return List.of(new UtenlandsoppholdsperiodeDto(LocalDate.now().minusYears(2), LocalDate.now(), USA));
     }
 }

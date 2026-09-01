@@ -1,8 +1,8 @@
 package no.nav.foreldrepenger.generator.soknad.maler;
 
-import java.time.LocalDate;
+import static no.nav.foreldrepenger.generator.soknad.Landkoder.NOR;
 
-import com.neovisionaries.i18n.CountryCode;
+import java.time.LocalDate;
 
 import no.nav.foreldrepenger.kontrakter.felles.typer.Orgnummer;
 import no.nav.foreldrepenger.soknad.kontrakt.opptjening.AnnenInntektDto;
@@ -35,16 +35,16 @@ public final class OpptjeningMaler {
         return lagNorskOrganisasjon(orgnummer, fom, tom, erNyIArbeidslivet, næringsInntekt, varigEndretNæring);
     }
 
-    public static AnnenInntektDto utenlandskArbeidsforhold(CountryCode landKode) {
+    public static AnnenInntektDto utenlandskArbeidsforhold(String landKode) {
         return annenInntekt(AnnenInntektDto.AnnenOpptjeningType.JOBB_I_UTLANDET, landKode, LocalDate.now().minusYears(4), LocalDate.now());
     }
 
     public static AnnenInntektDto annenInntektNorsk(AnnenInntektDto.AnnenOpptjeningType type) {
-        return annenInntekt(type, CountryCode.NO, LocalDate.now().minusYears(4), LocalDate.now());
+        return annenInntekt(type, NOR, LocalDate.now().minusYears(4), LocalDate.now());
     }
 
     public static AnnenInntektDto annenInntektNorsk(AnnenInntektDto.AnnenOpptjeningType type, LocalDate fom, LocalDate tom) {
-        return annenInntekt(type, CountryCode.NO, fom, tom);
+        return annenInntekt(type, NOR, fom, tom);
     }
 
 
@@ -62,7 +62,7 @@ public final class OpptjeningMaler {
             new Orgnummer(orgnummer),
             næringsInntekt.intValue(),
             true,
-            CountryCode.NO,
+            NOR,
             erNyIArbeidslivet,
             LocalDate.now().minusYears(4),
             varigEndretNæring,
@@ -72,7 +72,7 @@ public final class OpptjeningMaler {
 
     }
 
-    private static AnnenInntektDto annenInntekt(AnnenInntektDto.AnnenOpptjeningType type, CountryCode landKode, LocalDate fom, LocalDate tom) {
+    private static AnnenInntektDto annenInntekt(AnnenInntektDto.AnnenOpptjeningType type, String landKode, LocalDate fom, LocalDate tom) {
         if (AnnenInntektDto.AnnenOpptjeningType.JOBB_I_UTLANDET.equals(type)) {
             return new AnnenInntektDto(type, fom, tom, landKode, "Utenlandsk arbeidsgiver AS");
         }
