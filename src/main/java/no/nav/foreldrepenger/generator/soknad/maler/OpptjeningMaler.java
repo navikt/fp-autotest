@@ -35,6 +35,56 @@ public final class OpptjeningMaler {
         return lagNorskOrganisasjon(orgnummer, fom, tom, erNyIArbeidslivet, næringsInntekt, varigEndretNæring);
     }
 
+    public static NæringDto registrertEgenNæring(String orgnummer,
+                                                 String navn,
+                                                 NæringDto.Virksomhetstype næringstype,
+                                                 LocalDate fom,
+                                                 Number næringsinntekt,
+                                                 boolean erNyIArbeidslivet) {
+        return new NæringDto(
+                fom,
+                null,
+                næringstype,
+                navn,
+                new Orgnummer(orgnummer),
+                næringsinntekt.intValue(),
+                true,
+                null,
+                erNyIArbeidslivet,
+                null,
+                false,
+                null,
+                null,
+                null);
+    }
+
+    /**
+     * Næring som søker legger til manuelt fordi den ikke finnes i Enhetsregisteret. Navn, land og virksomhetstype er
+     * søkerens egne svar, og skal derfor vises i kvitteringen selv om forelagte næringer også følger med søknaden.
+     */
+    public static NæringDto utenlandskEgenNæring(String navn,
+                                                 CountryCode registrertILand,
+                                                 NæringDto.Virksomhetstype næringstype,
+                                                 LocalDate fom,
+                                                 Number næringsinntekt,
+                                                 boolean erNyIArbeidslivet) {
+        return new NæringDto(
+                fom,
+                null,
+                næringstype,
+                navn,
+                null,
+                næringsinntekt.intValue(),
+                false,
+                registrertILand,
+                erNyIArbeidslivet,
+                null,
+                false,
+                null,
+                null,
+                null);
+    }
+
     public static AnnenInntektDto utenlandskArbeidsforhold(CountryCode landKode) {
         return annenInntekt(AnnenInntektDto.AnnenOpptjeningType.JOBB_I_UTLANDET, landKode, LocalDate.now().minusYears(4), LocalDate.now());
     }

@@ -13,6 +13,7 @@ import no.nav.foreldrepenger.vtp.kontrakter.person.ArenaDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.ArenaMeldekort;
 import no.nav.foreldrepenger.vtp.kontrakter.person.ArenaSakerDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.ArenaVedtakDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.BrregDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.GrunnlagDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.InfotrygdDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.InntektYtelseModellDto;
@@ -321,6 +322,15 @@ public class InntektYtelseGenerator {
             now = now.minusYears(1);
         }
         inntektYtelse.sigrun(sigrunDto);
+        inntektYtelse.brreg(new BrregDto(List.of(
+                new BrregDto.VirksomhetDto(
+                        "999999999",
+                        "VTP FISKE",
+                        "ENK",
+                        "Enkeltpersonforetak",
+                        "03.110",
+                        "Hav- og kystfiske")
+        )));
         return this;
     }
 

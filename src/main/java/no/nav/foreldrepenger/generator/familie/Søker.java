@@ -28,11 +28,13 @@ import no.nav.foreldrepenger.soknad.kontrakt.SøknadDto;
 import no.nav.foreldrepenger.soknad.kontrakt.builder.EndringssøknadBuilder;
 import no.nav.foreldrepenger.soknad.kontrakt.builder.SøknadBuilder;
 import no.nav.foreldrepenger.soknad.kontrakt.ettersendelse.YtelseType;
+import no.nav.foreldrepenger.soknad.kontrakt.opptjening.NæringDto;
 import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.DokumentTypeId;
 import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.Dokumenterer;
 import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.InnsendingType;
 import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.VedleggDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.AaregDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.BrregDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.InntektYtelseModellDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.OrganisasjonDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.PersonDto;
@@ -210,7 +212,7 @@ public abstract class Søker {
 
     public Saksnummer søk(SøknadBuilder søknadBuilder) {
         var søknad = søknadBuilder
-                .medSøkerinfo(new SøkerDto(fødselsnummer, new SøkerDto.Navn("Fornavnet", "Mellomnavnet", "Etternavnet hardkodet"), registrerteArbeidsforhold()))
+                .medSøkerinfo(søkerDto())
                 .build();
         LOG.info("Sender inn søknad for {} ...", fødselsnummer.value());
         this.førstegangssøknad = søknad;
@@ -221,7 +223,7 @@ public abstract class Søker {
 
     public Saksnummer søk(SøknadBuilder søknadBuilder, Saksnummer saksnummer) {
         var søknad = søknadBuilder
-                .medSøkerinfo(new SøkerDto(fødselsnummer, new SøkerDto.Navn("Fornavnet", "Mellomnavnet", "Etternavnet hardkodet"), registrerteArbeidsforhold()))
+                .medSøkerinfo(søkerDto())
                 .build();
         LOG.info("Sender inn søknad for {} med saksnummer {} ...", fødselsnummer.value(), saksnummer.value());
         this.førstegangssøknad = søknad;
@@ -232,7 +234,7 @@ public abstract class Søker {
 
     public Saksnummer søk(EndringssøknadBuilder søknadBuilder) {
         var søknad = søknadBuilder
-                .medSøkerinfo(new SøkerDto(fødselsnummer, new SøkerDto.Navn("Fornavnet", "Mellomnavnet", "Etternavnet hardkodet"), registrerteArbeidsforhold()))
+                .medSøkerinfo(søkerDto())
                 .build();
         this.saksnummer = søknad.saksnummer();
         LOG.info("Sender inn endringssøknadsøknad for {} med saksnummer {} ...", fødselsnummer.value(), this.saksnummer.value());
@@ -308,6 +310,44 @@ public abstract class Søker {
         return arbeidsforholdene().stream()
                 .map(Søker::tilArbeidsforhold)
                 .toList();
+    }
+
+    private SøkerDto søkerDto() {
+        return new SøkerDto(
+                fødselsnummer,
+                new SøkerDto.Navn("Fornavnet", "Mellomnavnet", "Etternavnet hardkodet"),
+                registrerteArbeidsforhold(),
+                List.of(),
+                selvstendigeNæringer());
+    }
+
+    private List<SøkerDto.SelvstendigNæring> selvstendigeNæringer() {
+        return Optional.ofNullable(personDto.inntektytelse())
+                .map(InntektYtelseModellDto::brreg)
+                .map(BrregDto::virksomheter)
+                .orElseGet(List::of)
+                .stream()
+                .map(virksomhet -> new SøkerDto.SelvstendigNæring(
+                        virksomhet.navn(),
+                        new Orgnummer(virksomhet.organisasjonsnummer()),
+                        virksomhetstype(virksomhet.næringskode())))
+                .toList();
+    }
+
+    private static NæringDto.Virksomhetstype virksomhetstype(String næringskode) {
+        if (næringskode != null && ((næringskode.startsWith("01")
+                && !næringskode.startsWith("01.6")
+                && !næringskode.startsWith("01.7"))
+                || næringskode.startsWith("02.1"))) {
+            return NæringDto.Virksomhetstype.JORDBRUK_SKOGBRUK;
+        }
+        if (næringskode != null && næringskode.startsWith("03.1")) {
+            return NæringDto.Virksomhetstype.FISKE;
+        }
+        if (næringskode != null && næringskode.startsWith("88.91")) {
+            return NæringDto.Virksomhetstype.DAGMAMMA;
+        }
+        return NæringDto.Virksomhetstype.ANNEN;
     }
 
     private static SøkerDto.Arbeidsforhold tilArbeidsforhold(Arbeidsforhold af) {
