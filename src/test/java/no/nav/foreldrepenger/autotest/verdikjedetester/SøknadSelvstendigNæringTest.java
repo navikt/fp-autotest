@@ -5,6 +5,7 @@ import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.
 import static no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler.lagSøknadForeldrepengerTerminFødsel;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -20,6 +21,7 @@ import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
 import no.nav.foreldrepenger.generator.soknad.maler.OpptjeningMaler;
 import no.nav.foreldrepenger.soknad.kontrakt.BrukerRolle;
+import no.nav.foreldrepenger.soknad.kontrakt.opptjening.AnnenInntektDto.AnnenOpptjeningType;
 import no.nav.foreldrepenger.soknad.kontrakt.opptjening.NæringDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.FamilierelasjonModellDto;
 
@@ -86,6 +88,44 @@ class SøknadSelvstendigNæringTest extends VerdikjedeTestBase {
 
         var saksnummer = mor.søk(søknad);
         LOG.info("Søknad med utenlandsk næring er sendt. Fødselsnummer: {}, saksnummer: {}",
+                mor.fødselsnummer().value(), saksnummer.value());
+    }
+
+    @Test
+    @DisplayName("Sender foreldrepengesøknad med alle andre inntektskilder søker kan velge")
+    @Description("Førstegangstjeneste, etterlønn og jobb i utlandet er de tre typene søknadsdialogen tilbyr. "
+            + "Etterlønn og førstegangstjeneste har verken arbeidsgiver eller land, så kvitteringen skal utelate de punktene.")
+    void senderSøknadMedAlleAndreInntektskilder() {
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny().selvstendigNæringsdrivende(200_000).build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.now().minusWeeks(2))
+                .build();
+
+        var mor = familie.mor();
+        var oppgittNæring = OpptjeningMaler.registrertEgenNæring(
+                "999999999",
+                "VTP FISKE",
+                NæringDto.Virksomhetstype.FISKE,
+                mor.næringStartdato(),
+                mor.næringsinntekt(),
+                false);
+        var andreInntekter = List.of(
+                OpptjeningMaler.annenInntektNorsk(AnnenOpptjeningType.ETTERLØNN_SLUTTPAKKE,
+                        LocalDate.now().minusMonths(10), LocalDate.now().minusMonths(8)),
+                OpptjeningMaler.annenInntektNorsk(AnnenOpptjeningType.MILITÆR_ELLER_SIVILTJENESTE,
+                        LocalDate.now().minusMonths(8), LocalDate.now().minusMonths(4)),
+                OpptjeningMaler.utenlandskArbeidsforhold(CountryCode.SE, LocalDate.now().minusMonths(4), LocalDate.now().minusMonths(1)));
+        var søknad = lagSøknadForeldrepengerTerminFødsel(familie.barn().fødselsdato(), BrukerRolle.MOR)
+                .medSelvstendigNæringsdrivendeInformasjon(oppgittNæring)
+                .medAndreInntekterSiste10Mnd(andreInntekter)
+                .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
+
+        var saksnummer = mor.søk(søknad);
+        LOG.info("Søknad med alle andre inntektskilder er sendt. Fødselsnummer: {}, saksnummer: {}",
                 mor.fødselsnummer().value(), saksnummer.value());
     }
 }

@@ -89,6 +89,10 @@ public final class OpptjeningMaler {
         return annenInntekt(AnnenInntektDto.AnnenOpptjeningType.JOBB_I_UTLANDET, landKode, LocalDate.now().minusYears(4), LocalDate.now());
     }
 
+    public static AnnenInntektDto utenlandskArbeidsforhold(CountryCode landKode, LocalDate fom, LocalDate tom) {
+        return annenInntekt(AnnenInntektDto.AnnenOpptjeningType.JOBB_I_UTLANDET, landKode, fom, tom);
+    }
+
     public static AnnenInntektDto annenInntektNorsk(AnnenInntektDto.AnnenOpptjeningType type) {
         return annenInntekt(type, CountryCode.NO, LocalDate.now().minusYears(4), LocalDate.now());
     }
