@@ -2,6 +2,8 @@ package no.nav.foreldrepenger.autotest.verdikjedetester;
 
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
+import static no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner.NAV_OSLO;
+import static no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner.NAV_STORD;
 import static no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler.lagSøknadForeldrepengerTerminFødsel;
 
 import java.time.LocalDate;
@@ -92,13 +94,18 @@ class SøknadSelvstendigNæringTest extends VerdikjedeTestBase {
     }
 
     @Test
-    @DisplayName("Sender foreldrepengesøknad med alle andre inntektskilder søker kan velge")
-    @Description("Førstegangstjeneste, etterlønn og jobb i utlandet er de tre typene søknadsdialogen tilbyr. "
-            + "Etterlønn og førstegangstjeneste har verken arbeidsgiver eller land, så kvitteringen skal utelate de punktene.")
+    @DisplayName("Sender foreldrepengesøknad med alle aktiviteter og andre inntektskilder")
+    @Description("Søknaden inneholder arbeidsforhold, frilansoppdrag, selvstendig næring, førstegangstjeneste, "
+            + "etterlønn og jobb i utlandet, slik at hele v2-oppsummeringen kan kontrolleres i én kvittering.")
     void senderSøknadMedAlleAndreInntektskilder() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny().selvstendigNæringsdrivende(200_000).build())
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arbeidsforhold(NAV_OSLO, 75, LocalDate.now().minusYears(1), 480_000)
+                                .frilans(NAV_STORD, "arb", 25, LocalDate.now().minusYears(3),
+                                        LocalDate.now().minusMonths(1), 120_000)
+                                .selvstendigNæringsdrivende(200_000)
+                                .build())
                         .build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
@@ -120,6 +127,7 @@ class SøknadSelvstendigNæringTest extends VerdikjedeTestBase {
                         LocalDate.now().minusMonths(8), LocalDate.now().minusMonths(4)),
                 OpptjeningMaler.utenlandskArbeidsforhold(CountryCode.SE, LocalDate.now().minusMonths(4), LocalDate.now().minusMonths(1)));
         var søknad = lagSøknadForeldrepengerTerminFødsel(familie.barn().fødselsdato(), BrukerRolle.MOR)
+                .medFrilansInformasjon(OpptjeningMaler.frilansOpptjening())
                 .medSelvstendigNæringsdrivendeInformasjon(oppgittNæring)
                 .medAndreInntekterSiste10Mnd(andreInntekter)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));

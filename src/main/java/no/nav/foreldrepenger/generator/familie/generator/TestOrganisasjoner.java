@@ -70,6 +70,9 @@ public class TestOrganisasjoner {
                     LocalDate.now().minusDays(2))
     );
 
+    private static final List<OrganisasjonDto> KJENTE_ORGANISASJONER = List.of(
+            NAV, NAV_OSLO, NAV_BERGEN, NAV_STORD, NAV_KLAGE_MIDT, NAV_YTELSE_BETALING, NYLIG_OPPSTATET);
+
     private final List<OrganisasjonDto> ORGANISASJONER = new ArrayList<>();
 
 
@@ -77,6 +80,13 @@ public class TestOrganisasjoner {
         ORGANISASJONER.addAll(List.of(NAV, NAV_OSLO, NAV_BERGEN, NAV_STORD, NAV_KLAGE_MIDT));
     }
 
+    public static String navnFor(String orgnummer) {
+        return KJENTE_ORGANISASJONER.stream()
+                .filter(organisasjon -> organisasjon.orgnummer().value().equals(orgnummer))
+                .map(organisasjon -> organisasjon.organisasjonsdetaljer().navn())
+                .findFirst()
+                .orElse("ARBEIDSGIVERS NAVN AS");
+    }
 
     private final Random random = new Random();
 

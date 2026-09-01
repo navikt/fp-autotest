@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.generator.familie;
 
 import static no.nav.foreldrepenger.autotest.util.StreamUtils.distinctByKeys;
 import static no.nav.foreldrepenger.generator.familie.Aareg.arbeidsforholdFrilans;
+import static no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner.navnFor;
 import static no.nav.foreldrepenger.generator.familie.Sigrun.hentNæringsinntekt;
 import static no.nav.foreldrepenger.generator.familie.Sigrun.startdato;
 import static no.nav.foreldrepenger.vtp.kontrakter.person.Arbeidsforholdstype.ORDINÆRT_ARBEIDSFORHOLD;
@@ -308,7 +309,21 @@ public abstract class Søker {
 
     private List<SøkerDto.Arbeidsforhold> registrerteArbeidsforhold() {
         return arbeidsforholdene().stream()
+                .filter(arbeidsforhold -> ORDINÆRT_ARBEIDSFORHOLD.equals(arbeidsforhold.arbeidsforholdstype()))
                 .map(Søker::tilArbeidsforhold)
+                .toList();
+    }
+
+    private List<SøkerDto.Frilansoppdrag> registrerteFrilansoppdrag() {
+        return Optional.ofNullable(personDto.inntektytelse())
+                .map(InntektYtelseModellDto::aareg)
+                .map(aareg -> arbeidsforholdFrilans(aareg, identer))
+                .orElseGet(List::of)
+                .stream()
+                .map(arbeidsforhold -> new SøkerDto.Frilansoppdrag(
+                        navnFor(arbeidsforhold.arbeidsgiverIdentifikasjon()),
+                        arbeidsforhold.ansettelsesperiodeFom(),
+                        arbeidsforhold.ansettelsesperiodeTom()))
                 .toList();
     }
 
@@ -317,7 +332,7 @@ public abstract class Søker {
                 fødselsnummer,
                 new SøkerDto.Navn("Fornavnet", "Mellomnavnet", "Etternavnet hardkodet"),
                 registrerteArbeidsforhold(),
-                List.of(),
+                registrerteFrilansoppdrag(),
                 selvstendigeNæringer());
     }
 
@@ -351,9 +366,8 @@ public abstract class Søker {
     }
 
     private static SøkerDto.Arbeidsforhold tilArbeidsforhold(Arbeidsforhold af) {
-        var hardkodetNavn = "ARBEIDSGIVERS NAVN AS";
         return new SøkerDto.Arbeidsforhold(
-                hardkodetNavn,
+                navnFor(af.arbeidsgiverIdentifikasjon()),
                 new Orgnummer(af.arbeidsgiverIdentifikasjon()),
                 (double) af.stillingsprosent(),
                 af.ansettelsesperiodeFom(),

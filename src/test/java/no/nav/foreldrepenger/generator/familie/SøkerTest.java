@@ -1,6 +1,8 @@
 package no.nav.foreldrepenger.generator.familie;
 
 import static no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler.lagSøknadForeldrepengerTerminFødsel;
+import static no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner.NAV_OSLO;
+import static no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner.NAV_STORD;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.lang.reflect.Proxy;
@@ -13,6 +15,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.autotest.aktoerer.innsender.Innsender;
+import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 import no.nav.foreldrepenger.kontrakter.felles.typer.AktørId;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Fødselsnummer;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Saksnummer;
@@ -69,6 +72,35 @@ class SøkerTest {
         assertThat(søkerinfo(PersonDto.builder().build()).selvstendigNæring()).isEmpty();
         assertThat(søkerinfo(personMedBrreg(null)).selvstendigNæring()).isEmpty();
         assertThat(søkerinfo(personMedBrreg(new BrregDto(null))).selvstendigNæring()).isEmpty();
+    }
+
+    @Test
+    @DisplayName("Ordinære arbeidsforhold og frilansoppdrag legges i hver sin søkerinfo-liste")
+    void aaregdataFordelesPåArbeidsforholdOgFrilansoppdrag() {
+        var person = PersonDto.builder()
+                .inntektytelse(InntektYtelseGenerator.ny()
+                        .arbeidsforhold(NAV_OSLO, 75, LocalDate.now().minusYears(1), 480_000)
+                        .frilans(NAV_STORD, "frilans-1", 25, LocalDate.now().minusMonths(6),
+                                LocalDate.now().minusMonths(1), 120_000)
+                        .build())
+                .build();
+
+        var søkerinfo = søkerinfo(person);
+
+        assertThat(søkerinfo.arbeidsforhold())
+                .singleElement()
+                .extracting(SøkerDto.Arbeidsforhold::navn)
+                .isEqualTo("NAV FAMILIE- OG PENSJONSYTELSER OSLO");
+        assertThat(søkerinfo.frilansoppdrag())
+                .singleElement()
+                .extracting(
+                        SøkerDto.Frilansoppdrag::navn,
+                        SøkerDto.Frilansoppdrag::fom,
+                        SøkerDto.Frilansoppdrag::tom)
+                .containsExactly(
+                        "NAV FAMILIE- OG PENSJONSYTELSER STORD",
+                        LocalDate.now().minusMonths(6),
+                        LocalDate.now().minusMonths(1));
     }
 
     private static BrregDto.VirksomhetDto virksomhet(String orgnummer, String næringskode) {
