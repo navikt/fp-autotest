@@ -4,7 +4,7 @@ import static no.nav.foreldrepenger.autotest.util.StreamUtils.distinctByKeys;
 import static no.nav.foreldrepenger.generator.familie.Aareg.arbeidsforholdFrilans;
 import static no.nav.foreldrepenger.generator.familie.Sigrun.hentNæringsinntekt;
 import static no.nav.foreldrepenger.generator.familie.Sigrun.startdato;
-import static no.nav.foreldrepenger.vtp.kontrakter.person.Arbeidsforholdstype.ORDINÆRT_ARBEIDSFORHOLD;
+import static no.nav.foreldrepenger.vtp.kontrakter.person.v2.Arbeidsforholdstype.ORDINÆRT_ARBEIDSFORHOLD;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

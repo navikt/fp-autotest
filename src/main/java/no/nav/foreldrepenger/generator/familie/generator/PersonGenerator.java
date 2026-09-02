@@ -4,11 +4,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.neovisionaries.i18n.CountryCode;
-
-import no.nav.foreldrepenger.vtp.kontrakter.person.Kjønn;
-import no.nav.foreldrepenger.vtp.kontrakter.person.Rolle;
-import no.nav.foreldrepenger.vtp.kontrakter.person.Språk;
+import no.nav.foreldrepenger.generator.Landkoder;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.Kjønn;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.Rolle;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.Språk;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.AdresseDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.GeografiskTilknytningDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.MedlemskapDto;
@@ -85,7 +84,7 @@ public class PersonGenerator {
     }
 
     public static List<StatsborgerskapDto> norskStatsborgerskap() {
-        return new ArrayList<>(List.of(new StatsborgerskapDto(CountryCode.NO)));
+        return new ArrayList<>(List.of(new StatsborgerskapDto(Landkoder.NOR)));
     }
 
     public static List<MedlemskapDto> norskMedlemskap() {
@@ -103,7 +102,7 @@ public class PersonGenerator {
     public static List<AdresseDto> norskAdresse() {
         var adresse = new AdresseDto(
                 AdresseDto.AdresseType.BOSTEDSADRESSE,
-                CountryCode.NO,
+                Landkoder.NOR,
                 "000000001",
                 LocalDate.now().minusYears(10),
                 null
@@ -112,7 +111,7 @@ public class PersonGenerator {
         return new ArrayList<>(List.of(adresse));
     }
 
-    public static List<AdresseDto> utenlandskAdresse(CountryCode land) {
+    public static List<AdresseDto> utenlandskAdresse(String land) {
         var adresse = new AdresseDto(
                 AdresseDto.AdresseType.POSTADRESSE,
                 land,

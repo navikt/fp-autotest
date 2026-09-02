@@ -24,7 +24,7 @@ import no.nav.foreldrepenger.vtp.kontrakter.hendelser.DødshendelseDto;
 import no.nav.foreldrepenger.vtp.kontrakter.hendelser.FødselshendelseDto;
 import no.nav.foreldrepenger.vtp.kontrakter.hendelser.PersonhendelseDto;
 import no.nav.foreldrepenger.vtp.kontrakter.hendelser.YtelsevedtakDto;
-import no.nav.foreldrepenger.vtp.kontrakter.person.Rolle;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.Rolle;
 import no.nav.foreldrepenger.vtp.kontrakter.person.TilordnetIdentDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.PersonDto;
 

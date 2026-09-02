@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.generator.familie;
 
-import static no.nav.foreldrepenger.vtp.kontrakter.person.Arbeidsforholdstype.ORDINÆRT_ARBEIDSFORHOLD;
+import static no.nav.foreldrepenger.vtp.kontrakter.person.v2.Arbeidsforholdstype.ORDINÆRT_ARBEIDSFORHOLD;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

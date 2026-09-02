@@ -28,7 +28,7 @@ import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
 import no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler;
 import no.nav.foreldrepenger.generator.soknad.maler.UttaksperiodeType;
 import no.nav.foreldrepenger.soknad.kontrakt.BrukerRolle;
-import no.nav.foreldrepenger.vtp.kontrakter.person.Adressebeskyttelse;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.Adressebeskyttelse;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.FamilierelasjonDto;
 import no.nav.vedtak.exception.ManglerTilgangException;
 

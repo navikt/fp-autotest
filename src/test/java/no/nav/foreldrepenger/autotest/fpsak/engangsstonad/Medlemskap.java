@@ -15,8 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.neovisionaries.i18n.CountryCode;
-
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.VerdikjedeTestBase;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Avslagsårsak;
@@ -27,6 +25,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr.OverstyrMedlemskapsvilkaaret;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
+import no.nav.foreldrepenger.generator.Landkoder;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.FamilierelasjonDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.GeografiskTilknytningDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.MedlemskapDto;
@@ -45,7 +44,7 @@ class Medlemskap extends VerdikjedeTestBase {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
                         .personstatus(List.of(new PersonstatusDto(PersonstatusDto.Personstatuser.UTVA, LocalDate.now().minusYears(30), null)))
-                        .medlemskap(List.of(new MedlemskapDto(LocalDate.now().minusYears(1), LocalDate.now().plusYears(3), CountryCode.DE, MedlemskapDto.DekningsType.IHT_AVTALE)))
+                        .medlemskap(List.of(new MedlemskapDto(LocalDate.now().minusYears(1), LocalDate.now().plusYears(3), Landkoder.DEU, MedlemskapDto.DekningsType.IHT_AVTALE)))
                         .build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
@@ -88,7 +87,7 @@ class Medlemskap extends VerdikjedeTestBase {
     void morSøkerFødselUregistrert() {
         var familie = new FamilieGenerator()
                 .forelder(mor()
-                        .geografiskTilknytning(new GeografiskTilknytningDto(CountryCode.GB, GeografiskTilknytningDto.GeografiskTilknytningType.LAND))
+                        .geografiskTilknytning(new GeografiskTilknytningDto(Landkoder.GBR, GeografiskTilknytningDto.GeografiskTilknytningType.LAND))
                         .personstatus(List.of(new PersonstatusDto(PersonstatusDto.Personstatuser.UREG, LocalDate.now().minusYears(30), null)))
                         .build())
                 .forelder(far().build())
@@ -121,8 +120,8 @@ class Medlemskap extends VerdikjedeTestBase {
     void morSøkerFødselUtenlandsadresse() {
         var familie = new FamilieGenerator()
                 .forelder(mor()
-                        .adresser(utenlandskAdresse(CountryCode.DE))
-                        .medlemskap(List.of(new MedlemskapDto(LocalDate.now().minusYears(1), LocalDate.now().plusYears(3), CountryCode.DE, MedlemskapDto.DekningsType.FULL)))
+                        .adresser(utenlandskAdresse(Landkoder.DEU))
+                        .medlemskap(List.of(new MedlemskapDto(LocalDate.now().minusYears(1), LocalDate.now().plusYears(3), Landkoder.DEU, MedlemskapDto.DekningsType.FULL)))
                         .build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)

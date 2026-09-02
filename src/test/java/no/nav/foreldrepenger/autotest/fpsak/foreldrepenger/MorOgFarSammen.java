@@ -67,7 +67,7 @@ import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.Uttakspla
 import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.ÅpenPeriodeDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.FamilierelasjonDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.PermisjonDto;
-import no.nav.foreldrepenger.vtp.kontrakter.person.Permisjonstype;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.Permisjonstype;
 
 @Tag("fpsak")
 @Tag("foreldrepenger")

@@ -9,7 +9,7 @@ import no.nav.foreldrepenger.kontrakter.felles.typer.AktørId;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Orgnummer;
 import no.nav.foreldrepenger.vtp.kontrakter.person.TilordnetIdentDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.ArbeidsforholdDto;
-import no.nav.foreldrepenger.vtp.kontrakter.person.Arbeidsforholdstype;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.Arbeidsforholdstype;
 
 final class Aareg {
 
