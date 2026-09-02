@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import no.nav.foreldrepenger.vtp.kontrakter.person.Adressebeskyttelse;
-import no.nav.foreldrepenger.vtp.kontrakter.person.Kjønn;
-import no.nav.foreldrepenger.vtp.kontrakter.person.Rolle;
-import no.nav.foreldrepenger.vtp.kontrakter.person.Språk;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.Adressebeskyttelse;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.Kjønn;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.Rolle;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.Språk;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.AdresseDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.ArbeidsforholdDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.FamilierelasjonDto;

@@ -10,7 +10,7 @@ import no.nav.foreldrepenger.vtp.kontrakter.person.v2.ArbeidsgiverDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.InntektsperiodeDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.PermisjonDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.SkatteopplysningDto;
-import no.nav.foreldrepenger.vtp.kontrakter.person.Arbeidsforholdstype;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.Arbeidsforholdstype;
 
 public class InntektGenerator {
 

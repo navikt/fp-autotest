@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.generator.soknad.maler;
 
-import static no.nav.foreldrepenger.generator.soknad.Landkoder.USA;
+import static no.nav.foreldrepenger.generator.Landkoder.USA;
 
 import java.time.LocalDate;
 import java.util.List;

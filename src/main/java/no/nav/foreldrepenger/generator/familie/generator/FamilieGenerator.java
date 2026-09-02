@@ -18,8 +18,8 @@ import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.Saksbehandler
 import no.nav.foreldrepenger.autotest.klienter.vtp.testscenario.TestscenarioKlient;
 import no.nav.foreldrepenger.autotest.util.log.LoggFormater;
 import no.nav.foreldrepenger.generator.familie.Familie;
-import no.nav.foreldrepenger.vtp.kontrakter.person.Kjønn;
-import no.nav.foreldrepenger.vtp.kontrakter.person.Rolle;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.Kjønn;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.Rolle;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.ArbeidsforholdDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.FamilierelasjonDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.PersonDto;

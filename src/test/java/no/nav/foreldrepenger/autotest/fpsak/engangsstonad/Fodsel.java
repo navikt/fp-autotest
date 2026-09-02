@@ -13,8 +13,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import com.neovisionaries.i18n.CountryCode;
-
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.VerdikjedeTestBase;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Avslagsårsak;
@@ -28,6 +26,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr.OverstyrFodselsvilkaaret;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.Beregningsresultat;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
+import no.nav.foreldrepenger.generator.Landkoder;
 import no.nav.foreldrepenger.soknad.kontrakt.builder.BarnBuilder;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.FamilierelasjonDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.MedlemskapDto;
@@ -176,7 +175,7 @@ class Fodsel extends VerdikjedeTestBase {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
                         .personstatus(List.of(new PersonstatusDto(PersonstatusDto.Personstatuser.UTVA, LocalDate.now().minusYears(30), null)))
-                        .medlemskap(List.of(new MedlemskapDto(LocalDate.now().minusYears(1), LocalDate.now().plusYears(3), CountryCode.DE, MedlemskapDto.DekningsType.IHT_AVTALE)))
+                        .medlemskap(List.of(new MedlemskapDto(LocalDate.now().minusYears(1), LocalDate.now().plusYears(3), Landkoder.DEU, MedlemskapDto.DekningsType.IHT_AVTALE)))
                         .build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
@@ -218,7 +217,7 @@ class Fodsel extends VerdikjedeTestBase {
         var familie = FamilieGenerator.ny()
                 .forelder(mor(LocalDate.now().minusYears(17))
                         .personstatus(List.of(new PersonstatusDto(PersonstatusDto.Personstatuser.UTVA, LocalDate.now().minusYears(30), null)))
-                        .medlemskap(List.of(new MedlemskapDto(LocalDate.now().minusYears(1), LocalDate.now().plusYears(3), CountryCode.DE, MedlemskapDto.DekningsType.IHT_AVTALE)))
+                        .medlemskap(List.of(new MedlemskapDto(LocalDate.now().minusYears(1), LocalDate.now().plusYears(3), Landkoder.DEU, MedlemskapDto.DekningsType.IHT_AVTALE)))
                         .build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)

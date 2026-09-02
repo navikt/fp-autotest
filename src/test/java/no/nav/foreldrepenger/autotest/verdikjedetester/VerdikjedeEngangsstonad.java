@@ -11,8 +11,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import com.neovisionaries.i18n.CountryCode;
-
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.VerdikjedeTestBase;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
@@ -21,6 +19,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.DokumentTag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkType;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
+import no.nav.foreldrepenger.generator.Landkoder;
 import no.nav.foreldrepenger.generator.soknad.maler.SøknadEngangsstønadMaler;
 import no.nav.foreldrepenger.kontrakter.fpoversikt.BehandlingTilstand;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.FamilierelasjonDto;
@@ -35,7 +34,7 @@ class VerdikjedeEngangsstonad extends VerdikjedeTestBase {
     @Description("Mor er tredjelandsborger med statsborgerskap i USA og har ikke registrert medlemsskap i norsk folketrygd.")
     void MorTredjelandsborgerSøkerEngangsStønadTest() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor().statsborgerskap(List.of(new StatsborgerskapDto(CountryCode.US)))
+                .forelder(mor().statsborgerskap(List.of(new StatsborgerskapDto(Landkoder.USA)))
                         .build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
@@ -72,7 +71,7 @@ class VerdikjedeEngangsstonad extends VerdikjedeTestBase {
     @Description("Verifiserer at innsyn har korrekt data og sammenligner med vedtaket med det saksbehandlerene ser")
     void mor_innsyn_verifsere() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor().statsborgerskap(List.of(new StatsborgerskapDto(CountryCode.US)))
+                .forelder(mor().statsborgerskap(List.of(new StatsborgerskapDto(Landkoder.USA)))
                         .build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
