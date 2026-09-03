@@ -11,7 +11,6 @@ import no.nav.foreldrepenger.vtp.kontrakter.person.v2.Rolle;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.Språk;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.AdresseDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.ArbeidsforholdDto;
-import no.nav.foreldrepenger.vtp.kontrakter.person.v2.BrregDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.FamilierelasjonDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.GeografiskTilknytningDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.InntektsperiodeDto;
@@ -19,6 +18,7 @@ import no.nav.foreldrepenger.vtp.kontrakter.person.v2.MedlemskapDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.PersonDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.PersonopplysningerDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.PersonstatusDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.RegistrertNæringsvirksomhetDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.SivilstandDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.SkatteopplysningDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.StatsborgerskapDto;
@@ -36,7 +36,7 @@ public class PersonBuilder {
     private List<InntektsperiodeDto> inntekt = new ArrayList<>();
     private final List<YtelseDto> ytelser = new ArrayList<>();
     private List<SkatteopplysningDto> skatteopplysninger = new ArrayList<>();
-    private BrregDto brreg;
+    private List<RegistrertNæringsvirksomhetDto> registrerteNæringsvirksomheter = new ArrayList<>();
 
     PersonBuilder() {
     }
@@ -128,7 +128,7 @@ public class PersonBuilder {
         this.arbeidsforhold = new ArrayList<>(bundle.arbeidsforhold());
         this.inntekt = new ArrayList<>(bundle.inntekt());
         this.skatteopplysninger = new ArrayList<>(bundle.skatteopplysninger());
-        this.brreg = bundle.brreg();
+        this.registrerteNæringsvirksomheter = new ArrayList<>(bundle.registrerteNæringsvirksomheter());
         return this;
     }
 
@@ -148,7 +148,7 @@ public class PersonBuilder {
                 .inntekt(inntekt)
                 .ytelser(ytelser)
                 .skatteopplysninger(skatteopplysninger)
-                .brreg(brreg)
+                .registrerteNæringsvirksomheter(registrerteNæringsvirksomheter)
                 .build();
     }
 }

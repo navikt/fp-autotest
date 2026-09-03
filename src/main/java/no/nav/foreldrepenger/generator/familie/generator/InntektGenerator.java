@@ -7,9 +7,9 @@ import java.util.List;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.ArbeidsavtaleDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.ArbeidsforholdDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.ArbeidsgiverDto;
-import no.nav.foreldrepenger.vtp.kontrakter.person.v2.BrregDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.InntektsperiodeDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.PermisjonDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.RegistrertNæringsvirksomhetDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.SkatteopplysningDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.Arbeidsforholdstype;
 
@@ -18,7 +18,7 @@ public class InntektGenerator {
     private final List<ArbeidsforholdDto> arbeidsforhold = new ArrayList<>();
     private final List<InntektsperiodeDto> inntekt = new ArrayList<>();
     private final List<SkatteopplysningDto> skatteopplysninger = new ArrayList<>();
-    private final List<BrregDto.VirksomhetDto> registrerteNæringer = new ArrayList<>();
+    private final List<RegistrertNæringsvirksomhetDto> registrerteNæringer = new ArrayList<>();
     private final TestOrganisasjoner testOrganisasjoner = new TestOrganisasjoner();
     private static final int DEFAULT_ÅRSLØNN = 600_000;
     private static final int DEFAULT_STILLINGSPROSENT = 100;
@@ -255,7 +255,7 @@ public class InntektGenerator {
                                              String organisasjonsformBeskrivelse,
                                              String næringskode,
                                              String næringskodeBeskrivelse) {
-        registrerteNæringer.add(new BrregDto.VirksomhetDto(
+        registrerteNæringer.add(new RegistrertNæringsvirksomhetDto(
                 organisasjonsnummer,
                 navn,
                 organisasjonsformKode,
@@ -266,6 +266,6 @@ public class InntektGenerator {
     }
 
     public InntektYtelseBundle build() {
-        return new InntektYtelseBundle(arbeidsforhold, inntekt, skatteopplysninger, new BrregDto(registrerteNæringer));
+        return new InntektYtelseBundle(arbeidsforhold, inntekt, skatteopplysninger, registrerteNæringer);
     }
 }

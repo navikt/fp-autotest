@@ -45,7 +45,7 @@ public class TestOrganisasjoner {
     public static String navnFor(String orgnummer) {
         return KJENTE_ORGANISASJONER.stream()
                 .filter(organisasjon -> organisasjon.orgnummer().value().equals(orgnummer))
-                .map(organisasjon -> organisasjon.organisasjonsdetaljer().navn())
+                .map(organisasjon -> organisasjon.detaljer().navn())
                 .findFirst()
                 .orElse("ARBEIDSGIVERS NAVN AS");
     }

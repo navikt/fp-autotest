@@ -9,7 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import no.nav.foreldrepenger.vtp.kontrakter.person.v2.BrregDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.RegistrertNæringsvirksomhetDto;
 
 @Tag("internal")
 class InntektGeneratorTest {
@@ -34,8 +34,8 @@ class InntektGeneratorTest {
                         inneværendeÅr - 3,
                         inneværendeÅr - 4,
                         inneværendeÅr - 5);
-        assertThat(inntektYtelse.brreg().virksomheter()).containsExactly(
-                new BrregDto.VirksomhetDto(
+        assertThat(inntektYtelse.registrerteNæringsvirksomheter()).containsExactly(
+                new RegistrertNæringsvirksomhetDto(
                         "999999999",
                         "VTP FISKE",
                         "ENK",
@@ -58,8 +58,9 @@ class InntektGeneratorTest {
                         "Dyrking av korn")
                 .build();
 
-        assertThat(inntektYtelse.brreg().virksomheter())
-                .extracting(BrregDto.VirksomhetDto::organisasjonsnummer, BrregDto.VirksomhetDto::navn)
+        assertThat(inntektYtelse.registrerteNæringsvirksomheter())
+                .extracting(RegistrertNæringsvirksomhetDto::organisasjonsnummer,
+                        RegistrertNæringsvirksomhetDto::navn)
                 .containsExactly(
                         tuple("999999999", "VTP FISKE"),
                         tuple("974760673", "VTP GÅRDSDRIFT"));

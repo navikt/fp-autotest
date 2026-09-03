@@ -24,8 +24,8 @@ import no.nav.foreldrepenger.kontrakter.felles.typer.Saksnummer;
 import no.nav.foreldrepenger.soknad.kontrakt.BrukerRolle;
 import no.nav.foreldrepenger.soknad.kontrakt.SøkerDto;
 import no.nav.foreldrepenger.soknad.kontrakt.opptjening.NæringDto;
-import no.nav.foreldrepenger.vtp.kontrakter.person.v2.BrregDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.PersonDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.RegistrertNæringsvirksomhetDto;
 
 @Tag("internal")
 class SøkerTest {
@@ -45,7 +45,7 @@ class SøkerTest {
                 virksomhet("999999995", "03.1"),
                 virksomhet("999999996", "88.91"),
                 virksomhet("999999997", "62.01"));
-        var person = personMedBrreg(new BrregDto(virksomheter));
+        var person = personMedRegistrerteNæringsvirksomheter(virksomheter);
 
         var søkerinfo = søkerinfo(person);
 
@@ -70,8 +70,7 @@ class SøkerTest {
     @DisplayName("Manglende inntektsytelse, Brreg eller virksomhetsliste gir tom selvstendig næring")
     void manglendeBrregdataGirTomListe() {
         assertThat(søkerinfo(PersonDto.builder().build()).selvstendigNæring()).isEmpty();
-        assertThat(søkerinfo(personMedBrreg(null)).selvstendigNæring()).isEmpty();
-        assertThat(søkerinfo(personMedBrreg(new BrregDto(null))).selvstendigNæring()).isEmpty();
+        assertThat(søkerinfo(personMedRegistrerteNæringsvirksomheter(null)).selvstendigNæring()).isEmpty();
     }
 
     @Test
@@ -149,8 +148,8 @@ class SøkerTest {
                 .containsExactly(førsteOppdragFom.plusDays(19 * 16L), førsteOppdragFom.plusDays(19 * 16L + 13));
     }
 
-    private static BrregDto.VirksomhetDto virksomhet(String orgnummer, String næringskode) {
-        return new BrregDto.VirksomhetDto(
+    private static RegistrertNæringsvirksomhetDto virksomhet(String orgnummer, String næringskode) {
+        return new RegistrertNæringsvirksomhetDto(
                 orgnummer,
                 "Virksomhet " + orgnummer,
                 "ENK",
@@ -159,9 +158,10 @@ class SøkerTest {
                 "Næring");
     }
 
-    private static PersonDto personMedBrreg(BrregDto brreg) {
+    private static PersonDto personMedRegistrerteNæringsvirksomheter(
+            List<RegistrertNæringsvirksomhetDto> registrerteNæringsvirksomheter) {
         return PersonDto.builder()
-                .brreg(brreg)
+                .registrerteNæringsvirksomheter(registrerteNæringsvirksomheter)
                 .build();
     }
 
@@ -170,7 +170,7 @@ class SøkerTest {
                 .arbeidsforhold(inntekt.arbeidsforhold())
                 .inntekt(inntekt.inntekt())
                 .skatteopplysninger(inntekt.skatteopplysninger())
-                .brreg(inntekt.brreg())
+                .registrerteNæringsvirksomheter(inntekt.registrerteNæringsvirksomheter())
                 .build();
     }
 

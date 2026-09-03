@@ -3,8 +3,8 @@ package no.nav.foreldrepenger.generator.familie.generator;
 import java.util.List;
 
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.ArbeidsforholdDto;
-import no.nav.foreldrepenger.vtp.kontrakter.person.v2.BrregDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.InntektsperiodeDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.RegistrertNæringsvirksomhetDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.SkatteopplysningDto;
 
 /**
@@ -15,5 +15,5 @@ import no.nav.foreldrepenger.vtp.kontrakter.person.v2.SkatteopplysningDto;
 public record InntektYtelseBundle(List<ArbeidsforholdDto> arbeidsforhold,
                                   List<InntektsperiodeDto> inntekt,
                                   List<SkatteopplysningDto> skatteopplysninger,
-                                  BrregDto brreg) {
+                                  List<RegistrertNæringsvirksomhetDto> registrerteNæringsvirksomheter) {
 }

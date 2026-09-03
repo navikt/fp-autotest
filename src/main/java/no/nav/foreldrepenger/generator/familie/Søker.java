@@ -320,7 +320,7 @@ public abstract class Søker {
     }
 
     private List<SøkerDto.SelvstendigNæring> selvstendigeNæringer() {
-        return personDto.brreg().virksomheter().stream()
+        return personDto.registrerteNæringsvirksomheter().stream()
                 .map(virksomhet -> new SøkerDto.SelvstendigNæring(
                         virksomhet.navn(),
                         new Orgnummer(virksomhet.organisasjonsnummer()),
