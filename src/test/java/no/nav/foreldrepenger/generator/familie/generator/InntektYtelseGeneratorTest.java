@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.generator.familie.generator;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.groups.Tuple.tuple;
 
 import java.time.LocalDate;
 
@@ -42,4 +43,29 @@ class InntektYtelseGeneratorTest {
                         "03.110",
                         "Hav- og kystfiske"));
     }
+
+    @Test
+    @DisplayName("Flere registrerte næringer legges til i stabil rekkefølge")
+    void flereRegistrerteNæringer() {
+        var inntektYtelse = InntektYtelseGenerator.ny()
+                .selvstendigNæringsdrivende(200_000)
+                .registrertNæring(
+                        "974760673",
+                        "VTP GÅRDSDRIFT",
+                        "ENK",
+                        "Enkeltpersonforetak",
+                        "01.110",
+                        "Dyrking av korn")
+                .build();
+
+        assertThat(inntektYtelse.brreg().virksomheter())
+                .extracting(BrregDto.VirksomhetDto::organisasjonsnummer, BrregDto.VirksomhetDto::navn)
+                .containsExactly(
+                        tuple("999999999", "VTP FISKE"),
+                        tuple("974760673", "VTP GÅRDSDRIFT"));
+        assertThat(inntektYtelse.sigrun().inntektår())
+                .hasSize(5)
+                .allSatisfy(inntektsår -> assertThat(inntektsår.beløp()).isEqualTo(200_000));
+    }
+
 }

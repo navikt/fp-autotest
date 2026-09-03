@@ -322,15 +322,32 @@ public class InntektYtelseGenerator {
             now = now.minusYears(1);
         }
         inntektYtelse.sigrun(sigrunDto);
-        inntektYtelse.brreg(new BrregDto(List.of(
-                new BrregDto.VirksomhetDto(
-                        "999999999",
-                        "VTP FISKE",
-                        "ENK",
-                        "Enkeltpersonforetak",
-                        "03.110",
-                        "Hav- og kystfiske")
-        )));
+        return registrertNæring(
+                "999999999",
+                "VTP FISKE",
+                "ENK",
+                "Enkeltpersonforetak",
+                "03.110",
+                "Hav- og kystfiske");
+    }
+
+    public InntektYtelseGenerator registrertNæring(String organisasjonsnummer,
+                                                   String navn,
+                                                   String organisasjonsformKode,
+                                                   String organisasjonsformBeskrivelse,
+                                                   String næringskode,
+                                                   String næringskodeBeskrivelse) {
+        var virksomheter = new ArrayList<>(inntektYtelse.brreg() == null
+                ? List.<BrregDto.VirksomhetDto>of()
+                : inntektYtelse.brreg().virksomheter());
+        virksomheter.add(new BrregDto.VirksomhetDto(
+                organisasjonsnummer,
+                navn,
+                organisasjonsformKode,
+                organisasjonsformBeskrivelse,
+                næringskode,
+                næringskodeBeskrivelse));
+        inntektYtelse.brreg(new BrregDto(virksomheter));
         return this;
     }
 
