@@ -14,8 +14,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import com.neovisionaries.i18n.CountryCode;
-
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.FptilbakeTestBase;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
@@ -31,11 +29,12 @@ import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjon
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.FattVedtakTilbakekreving;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.Kravgrunnlag;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
+import no.nav.foreldrepenger.generator.Landkoder;
 import no.nav.foreldrepenger.soknad.kontrakt.EngangsstønadDto;
 import no.nav.foreldrepenger.soknad.kontrakt.barn.AdopsjonDto;
-import no.nav.foreldrepenger.vtp.kontrakter.person.FamilierelasjonModellDto;
-import no.nav.foreldrepenger.vtp.kontrakter.person.MedlemskapDto;
-import no.nav.foreldrepenger.vtp.kontrakter.person.PersonstatusDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.FamilierelasjonDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.MedlemskapDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.PersonstatusDto;
 
 @Tag("tilbakekreving")
 @Tag("fptilbake")
@@ -51,7 +50,7 @@ class TilbakekrevingES extends FptilbakeTestBase {
         var familie = FamilieGenerator.ny()
                 .forelder(mor().build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .build();
         var mor = familie.mor();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1).plusWeeks(1);
@@ -148,10 +147,10 @@ class TilbakekrevingES extends FptilbakeTestBase {
         var familie = FamilieGenerator.ny()
                 .forelder(mor(LocalDate.now().minusYears(17))
                         .personstatus(List.of(new PersonstatusDto(PersonstatusDto.Personstatuser.UTVA, LocalDate.now().minusYears(30), null)))
-                        .medlemskap(List.of(new MedlemskapDto(LocalDate.now().minusYears(1), LocalDate.now().plusYears(3), CountryCode.DE, MedlemskapDto.DekningsType.IHT_AVTALE)))
+                        .medlemskap(List.of(new MedlemskapDto(LocalDate.now().minusYears(1), LocalDate.now().plusYears(3), Landkoder.DEU, MedlemskapDto.DekningsType.IHT_AVTALE)))
                         .build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusMonths(1))
                 .build(); // Bypasser selvbetjeing + 18 års aldergrense for innsending
 
@@ -206,7 +205,7 @@ class TilbakekrevingES extends FptilbakeTestBase {
         var vergeFamilie = FamilieGenerator.ny()
                 .forelder(mor().build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .build();
         vergeFakta.setVerge(vergeFamilie);
         tbksaksbehandler.behandleAksjonspunkt(vergeFakta);

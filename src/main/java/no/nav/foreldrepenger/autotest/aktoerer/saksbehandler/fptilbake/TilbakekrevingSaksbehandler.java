@@ -28,6 +28,7 @@ import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.Behand
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BrukerresponsDto;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.RevurderingArsak;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ApFaktaFeilutbetaling;
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ApForeldelse;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ApVerge;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ApVilkårsvurdering;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.FattVedtakTilbakekreving;
@@ -205,11 +206,20 @@ public class TilbakekrevingSaksbehandler {
                 return apFaktaFeilutbetaling;
             case 5002:
                 var apVilkårsvurdering = new ApVilkårsvurdering();
-                for (var perioder : behandlingerKlient.hentFeilutbetalingFakta(valgtBehandling.uuid)
+                for (var perioder : behandlingerKlient.hentVilkårsvurderingPerioder(valgtBehandling.uuid)
                         .getPerioder()) {
-                    apVilkårsvurdering.addVilkårPeriode(perioder.fom, perioder.tom);
+                    if (!perioder.foreldet) {
+                        apVilkårsvurdering.addVilkårPeriode(perioder.fom, perioder.tom);
+                    }
                 }
                 return apVilkårsvurdering;
+            case 5003:
+                var apForeldelse = new ApForeldelse();
+                for (var perioder : behandlingerKlient.hentFeilutbetalingFakta(valgtBehandling.uuid)
+                        .getPerioder()) {
+                    apForeldelse.addForeldelsePeriode(perioder.fom, perioder.tom);
+                }
+                return apForeldelse;
             case 5004:
                 return new ForeslåVedtak();
             case 5005:

@@ -138,6 +138,10 @@
 #### 8. `aksjonspunkt_VURDER_FARESIGNALER_KODE_5095`
 - **DisplayName:** "5095 – VURDER_FARESIGNALER_KODE"
 
+#### 9. `opprettTilbakekrevingManueltMedForeldelse`
+- **DisplayName:** "1b. Oppretter en tilbakekreving manuelt med en feilutbetalingsperiode som er foreldet"
+- **Aksjonspunkter:** `7003`, `5003` (VURDER_FORELDELSE), `5002`, `5004`, `5005`
+
 ### ArbeidsforholdVarianter.java (fpsak/foreldrepenger/ArbeidsforholdVarianter.java)
 **Tags:** fpsak, foreldrepenger
 

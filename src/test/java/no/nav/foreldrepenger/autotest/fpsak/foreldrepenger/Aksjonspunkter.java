@@ -3,11 +3,14 @@ package no.nav.foreldrepenger.autotest.fpsak.foreldrepenger;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.OmsorgsovertakelseVilkårType.ES_OMSORGSVILKÅRET;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
+import static no.nav.foreldrepenger.generator.Landkoder.DEU;
+import static no.nav.foreldrepenger.generator.soknad.maler.SøknadEndringMaler.lagEndringssøknad;
 import static no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler.lagSøknadForeldrepengerFødsel;
 import static no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler.lagSøknadForeldrepengerTermin;
 import static no.nav.foreldrepenger.generator.soknad.maler.UttakMaler.fordeling;
 import static no.nav.foreldrepenger.generator.soknad.maler.UttaksperioderMaler.uttaksperiode;
-import static no.nav.foreldrepenger.vtp.kontrakter.person.ArbeidsavtaleDto.arbeidsavtale;
+import static no.nav.foreldrepenger.vtp.kontrakter.person.v2.ArbeidsavtaleDto.arbeidsavtale;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,9 +20,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import com.neovisionaries.i18n.CountryCode;
-
-import no.nav.foreldrepenger.autotest.base.VerdikjedeTestBase;
+import io.qameta.allure.Description;
+import no.nav.foreldrepenger.autotest.base.FptilbakeTestBase;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderBeregnetInntektsAvvikBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderFaktaOmBeregningBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderFaresignalerDto;
@@ -30,8 +32,14 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.FordelingDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.PermisjonPeriodeDto;
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ApFaktaFeilutbetaling;
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ApForeldelse;
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ApVilkårsvurdering;
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.FattVedtakTilbakekreving;
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.Kravgrunnlag;
+import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
-import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
+import no.nav.foreldrepenger.generator.familie.generator.InntektGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.Prosent;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
@@ -41,23 +49,22 @@ import no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType;
 import no.nav.foreldrepenger.soknad.kontrakt.BrukerRolle;
 import no.nav.foreldrepenger.soknad.kontrakt.barn.AdopsjonDto;
 import no.nav.foreldrepenger.soknad.kontrakt.builder.BarnBuilder;
-import no.nav.foreldrepenger.vtp.kontrakter.person.ArenaSakerDto;
-import no.nav.foreldrepenger.vtp.kontrakter.person.FamilierelasjonModellDto;
-import no.nav.foreldrepenger.vtp.kontrakter.person.GrunnlagDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.FamilierelasjonDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.YtelseDto;
 
 @Tag("util")
 @Tag("foreldrepenger")
-class Aksjonspunkter extends VerdikjedeTestBase {
+class Aksjonspunkter extends FptilbakeTestBase {
 
     @Test
     @DisplayName("REGISTRER_PAPIRSØKNAD_FORELDREPENGER")
     void aksjonspunkt_FOEDSELSSOKNAD_FORELDREPENGER_5040() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
+                        .inntekt(InntektGenerator.ny().arbeidMedOpptjeningUnder6G().build())
                         .build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusWeeks(8))
                 .build();
 
@@ -91,14 +98,11 @@ class Aksjonspunkter extends VerdikjedeTestBase {
         var fødselsdatoBarn = LocalDate.now().minusDays(2);
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
-                                .arena(ArenaSakerDto.YtelseTema.DAG, LocalDate.now().minusYears(1), LocalDate.now().minusWeeks(12), 10_000)
-                                .infotrygd(GrunnlagDto.Ytelse.SP, LocalDate.now().minusMonths(9), LocalDate.now(),
-                                        GrunnlagDto.Status.AVSLUTTET, fødselsdatoBarn)
-                                .build())
+                        .ytelse(YtelseDto.YtelseType.DAGPENGER, LocalDate.now().minusYears(1), LocalDate.now().minusWeeks(12), 1000, 100)
+                        .ytelse(YtelseDto.YtelseType.SYKEPENGER, LocalDate.now().minusMonths(9), LocalDate.now(), 462, 100)
                         .build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(fødselsdatoBarn)
                 .build();
 
@@ -127,7 +131,7 @@ class Aksjonspunkter extends VerdikjedeTestBase {
     void aksjonspunkt_ADOPSJONSSOKNAD_ENGANGSSTONAD_5011() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
+                        .inntekt(InntektGenerator.ny()
                                 .arbeidsforhold(LocalDate.now().minusYears(4),
                                         arbeidsavtale(LocalDate.now().minusYears(4), LocalDate.now().minusDays(60)).build(),
                                         arbeidsavtale(LocalDate.now().minusDays(59)).stillingsprosent(50).build()
@@ -135,7 +139,7 @@ class Aksjonspunkter extends VerdikjedeTestBase {
                                 .build())
                         .build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .build();
         var mor = familie.mor();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1L);
@@ -157,12 +161,12 @@ class Aksjonspunkter extends VerdikjedeTestBase {
     void aksjonspunkt_FOEDSELSSOKNAD_FORELDREPENGER_5089() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
+                        .inntekt(InntektGenerator.ny()
                                 .arbeidsforhold(LocalDate.now().minusMonths(2))
                                 .build())
                         .build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusMonths(15))
                 .build();
         var mor = familie.mor();
@@ -183,10 +187,10 @@ class Aksjonspunkter extends VerdikjedeTestBase {
     void aksjonspunkt_MOR_FOEDSELSSOKNAD_FORELDREPENGER() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
+                        .inntekt(InntektGenerator.ny().arbeidMedOpptjeningUnder6G().build())
                         .build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .build();
 
         var mor = familie.mor();
@@ -230,17 +234,17 @@ class Aksjonspunkter extends VerdikjedeTestBase {
     void aksjonspunkt_MOR_FOEDSELSSOKNAD_FORELDREPENGER_() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
+                        .inntekt(InntektGenerator.ny().arbeidMedOpptjeningUnder6G().build())
                         .build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .build();
 
         var mor = familie.mor();
         var termindato = LocalDate.now().plusWeeks(3);
         var fpStartdato = termindato.minusWeeks(3);
         var søknad = lagSøknadForeldrepengerTermin(termindato, BrukerRolle.MOR)
-                .medAndreInntekterSiste10Mnd(List.of(OpptjeningMaler.utenlandskArbeidsforhold(CountryCode.DE)))
+                .medAndreInntekterSiste10Mnd(List.of(OpptjeningMaler.utenlandskArbeidsforhold(DEU)))
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var saksnummer = mor.søk(søknad);
 
@@ -260,10 +264,10 @@ class Aksjonspunkter extends VerdikjedeTestBase {
     void aksjonspunkt_MOR_FOEDSELSSOKNAD_FORELDREPENGER_5027() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
+                        .inntekt(InntektGenerator.ny().arbeidMedOpptjeningUnder6G().build())
                         .build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .build();
         var mor = familie.mor();
         var fødselsdato = LocalDate.now().minusWeeks(3);
@@ -288,13 +292,13 @@ class Aksjonspunkter extends VerdikjedeTestBase {
         var fødselsdatoBarn = LocalDate.now().minusMonths(1);
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
+                        .ytelse(YtelseDto.YtelseType.SYKEPENGER, LocalDate.now().minusMonths(9), LocalDate.now(), 462, 100)
+                        .inntekt(InntektGenerator.ny()
                                 .arbeidsforhold(TestOrganisasjoner.NYLIG_OPPSTATET, LocalDate.now())
-                                .infotrygd(GrunnlagDto.Ytelse.SP, LocalDate.now().minusMonths(9), LocalDate.now(), GrunnlagDto.Status.LØPENDE, fødselsdatoBarn)
                                 .arbeidMedOpptjeningUnder6G().build())
                         .build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(fødselsdatoBarn)
                 .build();
 
@@ -319,5 +323,93 @@ class Aksjonspunkter extends VerdikjedeTestBase {
 //        vurderFaresignalerDto.setHarInnvirketBehandlingen(true);
 //        vurderFaresignalerDto.setBegrunnelse("HELLO");
 //        saksbehandler.bekreftAksjonspunkt(vurderFaresignalerDto);
+    }
+
+
+    @Test
+    @DisplayName("1b. Oppretter en tilbakekreving manuelt med en feilutbetalingsperiode som er foreldet")
+    @Description("To perioder, en eldre enn foreldelsesfristen på 30 måneder som utleder aksjonspunkt 5003 "
+            + "Vurder foreldelse, og en fersk periode som går videre til vilkårsvurdering.")
+    void opprettTilbakekrevingManueltMedForeldelse() {
+        var ytelseType = "FP";
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntekt(InntektGenerator.ny().arbeidMedOpptjeningOver6G().build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
+                .barn(LocalDate.now().minusMonths(1))
+                .build();
+        var mor = familie.mor();
+        var fødselsdato = familie.barn().fødselsdato();
+        var fpStartdato = fødselsdato.minusWeeks(3);
+        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
+                .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
+        var saksnummer = mor.søk(søknad);
+
+        ventPåInntektsmeldingForespørsel(saksnummer);
+        var arbeidsgiver = mor.arbeidsgiver();
+        arbeidsgiver.sendInntektsmelding(saksnummer, arbeidsgiver.lagInntektsmeldingFP(fpStartdato));
+        saksbehandler.hentFagsak(saksnummer);
+        saksbehandler.ventPåOgVelgFørstegangsbehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
+        AllureHelper.debugFritekst("Ferdig med førstegangsbehandling");
+
+        var fordeling = fordeling(
+                uttaksperiode(KontoType.FELLESPERIODE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1))
+        );
+        var søknadE = lagEndringssøknad(søknad.build(), saksnummer, fordeling);
+        mor.søk(søknadE);
+
+        saksbehandler.hentFagsak(saksnummer);
+        saksbehandler.ventPåOgVelgRevurderingBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
+
+        tbksaksbehandler.opprettTilbakekreving(saksnummer, saksbehandler.valgtBehandling.uuid, ytelseType);
+        tbksaksbehandler.hentSisteBehandling(saksnummer);
+        tbksaksbehandler.ventTilBehandlingErPåVent();
+        assertThat(tbksaksbehandler.valgtBehandling.venteArsakKode)
+                .as("Venteårsak")
+                .isEqualTo("VENT_PÅ_TILBAKEKREVINGSGRUNNLAG");
+
+        var kravgrunnlag = new Kravgrunnlag(saksnummer, mor.fødselsnummer().value(),
+                saksbehandler.valgtBehandling.id, ytelseType, "NY");
+        kravgrunnlag.leggTilForeldetPeriode();
+        kravgrunnlag.leggTilGeneriskPeriode();
+        tbksaksbehandler.sendNyttKravgrunnlag(kravgrunnlag, saksnummer, saksbehandler.valgtBehandling.id);
+        tbksaksbehandler.ventTilBehandlingHarAktivtAksjonspunkt(7003);
+
+        var vurderFakta = (ApFaktaFeilutbetaling) tbksaksbehandler.hentAksjonspunktbehandling(7003);
+        vurderFakta.addGeneriskVurdering(ytelseType);
+        tbksaksbehandler.behandleAksjonspunkt(vurderFakta);
+        tbksaksbehandler.ventTilBehandlingHarAktivtAksjonspunkt(5003);
+
+        var vurderForeldelse = (ApForeldelse) tbksaksbehandler.hentAksjonspunktbehandling(5003);
+        vurderForeldelse.addGeneriskVurdering();
+        tbksaksbehandler.behandleAksjonspunkt(vurderForeldelse);
+        tbksaksbehandler.ventTilBehandlingHarAktivtAksjonspunkt(5002);
+
+        var vurderVilkår = (ApVilkårsvurdering) tbksaksbehandler.hentAksjonspunktbehandling(5002);
+        vurderVilkår.addGeneriskVurdering();
+        tbksaksbehandler.behandleAksjonspunkt(vurderVilkår);
+        tbksaksbehandler.ventTilBehandlingHarAktivtAksjonspunkt(5004);
+
+        tbksaksbehandler.behandleAksjonspunkt(tbksaksbehandler.hentAksjonspunktbehandling(5004));
+        tbksaksbehandler.ventTilBehandlingHarAktivtAksjonspunkt(5005);
+
+        tbkbeslutter.hentSisteBehandling(saksnummer);
+        tbkbeslutter.ventTilBehandlingHarAktivtAksjonspunkt(5005);
+
+        var fattVedtak = (FattVedtakTilbakekreving) tbkbeslutter.hentAksjonspunktbehandling(5005);
+        fattVedtak.godkjennAksjonspunkt(7003);
+        fattVedtak.godkjennAksjonspunkt(5003);
+        fattVedtak.godkjennAksjonspunkt(5002);
+        fattVedtak.godkjennAksjonspunkt(5004);
+        tbkbeslutter.behandleAksjonspunkt(fattVedtak);
+        tbkbeslutter.ventTilAvsluttetBehandling();
+
+        assertThat(tbksaksbehandler.hentResultat(tbksaksbehandler.valgtBehandling.uuid).getTilbakekrevingBeløp())
+                .as("Tilbakekrevingsbeløp i beregningsresultat, kun perioden som ikke er foreldet")
+                .isEqualTo(1616);
     }
 }

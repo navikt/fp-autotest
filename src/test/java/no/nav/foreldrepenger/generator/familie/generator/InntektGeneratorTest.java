@@ -9,10 +9,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import no.nav.foreldrepenger.vtp.kontrakter.person.BrregDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.BrregDto;
 
 @Tag("internal")
-class InntektYtelseGeneratorTest {
+class InntektGeneratorTest {
 
     @Test
     @DisplayName("Selvstendig næringsdrivende får Sigrun-inntekt og registrert virksomhet fra Brreg")
@@ -20,11 +20,11 @@ class InntektYtelseGeneratorTest {
         var næringsinntekt = 200_000;
         var inneværendeÅr = LocalDate.now().getYear();
 
-        var inntektYtelse = InntektYtelseGenerator.ny()
+        var inntektYtelse = InntektGenerator.ny()
                 .selvstendigNæringsdrivende(næringsinntekt)
                 .build();
 
-        assertThat(inntektYtelse.sigrun().inntektår())
+        assertThat(inntektYtelse.skatteopplysninger())
                 .hasSize(5)
                 .allSatisfy(inntektsår -> assertThat(inntektsår.beløp()).isEqualTo(næringsinntekt))
                 .extracting(inntektsår -> inntektsår.år())
@@ -47,7 +47,7 @@ class InntektYtelseGeneratorTest {
     @Test
     @DisplayName("Flere registrerte næringer legges til i stabil rekkefølge")
     void flereRegistrerteNæringer() {
-        var inntektYtelse = InntektYtelseGenerator.ny()
+        var inntektYtelse = InntektGenerator.ny()
                 .selvstendigNæringsdrivende(200_000)
                 .registrertNæring(
                         "974760673",
@@ -63,7 +63,7 @@ class InntektYtelseGeneratorTest {
                 .containsExactly(
                         tuple("999999999", "VTP FISKE"),
                         tuple("974760673", "VTP GÅRDSDRIFT"));
-        assertThat(inntektYtelse.sigrun().inntektår())
+        assertThat(inntektYtelse.skatteopplysninger())
                 .hasSize(5)
                 .allSatisfy(inntektsår -> assertThat(inntektsår.beløp()).isEqualTo(200_000));
     }

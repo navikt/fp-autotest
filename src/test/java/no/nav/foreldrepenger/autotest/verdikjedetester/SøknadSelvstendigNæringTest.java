@@ -20,13 +20,13 @@ import org.slf4j.LoggerFactory;
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.VerdikjedeTestBase;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
-import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
+import no.nav.foreldrepenger.generator.familie.generator.InntektGenerator;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
 import no.nav.foreldrepenger.generator.soknad.maler.OpptjeningMaler;
 import no.nav.foreldrepenger.soknad.kontrakt.BrukerRolle;
 import no.nav.foreldrepenger.soknad.kontrakt.SøkerDto;
 import no.nav.foreldrepenger.soknad.kontrakt.opptjening.NæringDto;
-import no.nav.foreldrepenger.vtp.kontrakter.person.FamilierelasjonModellDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.FamilierelasjonDto;
 
 @Tag("verdikjede")
 @Tag("foreldrepenger")
@@ -41,7 +41,7 @@ class SøknadSelvstendigNæringTest extends VerdikjedeTestBase {
     void senderSøknadMedFlereFrilansoppdrag() {
         var sisteOppdragFom = LocalDate.now().minusMonths(18);
         var førsteOppdragFom = sisteOppdragFom.minusDays(235);
-        var inntektYtelse = InntektYtelseGenerator.ny()
+        var inntektYtelse = InntektGenerator.ny()
                 .frilans(NAV_STORD, "frilans-1", 0, førsteOppdragFom, null, null)
                 .frilans(NAV_STORD, "frilans-2", 0, førsteOppdragFom.plusDays(23), førsteOppdragFom.plusDays(50), null)
                 .frilans(NAV_STORD, "frilans-2", 0, førsteOppdragFom.plusDays(54), null, null)
@@ -57,9 +57,9 @@ class SøknadSelvstendigNæringTest extends VerdikjedeTestBase {
                 .frilans(NAV_BERGEN, "frilans-10", 0, førsteOppdragFom.plusDays(209), førsteOppdragFom.plusDays(232), null)
                 .frilans(NAV_BERGEN, "frilans-10", 0, førsteOppdragFom.plusDays(235), null, null);
         var familie = FamilieGenerator.ny()
-                .forelder(mor().inntektytelse(inntektYtelse.build()).build())
+                .forelder(mor().inntekt(inntektYtelse.build()).build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusWeeks(2))
                 .build();
 
@@ -98,10 +98,10 @@ class SøknadSelvstendigNæringTest extends VerdikjedeTestBase {
     void senderSøknadMedFiskenæring() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny().selvstendigNæringsdrivende(200_000).build())
+                        .inntekt(InntektGenerator.ny().selvstendigNæringsdrivende(200_000).build())
                         .build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusWeeks(2))
                 .build();
 
@@ -135,12 +135,12 @@ class SøknadSelvstendigNæringTest extends VerdikjedeTestBase {
     void senderSøknadMedBareArbeidsgiver() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
+                        .inntekt(InntektGenerator.ny()
                                 .arbeidsforhold(NAV_OSLO, 100, LocalDate.now().minusYears(1), 480_000)
                                 .build())
                         .build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusWeeks(2))
                 .build();
 
@@ -169,13 +169,13 @@ class SøknadSelvstendigNæringTest extends VerdikjedeTestBase {
         var frilansTom = LocalDate.now().minusMonths(1);
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
+                        .inntekt(InntektGenerator.ny()
                                 .arbeidsforhold(NAV_OSLO, 75, LocalDate.now().minusYears(1), 480_000)
                                 .frilans(NAV_STORD, "frilans-1", 25, frilansFom, frilansTom, 120_000)
                                 .build())
                         .build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusWeeks(2))
                 .build();
 
@@ -213,7 +213,7 @@ class SøknadSelvstendigNæringTest extends VerdikjedeTestBase {
     void senderSøknadMedFlereNæringstyper() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
+                        .inntekt(InntektGenerator.ny()
                                 .selvstendigNæringsdrivende(350_000)
                                 .registrertNæring(
                                         "974760673",
@@ -239,7 +239,7 @@ class SøknadSelvstendigNæringTest extends VerdikjedeTestBase {
                                 .build())
                         .build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusWeeks(2))
                 .build();
 

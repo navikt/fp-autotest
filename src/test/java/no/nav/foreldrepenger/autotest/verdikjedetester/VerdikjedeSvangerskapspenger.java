@@ -33,7 +33,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.DokumentTag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkType;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
-import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
+import no.nav.foreldrepenger.generator.familie.generator.InntektGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.Inntektsmelding;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.Prosent;
@@ -45,7 +45,7 @@ import no.nav.foreldrepenger.kontrakter.felles.typer.Orgnummer;
 import no.nav.foreldrepenger.kontrakter.fpoversikt.BehandlingTilstand;
 import no.nav.foreldrepenger.soknad.kontrakt.builder.TilretteleggingBehovBuilder;
 import no.nav.foreldrepenger.soknad.kontrakt.svangerskapspenger.AvtaltFerieDto;
-import no.nav.foreldrepenger.vtp.kontrakter.person.FamilierelasjonModellDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.FamilierelasjonDto;
 
 @Tag("verdikjede")
 @Tag("svangerskapspenger")
@@ -58,9 +58,9 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
     @Description("Mor søker ingen tilrettelegging for en 100% stilling med inntekt over 6G.")
     void morSøkerIngenTilretteleggingInntektOver6GTest() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor().inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build()).build())
+                .forelder(mor().inntekt(InntektGenerator.ny().arbeidMedOpptjeningUnder6G().build()).build())
                 .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .build();
         var mor = familie.mor();
         var tilrettelegginsprosent = 0.0;
@@ -110,7 +110,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
             + "Endrer tilretteleggingen med ny fra dato og arbeidsprosent. Ferien skal beholdes.")
     void morSøkerDelvisTilretteleggingMedInntektOver6GTest() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor().inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningOver6G().build()).build())
+                .forelder(mor().inntekt(InntektGenerator.ny().arbeidMedOpptjeningOver6G().build()).build())
                 .build();
 
         var mor = familie.mor();
@@ -208,7 +208,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
             + "og hvordan grunnlag og refusjon skal fordeles for å håndtere ulik lønn i stillingene ")
     void morSøkerFulltUttakForEttAvToArbeidsforholdTest() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor().inntektytelse(InntektYtelseGenerator.ny()
+                .forelder(mor().inntekt(InntektGenerator.ny()
                         .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-001", 100, LocalDate.now().minusYears(2), 480_000)
                         .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-002", 0, LocalDate.now().minusYears(4), 20_000)
                         .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-003", 0, LocalDate.now().minusYears(4), null)
@@ -306,7 +306,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
             + "To måneder senere sender mor inn ny søknad for SN")
     void morSøkerFørstForATOgSenereForSNTest() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor().inntektytelse(InntektYtelseGenerator.ny()
+                .forelder(mor().inntekt(InntektGenerator.ny()
                         .selvstendigNæringsdrivende(1_000_000)
                         .arbeidsforhold(LocalDate.now().minusMonths(12), 720_000)
                         .build()).build())
@@ -431,7 +431,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
             + "Inntekten i disse to arbeidsforholdene er samlet over 6G hvor fordelingen er 2/3 og 1/3 av inntekten.")
     void morSøkerIngenTilretteleggingForToArbeidsforholdFullRefusjonTest() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor().inntektytelse(InntektYtelseGenerator.ny()
+                .forelder(mor().inntekt(InntektGenerator.ny()
                         .arbeidsforhold(LocalDate.now().minusYears(4), 720_000)
                         .arbeidsforhold(50, LocalDate.now().minusYears(2), 360_000)
                         .build()).build())
@@ -509,7 +509,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
     @Description("Verifiserer at innsyn har korrekt data og sammenligner med vedtaket med det saksbehandlerene ser")
     void mor_innsyn_verifsere() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor().inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build()).build())
+                .forelder(mor().inntekt(InntektGenerator.ny().arbeidMedOpptjeningUnder6G().build()).build())
                 .build();
 
         var mor = familie.mor();

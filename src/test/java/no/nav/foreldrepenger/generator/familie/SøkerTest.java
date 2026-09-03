@@ -16,17 +16,16 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.autotest.aktoerer.innsender.Innsender;
-import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
+import no.nav.foreldrepenger.generator.familie.generator.InntektGenerator;
+import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseBundle;
 import no.nav.foreldrepenger.kontrakter.felles.typer.AktørId;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Fødselsnummer;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Saksnummer;
 import no.nav.foreldrepenger.soknad.kontrakt.BrukerRolle;
 import no.nav.foreldrepenger.soknad.kontrakt.SøkerDto;
 import no.nav.foreldrepenger.soknad.kontrakt.opptjening.NæringDto;
-import no.nav.foreldrepenger.vtp.kontrakter.person.AaregDto;
-import no.nav.foreldrepenger.vtp.kontrakter.person.BrregDto;
-import no.nav.foreldrepenger.vtp.kontrakter.person.InntektYtelseModellDto;
-import no.nav.foreldrepenger.vtp.kontrakter.person.PersonDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.BrregDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.PersonDto;
 
 @Tag("internal")
 class SøkerTest {
@@ -78,8 +77,7 @@ class SøkerTest {
     @Test
     @DisplayName("Flere registrerte næringer beholdes i rekkefølge i søkerinfo")
     void flereRegistrerteNæringerLeggesISøkerinfo() {
-        var person = PersonDto.builder()
-                .inntektytelse(InntektYtelseGenerator.ny()
+        var person = personMedInntekt(InntektGenerator.ny()
                         .selvstendigNæringsdrivende(350_000)
                         .registrertNæring(
                                 "974760673",
@@ -88,8 +86,7 @@ class SøkerTest {
                                 "Enkeltpersonforetak",
                                 "01.110",
                                 "Dyrking av korn")
-                        .build())
-                .build();
+                        .build());
 
         assertThat(søkerinfo(person).selvstendigNæring())
                 .extracting(
@@ -104,13 +101,11 @@ class SøkerTest {
     @Test
     @DisplayName("Ordinære arbeidsforhold og frilansoppdrag legges i hver sin søkerinfo-liste")
     void aaregdataFordelesPåArbeidsforholdOgFrilansoppdrag() {
-        var person = PersonDto.builder()
-                .inntektytelse(InntektYtelseGenerator.ny()
+        var person = personMedInntekt(InntektGenerator.ny()
                         .arbeidsforhold(NAV_OSLO, 75, LocalDate.now().minusYears(1), 480_000)
                         .frilans(NAV_STORD, "frilans-1", 25, LocalDate.now().minusMonths(6),
                                 LocalDate.now().minusMonths(1), 120_000)
-                        .build())
-                .build();
+                        .build());
 
         var søkerinfo = søkerinfo(person);
 
@@ -133,13 +128,13 @@ class SøkerTest {
     @Test
     @DisplayName("Mange frilansoppdrag beholdes med perioder og rekkefølge i søkerinfo")
     void mangeFrilansoppdragLeggesISøkerinfo() {
-        var inntektYtelse = InntektYtelseGenerator.ny();
+        var inntektYtelse = InntektGenerator.ny();
         var førsteOppdragFom = LocalDate.now().minusDays(320);
         for (int i = 0; i < 20; i++) {
             var fom = førsteOppdragFom.plusDays(i * 16L);
             inntektYtelse.frilans(NAV_STORD, "frilans-" + (i + 1), 25, fom, fom.plusDays(13), 120_000);
         }
-        var person = PersonDto.builder().inntektytelse(inntektYtelse.build()).build();
+        var person = personMedInntekt(inntektYtelse.build());
 
         var frilansoppdrag = søkerinfo(person).frilansoppdrag();
 
@@ -166,10 +161,16 @@ class SøkerTest {
 
     private static PersonDto personMedBrreg(BrregDto brreg) {
         return PersonDto.builder()
-                .inntektytelse(InntektYtelseModellDto.builder()
-                        .aareg(new AaregDto(List.of()))
-                        .brreg(brreg)
-                        .build())
+                .brreg(brreg)
+                .build();
+    }
+
+    private static PersonDto personMedInntekt(InntektYtelseBundle inntekt) {
+        return PersonDto.builder()
+                .arbeidsforhold(inntekt.arbeidsforhold())
+                .inntekt(inntekt.inntekt())
+                .skatteopplysninger(inntekt.skatteopplysninger())
+                .brreg(inntekt.brreg())
                 .build();
     }
 

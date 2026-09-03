@@ -4,18 +4,16 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.neovisionaries.i18n.CountryCode;
-
-import no.nav.foreldrepenger.vtp.kontrakter.person.AdresseDto;
-import no.nav.foreldrepenger.vtp.kontrakter.person.GeografiskTilknytningDto;
-import no.nav.foreldrepenger.vtp.kontrakter.person.Kjønn;
-import no.nav.foreldrepenger.vtp.kontrakter.person.MedlemskapDto;
-import no.nav.foreldrepenger.vtp.kontrakter.person.PersonDto;
-import no.nav.foreldrepenger.vtp.kontrakter.person.PersonstatusDto;
-import no.nav.foreldrepenger.vtp.kontrakter.person.Rolle;
-import no.nav.foreldrepenger.vtp.kontrakter.person.SivilstandDto;
-import no.nav.foreldrepenger.vtp.kontrakter.person.Språk;
-import no.nav.foreldrepenger.vtp.kontrakter.person.StatsborgerskapDto;
+import no.nav.foreldrepenger.generator.Landkoder;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.Kjønn;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.Rolle;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.Språk;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.AdresseDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.GeografiskTilknytningDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.MedlemskapDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.PersonstatusDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.SivilstandDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.StatsborgerskapDto;
 
 public class PersonGenerator {
 
@@ -25,36 +23,36 @@ public class PersonGenerator {
         // Statisk implementasjon
     }
 
-    public static PersonDto.Builder mor() {
+    public static PersonBuilder mor() {
         return kvinne(Rolle.MOR);
     }
 
-    public static PersonDto.Builder mor(LocalDate fødselsdato) {
+    public static PersonBuilder mor(LocalDate fødselsdato) {
         return kvinne(Rolle.MOR, fødselsdato);
     }
 
-    public static PersonDto.Builder medmor() {
+    public static PersonBuilder medmor() {
         return kvinne(Rolle.MEDMOR);
     }
 
-    public static PersonDto.Builder medmor(LocalDate fødselsdato) {
+    public static PersonBuilder medmor(LocalDate fødselsdato) {
         return kvinne(Rolle.MEDMOR, fødselsdato);
     }
 
-    public static PersonDto.Builder far() {
+    public static PersonBuilder far() {
         return mann(Rolle.FAR);
     }
 
-    public static PersonDto.Builder far(LocalDate fødselsdato) {
+    public static PersonBuilder far(LocalDate fødselsdato) {
         return mann(Rolle.FAR, fødselsdato);
     }
 
-    public static PersonDto.Builder kvinne(Rolle rolle) {
+    public static PersonBuilder kvinne(Rolle rolle) {
         return kvinne(rolle, FødselsdatoGenerator.tilfeldig());
     }
 
-    public static PersonDto.Builder kvinne(Rolle rolle, LocalDate fødselsdato) {
-        return PersonDto.builder()
+    public static PersonBuilder kvinne(Rolle rolle, LocalDate fødselsdato) {
+        return PersonBuilder.ny()
                 .rolle(rolle)
                 .kjønn(Kjønn.K)
                 .fødselsdato(fødselsdato)
@@ -64,16 +62,15 @@ public class PersonGenerator {
                 .personstatus(bosattFra(fødselsdato))
                 .sivilstand(ugift())
                 .medlemskap(norskMedlemskap())
-                .statsborgerskap(norskStatsborgerskap())
-                ;
+                .statsborgerskap(norskStatsborgerskap());
     }
 
-    public static PersonDto.Builder mann(Rolle rolle) {
+    public static PersonBuilder mann(Rolle rolle) {
         return mann(rolle, FødselsdatoGenerator.tilfeldig());
     }
 
-    public static PersonDto.Builder mann(Rolle rolle, LocalDate fødselsdato) {
-        return PersonDto.builder()
+    public static PersonBuilder mann(Rolle rolle, LocalDate fødselsdato) {
+        return PersonBuilder.ny()
                 .rolle(rolle)
                 .kjønn(Kjønn.M)
                 .fødselsdato(fødselsdato)
@@ -83,12 +80,11 @@ public class PersonGenerator {
                 .personstatus(bosattFra(fødselsdato))
                 .sivilstand(ugift())
                 .medlemskap(norskMedlemskap())
-                .statsborgerskap(norskStatsborgerskap())
-                ;
+                .statsborgerskap(norskStatsborgerskap());
     }
 
     public static List<StatsborgerskapDto> norskStatsborgerskap() {
-        return new ArrayList<>(List.of(new StatsborgerskapDto(CountryCode.NO)));
+        return new ArrayList<>(List.of(new StatsborgerskapDto(Landkoder.NOR)));
     }
 
     public static List<MedlemskapDto> norskMedlemskap() {
@@ -106,7 +102,7 @@ public class PersonGenerator {
     public static List<AdresseDto> norskAdresse() {
         var adresse = new AdresseDto(
                 AdresseDto.AdresseType.BOSTEDSADRESSE,
-                CountryCode.NO,
+                Landkoder.NOR,
                 "000000001",
                 LocalDate.now().minusYears(10),
                 null
@@ -115,7 +111,7 @@ public class PersonGenerator {
         return new ArrayList<>(List.of(adresse));
     }
 
-    public static List<AdresseDto> utenlandskAdresse(CountryCode land) {
+    public static List<AdresseDto> utenlandskAdresse(String land) {
         var adresse = new AdresseDto(
                 AdresseDto.AdresseType.POSTADRESSE,
                 land,
