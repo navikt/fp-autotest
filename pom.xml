@@ -23,18 +23,16 @@
     </licenses>
 
     <properties>
-        <!-- MIDLERTIDIG: lokal VTP-kontrakt for TFP-6872. Bruk publisert versjon før merge. -->
-        <vtp.versjon>2.3.0-SNAPSHOT</vtp.versjon>
+        <vtp.versjon>2.2.5</vtp.versjon>
 
         <fp-felles.versjon>7.9.0</fp-felles.versjon>
         <fp-prosesstask.version>5.2.7</fp-prosesstask.version>
-        <fp-kontrakter.version>9.4.37</fp-kontrakter.version>
+        <fp-kontrakter.version>9.4.39</fp-kontrakter.version>
 
-        <ftberegning.version>7.1.6</ftberegning.version>
+        <ftberegning.version>7.2.0</ftberegning.version>
         <fpkalkulus.kontrakt.version>1.2.1</fpkalkulus.kontrakt.version>
 
-        <!-- MIDLERTIDIG: lokal kontrakt for TFP-6851. Bruk publisert versjon før merge. -->
-        <fpsoknad-kontrakt.version>2.3.5-SNAPSHOT</fpsoknad-kontrakt.version>
+        <fpsoknad-kontrakt.version>1.0.9</fpsoknad-kontrakt.version>
 
         <pdfbox.version>3.0.8</pdfbox.version>
         <allure.version>2.35.4</allure.version>
