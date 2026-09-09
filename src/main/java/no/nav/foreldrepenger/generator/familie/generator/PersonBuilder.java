@@ -18,6 +18,7 @@ import no.nav.foreldrepenger.vtp.kontrakter.person.v2.MedlemskapDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.PersonDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.PersonopplysningerDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.PersonstatusDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.RegistrertNæringsvirksomhetDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.SivilstandDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.SkatteopplysningDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.StatsborgerskapDto;
@@ -25,8 +26,8 @@ import no.nav.foreldrepenger.vtp.kontrakter.person.v2.YtelseDto;
 
 /**
  * Erstatter v1s bruk av kontrakter.PersonDto.Builder direkte. Wrapper rundt v2s
- * PersonopplysningerDto.Builder + de fire flate listene (arbeidsforhold/inntekt/ytelser/skatteopplysninger)
- * som v2.PersonDto krever separat. Gir samme fluent API som testene bruker i dag.
+ * PersonopplysningerDto.Builder, de flate listene og Brreg-dataene som v2.PersonDto krever separat.
+ * Gir samme fluent API som testene bruker i dag.
  */
 public class PersonBuilder {
 
@@ -35,6 +36,7 @@ public class PersonBuilder {
     private List<InntektsperiodeDto> inntekt = new ArrayList<>();
     private final List<YtelseDto> ytelser = new ArrayList<>();
     private List<SkatteopplysningDto> skatteopplysninger = new ArrayList<>();
+    private List<RegistrertNæringsvirksomhetDto> registrerteNæringsvirksomheter = new ArrayList<>();
 
     PersonBuilder() {
     }
@@ -126,6 +128,7 @@ public class PersonBuilder {
         this.arbeidsforhold = new ArrayList<>(bundle.arbeidsforhold());
         this.inntekt = new ArrayList<>(bundle.inntekt());
         this.skatteopplysninger = new ArrayList<>(bundle.skatteopplysninger());
+        this.registrerteNæringsvirksomheter = new ArrayList<>(bundle.registrerteNæringsvirksomheter());
         return this;
     }
 
@@ -145,6 +148,7 @@ public class PersonBuilder {
                 .inntekt(inntekt)
                 .ytelser(ytelser)
                 .skatteopplysninger(skatteopplysninger)
+                .registrerteNæringsvirksomheter(registrerteNæringsvirksomheter)
                 .build();
     }
 }

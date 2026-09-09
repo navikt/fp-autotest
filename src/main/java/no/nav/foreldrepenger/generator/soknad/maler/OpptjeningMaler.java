@@ -35,8 +35,58 @@ public final class OpptjeningMaler {
         return lagNorskOrganisasjon(orgnummer, fom, tom, erNyIArbeidslivet, næringsInntekt, varigEndretNæring);
     }
 
+    public static NæringDto registrertEgenNæring(String orgnummer,
+                                                 String navn,
+                                                 NæringDto.Virksomhetstype næringstype,
+                                                 LocalDate fom,
+                                                 Number næringsinntekt,
+                                                 boolean erNyIArbeidslivet) {
+        return new NæringDto(
+                fom,
+                null,
+                næringstype,
+                navn,
+                new Orgnummer(orgnummer),
+                næringsinntekt.intValue(),
+                true,
+                null,
+                erNyIArbeidslivet,
+                null,
+                false,
+                null,
+                null,
+                null);
+    }
+
+    public static NæringDto utenlandskEgenNæring(String navn,
+                                                 String registrertILand,
+                                                 NæringDto.Virksomhetstype næringstype,
+                                                 LocalDate fom,
+                                                 Number næringsinntekt,
+                                                 boolean erNyIArbeidslivet) {
+        return new NæringDto(
+                fom,
+                null,
+                næringstype,
+                navn,
+                null,
+                næringsinntekt.intValue(),
+                false,
+                registrertILand,
+                erNyIArbeidslivet,
+                null,
+                false,
+                null,
+                null,
+                null);
+    }
+
     public static AnnenInntektDto utenlandskArbeidsforhold(String landKode) {
         return annenInntekt(AnnenInntektDto.AnnenOpptjeningType.JOBB_I_UTLANDET, landKode, LocalDate.now().minusYears(4), LocalDate.now());
+    }
+
+    public static AnnenInntektDto utenlandskArbeidsforhold(String landKode, LocalDate fom, LocalDate tom) {
+        return annenInntekt(AnnenInntektDto.AnnenOpptjeningType.JOBB_I_UTLANDET, landKode, fom, tom);
     }
 
     public static AnnenInntektDto annenInntektNorsk(AnnenInntektDto.AnnenOpptjeningType type) {
