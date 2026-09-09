@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.autotest.verdikjedetester;
+package no.nav.foreldrepenger.autotest.fpsak.foreldrepenger;
 
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
@@ -30,9 +30,9 @@ import no.nav.foreldrepenger.vtp.kontrakter.person.v2.FamilierelasjonDto;
 
 @Tag("verdikjede")
 @Tag("foreldrepenger")
-class SøknadSelvstendigNæringTest extends VerdikjedeTestBase {
+class FrilansOgSelvstendigNæring extends VerdikjedeTestBase {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SøknadSelvstendigNæringTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(FrilansOgSelvstendigNæring.class);
 
     @Test
     @DisplayName("Sender foreldrepengesøknad med mange registrerte frilansoppdrag")
