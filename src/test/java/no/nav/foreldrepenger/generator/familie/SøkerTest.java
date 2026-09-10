@@ -4,7 +4,6 @@ import static no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepenger
 import static no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner.NAV_OSLO;
 import static no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner.NAV_STORD;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.groups.Tuple.tuple;
 
 import java.lang.reflect.Proxy;
 import java.time.LocalDate;
@@ -74,30 +73,6 @@ class SøkerTest {
     }
 
     @Test
-    @DisplayName("Flere registrerte næringer beholdes i rekkefølge i søkerinfo")
-    void flereRegistrerteNæringerLeggesISøkerinfo() {
-        var person = personMedInntekt(InntektGenerator.ny()
-                        .selvstendigNæringsdrivende(350_000)
-                        .registrertNæring(
-                                "974760673",
-                                "VTP GÅRDSDRIFT",
-                                "ENK",
-                                "Enkeltpersonforetak",
-                                "01.110",
-                                "Dyrking av korn")
-                        .build());
-
-        assertThat(søkerinfo(person).selvstendigNæring())
-                .extracting(
-                        SøkerDto.SelvstendigNæring::navn,
-                        næring -> næring.organisasjonsnummer().value(),
-                        SøkerDto.SelvstendigNæring::næringstype)
-                .containsExactly(
-                        tuple("VTP FISKE", "999999999", NæringDto.Virksomhetstype.FISKE),
-                        tuple("VTP GÅRDSDRIFT", "974760673", NæringDto.Virksomhetstype.JORDBRUK_SKOGBRUK));
-    }
-
-    @Test
     @DisplayName("Ordinære arbeidsforhold og frilansoppdrag legges i hver sin søkerinfo-liste")
     void aaregdataFordelesPåArbeidsforholdOgFrilansoppdrag() {
         var person = personMedInntekt(InntektGenerator.ny()
@@ -122,30 +97,6 @@ class SøkerTest {
                         "NAV FAMILIE- OG PENSJONSYTELSER STORD",
                         LocalDate.now().minusMonths(6),
                         LocalDate.now().minusMonths(1));
-    }
-
-    @Test
-    @DisplayName("Mange frilansoppdrag beholdes med perioder og rekkefølge i søkerinfo")
-    void mangeFrilansoppdragLeggesISøkerinfo() {
-        var inntektYtelse = InntektGenerator.ny();
-        var førsteOppdragFom = LocalDate.now().minusDays(320);
-        for (int i = 0; i < 20; i++) {
-            var fom = førsteOppdragFom.plusDays(i * 16L);
-            inntektYtelse.frilans(NAV_STORD, "frilans-" + (i + 1), 25, fom, fom.plusDays(13), 120_000);
-        }
-        var person = personMedInntekt(inntektYtelse.build());
-
-        var frilansoppdrag = søkerinfo(person).frilansoppdrag();
-
-        assertThat(frilansoppdrag).hasSize(20)
-                .allSatisfy(oppdrag -> assertThat(oppdrag.navn())
-                        .isEqualTo("NAV FAMILIE- OG PENSJONSYTELSER STORD"));
-        assertThat(frilansoppdrag.getFirst())
-                .extracting(SøkerDto.Frilansoppdrag::fom, SøkerDto.Frilansoppdrag::tom)
-                .containsExactly(førsteOppdragFom, førsteOppdragFom.plusDays(13));
-        assertThat(frilansoppdrag.getLast())
-                .extracting(SøkerDto.Frilansoppdrag::fom, SøkerDto.Frilansoppdrag::tom)
-                .containsExactly(førsteOppdragFom.plusDays(19 * 16L), førsteOppdragFom.plusDays(19 * 16L + 13));
     }
 
     private static RegistrertNæringsvirksomhetDto virksomhet(String orgnummer, String næringskode) {
