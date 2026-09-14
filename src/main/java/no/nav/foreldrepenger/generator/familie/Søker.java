@@ -4,6 +4,8 @@ import static no.nav.foreldrepenger.autotest.util.StreamUtils.distinctByKeys;
 import static no.nav.foreldrepenger.generator.familie.Aareg.arbeidsforholdFrilans;
 import static no.nav.foreldrepenger.generator.familie.Sigrun.hentNæringsinntekt;
 import static no.nav.foreldrepenger.generator.familie.Sigrun.startdato;
+import static no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner.navnFor;
+import static no.nav.foreldrepenger.vtp.kontrakter.person.v2.Arbeidsforholdstype.FRILANSER_OPPDRAGSTAKER_MED_MER;
 import static no.nav.foreldrepenger.vtp.kontrakter.person.v2.Arbeidsforholdstype.ORDINÆRT_ARBEIDSFORHOLD;
 
 import java.time.LocalDate;
@@ -28,6 +30,7 @@ import no.nav.foreldrepenger.soknad.kontrakt.SøknadDto;
 import no.nav.foreldrepenger.soknad.kontrakt.builder.EndringssøknadBuilder;
 import no.nav.foreldrepenger.soknad.kontrakt.builder.SøknadBuilder;
 import no.nav.foreldrepenger.soknad.kontrakt.ettersendelse.YtelseType;
+import no.nav.foreldrepenger.soknad.kontrakt.opptjening.NæringDto;
 import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.DokumentTypeId;
 import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.Dokumenterer;
 import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.InnsendingType;
@@ -205,7 +208,7 @@ public abstract class Søker {
 
     public Saksnummer søk(SøknadBuilder søknadBuilder) {
         var søknad = søknadBuilder
-                .medSøkerinfo(new SøkerDto(fødselsnummer, new SøkerDto.Navn("Fornavnet", "Mellomnavnet", "Etternavnet hardkodet"), registrerteArbeidsforhold()))
+                .medSøkerinfo(søkerDto())
                 .build();
         LOG.info("Sender inn søknad for {} ...", fødselsnummer.value());
         this.førstegangssøknad = søknad;
@@ -216,7 +219,7 @@ public abstract class Søker {
 
     public Saksnummer søk(SøknadBuilder søknadBuilder, Saksnummer saksnummer) {
         var søknad = søknadBuilder
-                .medSøkerinfo(new SøkerDto(fødselsnummer, new SøkerDto.Navn("Fornavnet", "Mellomnavnet", "Etternavnet hardkodet"), registrerteArbeidsforhold()))
+                .medSøkerinfo(søkerDto())
                 .build();
         LOG.info("Sender inn søknad for {} med saksnummer {} ...", fødselsnummer.value(), saksnummer.value());
         this.førstegangssøknad = søknad;
@@ -227,7 +230,7 @@ public abstract class Søker {
 
     public Saksnummer søk(EndringssøknadBuilder søknadBuilder) {
         var søknad = søknadBuilder
-                .medSøkerinfo(new SøkerDto(fødselsnummer, new SøkerDto.Navn("Fornavnet", "Mellomnavnet", "Etternavnet hardkodet"), registrerteArbeidsforhold()))
+                .medSøkerinfo(søkerDto())
                 .build();
         this.saksnummer = søknad.saksnummer();
         LOG.info("Sender inn endringssøknadsøknad for {} med saksnummer {} ...", fødselsnummer.value(), this.saksnummer.value());
@@ -300,14 +303,59 @@ public abstract class Søker {
 
     private List<SøkerDto.Arbeidsforhold> registrerteArbeidsforhold() {
         return arbeidsforholdene().stream()
+                .filter(arbeidsforhold -> ORDINÆRT_ARBEIDSFORHOLD.equals(arbeidsforhold.arbeidsforholdstype()))
                 .map(Søker::tilArbeidsforhold)
                 .toList();
     }
 
+    private List<SøkerDto.Frilansoppdrag> registrerteFrilansoppdrag() {
+        return arbeidsforholdene().stream()
+                .filter(arbeidsforhold ->
+                        FRILANSER_OPPDRAGSTAKER_MED_MER.equals(arbeidsforhold.arbeidsforholdstype()))
+                .map(arbeidsforhold -> new SøkerDto.Frilansoppdrag(
+                        navnFor(arbeidsforhold.arbeidsgiverIdentifikasjon()),
+                        arbeidsforhold.ansettelsesperiodeFom(),
+                        arbeidsforhold.ansettelsesperiodeTom()))
+                .toList();
+    }
+
+    private List<SøkerDto.SelvstendigNæring> selvstendigeNæringer() {
+        return personDto.registrerteNæringsvirksomheter().stream()
+                .map(virksomhet -> new SøkerDto.SelvstendigNæring(
+                        virksomhet.navn(),
+                        new Orgnummer(virksomhet.organisasjonsnummer()),
+                        virksomhetstype(virksomhet.næringskode())))
+                .toList();
+    }
+
+    private SøkerDto søkerDto() {
+        return new SøkerDto(
+                fødselsnummer,
+                new SøkerDto.Navn("Fornavnet", "Mellomnavnet", "Etternavnet hardkodet"),
+                registrerteArbeidsforhold(),
+                registrerteFrilansoppdrag(),
+                selvstendigeNæringer());
+    }
+
+    private static NæringDto.Virksomhetstype virksomhetstype(String næringskode) {
+        if (næringskode != null && ((næringskode.startsWith("01")
+                && !næringskode.startsWith("01.6")
+                && !næringskode.startsWith("01.7"))
+                || næringskode.startsWith("02.1"))) {
+            return NæringDto.Virksomhetstype.JORDBRUK_SKOGBRUK;
+        }
+        if (næringskode != null && næringskode.startsWith("03.1")) {
+            return NæringDto.Virksomhetstype.FISKE;
+        }
+        if (næringskode != null && næringskode.startsWith("88.91")) {
+            return NæringDto.Virksomhetstype.DAGMAMMA;
+        }
+        return NæringDto.Virksomhetstype.ANNEN;
+    }
+
     private static SøkerDto.Arbeidsforhold tilArbeidsforhold(Arbeidsforhold af) {
-        var hardkodetNavn = "ARBEIDSGIVERS NAVN AS";
         return new SøkerDto.Arbeidsforhold(
-                hardkodetNavn,
+                navnFor(af.arbeidsgiverIdentifikasjon()),
                 new Orgnummer(af.arbeidsgiverIdentifikasjon()),
                 (double) af.stillingsprosent(),
                 af.ansettelsesperiodeFom(),
