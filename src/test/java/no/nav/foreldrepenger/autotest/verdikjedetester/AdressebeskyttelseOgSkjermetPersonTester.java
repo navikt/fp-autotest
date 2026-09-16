@@ -88,7 +88,7 @@ class AdressebeskyttelseOgSkjermetPersonTester {
         var saksnummerMor = mor.søk(søknadMor);
 
         saksbehandler6.hentFagsak(saksnummerMor);
-        saksbehandler6.ventTilHistorikkinnslag(HistorikkType.MIN_SIDE_ARBEIDSGIVER);
+        saksbehandler6.ventTilHistorikkinnslag(HistorikkType.FORESPØRSEL_OM_INNTEKTSMELDING);
         mor.arbeidsgiver().sendInntektsmeldingerFP(saksnummerMor, termindato);
         saksbehandler6.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
@@ -112,7 +112,7 @@ class AdressebeskyttelseOgSkjermetPersonTester {
         var saksnummerFar = far.søk(søknadFar);
 
         saksbehandler6.hentFagsak(saksnummerFar);
-        saksbehandler6.ventTilHistorikkinnslag(HistorikkType.MIN_SIDE_ARBEIDSGIVER);
+        saksbehandler6.ventTilHistorikkinnslag(HistorikkType.FORESPØRSEL_OM_INNTEKTSMELDING);
         far.arbeidsgiver().sendInntektsmeldingerFP(saksnummerFar, termindato);
         saksbehandler6.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
@@ -160,7 +160,7 @@ class AdressebeskyttelseOgSkjermetPersonTester {
         var saksnummerMor = mor.søk(søknadMor);
 
         saksbehandlerEgenAnsatt.hentFagsak(saksnummerMor);
-        saksbehandlerEgenAnsatt.ventTilHistorikkinnslag(HistorikkType.MIN_SIDE_ARBEIDSGIVER);
+        saksbehandlerEgenAnsatt.ventTilHistorikkinnslag(HistorikkType.FORESPØRSEL_OM_INNTEKTSMELDING);
         mor.arbeidsgiver().sendInntektsmeldingerFP(saksnummerMor, termindato);
         saksbehandlerEgenAnsatt.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 

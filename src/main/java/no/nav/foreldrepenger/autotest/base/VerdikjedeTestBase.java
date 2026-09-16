@@ -194,7 +194,7 @@ public abstract class VerdikjedeTestBase extends BrevTestBase {
     protected void ventPåInntektsmeldingForespørsel(Saksnummer saksnummer) {
         saksbehandler.hentFagsak(saksnummer);
         LOG.debug("Venter på inntektsmelding forespørsel for saksnummer {}...", saksnummer.value());
-        saksbehandler.ventTilHistorikkinnslag(HistorikkType.MIN_SIDE_ARBEIDSGIVER);
+        saksbehandler.ventTilHistorikkinnslag(HistorikkType.FORESPØRSEL_OM_INNTEKTSMELDING);
     }
 
     protected int grunnbeløp() {
