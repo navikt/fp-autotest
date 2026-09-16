@@ -12,7 +12,7 @@ public enum HistorikkType {
     SPOLT_TILBAKE("Behandlingen er flyttet"),
     AVBRUTT_BEH("Behandling er henlagt"),
     VEDTAK_FATTET("Vedtak er fattet", "VEDTAK"),
-    MIN_SIDE_ARBEIDSGIVER("Min side - arbeidsgiver");
+    FORESPØRSEL_OM_INNTEKTSMELDING("Forespørsel om inntektsmelding");
 
     private final String tittel;
     private final String skjermlenke;
