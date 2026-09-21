@@ -10,15 +10,15 @@ import java.time.Duration;
 
 import io.qameta.allure.Step;
 import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.BeregningsgrunnlagDto;
+import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
+import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
+import no.nav.foreldrepenger.kalkulus.kontrakt.request.EnkelBeregnRequestDto;
 import no.nav.foreldrepenger.kalkulus.kontrakt.request.EnkelFpkalkulusRequestDto;
 import no.nav.foreldrepenger.kalkulus.kontrakt.request.EnkelHentBeregningsgrunnlagGUIRequest;
 import no.nav.foreldrepenger.kalkulus.kontrakt.request.EnkelHåndterBeregningRequestDto;
 import no.nav.foreldrepenger.kalkulus.kontrakt.response.TilstandResponse;
 import no.nav.foreldrepenger.kalkulus.kontrakt.response.beregningsgrunnlag.detaljert.BeregningsgrunnlagGrunnlagDto;
 import no.nav.foreldrepenger.kalkulus.kontrakt.response.håndtering.OppdateringRespons;
-import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
-import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
-import no.nav.foreldrepenger.kalkulus.kontrakt.request.EnkelBeregnRequestDto;
 
 public class KalkulusKlient {
     private static final String KLIENT_ID = "kalkulus";
@@ -69,7 +69,7 @@ public class KalkulusKlient {
 
     @Step("Håndter aksjonspunkt")
     public OppdateringRespons håndterBeregning(EnkelHåndterBeregningRequestDto  håndterRequestDto) {
-        håndterRequestDto.håndterBeregningDtoList().forEach(dto -> dto.setBegrunnelse("Løst av verdikjeden"));
+        håndterRequestDto.håndterBeregningDto().setBegrunnelse("Løst av verdikjeden");
         var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle, KLIENT_ID)
                 .timeout(KALKULUS_TIMEOUT)
                 .uri(fromUri(BaseUriProvider.KALKULUS_BASE)
