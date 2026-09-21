@@ -11,31 +11,26 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
 import no.nav.foreldrepenger.autotest.klienter.vtp.testscenario.TestscenarioKlient;
-import no.nav.foreldrepenger.autotest.util.log.LoggFormater;
 import no.nav.foreldrepenger.generator.familie.Familie;
-import no.nav.foreldrepenger.vtp.kontrakter.person.v2.Kjønn;
-import no.nav.foreldrepenger.vtp.kontrakter.person.v2.Rolle;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.ArbeidsforholdDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.FamilierelasjonDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.Kjønn;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.PersonDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.PersonopplysningerDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.PrivatArbeidsgiverDto;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.Rolle;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.SivilstandDto;
 import no.nav.vedtak.log.mdc.MDCOperations;
 
 
 public class FamilieGenerator {
-    private static final Logger LOG = LoggerFactory.getLogger(FamilieGenerator.class);
 
     private static final TestscenarioKlient TESTSCENARIO_JERSEY_KLIENT = new TestscenarioKlient();
 
     private final List<PersonDto> parter = new ArrayList<>();
-    private SaksbehandlerRolle saksbehandlerRolle;
+    private final SaksbehandlerRolle saksbehandlerRolle;
 
     public FamilieGenerator() {
         saksbehandlerRolle = SaksbehandlerRolle.SAKSBEHANDLER;
@@ -135,7 +130,6 @@ public class FamilieGenerator {
 
     public Familie build() {
         MDCOperations.putCallId();
-        LOG.debug("Testcase: {}", LoggFormater.navnPåTestCaseSomKjører());
         guardMinstEnPart();
         guardForeldresammensetning();
         opprettFamilieRelasjonForFødteBarn();
