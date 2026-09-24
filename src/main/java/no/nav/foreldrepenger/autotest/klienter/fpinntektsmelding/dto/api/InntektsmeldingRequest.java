@@ -29,7 +29,7 @@ public record InntektsmeldingRequest(@NotNull @Valid UUID forespoerselId,
 
     public record Refusjon(@NotNull BigDecimal beloepPerMaaned,
                            @NotNull @Valid List<RefusjonEndring> endringer) {
-        public record RefusjonEndring(@NotNull @Min(0) @Max(Integer.MAX_VALUE) @Digits(integer = 20, fraction = 2) BigDecimal beloepPerMaaned, @NotNull LocalDate stardato) {}
+        public record RefusjonEndring(@NotNull @Min(0) @Max(Integer.MAX_VALUE) @Digits(integer = 20, fraction = 2) BigDecimal beloepPerMaaned, @NotNull LocalDate startdato) {}
     }
 
     public record Kontaktinformasjon(@NotNull String arbeidsgiverNavn,  @NotNull String arbeidsgiverTlf) {}
