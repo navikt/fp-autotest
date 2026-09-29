@@ -551,6 +551,40 @@
 
 ## Suite: verdikjedetester
 
+### FellesUttaksplan.java (verdikjedetester/FellesUttaksplan.java)
+**Tags:** verdikjede, foreldrepenger
+
+Debugforløp uten assertions. Sett breakpoint på logglinjen i `stoppunkt` for å inspisere
+`scenario`, `familie`, `morsPlan` og `farsPlan` før neste steg. Metoden stopper ikke kjøringen
+uten debugger. Hver test oppretter en ny familie med registrert barn.
+
+| Scenario | Testmetode |
+|---|---|
+| F01 | `f01_ingen_har_søkt` |
+| F02, F03 | `mor_sender_inn_fars_perioder` |
+| F04 | `f04_mor_får_delvis_avslag` |
+| F05 | `f05_tomt_forslag_til_far` |
+| F06 | `f06_mor_erstatter_forslaget` |
+| F07 | `f07_far_søker_først` |
+| B01, B03, B04 | `b01_b03_b04_begge_søker_før_vedtak` |
+| B02 | `b02_mor_har_vedtak_før_far_søker` |
+| B06 | `b06_far_får_avslag` |
+| E01, E02 | `e01_e02_mor_endrer_egen_plan_og_forslag` |
+| E03 | `e03_far_endrer_egen_plan_og_forslag` |
+| E04, E06 | `e04_e06_mor_endrer_og_tømmer_forslaget` |
+| E05 | `e05_far_endrer_bare_forslaget` |
+| E07 | `e07_mor_flytter_splitter_og_forkorter` |
+
+E01/E02, E04/E06 og E05 kjøres med og uten annen parts egne data.
+B05 er utelatt: fp-soknad avviser tom egen uttaksplan før lagring.
+Endringsforløpene oppretter revurderingen manuelt før innsending, slik at de blir stående
+på foreslå vedtak mens planene inspiseres. Første uttak for far starter innen fire uker;
+endringene i egne perioder gjelder fremtidig uttak.
+
+Kjør én metode med `mvn test -P verdikjede -Dtest=FellesUttaksplan#mor_sender_inn_fars_perioder`.
+Forløpene krever de lokale kontrakt-snapshotene og branchene med felles uttaksplan i
+fp-soknad og fp-oversikt.
+
 ### AdressebeskyttelseOgSkjermetPersonTester.java (verdikjedetester/AdressebeskyttelseOgSkjermetPersonTester.java)
 **Tags:** verdikjede
 

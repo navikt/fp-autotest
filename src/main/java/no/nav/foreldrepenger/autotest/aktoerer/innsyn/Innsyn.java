@@ -10,6 +10,7 @@ import no.nav.foreldrepenger.autotest.util.vent.Vent;
 import no.nav.foreldrepenger.kontrakter.fpoversikt.AnnenPartSak;
 import no.nav.foreldrepenger.kontrakter.fpoversikt.BehandlingTilstand;
 import no.nav.foreldrepenger.kontrakter.fpoversikt.EsSak;
+import no.nav.foreldrepenger.kontrakter.fpoversikt.FellesUttaksplanDto;
 import no.nav.foreldrepenger.kontrakter.fpoversikt.FpSak;
 import no.nav.foreldrepenger.kontrakter.fpoversikt.Saker;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Fødselsnummer;
@@ -36,6 +37,12 @@ public class Innsyn {
 
     public AnnenPartSak hentAnnenpartsSak(Fødselsnummer annenpart, LocalDate familiehendelse) {
         return innsynKlient.hentAnnenpartsSak(fnr, new InnsynKlient.AnnenPartSakIdentifikator(annenpart, null, familiehendelse));
+    }
+
+    public FellesUttaksplanDto hentFellesUttaksplan(Fødselsnummer annenpart, LocalDate familiehendelse) {
+        return Vent.på(() -> innsynKlient.hentFellesUttaksplan(fnr, annenpart, familiehendelse),
+                () -> "Finner ikke felles uttaksplan for familiehendelse " + familiehendelse,
+                API_TIMEOUT_SEKUNDER, API_PROGRESSIV_VENTETID);
     }
 
     public EsSak hentEsSakMedÅpenBehandlingTilstand(Saksnummer saksnummer, BehandlingTilstand behandlingTilstand) {

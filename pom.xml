@@ -32,7 +32,7 @@
         <ftberegning.version>7.2.0</ftberegning.version>
         <fpkalkulus.kontrakt.version>1.2.2</fpkalkulus.kontrakt.version>
 
-        <fpsoknad-kontrakt.version>1.0.10</fpsoknad-kontrakt.version>
+        <fpsoknad-kontrakt.version>2.3.5-SNAPSHOT</fpsoknad-kontrakt.version>
 
         <pdfbox.version>3.0.8</pdfbox.version>
         <allure.version>3.0.0</allure.version>
@@ -183,6 +183,7 @@
         <dependency>
             <groupId>no.nav.foreldrepenger.kontrakter</groupId>
             <artifactId>fp-oversikt</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.vtp</groupId>

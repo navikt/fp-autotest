@@ -689,6 +689,8 @@ services:
         condition: service_started
       fptilbake:
         condition: service_started
+      fpoversikt:
+        condition: service_healthy
   fpinntektsmelding:
     <<: *default-konfigurasjon
     image: $FPINNTEKTSMELDING_IMAGE
