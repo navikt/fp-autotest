@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.VerdikjedeTestBase;
+import no.nav.foreldrepenger.autotest.brev.BrevAssertionBuilder;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.ArbeidInntektsmeldingAksjonspunktÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.ArbeidsforholdKomplettVurderingType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
@@ -33,6 +34,9 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeidInntektsmelding.ManueltArbeidsforholdDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.ArbeidstakerandelUtenIMMottarYtelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.DokumentTag;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkType;
+import no.nav.foreldrepenger.autotest.util.vent.Vent;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
@@ -175,6 +179,91 @@ class ArbeidsforholdVarianter extends VerdikjedeTestBase {
                     assertThat(p.getAndeler().get(0).getTilSøker()).isEqualTo(1154);
         });
 
+    }
+
+    @Test
+    @DisplayName("Mor søker fødsel med 2 arbeidsforhold i samme organisasjon. IM med arbeidsforholdId for kun ett av dem")
+    @Description("Inntektsmelding fra arbeidsgiver dekker alle arbeidsforhold hos arbeidsgiveren, også når den kun refererer " +
+            "til ett arbeidsforhold. Skal ikke gi aksjonspunkt 5085 for manglende inntektsmelding på det andre arbeidsforholdet.")
+    void toArbeidsforholdSammeOrgImMedArbeidsforholdIdForEtt() {
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntekt(InntektGenerator.ny()
+                                .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-001", 40, LocalDate.now().minusYears(2), 490_000)
+                                .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-002", 60, LocalDate.now().minusYears(3), 490_000)
+                                .build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
+                .barn(LocalDate.now().minusDays(2))
+                .build();
+        var mor = familie.mor();
+        var fødselsdato = familie.barn().fødselsdato();
+        var fpStartdato = fødselsdato.minusWeeks(3);
+        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
+                .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
+        var saksnummer = mor.søk(søknad);
+
+        var arbeidsgiver = mor.arbeidsgiver();
+        var inntektsmeldingForEttArbeidsforhold = arbeidsgiver.lagInntektsmeldingerFP(fpStartdato, false).getFirst();
+        ventPåInntektsmeldingForespørsel(saksnummer);
+        arbeidsgiver.sendInntektsmelding(saksnummer, inntektsmeldingForEttArbeidsforhold);
+
+        Vent.på(() -> {
+            saksbehandler.hentFagsak(saksnummer);
+            return saksbehandler.harAksjonspunkt(AksjonspunktKoder.FORESLÅ_VEDTAK)
+                    || saksbehandler.harAksjonspunkt(AksjonspunktKoder.FASTSETT_BEREGNINGSGRUNNLAG_ARBEIDSTAKER_FRILANS)
+                    || saksbehandler.harAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
+        }, "Behandlingen kom ikke videre etter inntektsmelding");
+
+        assertThat(saksbehandler.harAksjonspunkt(VURDER_ARBEIDSFORHOLD_INNTEKTSMELDING))
+                .as("Aksjonspunkt 5085 (IM for andre arbeidsforhold hos samme arbeidsgiver skal ikke etterlyses)")
+                .isFalse();
+        assertThat(saksbehandler.harAksjonspunkt(AksjonspunktKoder.AUTO_VENT_ETTERLYST_INNTEKTSMELDING_KODE))
+                .as("Behandlingen skal ikke vente på etterlyst inntektsmelding")
+                .isFalse();
+    }
+
+    @Test
+    @DisplayName("Mor søker fødsel med 2 arbeidsforhold i samme organisasjon uten IM. Etterlysning og 5085 pr arbeidsgiver")
+    @Description("Etterlysningsbrevet skal ha én linje for arbeidsgiveren med summert stillingsprosent, og 5085 skal kunne " +
+            "løses med ett valg pr arbeidsgiver (fortsett uten inntektsmelding).")
+    void toArbeidsforholdSammeOrgUtenIm() {
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntekt(InntektGenerator.ny()
+                                .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-001", 40, LocalDate.now().minusYears(2), 490_000)
+                                .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-002", 60, LocalDate.now().minusYears(3), 490_000)
+                                .build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
+                .barn(LocalDate.now().minusDays(2))
+                .build();
+        var mor = familie.mor();
+        var fødselsdato = familie.barn().fødselsdato();
+        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
+                .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
+        var saksnummer = mor.søk(søknad);
+
+        ventPåInntektsmeldingForespørsel(saksnummer);
+        var brevAssertionsBuilder = BrevAssertionBuilder.ny()
+                .medTekstOmArbeidsgiverMedStillingsprosent(TestOrganisasjoner.NAV.orgnummer().value(), 100)
+                .medTekstOmDuKanSeBortFreDenneOmArbeidsgiverenHarSendt();
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.ETTERLYS_INNTEKTSMELDING, HistorikkType.BREV_SENDT);
+
+        saksbehandler.hentFagsak(saksnummer);
+        if (saksbehandler.harAksjonspunkt(AksjonspunktKoder.AUTO_VENT_ETTERLYST_INNTEKTSMELDING_KODE)) {
+            saksbehandler.hentAksjonspunkt(AksjonspunktKoder.AUTO_VENT_ETTERLYST_INNTEKTSMELDING_KODE);
+            saksbehandler.gjenopptaBehandling();
+        }
+
+        saksbehandler.fortsettUteninntektsmeldinger();
+
+        saksbehandler.hentFagsak(saksnummer);
+        assertThat(saksbehandler.harAksjonspunkt(VURDER_ARBEIDSFORHOLD_INNTEKTSMELDING))
+                .as("Aksjonspunkt 5085 skal være løst med ett valg for arbeidsgiveren")
+                .isFalse();
     }
 
     private void opprettArbeidsforholdFraIM5085(Orgnummer orgnummer) {

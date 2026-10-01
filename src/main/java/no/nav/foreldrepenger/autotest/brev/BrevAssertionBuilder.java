@@ -76,6 +76,11 @@ public class BrevAssertionBuilder {
         return this;
     }
 
+    public BrevAssertionBuilder medTekstOmArbeidsgiverMedStillingsprosent(String orgnummer, int stillingsprosent) {
+        brevAssertions.add("med organisasjonsnummer " + orgnummer + " i stillingen du jobber " + stillingsprosent + " prosent.");
+        return this;
+    }
+
     public BrevAssertionBuilder medTekstOmDuKanSeBortFreDenneOmArbeidsgiverenHarSendt() {
         brevAssertions.add("Hvis arbeidsgiver allerede har sendt inntektsmelding, kan du se bort fra denne henvendelsen.");
         return this;

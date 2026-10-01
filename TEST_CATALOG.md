@@ -151,6 +151,14 @@
 #### 2. `morSøkerTerminUtenAktiviteterIAareg`
 - **DisplayName:** "Mor søker fødsel, men har ikke arbeidsforhold i AAREG. Legger til fiktivt arbeidsforhold."
 
+#### 3. `toArbeidsforholdSammeOrgImMedArbeidsforholdIdForEtt`
+- **DisplayName:** "Mor søker fødsel med 2 arbeidsforhold i samme organisasjon. IM med arbeidsforholdId for kun ett av dem"
+- **Verifiserer:** IM dekker alle arbeidsforhold hos arbeidsgiver; ingen `5085` og ingen etterlysning
+
+#### 4. `toArbeidsforholdSammeOrgUtenIm`
+- **DisplayName:** "Mor søker fødsel med 2 arbeidsforhold i samme organisasjon uten IM. Etterlysning og 5085 pr arbeidsgiver"
+- **Verifiserer:** etterlysningsbrev med én linje og summert stillingsprosent; `5085` løses med ett valg pr arbeidsgiver
+
 ### BeregningVerdikjede.java (fpsak/foreldrepenger/BeregningVerdikjede.java)
 **Tags:** fpsak
 
