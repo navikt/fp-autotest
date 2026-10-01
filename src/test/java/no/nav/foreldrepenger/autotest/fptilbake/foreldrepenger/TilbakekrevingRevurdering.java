@@ -28,6 +28,7 @@ import no.nav.foreldrepenger.generator.familie.generator.InntektGenerator;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
 import no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType;
 import no.nav.foreldrepenger.soknad.kontrakt.BrukerRolle;
+import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.FellesUttaksplanDto.Rolle;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.FamilierelasjonDto;
 
 @Tag("tilbakekreving")
@@ -68,7 +69,7 @@ class TilbakekrevingRevurdering extends FptilbakeTestBase {
         AllureHelper.debugFritekst("Ferdig med førstegangsbehandling");
 
         var fordeling = fordeling(
-                uttaksperiode(KontoType.FELLESPERIODE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1))
+                uttaksperiode(Rolle.MOR, KontoType.FELLESPERIODE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1))
         );
         var søknadE = lagEndringssøknad(søknad.build(), saksnummer, fordeling);
         var saksnummerE = mor.søk(søknadE);

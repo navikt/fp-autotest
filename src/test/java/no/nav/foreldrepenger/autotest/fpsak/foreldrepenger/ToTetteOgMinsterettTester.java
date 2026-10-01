@@ -45,6 +45,7 @@ import no.nav.foreldrepenger.generator.familie.generator.InntektGenerator;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
 import no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler;
 import no.nav.foreldrepenger.soknad.kontrakt.BrukerRolle;
+import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.FellesUttaksplanDto.Rolle;
 import no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.FamilierelasjonDto;
 
@@ -96,12 +97,12 @@ class ToTetteOgMinsterettTester extends VerdikjedeTestBase {
         var fødselsdatoBarn1 = familie.barn().fødselsdato();
         var fpStartdatoBarn1 = fødselsdatoBarn1.minusWeeks(3);
         var fordelingBarn1 = fordeling(
-                uttaksperiode(KontoType.FORELDREPENGER_FØR_FØDSEL, fpStartdatoBarn1, fødselsdatoBarn1.minusDays(1)),
-                uttaksperiode(KontoType.MØDREKVOTE, fødselsdatoBarn1, fødselsdatoBarn1.plusWeeks(15).minusDays(1)),
-                uttaksperiode(KontoType.FELLESPERIODE, fødselsdatoBarn1.plusWeeks(35), fødselsdatoBarn1.plusWeeks(51).minusDays(1))
+                uttaksperiode(Rolle.MOR, KontoType.FORELDREPENGER_FØR_FØDSEL, fpStartdatoBarn1, fødselsdatoBarn1.minusDays(1)),
+                uttaksperiode(Rolle.MOR, KontoType.MØDREKVOTE, fødselsdatoBarn1, fødselsdatoBarn1.plusWeeks(15).minusDays(1)),
+                uttaksperiode(Rolle.MOR, KontoType.FELLESPERIODE, fødselsdatoBarn1.plusWeeks(35), fødselsdatoBarn1.plusWeeks(51).minusDays(1))
         );
         var søknadBarn1 = lagSøknadForeldrepengerFødsel(fødselsdatoBarn1, BrukerRolle.MOR)
-                .medUttaksplan(fordelingBarn1)
+                .medPerioder(fordelingBarn1.perioder())
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()))
                 .medMottattdato(fødselsdatoBarn1.minusWeeks(2));
         var saksnummerBarn1 = mor.søk(søknadBarn1);
@@ -193,12 +194,12 @@ class ToTetteOgMinsterettTester extends VerdikjedeTestBase {
         var fødselsdatoBarn1 = familie.barn().fødselsdato();
         var fpStartdatoBarn1 = fødselsdatoBarn1.minusWeeks(3);
         var fordelingBarn1 = fordeling(
-                uttaksperiode(KontoType.FORELDREPENGER_FØR_FØDSEL, fpStartdatoBarn1, fødselsdatoBarn1.minusDays(1)),
-                uttaksperiode(KontoType.MØDREKVOTE, fødselsdatoBarn1, fødselsdatoBarn1.plusWeeks(12).minusDays(1)),
-                uttaksperiode(KontoType.FELLESPERIODE, fødselsdatoBarn1.plusWeeks(12), fødselsdatoBarn1.plusWeeks(15).minusDays(1))
+                uttaksperiode(Rolle.MOR, KontoType.FORELDREPENGER_FØR_FØDSEL, fpStartdatoBarn1, fødselsdatoBarn1.minusDays(1)),
+                uttaksperiode(Rolle.MOR, KontoType.MØDREKVOTE, fødselsdatoBarn1, fødselsdatoBarn1.plusWeeks(12).minusDays(1)),
+                uttaksperiode(Rolle.MOR, KontoType.FELLESPERIODE, fødselsdatoBarn1.plusWeeks(12), fødselsdatoBarn1.plusWeeks(15).minusDays(1))
         );
         var søknadBarn1 = lagSøknadForeldrepengerFødsel(fødselsdatoBarn1, MOR)
-                .medUttaksplan(fordelingBarn1)
+                .medPerioder(fordelingBarn1.perioder())
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()))
                 .medMottattdato(fødselsdatoBarn1.minusWeeks(2));
         var saksnummerMorBarn1 = mor.søk(søknadBarn1);
@@ -217,11 +218,11 @@ class ToTetteOgMinsterettTester extends VerdikjedeTestBase {
         // FAR (barn 1): Førstegangssøknad for barn 1 (40 uker gammelt)
         var far = familie.far();
         var fordeling = fordeling(
-                uttaksperiode(KontoType.FEDREKVOTE, fødselsdatoBarn1, fødselsdatoBarn1.plusWeeks(2).minusDays(1), SAMTIDIGUTTAK),
-                uttaksperiode(KontoType.FEDREKVOTE, fødselsdatoBarn1.plusWeeks(36), fødselsdatoBarn1.plusWeeks(46).minusDays(1))
+                uttaksperiode(Rolle.FAR_MEDMOR, KontoType.FEDREKVOTE, fødselsdatoBarn1, fødselsdatoBarn1.plusWeeks(2).minusDays(1), SAMTIDIGUTTAK),
+                uttaksperiode(Rolle.FAR_MEDMOR, KontoType.FEDREKVOTE, fødselsdatoBarn1.plusWeeks(36), fødselsdatoBarn1.plusWeeks(46).minusDays(1))
         );
         var søknadFar = SøknadForeldrepengerMaler.lagSøknadForeldrepengerTerminFødsel(fødselsdatoBarn1, FAR)
-                .medUttaksplan(fordeling)
+                .medPerioder(fordeling.perioder())
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.mor()))
                 .medMottattdato(fødselsdatoBarn1.minusWeeks(1));
         var saksnummerFarBarn1 = far.søk(søknadFar);
@@ -239,10 +240,10 @@ class ToTetteOgMinsterettTester extends VerdikjedeTestBase {
         var termindatoBarn2 = fødselsdatoBarn1.plusWeeks(40);
         var morStartdatoBarn2 = termindatoBarn2.minusWeeks(3);
         var fordelingMorBarn2 = fordeling(
-                uttaksperiode(KontoType.FORELDREPENGER_FØR_FØDSEL, morStartdatoBarn2, termindatoBarn2.minusDays(1)),
-                uttaksperiode(KontoType.MØDREKVOTE, termindatoBarn2, termindatoBarn2.plusWeeks(6).minusDays(1)));
+                uttaksperiode(Rolle.MOR, KontoType.FORELDREPENGER_FØR_FØDSEL, morStartdatoBarn2, termindatoBarn2.minusDays(1)),
+                uttaksperiode(Rolle.MOR, KontoType.MØDREKVOTE, termindatoBarn2, termindatoBarn2.plusWeeks(6).minusDays(1)));
         var søknadMorBarn2 = lagSøknadForeldrepengerTermin(termindatoBarn2, MOR)
-                .medUttaksplan(fordelingMorBarn2)
+                .medPerioder(fordelingMorBarn2.perioder())
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()))
                 .medMottattdato(morStartdatoBarn2);
         var saksnummerMorBarn2 = mor.søk(søknadMorBarn2);
@@ -287,7 +288,7 @@ class ToTetteOgMinsterettTester extends VerdikjedeTestBase {
                 sisteUttaksperiodeFarBarn1.getPeriodeResultatÅrsak());
         assertThat(sisteUttaksperiodeFarBarn1.getFom())
                 .as("Siste periode knekt ved startdato ny sak")
-                .isEqualTo(fordeling.uttaksperioder().getLast().fom().plusWeeks(6)); // tatt ut 2 uker ifm fødsel. 6 uker igjen av to tette.
+                .isEqualTo(fordeling.perioder().getLast().fom().plusWeeks(6)); // tatt ut 2 uker ifm fødsel. 6 uker igjen av to tette.
         assertThat(sisteUttaksperiodeFarBarn1.getPeriodeResultatÅrsak().isAvslåttÅrsak()).isTrue();
         assertThat(sisteUttaksperiodeFarBarn1.getPeriodeResultatÅrsak())
                 .as("Siste periode avslått med årsak ny stønadsperiode")
@@ -298,8 +299,8 @@ class ToTetteOgMinsterettTester extends VerdikjedeTestBase {
         // MOR (barn 1): ENDRINGSSØKNAD FOR Å TA UT RESTEN AV MINSTERETTEN.
         // Har 4 uker igjen av minstretten, men søker om 8 (forventer 4 uker innvilget og de siste 4 ukene avslått)
         var fordelingEndringBarn1 = fordeling(
-                uttaksperiode(KontoType.MØDREKVOTE, termindatoBarn2.plusWeeks(6), termindatoBarn2.plusWeeks(9).minusDays(1)),
-                uttaksperiode(KontoType.FELLESPERIODE, termindatoBarn2.plusWeeks(9), termindatoBarn2.plusWeeks(14).minusDays(1))
+                uttaksperiode(Rolle.MOR, KontoType.MØDREKVOTE, termindatoBarn2.plusWeeks(6), termindatoBarn2.plusWeeks(9).minusDays(1)),
+                uttaksperiode(Rolle.MOR, KontoType.FELLESPERIODE, termindatoBarn2.plusWeeks(9), termindatoBarn2.plusWeeks(14).minusDays(1))
         );
         var endringssøknadMorBarn1 = lagEndringssøknad(søknadBarn1.build(), saksnummerMorBarn1, fordelingEndringBarn1);
         var saksnummerMorBarn1Endring = mor.søk(endringssøknadMorBarn1);

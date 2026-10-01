@@ -15,7 +15,7 @@ public final class SøknadForeldrepengerMaler {
     private static ForeldrepengerBuilder lagSøknadForeldrepenger(LocalDate familiehendelse, BrukerRolle brukerRolle) {
         return new ForeldrepengerBuilder()
                 .medRolle(brukerRolle)
-                .medUttaksplan(UttakMaler.fordelingHappyCase(familiehendelse, brukerRolle))
+                .medPerioder(UttakMaler.fordelingHappyCase(familiehendelse, brukerRolle))
                 .medDekningsgrad(Dekningsgrad.HUNDRE)
                 .medUtenlandsopphold(UtenlandsoppholdMaler.oppholdBareINorge())
                 .medAnnenForelder(AnnenforelderMaler.ukjentForelder());

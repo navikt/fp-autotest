@@ -4,10 +4,8 @@ import java.util.List;
 import java.util.UUID;
 
 import no.nav.foreldrepenger.kontrakter.felles.kodeverk.MorsAktivitet;
-import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.UtsettelsesPeriodeDto;
-import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.UttaksPeriodeDto;
+import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.FellesUttaksplanDto.UttakPeriodeDto;
 import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.UttaksplanDto;
-import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.Uttaksplanperiode;
 import no.nav.foreldrepenger.soknad.kontrakt.svangerskapspenger.TilretteleggingbehovDto;
 import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.DokumentTypeId;
 import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.Dokumenterer;
@@ -27,15 +25,15 @@ public class VedleggMaler {
     }
 
     public static VedleggDto dokumenterUttak(UttaksplanDto uttaksplan, MorsAktivitet morsAktivitet, InnsendingType innsendingType) {
-        return dokumenterUttak(uttaksplan.uttaksperioder(), morsAktivitet, innsendingType);
+        return dokumenterUttak(uttaksplan.perioder(), morsAktivitet, innsendingType);
     }
 
-    public static VedleggDto dokumenterUttak(List<Uttaksplanperiode> uttaksplan, MorsAktivitet morsAktivitet, InnsendingType innsendingType) {
+    public static VedleggDto dokumenterUttak(List<UttakPeriodeDto> uttaksplan, MorsAktivitet morsAktivitet, InnsendingType innsendingType) {
         var uttaksperiodeSomSkalDokumenteres = uttaksplan.stream()
                 .filter(periode ->
-                        periode instanceof UttaksPeriodeDto uttak && morsAktivitet.equals(uttak.morsAktivitetIPerioden()) ||
-                        periode instanceof UtsettelsesPeriodeDto utsettelse && morsAktivitet.equals(utsettelse.morsAktivitetIPerioden()))
-                .map(uttaksperiode -> new ÅpenPeriodeDto(uttaksperiode.fom(), uttaksperiode.tom()))
+                        periode.søker() != null && periode.søker().overføringÅrsak() == null &&
+                                morsAktivitet.equals(periode.søker().morsAktivitet()))
+                .map(periode -> new ÅpenPeriodeDto(periode.fom(), periode.tom()))
                 .toList();
         if (uttaksperiodeSomSkalDokumenteres.isEmpty()) {
             throw new IllegalArgumentException("UTVIKLERFEIL: Uttaksplan har ingen perioder med morsAktivitet: " + morsAktivitet);
@@ -45,16 +43,11 @@ public class VedleggMaler {
         return new VedleggDto(UUID.randomUUID(), dokumentTypeFraAktivitet, innsendingType, null, dokumenterer);
     }
 
-
-    public static VedleggDto dokumenterUttak(UttaksPeriodeDto uttaksperiode, InnsendingType innsendingType) {
-        if (uttaksperiode.morsAktivitetIPerioden() == null) {
+    public static VedleggDto dokumenterUttak(UttakPeriodeDto uttaksperiode, InnsendingType innsendingType) {
+        if (uttaksperiode.søker() == null || uttaksperiode.søker().morsAktivitet() == null) {
             throw new IllegalArgumentException("UTVIKLERFEIL: Uttaksperiode må ha noe å dokumentere. Morsk aktivitet er null.");
         }
-
-        var dokumentTypeFraAktivitet = dokumentypeFraAktivitet(uttaksperiode.morsAktivitetIPerioden());
-        var åpenPeriode = new ÅpenPeriodeDto(uttaksperiode.fom(), uttaksperiode.tom());
-        var dokumenterer = new Dokumenterer(Dokumenterer.DokumentererType.UTTAK, null, List.of(åpenPeriode));
-        return new VedleggDto(UUID.randomUUID(), dokumentTypeFraAktivitet, innsendingType, null, dokumenterer);
+        return dokumenterUttak(List.of(uttaksperiode), uttaksperiode.søker().morsAktivitet(), innsendingType);
     }
 
     public static VedleggDto dokumenterTilrettelegging(TilretteleggingbehovDto tilretteleggingbehovDto, InnsendingType innsendingType) {

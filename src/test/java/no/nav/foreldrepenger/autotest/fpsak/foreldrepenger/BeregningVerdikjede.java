@@ -52,6 +52,7 @@ import no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Orgnummer;
 import no.nav.foreldrepenger.kontrakter.fpoversikt.Inntektskilde;
 import no.nav.foreldrepenger.soknad.kontrakt.BrukerRolle;
+import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.FellesUttaksplanDto.Rolle;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.FamilierelasjonDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.YtelseDto;
 
@@ -295,13 +296,13 @@ class BeregningVerdikjede extends VerdikjedeTestBase {
                 30_000,
                 false);
         var fordeling = fordeling(
-                uttaksperiode(KontoType.FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)),
-                uttaksperiode(KontoType.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)),
-                graderingsperiodeSN(KontoType.FELLESPERIODE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1), 50)
+                uttaksperiode(Rolle.MOR, KontoType.FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)),
+                uttaksperiode(Rolle.MOR, KontoType.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)),
+                graderingsperiodeSN(Rolle.MOR, KontoType.FELLESPERIODE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1), BigDecimal.valueOf(50))
         );
         var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
                 .medSelvstendigNæringsdrivendeInformasjon(opptjening)
-                .medUttaksplan(fordeling)
+                .medPerioder(fordeling.perioder())
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var saksnummer = mor.søk(søknad);
 
@@ -317,7 +318,7 @@ class BeregningVerdikjede extends VerdikjedeTestBase {
         debugLoggBehandling(saksbehandler.valgtBehandling);
 
         // FORDEL BEREGNINGSGRUNNLAG //
-        var graderingsperiode = fordeling.uttaksperioder().get(2);
+        var graderingsperiode = fordeling.perioder().get(2);
         var fordelBeregningsgrunnlagBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(new FordelBeregningsgrunnlagBekreftelse())
                 .settFastsattBeløpOgInntektskategoriMedRefusjon(graderingsperiode.fom(), 500_000, 500_000,
