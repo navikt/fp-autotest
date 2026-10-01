@@ -10,7 +10,7 @@ import no.nav.foreldrepenger.autotest.util.vent.Vent;
 import no.nav.foreldrepenger.kontrakter.fpoversikt.AnnenPartSak;
 import no.nav.foreldrepenger.kontrakter.fpoversikt.BehandlingTilstand;
 import no.nav.foreldrepenger.kontrakter.fpoversikt.EsSak;
-import no.nav.foreldrepenger.kontrakter.fpoversikt.FellesUttaksplanDto;
+import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.FellesUttaksplanDto;
 import no.nav.foreldrepenger.kontrakter.fpoversikt.FpSak;
 import no.nav.foreldrepenger.kontrakter.fpoversikt.Saker;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Fødselsnummer;

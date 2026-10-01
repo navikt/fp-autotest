@@ -583,7 +583,14 @@ endringene i egne perioder gjelder fremtidig uttak.
 
 Kjør én metode med `mvn test -P verdikjede -Dtest=FellesUttaksplan#mor_sender_inn_fars_perioder`.
 Forløpene krever de lokale kontrakt-snapshotene og branchene med felles uttaksplan i
-fp-soknad og fp-oversikt.
+fp-soknad og fp-oversikt. Søknadene sender hele planen i `uttaksplan.perioder`,
+ved siden av eksisterende `uttaksplan.uttaksperioder`.
+Endringssøknadene avgrenser selv søkerperiodene fra endringsdatoen og legger eventuell
+FRI-markør i begge formater; fp-soknad filtrerer ikke den nye listen mot gammel plan.
+Periodetypen er `FellesUttaksplanDto.UttakPeriodeDto` fra `fp-soknad/kontrakter`,
+som også brukes av fp-soknad og fp-oversikt.
+Lokalt brukes `no.nav.foreldrepenger.soknad:kontrakter:2.3.5-SNAPSHOT`;
+produksjon krever en publisert release.
 
 ### AdressebeskyttelseOgSkjermetPersonTester.java (verdikjedetester/AdressebeskyttelseOgSkjermetPersonTester.java)
 **Tags:** verdikjede

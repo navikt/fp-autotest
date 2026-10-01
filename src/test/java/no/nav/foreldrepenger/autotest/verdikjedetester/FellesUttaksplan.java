@@ -45,12 +45,12 @@ import no.nav.foreldrepenger.generator.familie.generator.InntektGenerator;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
 import no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Saksnummer;
-import no.nav.foreldrepenger.kontrakter.fpoversikt.FpSak;
-import no.nav.foreldrepenger.soknad.kontrakt.BrukerRolle;
 import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.FellesUttaksplanDto;
 import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.FellesUttaksplanDto.Rolle;
 import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.FellesUttaksplanDto.UttakDto;
 import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.FellesUttaksplanDto.UttakPeriodeDto;
+import no.nav.foreldrepenger.kontrakter.fpoversikt.FpSak;
+import no.nav.foreldrepenger.soknad.kontrakt.BrukerRolle;
 import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.UtsettelsesÅrsak;
 import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.Uttaksplanperiode;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.FamilierelasjonDto;
@@ -289,7 +289,7 @@ class FellesUttaksplan extends VerdikjedeTestBase {
         var søknad = lagSøknadForeldrepengerTerminFødsel(familie.fødselsdato(), familie.fødselsdato(), rolle)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.annenPart(rolle)))
                 .medUttaksplan(egne.stream().map(Periode::tilSøknadsperiode).toList())
-                .medFellesUttaksplan(fellesplan(familie, rolle, egne, forslag));
+                .medPerioder(fellesperioder(rolle, egne, forslag));
         var saksnummer = eksisterendeSak == null ? søker.søk(søknad) : søker.søk(søknad, eksisterendeSak);
         saksbehandler.hentFagsak(saksnummer);
         ventPåOppdatertSak(søker, saksnummer, forrigeOppdatering);
@@ -320,14 +320,19 @@ class FellesUttaksplan extends VerdikjedeTestBase {
             return sak != null && sak.åpenBehandling() != null ? sak : null;
         }, () -> "Venter på åpen revurdering i fpoversikt: " + saksnummer.value(), 30, 3000);
         var forrigeOppdatering = åpenSak.oppdatertTidspunkt();
-        var legacy = new ArrayList<Uttaksplanperiode>(egne.stream()
-                .filter(p -> !p.tom().isBefore(endringFra))
+        var endredePerioder = egne.stream().filter(p -> !p.tom().isBefore(endringFra)).toList();
+        var perioder = new ArrayList<>(fellesperioder(rolle, endredePerioder, forslag));
+        var legacy = new ArrayList<Uttaksplanperiode>(endredePerioder.stream()
                 .map(Periode::tilSøknadsperiode).toList());
         if (egne.stream().noneMatch(p -> !endringFra.isBefore(p.fom()) && !endringFra.isAfter(p.tom()))) {
             legacy.addFirst(utsettelsesperiode(UtsettelsesÅrsak.FRI, endringFra, endringFra.plusDays(4)));
+            var utsettelse = new UttakDto(rolle == BrukerRolle.MOR ? Rolle.MOR : Rolle.FAR_MEDMOR, null,
+                    FellesUttaksplanDto.UtsettelseÅrsak.FRI, null, null, null, null, false, null);
+            perioder.add(new UttakPeriodeDto(endringFra, endringFra.plusDays(4), utsettelse, null, null));
         }
+        perioder.sort(Comparator.comparing(UttakPeriodeDto::fom));
         søker.søk(lagEndringssøknad(søker.førstegangssøknad(), saksnummer, legacy)
-                .medFellesUttaksplan(fellesplan(familie, rolle, egne, forslag)));
+                .medPerioder(perioder));
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
         ventPåOppdatertSak(søker, saksnummer, forrigeOppdatering);
@@ -373,18 +378,17 @@ class FellesUttaksplan extends VerdikjedeTestBase {
         return new Testfamilie(familie, fødselsdato);
     }
 
-    private static FellesUttaksplanDto fellesplan(Testfamilie familie, BrukerRolle rolle, List<Periode> egne, List<Periode> forslag) {
+    private static List<UttakPeriodeDto> fellesperioder(BrukerRolle rolle, List<Periode> egne, List<Periode> forslag) {
         var søkerRolle = rolle == BrukerRolle.MOR ? Rolle.MOR : Rolle.FAR_MEDMOR;
         var annenRolle = rolle == BrukerRolle.MOR ? Rolle.FAR_MEDMOR : Rolle.MOR;
-        var perioder = Stream.concat(
+        return Stream.concat(
                 egne.stream().map(p -> new UttakPeriodeDto(p.fom(), p.tom(), p.uttak(søkerRolle), null, null)),
                 forslag.stream().map(p -> new UttakPeriodeDto(p.fom(), p.tom(), null, p.uttak(annenRolle), null)))
                 .sorted(Comparator.comparing(UttakPeriodeDto::fom)).toList();
-        return new FellesUttaksplanDto(familie.fødselsdato(), 1, FellesUttaksplanDto.Dekningsgrad.HUNDRE, perioder);
     }
 
-    private record Planer(no.nav.foreldrepenger.kontrakter.fpoversikt.FellesUttaksplanDto mor,
-                          no.nav.foreldrepenger.kontrakter.fpoversikt.FellesUttaksplanDto far) {
+    private record Planer(no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.FellesUttaksplanDto mor,
+                          no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.FellesUttaksplanDto far) {
     }
 
     private record Periode(LocalDate fom, LocalDate tom, KontoType konto) {

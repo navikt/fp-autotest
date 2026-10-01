@@ -12,7 +12,7 @@ import java.time.LocalDate;
 import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Fødselsnummer;
 import no.nav.foreldrepenger.kontrakter.fpoversikt.AnnenPartSak;
-import no.nav.foreldrepenger.kontrakter.fpoversikt.FellesUttaksplanDto;
+import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.FellesUttaksplanDto;
 import no.nav.foreldrepenger.kontrakter.fpoversikt.Saker;
 
 public class InnsynKlient {
