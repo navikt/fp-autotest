@@ -26,13 +26,9 @@ public final class UttakMaler {
     }
 
     public static List<UttakPeriodeDto> fordelingHappyCase(LocalDate familehendelseDato, BrukerRolle søkerRolle) {
-        var rolle = switch (søkerRolle) {
-            case MOR -> Rolle.MOR;
-            case FAR, MEDMOR -> Rolle.FAR_MEDMOR;
-        };
-        return switch (rolle) {
+        return switch (søkerRolle) {
             case MOR -> fordelingMorHappyCaseLong(familehendelseDato);
-            case FAR_MEDMOR -> fordelingFarHappyCase(familehendelseDato);
+            case FAR, MEDMOR -> fordelingFarHappyCase(familehendelseDato);
         };
     }
 

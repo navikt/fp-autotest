@@ -42,7 +42,6 @@ import no.nav.foreldrepenger.soknad.kontrakt.BrukerRolle;
 import no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType;
 import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.FellesUttaksplanDto.Rolle;
 import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.FellesUttaksplanDto.UtsettelseÅrsak;
-import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.ÅpenPeriodeDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.FamilierelasjonDto;
 
 @Tag("fpsak")
@@ -105,11 +104,11 @@ class SammenhengendeUttak extends VerdikjedeTestBase {
         saksbehandler.hentFagsak(saksnummer);
         var vurderUttakDokumentasjonBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(new VurderUttakDokumentasjonBekreftelse())
-                .godkjenn(new ÅpenPeriodeDto(utsettelseInstitusjsoppholdBarn.fom(), utsettelseInstitusjsoppholdBarn.tom()))
-                .godkjenn(new ÅpenPeriodeDto(utsettelseInstitusjsoppholdSøker.fom(), utsettelseInstitusjsoppholdSøker.tom()))
-                .godkjenn(new ÅpenPeriodeDto(utsettelseSykdom.fom(), utsettelseSykdom.tom()))
-                .godkjenn(new ÅpenPeriodeDto(utsettelseHvØvelse.fom(), utsettelseHvØvelse.tom()))
-                .godkjenn(new ÅpenPeriodeDto(utsettelseNavTiltak.fom(), utsettelseNavTiltak.tom()));
+                .godkjenn(utsettelseInstitusjsoppholdBarn)
+                .godkjenn(utsettelseInstitusjsoppholdSøker)
+                .godkjenn(utsettelseSykdom)
+                .godkjenn(utsettelseHvØvelse)
+                .godkjenn(utsettelseNavTiltak);
         saksbehandler.bekreftAksjonspunkt(vurderUttakDokumentasjonBekreftelse);
         saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
 
@@ -415,4 +414,3 @@ class SammenhengendeUttak extends VerdikjedeTestBase {
                 .isEmpty();
     }
 }
-

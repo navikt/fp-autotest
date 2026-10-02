@@ -11,7 +11,6 @@ import static no.nav.foreldrepenger.generator.soknad.maler.UttaksperioderMaler.u
 import static no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler.lagSøknadForeldrepengerTerminFødsel;
 import static no.nav.foreldrepenger.generator.soknad.maler.UttakMaler.fordelingFarAleneomsorg;
 import static no.nav.foreldrepenger.generator.soknad.maler.UttakMaler.fordelingMorAleneomsorgHappyCase;
-import static no.nav.foreldrepenger.generator.soknad.maler.UttakMaler.fordelingMorHappyCaseLong;
 import static no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType.FELLESPERIODE;
 import static no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType.FORELDREPENGER;
 import static no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType.FORELDREPENGER_FØR_FØDSEL;
@@ -98,7 +97,6 @@ class Fodsel extends VerdikjedeTestBase {
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
         var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
-                .medPerioder(fordelingMorHappyCaseLong(fødselsdato))
                 .medFrilansInformasjon(OpptjeningMaler.frilansOpptjening())
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var saksnummer = mor.søk(søknad);
@@ -185,7 +183,6 @@ class Fodsel extends VerdikjedeTestBase {
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
         var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
-                .medPerioder(fordelingMorHappyCaseLong(fødselsdato))
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var saksnummer = mor.søk(søknad);
 
@@ -238,7 +235,6 @@ class Fodsel extends VerdikjedeTestBase {
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
         var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
-                .medPerioder(fordelingMorHappyCaseLong(fødselsdato))
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var saksnummer = mor.søk(søknad);
 
@@ -293,7 +289,6 @@ class Fodsel extends VerdikjedeTestBase {
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
         var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
-                .medPerioder(fordelingMorHappyCaseLong(fødselsdato))
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var saksnummer = mor.søk(søknad);
 
@@ -331,7 +326,6 @@ class Fodsel extends VerdikjedeTestBase {
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
         var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
-                .medPerioder(fordelingMorHappyCaseLong(fødselsdato))
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var saksnummer = mor.søk(søknad);
 
@@ -368,7 +362,6 @@ class Fodsel extends VerdikjedeTestBase {
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
         var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
-                .medPerioder(fordelingMorHappyCaseLong(fødselsdato))
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var saksnummer = mor.søk(søknad);
 
@@ -449,7 +442,6 @@ class Fodsel extends VerdikjedeTestBase {
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
         var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
-                .medPerioder(fordelingMorHappyCaseLong(fødselsdato))
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var saksnummer = mor.søk(søknad);
 
@@ -576,7 +568,6 @@ class Fodsel extends VerdikjedeTestBase {
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
-                .medPerioder(fordelingMorHappyCaseLong(fødselsdato))
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var saksnummer = mor.søk(søknad);
 
@@ -701,7 +692,6 @@ class Fodsel extends VerdikjedeTestBase {
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
         var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
-                .medPerioder(fordelingMorHappyCaseLong(fødselsdato))
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var saksnummer = mor.søk(søknad);
 
@@ -932,7 +922,6 @@ class Fodsel extends VerdikjedeTestBase {
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
         var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
-                .medPerioder(fordelingMorHappyCaseLong(fødselsdato))
                 .medBarn(BarnBuilder.fødsel(2, fødselsdato).build())
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var saksnummer = mor.søk(søknad);
@@ -979,7 +968,6 @@ class Fodsel extends VerdikjedeTestBase {
         var fødselsdato = LocalDate.now().minusDays(5);
         var fpStartdato = fødselsdato.minusWeeks(3);
         var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
-                .medPerioder(fordelingMorHappyCaseLong(fødselsdato))
                 .medBarn(BarnBuilder.fødsel(2, fødselsdato).build())
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var saksnummer = mor.søk(søknad);

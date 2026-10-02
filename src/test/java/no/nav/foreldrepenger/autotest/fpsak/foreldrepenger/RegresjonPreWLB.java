@@ -38,7 +38,6 @@ import no.nav.foreldrepenger.soknad.kontrakt.BrukerRolle;
 import no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType;
 import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.FellesUttaksplanDto.Rolle;
 import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.FellesUttaksplanDto.UtsettelseÅrsak;
-import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.ÅpenPeriodeDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.FamilierelasjonDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.YtelseDto;
 
@@ -112,10 +111,10 @@ class RegresjonPreWLB extends VerdikjedeTestBase {
 
         var kontrollerAktivitetskravBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(new VurderUttakDokumentasjonBekreftelse())
-                .ikkeDokumentert(new ÅpenPeriodeDto(uttaksperiode1.fom(), uttaksperiode1.tom()))
-                .ikkeDokumentert(new ÅpenPeriodeDto(utsettelsesperiode1.fom(), utsettelsesperiode1.tom()))
-                .ikkeDokumentert(new ÅpenPeriodeDto(uttaksperiode2.fom(), uttaksperiode2.tom()))
-                .ikkeDokumentert(new ÅpenPeriodeDto(utsettelsesperiode2.fom(), utsettelsesperiode2.tom()))
+                .ikkeDokumentert(uttaksperiode1)
+                .ikkeDokumentert(utsettelsesperiode1)
+                .ikkeDokumentert(uttaksperiode2)
+                .ikkeDokumentert(utsettelsesperiode2)
                 .setBegrunnelse("Mor er ikke i aktivtet i perioden som det søkes om, med unntak av siste periode som søkes uten aktivitetskrav");
         saksbehandler.bekreftAksjonspunkt(kontrollerAktivitetskravBekreftelse);
 
@@ -214,7 +213,7 @@ class RegresjonPreWLB extends VerdikjedeTestBase {
 
         var avklarFaktaUttakPerioder = saksbehandler
                 .hentAksjonspunktbekreftelse(new VurderUttakDokumentasjonBekreftelse())
-                .ikkeGodkjenn(new ÅpenPeriodeDto(uttaksperiodeIfmFødsel.fom(), uttaksperiodeIfmFødsel.tom()))
+                .ikkeGodkjenn(uttaksperiodeIfmFødsel)
                 .godkjennMorsAktivitet(VurderUttakDokumentasjonBekreftelse.DokumentasjonVurderingBehov.Behov.Årsak.AKTIVITETSKRAV_ARBEID);
         saksbehandler.bekreftAksjonspunkt(avklarFaktaUttakPerioder);
 

@@ -24,15 +24,14 @@ public class VedleggMaler {
         return new VedleggDto(null, DokumentTypeId.I000141, innsendingType, null, dokumenterer);
     }
 
-    public static VedleggDto dokumenterUttak(UttaksplanDto uttaksplan, MorsAktivitet morsAktivitet, InnsendingType innsendingType) {
-        return dokumenterUttak(uttaksplan.perioder(), morsAktivitet, innsendingType);
+    public static VedleggDto dokumenterMorsAktivitet(UttaksplanDto uttaksplan, MorsAktivitet morsAktivitet, InnsendingType innsendingType) {
+        return dokumenterMorsAktivitet(uttaksplan.perioder(), morsAktivitet, innsendingType);
     }
 
-    public static VedleggDto dokumenterUttak(List<UttakPeriodeDto> uttaksplan, MorsAktivitet morsAktivitet, InnsendingType innsendingType) {
+    public static VedleggDto dokumenterMorsAktivitet(List<UttakPeriodeDto> uttaksplan, MorsAktivitet morsAktivitet, InnsendingType innsendingType) {
         var uttaksperiodeSomSkalDokumenteres = uttaksplan.stream()
                 .filter(periode ->
-                        periode.søker() != null && periode.søker().overføringÅrsak() == null &&
-                                morsAktivitet.equals(periode.søker().morsAktivitet()))
+                        periode.søker() != null && morsAktivitet.equals(periode.søker().morsAktivitet()))
                 .map(periode -> new ÅpenPeriodeDto(periode.fom(), periode.tom()))
                 .toList();
         if (uttaksperiodeSomSkalDokumenteres.isEmpty()) {
@@ -41,13 +40,6 @@ public class VedleggMaler {
         var dokumentTypeFraAktivitet = dokumentypeFraAktivitet(morsAktivitet);
         var dokumenterer = new Dokumenterer(Dokumenterer.DokumentererType.UTTAK, null, uttaksperiodeSomSkalDokumenteres);
         return new VedleggDto(UUID.randomUUID(), dokumentTypeFraAktivitet, innsendingType, null, dokumenterer);
-    }
-
-    public static VedleggDto dokumenterUttak(UttakPeriodeDto uttaksperiode, InnsendingType innsendingType) {
-        if (uttaksperiode.søker() == null || uttaksperiode.søker().morsAktivitet() == null) {
-            throw new IllegalArgumentException("UTVIKLERFEIL: Uttaksperiode må ha noe å dokumentere. Morsk aktivitet er null.");
-        }
-        return dokumenterUttak(List.of(uttaksperiode), uttaksperiode.søker().morsAktivitet(), innsendingType);
     }
 
     public static VedleggDto dokumenterTilrettelegging(TilretteleggingbehovDto tilretteleggingbehovDto, InnsendingType innsendingType) {

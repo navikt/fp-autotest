@@ -41,7 +41,6 @@ import static no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepenger
 import static no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler.lagSøknadForeldrepengerTermin;
 import static no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler.lagSøknadForeldrepengerTerminFødsel;
 import static no.nav.foreldrepenger.generator.soknad.maler.UttakMaler.fordeling;
-import static no.nav.foreldrepenger.generator.soknad.maler.UttakMaler.fordelingMorHappyCaseLong;
 import static no.nav.foreldrepenger.generator.soknad.maler.UttaksperiodeType.FLERBARNSDAGER;
 import static no.nav.foreldrepenger.generator.soknad.maler.UttaksperiodeType.SAMTIDIGUTTAK;
 import static no.nav.foreldrepenger.generator.soknad.maler.UttaksperioderMaler.graderingsperiodeArbeidstaker;
@@ -49,7 +48,6 @@ import static no.nav.foreldrepenger.generator.soknad.maler.UttaksperioderMaler.o
 import static no.nav.foreldrepenger.generator.soknad.maler.UttaksperioderMaler.utsettelsesperiode;
 import static no.nav.foreldrepenger.generator.soknad.maler.UttaksperioderMaler.uttaksperiode;
 import static no.nav.foreldrepenger.generator.soknad.maler.VedleggMaler.dokumenterTermin;
-import static no.nav.foreldrepenger.generator.soknad.maler.VedleggMaler.dokumenterUttak;
 import static no.nav.foreldrepenger.generator.soknad.util.VirkedagUtil.helgejustertTilFredag;
 import static no.nav.foreldrepenger.generator.soknad.util.VirkedagUtil.helgejustertTilMandag;
 import static no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType.FEDREKVOTE;
@@ -72,6 +70,8 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.List;
+
+import no.nav.foreldrepenger.generator.soknad.maler.VedleggMaler;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -535,7 +535,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 gradertFedrekvote);
         var søknadFar = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.FAR)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.mor())).medPerioder(fordelingFar)
-                .medVedlegg(List.of(dokumenterUttak(fordelingFar, MorsAktivitet.ARBEID, InnsendingType.LASTET_OPP)));
+                .medVedlegg(List.of(VedleggMaler.dokumenterMorsAktivitet(fordelingFar, MorsAktivitet.ARBEID, InnsendingType.LASTET_OPP)));
         var saksnummerFar = far.søk(søknadFar);
 
 
@@ -639,7 +639,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.mor()))
                 .medPerioder(fordelingFar)
                 .medMottattdato(fødselsdato.minusWeeks(1))
-                .medVedlegg(List.of(dokumenterUttak(fordelingFar, MorsAktivitet.ARBEID, InnsendingType.AUTOMATISK)));
+                .medVedlegg(List.of(VedleggMaler.dokumenterMorsAktivitet(fordelingFar, MorsAktivitet.ARBEID, InnsendingType.AUTOMATISK)));
         var saksnummerFar = far.søk(søknadFar);
 
         saksbehandler.hentFagsak(saksnummerFar);
@@ -718,8 +718,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medAnnenForelder(AnnenforelderMaler.norskIkkeRett(familie.mor()))
                 .medMottattdato(fødselsdato.minusWeeks(2))
                 .medVedlegg(List.of(
-                        dokumenterUttak(fordelingFar, MorsAktivitet.ARBEID, InnsendingType.AUTOMATISK),
-                        dokumenterUttak(fordelingFar, ARBEID_OG_UTDANNING, InnsendingType.LASTET_OPP)
+                        VedleggMaler.dokumenterMorsAktivitet(fordelingFar, MorsAktivitet.ARBEID, InnsendingType.AUTOMATISK),
+                        VedleggMaler.dokumenterMorsAktivitet(fordelingFar, ARBEID_OG_UTDANNING, InnsendingType.LASTET_OPP)
                 ));
         var saksnummerFar = far.søk(søknadFar);
 
@@ -756,7 +756,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         assertThat(vurderingsbehov.get(2).vurdering()).isEqualTo(DokumentasjonVurderingBehov.Vurdering.GODKJENT_AUTOMATISK); // Godkjent utsettelse ARBEID
         assertThat(vurderingsbehov.get(3).vurdering()).isNull(); // Utsettelse ARBEID_OG_UTDANNING
         assertThat(vurderingsbehov.get(4).vurdering()).isEqualTo(DokumentasjonVurderingBehov.Vurdering.GODKJENT_AUTOMATISK);
-        vurderUttakDokumentasjonBekreftelse.godkjenn(new ÅpenPeriodeDto(fordelingFar.get(3).fom(), fordelingFar.get(3).tom()));
+        vurderUttakDokumentasjonBekreftelse.godkjenn(fordelingFar.get(3));
         saksbehandler.bekreftAksjonspunkt(vurderUttakDokumentasjonBekreftelse.godkjenn());
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandling(saksnummerFar, false, false);
@@ -924,7 +924,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.hentFagsak(saksnummerFar);
         var avklarFaktaUttakPerioder = saksbehandler.hentAksjonspunktbekreftelse(new VurderUttakDokumentasjonBekreftelse())
-                .godkjenn(new ÅpenPeriodeDto(overføringsperiodeEndring.fom(), overføringsperiodeEndring.tom()));
+                .godkjenn(overføringsperiodeEndring);
         saksbehandler.bekreftAksjonspunkt(avklarFaktaUttakPerioder);
 
         var beregningAktivitetStatus = saksbehandler.hentUnikeBeregningAktivitetStatus();
@@ -1189,9 +1189,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdatoMor = fødselsdato.minusWeeks(3);
-        var fordelingMor = fordelingMorHappyCaseLong(fødselsdato);
 
-        var søknadMor = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR).medPerioder(fordelingMor)
+        var søknadMor = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var saksnummerMor = mor.søk(søknadMor);
 
@@ -1384,7 +1383,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 uttaksperiode(Rolle.FAR_MEDMOR, FELLESPERIODE, fellesperiodeStartFar, fellesperiodeSluttFar, null, ARBEID));
         var søknadFar = lagSøknadForeldrepengerAdopsjon(omsorgsovertakelsedatoe, BrukerRolle.FAR, false).medPerioder(fordelingFar.perioder())
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(mor))
-                .medVedlegg(List.of(dokumenterUttak(fordelingFar, MorsAktivitet.ARBEID, InnsendingType.AUTOMATISK)));
+                .medVedlegg(List.of(VedleggMaler.dokumenterMorsAktivitet(fordelingFar, MorsAktivitet.ARBEID, InnsendingType.AUTOMATISK)));
         var saksnummerFar = far.søk(søknadFar);
 
         var arbeidsgiverFar = far.arbeidsgiver();
@@ -1958,8 +1957,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medAnnenForelder(AnnenforelderMaler.norskIkkeRett(familie.mor()))
                 .medMottattdato(fødselsdato.minusWeeks(1))
                 .medVedlegg(List.of(
-                        dokumenterUttak(fordeling, MorsAktivitet.ARBEID, InnsendingType.SEND_SENERE),
-                        dokumenterUttak(fordeling, MorsAktivitet.UTDANNING, InnsendingType.SEND_SENERE)
+                        VedleggMaler.dokumenterMorsAktivitet(fordeling, MorsAktivitet.ARBEID, InnsendingType.SEND_SENERE),
+                        VedleggMaler.dokumenterMorsAktivitet(fordeling, MorsAktivitet.UTDANNING, InnsendingType.SEND_SENERE)
                 ));
         var saksnummerFar = far.søk(søknad);
         var arbeidsgiver = far.arbeidsgiver();
@@ -1981,9 +1980,9 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
          * Mors aktivitet er ikke dokumentert for utsettelsesperioden og første uttaksperiode etter utsettelsen.
          * */
         var vurderUttakDokBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(new VurderUttakDokumentasjonBekreftelse())
-                .ikkeDokumentert(new ÅpenPeriodeDto(utsettelsesperiode.fom(), utsettelsesperiode.tom()))
-                .ikkeDokumentert(new ÅpenPeriodeDto(uttaksperiodeEtterUtsettelse1.fom(), uttaksperiodeEtterUtsettelse1.tom()))
-                .godkjenn(new ÅpenPeriodeDto(uttaksperiodeEtterUtsettelse2.fom(), uttaksperiodeEtterUtsettelse2.tom()))
+                .ikkeDokumentert(utsettelsesperiode)
+                .ikkeDokumentert(uttaksperiodeEtterUtsettelse1)
+                .godkjenn(uttaksperiodeEtterUtsettelse2)
                 .setBegrunnelse("Mor er ikke i aktivitet!");
         saksbehandler.bekreftAksjonspunkt(vurderUttakDokBekreftelse);
         foreslårOgFatterVedtakVenterTilAvsluttetBehandling(saksnummerFar, false, false);
@@ -2440,7 +2439,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.FAR).medPerioder(fordeling.perioder())
                 .medAnnenForelder(AnnenforelderMaler.norskIkkeRett(familie.mor()))
                 .medMottattdato(fødselsdato.minusWeeks(1))
-                .medVedlegg(List.of(dokumenterUttak(fordeling, MorsAktivitet.ARBEID, InnsendingType.AUTOMATISK)));
+                .medVedlegg(List.of(VedleggMaler.dokumenterMorsAktivitet(fordeling, MorsAktivitet.ARBEID, InnsendingType.AUTOMATISK)));
         var saksnummerFar = far.søk(søknad);
         var arbeidsgiver = far.arbeidsgiver();
 
@@ -2547,7 +2546,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         saksbehandler.bekreftAksjonspunkt(avklarAnnenforelderEøsPerioder);
 
         var vurderUttakDokumentasjonBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(new VurderUttakDokumentasjonBekreftelse())
-                .godkjenn(new ÅpenPeriodeDto(fellesperiodeFar.fom(), fellesperiodeFar.tom()));
+                .godkjenn(fellesperiodeFar);
         saksbehandler.bekreftAksjonspunkt(vurderUttakDokumentasjonBekreftelse);
 
         var helgejustertSistedatoForeldrepenger = helgejustertTilFredag(startdatoForeldrepenger.plusWeeks(31).minusDays(1));
