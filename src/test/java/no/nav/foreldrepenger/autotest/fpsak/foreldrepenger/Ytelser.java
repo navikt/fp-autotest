@@ -40,6 +40,7 @@ import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektGenerator;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
 import no.nav.foreldrepenger.soknad.kontrakt.BrukerRolle;
+import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.FellesUttaksplanDto.Rolle;
 import no.nav.foreldrepenger.vtp.kontrakter.hendelser.YtelsevedtakDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.FamilierelasjonDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.YtelseDto;
@@ -164,11 +165,11 @@ class Ytelser extends VerdikjedeTestBase {
 
         // Steg 1: Søknad og inntektsmelding — innvilg foreldrepenger
         var søknad = lagSøknadForeldrepengerTermin(termindato, BrukerRolle.MOR)
-                .medUttaksplan(List.of(
-                        uttaksperiode(FELLESPERIODE, termindato.minusWeeks(12), termindato.minusWeeks(12)), //Starter med en tidlig fellesperiode for å hindre "for tidlig søkt"
-                        uttaksperiode(FORELDREPENGER_FØR_FØDSEL, termindato.minusWeeks(3), termindato.minusDays(1)),
-                        uttaksperiode(MØDREKVOTE, termindato, termindato.plusWeeks(15).minusDays(1)),
-                        uttaksperiode(FELLESPERIODE, termindato.plusWeeks(15), termindato.plusWeeks(16).minusDays(4))))
+                .medPerioder(List.of(
+                        uttaksperiode(Rolle.MOR, FELLESPERIODE, termindato.minusWeeks(12), termindato.minusWeeks(12)), //Starter med en tidlig fellesperiode for å hindre "for tidlig søkt"
+                        uttaksperiode(Rolle.MOR, FORELDREPENGER_FØR_FØDSEL, termindato.minusWeeks(3), termindato.minusDays(1)),
+                        uttaksperiode(Rolle.MOR, MØDREKVOTE, termindato, termindato.plusWeeks(15).minusDays(1)),
+                        uttaksperiode(Rolle.MOR, FELLESPERIODE, termindato.plusWeeks(15), termindato.plusWeeks(16).minusDays(4))))
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var saksnummer = mor.søk(søknad);
 

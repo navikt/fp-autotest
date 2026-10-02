@@ -36,7 +36,8 @@ import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
 import no.nav.foreldrepenger.soknad.kontrakt.BrukerRolle;
 import no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType;
-import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.UtsettelsesÅrsak;
+import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.FellesUttaksplanDto.Rolle;
+import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.FellesUttaksplanDto.UtsettelseÅrsak;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.FamilierelasjonDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.YtelseDto;
 
@@ -76,11 +77,11 @@ class RegresjonPreWLB extends VerdikjedeTestBase {
         * Han skal få innvilge totalt 12 av 15 uker med foreldrepenger uten aktivitetskrav, men får avslag på de siste 3 fordi
         *   disse dagene må tas ut innen uke 46 (+ eventuelle innvilgede utsettelserList).
         * */
-        var uttaksperiode1 = uttaksperiode(KontoType.FORELDREPENGER, fpStartdatoFar, fpStartdatoFar.plusWeeks(5).minusDays(1), ARBEID);
-        var utsettelsesperiode1 = utsettelsesperiode(UtsettelsesÅrsak.FRI, fpStartdatoFar.plusWeeks(5), fpStartdatoFar.plusWeeks(10).minusDays(1), TRENGER_HJELP);
-        var uttaksperiode2 = uttaksperiode(KontoType.FORELDREPENGER, fpStartdatoFar.plusWeeks(10), fpStartdatoFar.plusWeeks(15).minusDays(1), ARBEID);
-        var utsettelsesperiode2 = utsettelsesperiode(UtsettelsesÅrsak.FRI, fpStartdatoFar.plusWeeks(15), fpStartdatoFar.plusWeeks(38).minusDays(1), TRENGER_HJELP);
-        var uttaksperiode3 = uttaksperiode(KontoType.FORELDREPENGER, fpStartdatoFar.plusWeeks(38), fpStartdatoFar.plusWeeks(43).minusDays(1), UFØRE);
+        var uttaksperiode1 = uttaksperiode(Rolle.FAR_MEDMOR, KontoType.FORELDREPENGER, fpStartdatoFar, fpStartdatoFar.plusWeeks(5).minusDays(1), null, ARBEID);
+        var utsettelsesperiode1 = utsettelsesperiode(Rolle.FAR_MEDMOR, UtsettelseÅrsak.FRI, fpStartdatoFar.plusWeeks(5), fpStartdatoFar.plusWeeks(10).minusDays(1), TRENGER_HJELP);
+        var uttaksperiode2 = uttaksperiode(Rolle.FAR_MEDMOR, KontoType.FORELDREPENGER, fpStartdatoFar.plusWeeks(10), fpStartdatoFar.plusWeeks(15).minusDays(1), null, ARBEID);
+        var utsettelsesperiode2 = utsettelsesperiode(Rolle.FAR_MEDMOR, UtsettelseÅrsak.FRI, fpStartdatoFar.plusWeeks(15), fpStartdatoFar.plusWeeks(38).minusDays(1), TRENGER_HJELP);
+        var uttaksperiode3 = uttaksperiode(Rolle.FAR_MEDMOR, KontoType.FORELDREPENGER, fpStartdatoFar.plusWeeks(38), fpStartdatoFar.plusWeeks(43).minusDays(1), null, UFØRE);
         var fordeling = fordeling(
                 uttaksperiode1,
                 utsettelsesperiode1,
@@ -89,7 +90,7 @@ class RegresjonPreWLB extends VerdikjedeTestBase {
                 uttaksperiode3
         );
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.FAR)
-                .medUttaksplan(fordeling)
+                .medPerioder(fordeling.perioder())
                 .medAnnenForelder(AnnenforelderMaler.annenpartIkkeRettOgMorHarUføretrygd(familie.mor()))
                 .medMottattdato(fødselsdato);
         var saksnummer = far.søk(søknad);
@@ -188,14 +189,14 @@ class RegresjonPreWLB extends VerdikjedeTestBase {
                 .build();
         var far = familie.far();
         var fødselsdato = familie.barn().fødselsdato();
-        var uttaksperiodeIfmFødsel = uttaksperiode(KontoType.FEDREKVOTE, fødselsdato, fødselsdato.plusWeeks(1).minusDays(1), INNLAGT);
+        var uttaksperiodeIfmFødsel = uttaksperiode(Rolle.FAR_MEDMOR, KontoType.FEDREKVOTE, fødselsdato, fødselsdato.plusWeeks(1).minusDays(1), null, INNLAGT);
         var fordeling = fordeling(
                 uttaksperiodeIfmFødsel,
-                uttaksperiode(KontoType.FEDREKVOTE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(20).minusDays(1)),
-                uttaksperiode(KontoType.FELLESPERIODE, fødselsdato.plusWeeks(20), fødselsdato.plusWeeks(26).minusDays(1), ARBEID)
+                uttaksperiode(Rolle.FAR_MEDMOR, KontoType.FEDREKVOTE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(20).minusDays(1)),
+                uttaksperiode(Rolle.FAR_MEDMOR, KontoType.FELLESPERIODE, fødselsdato.plusWeeks(20), fødselsdato.plusWeeks(26).minusDays(1), null, ARBEID)
         );
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.FAR)
-                .medUttaksplan(fordeling)
+                .medPerioder(fordeling.perioder())
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.mor()))
                 .medMottattdato(fødselsdato);
         var saksnummer = far.søk(søknad);

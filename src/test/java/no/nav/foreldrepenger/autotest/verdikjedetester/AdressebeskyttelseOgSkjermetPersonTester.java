@@ -28,6 +28,7 @@ import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
 import no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler;
 import no.nav.foreldrepenger.generator.soknad.maler.UttaksperiodeType;
 import no.nav.foreldrepenger.soknad.kontrakt.BrukerRolle;
+import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.FellesUttaksplanDto.Rolle;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.Adressebeskyttelse;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.FamilierelasjonDto;
 import no.nav.vedtak.exception.ManglerTilgangException;
@@ -79,9 +80,9 @@ class AdressebeskyttelseOgSkjermetPersonTester {
                 .build();
         var termindato = LocalDate.now().minusWeeks(2);
         var søknadMor = SøknadForeldrepengerMaler.lagSøknadForeldrepengerTermin(termindato, BrukerRolle.MOR)
-                .medUttaksplan(List.of(
-                        uttaksperiode(FORELDREPENGER_FØR_FØDSEL, termindato.minusWeeks(3), termindato.minusDays(1)),
-                        uttaksperiode(MØDREKVOTE, termindato, termindato.plusWeeks(6).minusDays(1))
+                .medPerioder(List.of(
+                        uttaksperiode(Rolle.MOR, FORELDREPENGER_FØR_FØDSEL, termindato.minusWeeks(3), termindato.minusDays(1)),
+                        uttaksperiode(Rolle.MOR, MØDREKVOTE, termindato, termindato.plusWeeks(6).minusDays(1))
                 ))
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var mor = familie.mor();
@@ -104,9 +105,9 @@ class AdressebeskyttelseOgSkjermetPersonTester {
 
         var far = familie.far();
         var søknadFar = SøknadForeldrepengerMaler.lagSøknadForeldrepengerTermin(termindato, BrukerRolle.FAR)
-                .medUttaksplan(List.of(
-                        uttaksperiode(FEDREKVOTE, termindato, termindato.plusWeeks(1).minusDays(1), 100, UttaksperiodeType.SAMTIDIGUTTAK),
-                        uttaksperiode(FEDREKVOTE, termindato.plusWeeks(6), termindato.plusWeeks(9).minusDays(1))
+                .medPerioder(List.of(
+                        uttaksperiode(Rolle.FAR_MEDMOR, FEDREKVOTE, termindato, termindato.plusWeeks(1).minusDays(1), 100, UttaksperiodeType.SAMTIDIGUTTAK),
+                        uttaksperiode(Rolle.FAR_MEDMOR, FEDREKVOTE, termindato.plusWeeks(6), termindato.plusWeeks(9).minusDays(1))
                 ))
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.mor()));
         var saksnummerFar = far.søk(søknadFar);

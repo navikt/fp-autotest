@@ -14,7 +14,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
-import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.Uttaksplanperiode;
+import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.FellesUttaksplanDto.UttakPeriodeDto;
 import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.ÅpenPeriodeDto;
 
 public class VurderUttakDokumentasjonBekreftelse extends AksjonspunktBekreftelse {
@@ -34,13 +34,13 @@ public class VurderUttakDokumentasjonBekreftelse extends AksjonspunktBekreftelse
         return this;
     }
 
-    public VurderUttakDokumentasjonBekreftelse godkjenn(Uttaksplanperiode uttaksplanperiode) {
-        vurder(GODKJENT, null, null, uttaksplanperiode.fom(), uttaksplanperiode.tom());
-        return this;
-    }
     public VurderUttakDokumentasjonBekreftelse godkjenn(ÅpenPeriodeDto åpenPeriodeDto) {
         vurder(GODKJENT, null, null, åpenPeriodeDto.fom(), åpenPeriodeDto.tom());
         return this;
+    }
+
+    public VurderUttakDokumentasjonBekreftelse godkjenn(UttakPeriodeDto periode) {
+        return godkjenn(new ÅpenPeriodeDto(periode.fom(), periode.tom()));
     }
 
     public VurderUttakDokumentasjonBekreftelse godkjenn(ÅpenPeriodeDto åpenPeriodeDto, BigDecimal stillingsprosent) {
@@ -48,13 +48,13 @@ public class VurderUttakDokumentasjonBekreftelse extends AksjonspunktBekreftelse
         return this;
     }
 
-    public VurderUttakDokumentasjonBekreftelse ikkeGodkjenn(Uttaksplanperiode periode) {
-        return ikkeGodkjenn(new ÅpenPeriodeDto(periode.fom(), periode.tom()));
-    }
-
     public VurderUttakDokumentasjonBekreftelse ikkeGodkjenn(ÅpenPeriodeDto periode) {
         vurder(IKKE_GODKJENT, null, null, periode.fom(), periode.tom());
         return this;
+    }
+
+    public VurderUttakDokumentasjonBekreftelse ikkeGodkjenn(UttakPeriodeDto periode) {
+        return ikkeGodkjenn(new ÅpenPeriodeDto(periode.fom(), periode.tom()));
     }
 
     public VurderUttakDokumentasjonBekreftelse godkjennSykdom() {
@@ -68,14 +68,13 @@ public class VurderUttakDokumentasjonBekreftelse extends AksjonspunktBekreftelse
     }
 
 
-    public VurderUttakDokumentasjonBekreftelse ikkeDokumentert(Uttaksplanperiode uttaksplanperiode) {
-        vurder(IKKE_DOKUMENTERT, null, null, uttaksplanperiode.fom(), uttaksplanperiode.tom());
-        return this;
-    }
-
     public VurderUttakDokumentasjonBekreftelse ikkeDokumentert(ÅpenPeriodeDto åpenPeriodeDto) {
         vurder(IKKE_DOKUMENTERT, null, null, åpenPeriodeDto.fom(), åpenPeriodeDto.tom());
         return this;
+    }
+
+    public VurderUttakDokumentasjonBekreftelse ikkeDokumentert(UttakPeriodeDto periode) {
+        return ikkeDokumentert(new ÅpenPeriodeDto(periode.fom(), periode.tom()));
     }
 
     private void vurder(Vurdering vurdering, Behov.Årsak årsak) {

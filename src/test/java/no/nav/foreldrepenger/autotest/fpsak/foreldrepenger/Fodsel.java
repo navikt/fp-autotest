@@ -6,12 +6,11 @@ import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
 import static no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner.NAV_OSLO;
 import static no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner.NAV_STORD;
-import static no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler.lagSøknadForeldrepengerTerminFødsel;
-import static no.nav.foreldrepenger.generator.soknad.maler.UttakMaler.fordeling;
-import static no.nav.foreldrepenger.generator.soknad.maler.UttakMaler.fordelingFarAleneomsorg;
-import static no.nav.foreldrepenger.generator.soknad.maler.UttakMaler.fordelingMorAleneomsorgHappyCase;
 import static no.nav.foreldrepenger.generator.soknad.maler.UttaksperioderMaler.graderingsperiodeArbeidstaker;
 import static no.nav.foreldrepenger.generator.soknad.maler.UttaksperioderMaler.uttaksperiode;
+import static no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler.lagSøknadForeldrepengerTerminFødsel;
+import static no.nav.foreldrepenger.generator.soknad.maler.UttakMaler.fordelingFarAleneomsorg;
+import static no.nav.foreldrepenger.generator.soknad.maler.UttakMaler.fordelingMorAleneomsorgHappyCase;
 import static no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType.FELLESPERIODE;
 import static no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType.FORELDREPENGER;
 import static no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType.FORELDREPENGER_FØR_FØDSEL;
@@ -64,11 +63,11 @@ import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.Prosent;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
 import no.nav.foreldrepenger.generator.soknad.maler.OpptjeningMaler;
-import no.nav.foreldrepenger.generator.soknad.maler.UttaksperiodeType;
 import no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType;
 import no.nav.foreldrepenger.kontrakter.felles.kodeverk.MorsAktivitet;
 import no.nav.foreldrepenger.soknad.kontrakt.BrukerRolle;
 import no.nav.foreldrepenger.soknad.kontrakt.builder.BarnBuilder;
+import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.FellesUttaksplanDto.Rolle;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.FamilierelasjonDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.PrivatArbeidsgiverDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.SivilstandDto;
@@ -393,13 +392,13 @@ class Fodsel extends VerdikjedeTestBase {
                 .build();
         var far = familie.far();
         var fødselsdato = familie.barn().fødselsdato();
-        var fordeling = fordeling(
-                uttaksperiode(KontoType.FEDREKVOTE, fødselsdato, fødselsdato.plusWeeks(2).minusDays(1), UttaksperiodeType.SAMTIDIGUTTAK),
-                uttaksperiode(KontoType.FEDREKVOTE, fødselsdato.plusWeeks(30), fødselsdato.plusWeeks(43).minusDays(1)),
-                uttaksperiode(KontoType.FELLESPERIODE, fødselsdato.plusWeeks(43), fødselsdato.plusWeeks(45).minusDays(1), MorsAktivitet.ARBEID)
+        var perioder = List.of(
+                uttaksperiode(Rolle.FAR_MEDMOR, KontoType.FEDREKVOTE, fødselsdato, fødselsdato.plusWeeks(2).minusDays(1), BigDecimal.valueOf(100)),
+                uttaksperiode(Rolle.FAR_MEDMOR, KontoType.FEDREKVOTE, fødselsdato.plusWeeks(30), fødselsdato.plusWeeks(43).minusDays(1)),
+                uttaksperiode(Rolle.FAR_MEDMOR, KontoType.FELLESPERIODE, fødselsdato.plusWeeks(43), fødselsdato.plusWeeks(45).minusDays(1), null, MorsAktivitet.ARBEID)
         );
         var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.FAR)
-                .medUttaksplan(fordeling)
+                .medPerioder(perioder)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var saksnummer = far.søk(søknad);
         var arbeidsgiver = far.arbeidsgiver();
@@ -641,7 +640,7 @@ class Fodsel extends VerdikjedeTestBase {
         var far = familie.far();
         var fødselsdato = familie.barn().fødselsdato();
         var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.FAR)
-                .medUttaksplan(fordelingFarAleneomsorg(fødselsdato))
+                .medPerioder(fordelingFarAleneomsorg(fødselsdato))
                 .medAnnenForelder(AnnenforelderMaler.norskAleneomsorg(familie.mor()));
         var saksnummer = far.søk(søknad);
         var arbeidsgiver = far.arbeidsgiver();
@@ -741,12 +740,13 @@ class Fodsel extends VerdikjedeTestBase {
         var graderingFom = fødselsdato.plusWeeks(10).plusDays(1);
         var graderingTom = fødselsdato.plusWeeks(12);
         var arbeidstidsprosent = BigDecimal.TEN;
-        var fordeling = fordeling(
-                uttaksperiode(KontoType.FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)),
-                uttaksperiode(KontoType.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10)),
-                graderingsperiodeArbeidstaker(KontoType.FELLESPERIODE,graderingFom, graderingTom, gradertArbeidsgiverIdentifikator, arbeidstidsprosent.intValue()));
+        var perioder = List.of(
+                uttaksperiode(Rolle.MOR, KontoType.FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)),
+                uttaksperiode(Rolle.MOR, KontoType.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10)),
+                graderingsperiodeArbeidstaker(Rolle.MOR, KontoType.FELLESPERIODE, graderingFom, graderingTom,
+                        gradertArbeidsgiverIdentifikator, arbeidstidsprosent));
         var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
-                .medUttaksplan(fordeling)
+                .medPerioder(perioder)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var saksnummer = mor.søk(søknad);
         ventPåInntektsmeldingForespørsel(saksnummer);
@@ -846,7 +846,7 @@ class Fodsel extends VerdikjedeTestBase {
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
         var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
-                .medUttaksplan(fordelingMorAleneomsorgHappyCase(fødselsdato))
+                .medPerioder(fordelingMorAleneomsorgHappyCase(fødselsdato))
                 .medAnnenForelder(AnnenforelderMaler.ukjentForelder());
         var saksnummer = mor.søk(søknad);
 

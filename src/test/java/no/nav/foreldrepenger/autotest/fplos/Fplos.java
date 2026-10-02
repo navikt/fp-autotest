@@ -12,6 +12,7 @@ import static no.nav.foreldrepenger.generator.soknad.maler.UttaksperioderMaler.g
 import static no.nav.foreldrepenger.generator.soknad.maler.UttaksperioderMaler.uttaksperiode;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
@@ -54,6 +55,7 @@ import no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Orgnummer;
 import no.nav.foreldrepenger.soknad.kontrakt.BrukerRolle;
 import no.nav.foreldrepenger.soknad.kontrakt.builder.TilretteleggingBehovBuilder;
+import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.FellesUttaksplanDto.Rolle;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.FamilierelasjonDto;
 
 @Tag("fplos")
@@ -133,13 +135,13 @@ class Fplos extends VerdikjedeTestBase {
         var opptjening = OpptjeningMaler.egenNaeringOpptjening(mor.arbeidsforhold().arbeidsgiverIdentifikasjon(),
                 mor.næringStartdato(), LocalDate.now(), false, 30_000, false);
         var fordeling = fordeling(
-                uttaksperiode(KontoType.FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)),
-                uttaksperiode(KontoType.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)),
-                graderingsperiodeSN(KontoType.FELLESPERIODE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1),
-                        50));
+                uttaksperiode(Rolle.MOR, KontoType.FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)),
+                uttaksperiode(Rolle.MOR, KontoType.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)),
+                graderingsperiodeSN(Rolle.MOR, KontoType.FELLESPERIODE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1),
+                        BigDecimal.valueOf(50)));
         var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
                 .medSelvstendigNæringsdrivendeInformasjon(opptjening)
-                .medUttaksplan(fordeling)
+                .medPerioder(fordeling.perioder())
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var saksnummer = mor.søk(søknad);
 
@@ -153,7 +155,7 @@ class Fplos extends VerdikjedeTestBase {
         debugLoggBehandling(saksbehandler.valgtBehandling);
 
         // FORDEL BEREGNINGSGRUNNLAG //
-        var graderingsperiode = fordeling.uttaksperioder().get(2);
+        var graderingsperiode = fordeling.perioder().get(2);
         var fordelBeregningsgrunnlagBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(new FordelBeregningsgrunnlagBekreftelse())
                 .settFastsattBeløpOgInntektskategoriMedRefusjon(graderingsperiode.fom(), 500_000, 500_000,
                         Inntektskategori.ARBEIDSTAKER, 1)

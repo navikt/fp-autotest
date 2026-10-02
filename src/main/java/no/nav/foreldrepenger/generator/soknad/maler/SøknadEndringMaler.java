@@ -8,8 +8,8 @@ import no.nav.foreldrepenger.soknad.kontrakt.Målform;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Saksnummer;
 import no.nav.foreldrepenger.soknad.kontrakt.SøknadDto;
 import no.nav.foreldrepenger.soknad.kontrakt.builder.EndringssøknadBuilder;
+import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.FellesUttaksplanDto.UttakPeriodeDto;
 import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.UttaksplanDto;
-import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.Uttaksplanperiode;
 
 public class SøknadEndringMaler {
 
@@ -28,7 +28,7 @@ public class SøknadEndringMaler {
                 .medUttaksplan(uttaksplanDto);
     }
 
-    public static EndringssøknadBuilder lagEndringssøknad(SøknadDto søknadDto, Saksnummer saksnummer, List<Uttaksplanperiode> uttaksplanDto) {
-        return lagEndringssøknad(søknadDto, saksnummer, new UttaksplanDto(false, uttaksplanDto));
+    public static EndringssøknadBuilder lagEndringssøknad(SøknadDto søknadDto, Saksnummer saksnummer, List<UttakPeriodeDto> perioder) {
+        return lagEndringssøknad(søknadDto, saksnummer, new UttaksplanDto(false, List.of(), perioder));
     }
 }

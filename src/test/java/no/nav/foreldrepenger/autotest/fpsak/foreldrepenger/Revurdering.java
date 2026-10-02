@@ -40,6 +40,7 @@ import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektGenerator;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
 import no.nav.foreldrepenger.soknad.kontrakt.BrukerRolle;
+import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.FellesUttaksplanDto.Rolle;
 import no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.FamilierelasjonDto;
 
@@ -149,7 +150,7 @@ class Revurdering extends VerdikjedeTestBase {
 
         // Endringssøknad
         var fordeling = fordeling(
-                uttaksperiode(KontoType.FELLESPERIODE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1))
+                uttaksperiode(Rolle.MOR, KontoType.FELLESPERIODE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1))
         );
         var søknadE = lagEndringssøknad(søknad.build(), saksnummer, fordeling);
         var saksnummerE = mor.søk(søknadE);
@@ -204,7 +205,7 @@ class Revurdering extends VerdikjedeTestBase {
         var graderingFom = fødselsdato.plusWeeks(20);
         var graderingTom = fødselsdato.plusWeeks(23).minusDays(1);
         var arbeidsgiveridentifikator = arbeidsgiver.arbeidsgiverIdentifikator();
-        var fordelingGradering = fordelingEndringssøknadGradering(KontoType.FELLESPERIODE, graderingFom, graderingTom,
+        var fordelingGradering = fordelingEndringssøknadGradering(Rolle.MOR, KontoType.FELLESPERIODE, graderingFom, graderingTom,
                 arbeidsgiveridentifikator, 40);
         var endretSøknad = lagEndringssøknad(søknad.build(), saksnummer, fordelingGradering);
         var saksnummerE = mor.søk(endretSøknad);
@@ -251,11 +252,11 @@ class Revurdering extends VerdikjedeTestBase {
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
         var fordeling = fordeling(
-                uttaksperiode(KontoType.FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)),
-                uttaksperiode(KontoType.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(13).minusDays(1))
+                uttaksperiode(Rolle.MOR, KontoType.FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)),
+                uttaksperiode(Rolle.MOR, KontoType.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(13).minusDays(1))
         );
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
-                .medUttaksplan(fordeling)
+                .medPerioder(fordeling.perioder())
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()))
                 .medMottattdato(fødselsdato.plusWeeks(9));
         var saksnummer = mor.søk(søknad);
@@ -269,7 +270,7 @@ class Revurdering extends VerdikjedeTestBase {
 
         // Sender endringssøknad for å gi fagsaken en ny søknad mottatt dato
         var fordelingEndringssøknad = fordeling(
-                uttaksperiode(KontoType.FELLESPERIODE, fødselsdato.plusWeeks(13), fødselsdato.plusWeeks(14).minusDays(1))
+                uttaksperiode(Rolle.MOR, KontoType.FELLESPERIODE, fødselsdato.plusWeeks(13), fødselsdato.plusWeeks(14).minusDays(1))
         );
         var søknadE = lagEndringssøknad(søknad.build(), saksnummer, fordelingEndringssøknad)
                 .medMottattdato(fødselsdato.plusWeeks(10));
@@ -305,11 +306,11 @@ class Revurdering extends VerdikjedeTestBase {
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
         var fordeling = fordeling(
-                uttaksperiode(KontoType.FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)),
-                uttaksperiode(KontoType.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(13).minusDays(1))
+                uttaksperiode(Rolle.MOR, KontoType.FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)),
+                uttaksperiode(Rolle.MOR, KontoType.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(13).minusDays(1))
         );
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
-                .medUttaksplan(fordeling)
+                .medPerioder(fordeling.perioder())
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()))
                 .medMottattdato(fødselsdato.plusWeeks(18));
         var saksnummer = mor.søk(søknad);
@@ -337,7 +338,7 @@ class Revurdering extends VerdikjedeTestBase {
                 .hasSizeGreaterThan(1);
 
         var fordelingEndringssøknad = fordeling(
-                uttaksperiode(KontoType.FELLESPERIODE, fødselsdato.plusWeeks(13), fødselsdato.plusWeeks(12).plusWeeks(2))
+                uttaksperiode(Rolle.MOR, KontoType.FELLESPERIODE, fødselsdato.plusWeeks(13), fødselsdato.plusWeeks(12).plusWeeks(2))
         );
         var søknadE = lagEndringssøknad(søknad.build(), saksnummer, fordelingEndringssøknad)
                 .medMottattdato(fødselsdato.plusWeeks(10));
@@ -353,6 +354,3 @@ class Revurdering extends VerdikjedeTestBase {
                 .hasSizeGreaterThan(1);
     }
 }
-
-
-

@@ -31,6 +31,7 @@ import no.nav.foreldrepenger.autotest.util.vent.Vent;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektGenerator;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
+import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.FellesUttaksplanDto.Rolle;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.FamilierelasjonDto;
 
 @Tag("fpsak")
@@ -163,20 +164,20 @@ class Termin extends VerdikjedeTestBase {
         var arbeidsgiveridentifikator1 = arbeidsforholdene.get(0).arbeidsgiverIdentifikasjon();
         var arbeidsgiveridentifikator2 = arbeidsforholdene.get(1).arbeidsgiverIdentifikasjon();
         var fordeling = fordeling(
-                uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fpstartdato, fpstartdato.plusWeeks(3).minusDays(1)),
-                uttaksperiode(MØDREKVOTE, termindato, termindato.plusWeeks(6).minusDays(1)),
-                graderingsperiodeArbeidstaker(MØDREKVOTE, termindato.plusWeeks(6),
-                        termindato.plusWeeks(9).minusDays(1), arbeidsgiveridentifikator2, 40),
-                uttaksperiode(MØDREKVOTE, termindato.plusWeeks(9), termindato.plusWeeks(12).minusDays(1)),
-                graderingsperiodeArbeidstaker(MØDREKVOTE, termindato.plusWeeks(12),
-                        termindato.plusWeeks(15).minusDays(1), arbeidsgiveridentifikator1, 10),
-                graderingsperiodeArbeidstaker(FELLESPERIODE, termindato.plusWeeks(15),
-                        termindato.plusWeeks(18).minusDays(1), arbeidsgiveridentifikator2, 20),
-                graderingsperiodeArbeidstaker(FELLESPERIODE, termindato.plusWeeks(18),
-                        termindato.plusWeeks(21).minusDays(1), arbeidsgiveridentifikator1, 30)
+                uttaksperiode(Rolle.MOR, FORELDREPENGER_FØR_FØDSEL, fpstartdato, fpstartdato.plusWeeks(3).minusDays(1)),
+                uttaksperiode(Rolle.MOR, MØDREKVOTE, termindato, termindato.plusWeeks(6).minusDays(1)),
+                graderingsperiodeArbeidstaker(Rolle.MOR, MØDREKVOTE, termindato.plusWeeks(6),
+                        termindato.plusWeeks(9).minusDays(1), arbeidsgiveridentifikator2, BigDecimal.valueOf(40)),
+                uttaksperiode(Rolle.MOR, MØDREKVOTE, termindato.plusWeeks(9), termindato.plusWeeks(12).minusDays(1)),
+                graderingsperiodeArbeidstaker(Rolle.MOR, MØDREKVOTE, termindato.plusWeeks(12),
+                        termindato.plusWeeks(15).minusDays(1), arbeidsgiveridentifikator1, BigDecimal.valueOf(10)),
+                graderingsperiodeArbeidstaker(Rolle.MOR, FELLESPERIODE, termindato.plusWeeks(15),
+                        termindato.plusWeeks(18).minusDays(1), arbeidsgiveridentifikator2, BigDecimal.valueOf(20)),
+                graderingsperiodeArbeidstaker(Rolle.MOR, FELLESPERIODE, termindato.plusWeeks(18),
+                        termindato.plusWeeks(21).minusDays(1), arbeidsgiveridentifikator1, BigDecimal.valueOf(30))
         );
         var søknad = lagSøknadForeldrepengerTermin(termindato, MOR)
-                .medUttaksplan(fordeling)
+                .medPerioder(fordeling.perioder())
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var saksnummer = mor.søk(søknad);
         ventPåInntektsmeldingForespørsel(saksnummer);
@@ -239,10 +240,10 @@ class Termin extends VerdikjedeTestBase {
         var termindato = LocalDate.now().plusWeeks(3);
         var startDatoForeldrepenger = termindato;
         var fordeling = fordeling(
-                uttaksperiode(MØDREKVOTE, termindato, termindato.plusWeeks(15).minusDays(1))
+                uttaksperiode(Rolle.MOR, MØDREKVOTE, termindato, termindato.plusWeeks(15).minusDays(1))
         );
         var søknad = lagSøknadForeldrepengerTermin(termindato, MOR)
-                .medUttaksplan(fordeling)
+                .medPerioder(fordeling.perioder())
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var saksnummer = mor.søk(søknad);
 
