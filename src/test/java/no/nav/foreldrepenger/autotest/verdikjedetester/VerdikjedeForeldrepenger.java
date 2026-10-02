@@ -31,9 +31,9 @@ import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.beh
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer.SaldoVisningStønadskontoType;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer.SaldoVisningStønadskontoType.FORELDREPENGER;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer.SaldoVisningStønadskontoType.MINSTERETT;
+import static no.nav.foreldrepenger.generator.Landkoder.SWE;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
-import static no.nav.foreldrepenger.generator.Landkoder.SWE;
 import static no.nav.foreldrepenger.generator.soknad.maler.SøknadEndringMaler.lagEndringssøknad;
 import static no.nav.foreldrepenger.generator.soknad.maler.SøknadEngangsstønadMaler.lagEngangstønadFødsel;
 import static no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler.lagSøknadForeldrepengerAdopsjon;
@@ -58,8 +58,8 @@ import static no.nav.foreldrepenger.kontrakter.felles.kodeverk.MorsAktivitet.ARB
 import static no.nav.foreldrepenger.kontrakter.felles.kodeverk.MorsAktivitet.ARBEID_OG_UTDANNING;
 import static no.nav.foreldrepenger.kontrakter.felles.kodeverk.MorsAktivitet.IKKE_OPPGITT;
 import static no.nav.foreldrepenger.kontrakter.felles.kodeverk.MorsAktivitet.UTDANNING;
-import static no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.FellesUttaksplanDto.OverføringÅrsak.SYKDOM_ANNEN_FORELDER;
 import static no.nav.foreldrepenger.soknad.kontrakt.BrukerRolle.FAR;
+import static no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.FellesUttaksplanDto.OverføringÅrsak.SYKDOM_ANNEN_FORELDER;
 import static no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.FellesUttaksplanDto.UtsettelseÅrsak.FRI;
 import static no.nav.foreldrepenger.vtp.kontrakter.person.v2.ArbeidsavtaleDto.arbeidsavtale;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -68,10 +68,12 @@ import static org.assertj.core.api.Assertions.within;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-
-import no.nav.foreldrepenger.generator.soknad.maler.VedleggMaler;
+import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -134,6 +136,7 @@ import no.nav.foreldrepenger.generator.soknad.maler.OpptjeningMaler;
 import no.nav.foreldrepenger.generator.soknad.maler.SøknadEndringMaler;
 import no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler;
 import no.nav.foreldrepenger.generator.soknad.maler.UttaksperiodeType;
+import no.nav.foreldrepenger.generator.soknad.maler.VedleggMaler;
 import no.nav.foreldrepenger.generator.soknad.util.VirkedagUtil;
 import no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType;
 import no.nav.foreldrepenger.kontrakter.felles.kodeverk.MorsAktivitet;
@@ -145,8 +148,10 @@ import no.nav.foreldrepenger.soknad.kontrakt.BrukerRolle;
 import no.nav.foreldrepenger.soknad.kontrakt.ForeldrepengesøknadDto;
 import no.nav.foreldrepenger.soknad.kontrakt.SøknadDto;
 import no.nav.foreldrepenger.soknad.kontrakt.barn.AdopsjonDto;
+import no.nav.foreldrepenger.soknad.kontrakt.barn.FødselDto;
 import no.nav.foreldrepenger.soknad.kontrakt.builder.BarnBuilder;
 import no.nav.foreldrepenger.soknad.kontrakt.ettersendelse.YtelseType;
+import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.FellesUttaksplanDto;
 import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.FellesUttaksplanDto.Rolle;
 import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.FellesUttaksplanDto.UtsettelseÅrsak;
 import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.UttaksplanDto;
@@ -155,9 +160,9 @@ import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.Dokumenterer;
 import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.InnsendingType;
 import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.ÅpenPeriodeDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.FamilierelasjonDto;
-import no.nav.foreldrepenger.vtp.kontrakter.person.v2.YtelseDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.PermisjonDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.Permisjonstype;
+import no.nav.foreldrepenger.vtp.kontrakter.person.v2.YtelseDto;
 
 
 @Tag("verdikjede")
@@ -2046,8 +2051,18 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdatoMor = fødselsdato.minusWeeks(3);
         var fpSluttdatoMor = fødselsdato.plusWeeks(23);
-        var saksnummerMor = sendInnSøknadOgIMAnnenpartMorMødrekvoteOgDelerAvFellesperiodeHappyCase(familie, fødselsdato,
-                fpStartdatoMor, fpSluttdatoMor);
+        var søknadMor = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
+                .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()))
+                .medPerioder(List.of(
+                        uttaksperiode(Rolle.MOR, FORELDREPENGER_FØR_FØDSEL, fpStartdatoMor, fødselsdato.minusDays(1)),
+                        uttaksperiode(Rolle.MOR, MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1)),
+                        uttaksperiode(Rolle.MOR, FELLESPERIODE, fødselsdato.plusWeeks(15), fpSluttdatoMor.minusDays(1))))
+                .medMottattdato(fpStartdatoMor.minusWeeks(4));
+        var saksnummerMor = familie.mor().søk(søknadMor);
+        ventPåInntektsmeldingForespørsel(saksnummerMor);
+        familie.mor().arbeidsgiver().sendInntektsmeldingerFP(saksnummerMor, fpStartdatoMor);
+        validerInnsendtInntektsmeldingForeldrepenger(familie.mor().fødselsnummer(), fpStartdatoMor,
+                familie.mor().månedsinntekt(), false);
 
         saksbehandler.hentFagsak(saksnummerMor);
         saksbehandler.ventTilRisikoKlassefiseringsstatus(RisikoklasseType.IKKE_HØY);
@@ -2087,6 +2102,88 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         uttakResultatPerioder.forEach(
                 periode -> assertThat(periode.getPeriodeResultatType()).isEqualTo(PeriodeResultatType.INNVILGET));
         vedtaksperioderInnsyn.forEach(periode -> assertThat(periode.resultat().innvilget()).isTrue());
+
+        var far = familie.far();
+        var morsPlan = mor.innsyn().hentFellesUttaksplan(fødselsdato, far.fødselsnummer());
+        var farsPlan = far.innsyn().hentFellesUttaksplan(fødselsdato, mor.fødselsnummer());
+        assertThat(morsPlan).as("Plan med mor innlogget").isNotNull();
+        assertThat(farsPlan).as("Plan med far innlogget").isNotNull();
+        var innsendtSøknadMor = (ForeldrepengesøknadDto) søknadMor.build();
+        var søknadsbarn = (FødselDto) innsendtSøknadMor.barn();
+        for (var plan : List.of(morsPlan, farsPlan)) {
+            assertThat(plan.termindato()).isEqualTo(søknadsbarn.termindato());
+            assertThat(plan.antallBarn()).isEqualTo(søknadsbarn.antallBarn());
+            assertThat(plan.dekningsgrad().name()).isEqualTo(innsendtSøknadMor.dekningsgrad().name());
+        }
+        verifiserSøknadsuttakIPlan(morsPlan, FellesUttaksplanDto.UttakPeriodeDto::søker, innsendtSøknadMor.uttaksplan(), true);
+        verifiserSøknadsuttakIPlan(farsPlan, FellesUttaksplanDto.UttakPeriodeDto::annenPart, innsendtSøknadMor.uttaksplan(), true);
+        assertThat(morsPlan.perioder()).allSatisfy(periode -> assertThat(periode.annenPart()).isNull());
+        assertThat(farsPlan.perioder()).allSatisfy(periode -> assertThat(periode.søker()).isNull());
+    }
+
+    @Test
+    @DisplayName("Felles uttaksplan for to foreldre med vedtatt gradering")
+    @Description("Mor og far har hvert sitt arbeidsforhold og får innvilget graderte kvoteperioder. "
+            + "Begge henter felles uttaksplan og kontrollerer vedtatt uttak og arbeidstidsprosent.")
+    void fellesUttaksplanBeggeForeldreMedVedtattGradering() {
+        var fødselsdato = helgejustertTilMandag(LocalDate.now().minusWeeks(10));
+        var familie = FamilieGenerator.ny()
+                .forelder(mor().inntekt(InntektGenerator.ny()
+                        .arbeidsforhold(TestOrganisasjoner.NAV, 100, LocalDate.now().minusYears(3), 480_000).build()).build())
+                .forelder(far().inntekt(InntektGenerator.ny()
+                        .arbeidsforhold(TestOrganisasjoner.NAV_BERGEN, 100, LocalDate.now().minusYears(3), 480_000).build()).build())
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
+                .barn(fødselsdato)
+                .build();
+        var mor = familie.mor();
+        var far = familie.far();
+        var morsArbeidstidprosent = BigDecimal.valueOf(50);
+        var farsArbeidstidprosent = BigDecimal.valueOf(25);
+        var morsGradering = graderingsperiodeArbeidstaker(Rolle.MOR, MØDREKVOTE,
+                fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(12).minusDays(1),
+                mor.arbeidsgiver().arbeidsgiverIdentifikator(), morsArbeidstidprosent);
+        var søknadMor = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
+                .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(far))
+                .medPerioder(List.of(
+                        uttaksperiode(Rolle.MOR, FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
+                        uttaksperiode(Rolle.MOR, MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)),
+                        morsGradering));
+        var saksnummerMor = mor.søk(søknadMor);
+        ventPåInntektsmeldingForespørsel(saksnummerMor);
+        mor.arbeidsgiver().sendInntektsmeldingerFP(saksnummerMor, fødselsdato.minusWeeks(3));
+        saksbehandler.hentFagsak(saksnummerMor);
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
+
+        var farsGradering = graderingsperiodeArbeidstaker(Rolle.FAR_MEDMOR, FEDREKVOTE,
+                fødselsdato.plusWeeks(12), fødselsdato.plusWeeks(16).minusDays(1),
+                far.arbeidsgiver().arbeidsgiverIdentifikator(), farsArbeidstidprosent);
+        var søknadFar = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.FAR)
+                .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(mor))
+                .medPerioder(List.of(farsGradering));
+        var saksnummerFar = far.søk(søknadFar);
+        ventPåInntektsmeldingForespørsel(saksnummerFar);
+        far.arbeidsgiver().sendInntektsmeldingerFP(saksnummerFar, farsGradering.fom());
+        saksbehandler.hentFagsak(saksnummerFar);
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
+
+        // Vent på at begge vedtak er synlig.
+        mor.innsyn().hentFpSakUtenÅpenBehandling(saksnummerMor);
+        far.innsyn().hentFpSakUtenÅpenBehandling(saksnummerFar);
+        var morsPlan = mor.innsyn().hentFellesUttaksplan(fødselsdato, far.fødselsnummer());
+        var farsPlan = far.innsyn().hentFellesUttaksplan(fødselsdato, mor.fødselsnummer());
+        var morsSøknadsplan = ((ForeldrepengesøknadDto) søknadMor.build()).uttaksplan();
+        var farsSøknadsplan = ((ForeldrepengesøknadDto) søknadFar.build()).uttaksplan();
+        verifiserSøknadsuttakIPlan(morsPlan, FellesUttaksplanDto.UttakPeriodeDto::søker, morsSøknadsplan, true);
+        verifiserSøknadsuttakIPlan(morsPlan, FellesUttaksplanDto.UttakPeriodeDto::annenPart, farsSøknadsplan, true);
+        verifiserSøknadsuttakIPlan(farsPlan, FellesUttaksplanDto.UttakPeriodeDto::søker, farsSøknadsplan, true);
+        verifiserSøknadsuttakIPlan(farsPlan, FellesUttaksplanDto.UttakPeriodeDto::annenPart, morsSøknadsplan, true);
+        verifiserGraderingIPlan(morsPlan, FellesUttaksplanDto.UttakPeriodeDto::søker, morsGradering);
+        verifiserGraderingIPlan(morsPlan, FellesUttaksplanDto.UttakPeriodeDto::annenPart, farsGradering);
+        verifiserGraderingIPlan(farsPlan, FellesUttaksplanDto.UttakPeriodeDto::søker, farsGradering);
+        verifiserGraderingIPlan(farsPlan, FellesUttaksplanDto.UttakPeriodeDto::annenPart, morsGradering);
+        //Skal ikke kunne se hverandres aktivitet(arbeidsgiver)
+        assertThat(hentAnnenpartsGraderinger(morsPlan)).allMatch(g -> g.aktivitet() == null);
+        assertThat(hentAnnenpartsGraderinger(farsPlan)).allMatch(g -> g.aktivitet() == null);
     }
 
     @Test
@@ -2609,6 +2706,20 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         assertThat(andrePeriodeInnsyn.kontoType()).isEqualTo(FELLESPERIODE);
         assertThat(andrePeriodeInnsyn.trekkdager().verdi()).isEqualByComparingTo(andreAvklarAnnenforelderEøsPeriodeFpsak.trekkdager());
 
+        var fellesPlan = far.innsyn().hentFellesUttaksplan(fødselsdato, null);
+        assertThat(fellesPlan).isNotNull();
+        var innsendtSøknad = (ForeldrepengesøknadDto) søknad.build();
+        var søknadsbarn = (FødselDto) innsendtSøknad.barn();
+        assertThat(fellesPlan.termindato()).isEqualTo(søknadsbarn.termindato());
+        assertThat(fellesPlan.antallBarn()).isEqualTo(søknadsbarn.antallBarn());
+        assertThat(fellesPlan.dekningsgrad().name()).isEqualTo(innsendtSøknad.dekningsgrad().name());
+        verifiserSøknadsuttakIPlan(fellesPlan, FellesUttaksplanDto.UttakPeriodeDto::søker, innsendtSøknad.uttaksplan(), false);
+        var eøsPerioder = fellesPlan.perioder().stream().filter(periode -> periode.annenPartEøs() != null).toList();
+        assertThat(eøsPerioder).isNotEmpty().allSatisfy(periode -> assertThat(periode.annenPart()).isNull());
+        var forventedeEøsKontotyper = avklarAnnenforelderEøsPerioder.getPerioder().stream()
+                .map(AvklarAnnenforelderEøsPerioder.EøsUttakPeriodeDto::trekkonto).toList();
+        assertThat(komprimerKontotyper(eøsPerioder.stream().map(periode -> periode.annenPartEøs().kontoType()).toList()))
+                .containsExactlyElementsOf(komprimerKontotyper(forventedeEøsKontotyper));
 
         // Revurdering
         // Skal utlede aksjonspunkt på nytt for revuderinger!
@@ -2622,6 +2733,58 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
         saksbehandler.harAksjonspunkt(AksjonspunktKoder.AVKLAR_UTTAK_I_EØS_FOR_ANNENPART_KODE);
+    }
+
+    private static void verifiserSøknadsuttakIPlan(FellesUttaksplanDto plan,
+                                                Function<FellesUttaksplanDto.UttakPeriodeDto, FellesUttaksplanDto.UttakDto> part,
+                                                UttaksplanDto søknadsplan, boolean forventInnvilget) {
+        assertThat(plan).isNotNull();
+        var forventetUttak = søknadsplan.perioder().stream().map(FellesUttaksplanDto.UttakPeriodeDto::søker).toList();
+        assertThat(forventetUttak).isNotEmpty();
+        var uttak = plan.perioder().stream().map(part).filter(Objects::nonNull).toList();
+        assertThat(komprimerKontotyper(uttak.stream().map(FellesUttaksplanDto.UttakDto::kontoType).toList()))
+                .containsExactlyElementsOf(komprimerKontotyper(forventetUttak.stream().map(FellesUttaksplanDto.UttakDto::kontoType).toList()));
+        assertThat(uttak).allSatisfy(periode -> {
+            assertThat(periode.forelder()).isEqualTo(forventetUttak.getFirst().forelder());
+            if (forventInnvilget) {
+                assertThat(periode.resultat()).isNotNull();
+                assertThat(periode.resultat().innvilget()).isTrue();
+            }
+        });
+    }
+
+    private static List<KontoType> komprimerKontotyper(List<KontoType> kontotyper) {
+        // Normalisert uttak kan dele opp perioder uten å endre rekkefølgen på kontotypene.
+        var komprimert = new ArrayList<KontoType>();
+        for (var kontotype : kontotyper) {
+            if (komprimert.isEmpty() || komprimert.getLast() != kontotype) {
+                komprimert.add(kontotype);
+            }
+        }
+        return komprimert;
+    }
+
+    private static void verifiserGraderingIPlan(FellesUttaksplanDto plan,
+                                              Function<FellesUttaksplanDto.UttakPeriodeDto, FellesUttaksplanDto.UttakDto> part,
+                                              FellesUttaksplanDto.UttakPeriodeDto forventet) {
+        var gradertePerioder = plan.perioder().stream()
+                .filter(periode -> part.apply(periode) != null && part.apply(periode).gradering() != null)
+                .filter(periode -> part.apply(periode).forelder() == forventet.søker().forelder()).toList();
+        assertThat(gradertePerioder).isNotEmpty().allSatisfy(periode -> {
+            var uttak = part.apply(periode);
+            assertThat(uttak.kontoType()).isEqualTo(forventet.søker().kontoType());
+            assertThat(uttak.resultat()).isNotNull();
+            assertThat(uttak.resultat().innvilget()).isTrue();
+            assertThat(uttak.gradering().arbeidstidprosent().value())
+                    .isEqualByComparingTo(forventet.søker().gradering().arbeidstidprosent().value());
+        });
+    }
+
+    private static Stream<FellesUttaksplanDto.Gradering> hentAnnenpartsGraderinger(FellesUttaksplanDto plan) {
+        return plan.perioder()
+                .stream()
+                .filter(p -> p.annenPart() != null && p.annenPart().gradering() != null)
+                .map(p -> p.annenPart().gradering());
     }
 
     private Saksnummer sendInnSøknadOgIMAnnenpartMorMødrekvoteOgDelerAvFellesperiodeHappyCase(Familie familie,
