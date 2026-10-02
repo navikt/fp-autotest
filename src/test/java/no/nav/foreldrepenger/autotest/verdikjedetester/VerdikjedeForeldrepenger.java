@@ -72,6 +72,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -91,6 +93,7 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.KonsekvensForYtelsen
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.OmsorgsovertakelseVilkårType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak;
+import no.nav.foreldrepenger.autotest.klienter.fpoversikt.InnsynKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsettUttaksperioderManueltBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsetteUttakKontrollerOpplysningerOmDødDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
@@ -125,6 +128,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.DokumentTag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkType;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
+import no.nav.foreldrepenger.autotest.util.vent.Vent;
 import no.nav.foreldrepenger.generator.familie.Familie;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektGenerator;
@@ -154,10 +158,14 @@ import no.nav.foreldrepenger.soknad.kontrakt.ettersendelse.YtelseType;
 import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.FellesUttaksplanDto;
 import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.FellesUttaksplanDto.Rolle;
 import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.FellesUttaksplanDto.UtsettelseÅrsak;
+import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.FellesUttaksplanDto.UttakDto;
+import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.FellesUttaksplanDto.UttakPeriodeDto;
+import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.FellesUttaksplanDto.VedtattResultat;
 import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.UttaksplanDto;
 import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.DokumentTypeId;
 import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.Dokumenterer;
 import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.InnsendingType;
+import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.VedleggDto;
 import no.nav.foreldrepenger.soknad.kontrakt.vedlegg.ÅpenPeriodeDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.FamilierelasjonDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.PermisjonDto;
@@ -2122,6 +2130,140 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
     }
 
     @Test
+    @DisplayName("Felles uttaksplan fra begge innlogginger før søknad, under behandling og etter vedtak og endring")
+    @Description("Syv kontrollpunkter kontrollerer eget søknadsuttak før vedtak, mens annen parts uttak bare vises fra vedtak. "
+            + "Mor har sykdomsutsettelse, far har samtidig uttak ved fødsel og dokumentasjon av mors aktivitet. "
+            + "Fars endring skal først vises når nytt vedtak er synlig i oversikt.")
+    void fellesUttaksplanGjennomSøknaderVedtakOgEndring() {
+        var fødselsdato = LocalDate.now().minusWeeks(10)
+                .with(java.time.temporal.TemporalAdjusters.previousOrSame(java.time.DayOfWeek.MONDAY));
+        var familie = FamilieGenerator.ny()
+                .forelder(mor().inntekt(InntektGenerator.ny().arbeidMedOpptjeningUnder6G().build()).build())
+                .forelder(far().inntekt(InntektGenerator.ny().arbeidMedOpptjeningUnder6G().build()).build())
+                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
+                .barn(fødselsdato)
+                .build();
+        var mor = familie.mor();
+        var far = familie.far();
+        var førsteFellesperiodedag = fødselsdato.plusWeeks(24);
+        var nyFellesperiodedag = førsteFellesperiodedag.plusDays(1).plusWeeks(13);
+        var fellesperiodeFar = uttaksperiode(Rolle.FAR_MEDMOR, FELLESPERIODE,
+                førsteFellesperiodedag, førsteFellesperiodedag, null, ARBEID_OG_UTDANNING);
+        var nyFellesperiodeFar = uttaksperiode(Rolle.FAR_MEDMOR, FELLESPERIODE,
+                nyFellesperiodedag, nyFellesperiodedag, null, ARBEID_OG_UTDANNING);
+
+        // 1: Ingen saker for denne syntetiske familien.
+        assertThat(mor.innsyn().hentFellesUttaksplan(fødselsdato, far.fødselsnummer())).isNull();
+        assertThat(far.innsyn().hentFellesUttaksplan(fødselsdato, mor.fødselsnummer())).isNull();
+
+        var samtidigFar = uttaksperiode(Rolle.FAR_MEDMOR, FEDREKVOTE,
+                fødselsdato, fødselsdato.plusWeeks(2).minusDays(1), SAMTIDIGUTTAK);
+        var førsteMødrekvote = uttaksperiode(Rolle.MOR, MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(2).minusDays(1));
+        var sykdom = utsettelsesperiode(Rolle.MOR, UtsettelseÅrsak.SØKER_SYKDOM,
+                fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(4).minusDays(1));
+        var innsendtFamilieplan = List.of(
+                uttaksperiode(Rolle.MOR, FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
+                new UttakPeriodeDto(førsteMødrekvote.fom(), førsteMødrekvote.tom(), førsteMødrekvote.søker(), samtidigFar.søker(), null),
+                uttaksperiode(Rolle.MOR, MØDREKVOTE, fødselsdato.plusWeeks(2), fødselsdato.plusWeeks(3).minusDays(1)),
+                sykdom,
+                uttaksperiode(Rolle.MOR, MØDREKVOTE, fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(16).minusDays(1)),
+                uttaksperiode(Rolle.MOR, FELLESPERIODE, fødselsdato.plusWeeks(16), førsteFellesperiodedag.minusDays(1)),
+                new UttakPeriodeDto(fellesperiodeFar.fom(), fellesperiodeFar.tom(), null, fellesperiodeFar.søker(), null));
+        var sykdomsvedlegg = new VedleggDto(UUID.randomUUID(), DokumentTypeId.I000121, InnsendingType.LASTET_OPP, null,
+                new Dokumenterer(Dokumenterer.DokumentererType.UTTAK, null,
+                        List.of(new ÅpenPeriodeDto(fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(4).minusDays(3)))));
+        var søknadMor = lagSøknadForeldrepengerTerminFødsel(fødselsdato, fødselsdato, BrukerRolle.MOR)
+                .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(far))
+                .medUttaksplan(new UttaksplanDto(false, List.of(), innsendtFamilieplan))
+                .medMottattdato(fødselsdato.minusWeeks(4))
+                .medVedlegg(List.of(sykdomsvedlegg));
+        var saksnummerMor = mor.søk(søknadMor);
+        verifiserInnsendtFamilieplan(((ForeldrepengesøknadDto) søknadMor.build()).uttaksplan(), innsendtFamilieplan);
+        ventPåInntektsmeldingForespørsel(saksnummerMor);
+        mor.arbeidsgiver().sendInntektsmeldingerFP(saksnummerMor, fødselsdato.minusWeeks(3));
+        var dokumentasjonMor = ventPåÅpenUttaksdokumentasjon(saksnummerMor);
+        assertThat(dokumentasjonMor.getVurderingBehov()).anySatisfy(behov -> {
+            assertThat(behov.årsak()).isEqualTo(DokumentasjonVurderingBehov.Behov.Årsak.SYKDOM_SØKER);
+            assertThat(behov.fom()).isEqualTo(fødselsdato.plusWeeks(3));
+            assertThat(behov.tom()).isEqualTo(fødselsdato.plusWeeks(4).minusDays(3));
+        });
+
+        // 2: Mor ser egen søknad; far ser metadata, men ikke mors ubehandlede søknad.
+        ventOgVerifiserFamilieplan(familie, forventetFamilieplan(fødselsdato, false, 0, false),
+                new FellesUttaksplanDto(fødselsdato, 1, FellesUttaksplanDto.Dekningsgrad.HUNDRE, List.of()), "2: Mor åpen");
+        saksbehandler.bekreftAksjonspunkt(dokumentasjonMor.godkjennSykdom());
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandling(saksnummerMor, false, false);
+        mor.innsyn().hentFpSakUtenÅpenBehandling(saksnummerMor);
+
+        // 3: Mors vedtak vises for begge, med søker/annenPart relativt innloggingen.
+        var morsVedtak = forventetFamilieplan(fødselsdato, true, 0, false);
+        ventOgVerifiserFamilieplan(familie, morsVedtak, byttPlanperspektiv(morsVedtak), "3: Mors vedtak");
+
+        var innsendtFarsPlan = byttPlanperioder(innsendtFamilieplan);
+        var søknadFar = lagSøknadForeldrepengerTerminFødsel(fødselsdato, fødselsdato, FAR)
+                .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(mor))
+                .medUttaksplan(new UttaksplanDto(false, List.of(), innsendtFarsPlan))
+                .medMottattdato(fødselsdato.minusWeeks(1))
+                .medVedlegg(List.of(VedleggMaler.dokumenterMorsAktivitet(innsendtFarsPlan,
+                        ARBEID_OG_UTDANNING, InnsendingType.LASTET_OPP)));
+        var saksnummerFar = far.søk(søknadFar);
+        verifiserInnsendtFamilieplan(((ForeldrepengesøknadDto) søknadFar.build()).uttaksplan(), innsendtFarsPlan);
+        ventPåInntektsmeldingForespørsel(saksnummerFar);
+        far.arbeidsgiver().sendInntektsmeldingerFP(saksnummerFar, fødselsdato);
+        var dokumentasjonFar = ventPåÅpenUttaksdokumentasjon(saksnummerFar);
+        assertThat(dokumentasjonFar.getVurderingBehov()).anySatisfy(behov -> {
+            assertThat(behov.årsak()).isEqualTo(DokumentasjonVurderingBehov.Behov.Årsak.AKTIVITETSKRAV_ARBEID_OG_UTDANNING);
+            assertThat(behov.fom()).isEqualTo(førsteFellesperiodedag);
+            assertThat(behov.tom()).isEqualTo(førsteFellesperiodedag);
+        });
+
+        // 4: Mor ser fortsatt bare eget vedtak; far ser egen søknad og mors vedtak.
+        ventOgVerifiserFamilieplan(familie, morsVedtak,
+                byttPlanperspektiv(forventetFamilieplan(fødselsdato, true, 1, false)), "4: Far åpen");
+        saksbehandler.bekreftAksjonspunkt(dokumentasjonFar.godkjenn(fellesperiodeFar));
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandling(saksnummerFar, false, false);
+        far.innsyn().hentFpSakUtenÅpenBehandling(saksnummerFar);
+
+        // 5: Begge vedtak er synlige, uten oppholdsperioder.
+        var beggeVedtak = forventetFamilieplan(fødselsdato, true, 2, false);
+        ventOgVerifiserFamilieplan(familie, beggeVedtak, byttPlanperspektiv(beggeVedtak), "5: Begge vedtak");
+
+        var innsendtEndringsplan = new ArrayList<>(innsendtFarsPlan);
+        innsendtEndringsplan.add(uttaksperiode(Rolle.FAR_MEDMOR, FEDREKVOTE,
+                førsteFellesperiodedag.plusDays(1), nyFellesperiodedag.minusDays(1)));
+        innsendtEndringsplan.add(nyFellesperiodeFar);
+        var endringssøknad = lagEndringssøknad(søknadFar.build(), saksnummerFar,
+                new UttaksplanDto(false, List.of(), innsendtEndringsplan))
+                .medVedlegg(List.of(VedleggMaler.dokumenterMorsAktivitet(innsendtEndringsplan,
+                        ARBEID_OG_UTDANNING, InnsendingType.LASTET_OPP)));
+        far.søk(endringssøknad);
+        verifiserInnsendtFamilieplan(endringssøknad.build().uttaksplan(), innsendtEndringsplan);
+        saksbehandler.hentFagsak(saksnummerFar);
+        saksbehandler.ventPåOgVelgRevurderingBehandling();
+        var dokumentasjonEndring = ventPåÅpenUttaksdokumentasjon(saksnummerFar);
+        assertThat(dokumentasjonEndring.getVurderingBehov()).anySatisfy(behov -> {
+            assertThat(behov.årsak()).isEqualTo(DokumentasjonVurderingBehov.Behov.Årsak.AKTIVITETSKRAV_ARBEID_OG_UTDANNING);
+            assertThat(behov.fom()).isEqualTo(nyFellesperiodedag);
+            assertThat(behov.tom()).isEqualTo(nyFellesperiodedag);
+        });
+        // Vent på selve revurderingen i oversikt, ikke bare på den allerede synlige gamle planen.
+        var innsynKlient = new InnsynKlient();
+        Vent.på(() -> innsynKlient.hentSaker(far.fødselsnummer()).foreldrepenger().stream()
+                .anyMatch(sak -> sak.saksnummer().equals(saksnummerFar) && sak.åpenBehandling() != null),
+                () -> "Fars åpne endring er ikke synlig i oversikt", 30, 3000);
+
+        // 6: Endringen erstatter ikke gjeldende vedtak før nytt vedtak.
+        ventOgVerifiserFamilieplan(familie, beggeVedtak, byttPlanperspektiv(beggeVedtak), "6: Far åpen endring");
+        saksbehandler.bekreftAksjonspunkt(dokumentasjonEndring.godkjenn(nyFellesperiodeFar));
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandling(saksnummerFar, true, false);
+        far.innsyn().hentFpSakUtenÅpenBehandling(saksnummerFar);
+
+        // 7: Begge ser hele den utvidede vedtatte planen.
+        var nyttVedtak = forventetFamilieplan(fødselsdato, true, 2, true);
+        ventOgVerifiserFamilieplan(familie, nyttVedtak, byttPlanperspektiv(nyttVedtak), "7: Fars nye vedtak");
+    }
+
+    @Test
     @DisplayName("Felles uttaksplan for to foreldre med vedtatt gradering")
     @Description("Mor og far har hvert sitt arbeidsforhold og får innvilget graderte kvoteperioder. "
             + "Begge henter felles uttaksplan og kontrollerer vedtatt uttak og arbeidstidsprosent.")
@@ -2733,6 +2875,107 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
         saksbehandler.harAksjonspunkt(AksjonspunktKoder.AVKLAR_UTTAK_I_EØS_FOR_ANNENPART_KODE);
+    }
+
+    private VurderUttakDokumentasjonBekreftelse ventPåÅpenUttaksdokumentasjon(Saksnummer saksnummer) {
+        Vent.på(() -> {
+            saksbehandler.hentFagsak(saksnummer);
+            return saksbehandler.harAksjonspunkt(AksjonspunktKoder.VURDER_UTTAK_DOKUMENTASJON_KODE)
+                    && "OPPR".equals(saksbehandler.hentAksjonspunkt(AksjonspunktKoder.VURDER_UTTAK_DOKUMENTASJON_KODE).getStatus());
+        }, () -> "Forventet åpent VURDER_UTTAK_DOKUMENTASJON", 30, 3000);
+        assertThat(saksbehandler.hentAksjonspunkt(AksjonspunktKoder.VURDER_UTTAK_DOKUMENTASJON_KODE).getStatus()).isEqualTo("OPPR");
+        return saksbehandler.hentAksjonspunktbekreftelse(new VurderUttakDokumentasjonBekreftelse());
+    }
+
+    private static void verifiserInnsendtFamilieplan(UttaksplanDto plan, List<UttakPeriodeDto> forventet) {
+        assertThat(plan.uttaksperioder()).isEmpty();
+        assertThat(plan.ønskerJustertUttakVedFødsel()).isFalse();
+        assertThat(plan.perioder()).usingRecursiveComparison().isEqualTo(forventet);
+        assertThat(plan.perioder()).anyMatch(p -> p.søker() != null).anyMatch(p -> p.annenPart() != null);
+    }
+
+    private static void ventOgVerifiserFamilieplan(Familie familie, FellesUttaksplanDto forventetMor,
+                                                  FellesUttaksplanDto forventetFar, String kontrollpunkt) {
+        var sisteAvvik = new AtomicReference<AssertionError>();
+        Vent.på(() -> {
+            var morsPlan = familie.mor().innsyn().hentFellesUttaksplan(familie.barn().fødselsdato(), familie.far().fødselsnummer());
+            var farsPlan = familie.far().innsyn().hentFellesUttaksplan(familie.barn().fødselsdato(), familie.mor().fødselsnummer());
+            try {
+                assertThat(morsPlan).as(kontrollpunkt + ", mor").usingRecursiveComparison()
+                        .ignoringFieldsMatchingRegexes(".*\\.resultat\\.(trekkerMinsterett|trekkerDager|årsak)")
+                        .withComparatorForType(BigDecimal::compareTo, BigDecimal.class).isEqualTo(forventetMor);
+                assertThat(farsPlan).as(kontrollpunkt + ", far").usingRecursiveComparison()
+                        .ignoringFieldsMatchingRegexes(".*\\.resultat\\.(trekkerMinsterett|trekkerDager|årsak)")
+                        .withComparatorForType(BigDecimal::compareTo, BigDecimal.class).isEqualTo(forventetFar);
+                return true;
+            } catch (AssertionError e) {
+                sisteAvvik.set(e);
+                return false;
+            }
+        }, () -> kontrollpunkt + ": forventet plan er ikke synlig fra begge innlogginger. "
+                + (sisteAvvik.get() == null ? "" : sisteAvvik.get().getMessage()), 30, 3000);
+        assertThat(familie.mor().innsyn().hentFellesUttaksplan(familie.barn().fødselsdato(), familie.far().fødselsnummer()))
+                .as(kontrollpunkt + ", mor").usingRecursiveComparison()
+                .ignoringFieldsMatchingRegexes(".*\\.resultat\\.(trekkerMinsterett|trekkerDager|årsak)")
+                .withComparatorForType(BigDecimal::compareTo, BigDecimal.class).isEqualTo(forventetMor);
+        assertThat(familie.far().innsyn().hentFellesUttaksplan(familie.barn().fødselsdato(), familie.mor().fødselsnummer()))
+                .as(kontrollpunkt + ", far").usingRecursiveComparison()
+                .ignoringFieldsMatchingRegexes(".*\\.resultat\\.(trekkerMinsterett|trekkerDager|årsak)")
+                .withComparatorForType(BigDecimal::compareTo, BigDecimal.class).isEqualTo(forventetFar);
+    }
+
+    private static FellesUttaksplanDto byttPlanperspektiv(FellesUttaksplanDto plan) {
+        return new FellesUttaksplanDto(plan.termindato(), plan.antallBarn(), plan.dekningsgrad(), byttPlanperioder(plan.perioder()));
+    }
+
+    private static List<UttakPeriodeDto> byttPlanperioder(List<UttakPeriodeDto> perioder) {
+        return perioder.stream().map(p -> new UttakPeriodeDto(p.fom(), p.tom(), p.annenPart(), p.søker(), p.annenPartEøs())).toList();
+    }
+
+    private static FellesUttaksplanDto forventetFamilieplan(LocalDate fødsel, boolean morVedtatt, int farStatus, boolean utvidet) {
+        return new FellesUttaksplanDto(fødsel, 1, FellesUttaksplanDto.Dekningsgrad.HUNDRE,
+                forventedeFamilieperioder(fødsel, morVedtatt, farStatus, utvidet));
+    }
+
+    // Eksplisitte segmenter for dette scenariet, ikke en normaliseringsalgoritme.
+    // farStatus: 0 = ikke synlig, 1 = søknad, 2 = vedtak.
+    private static List<UttakPeriodeDto> forventedeFamilieperioder(LocalDate fødsel, boolean morVedtatt,
+                                                                 int farStatus, boolean utvidet) {
+        var perioder = new ArrayList<UttakPeriodeDto>();
+        var førFødsel = forventetPlanuttak(Rolle.MOR, FORELDREPENGER_FØR_FØDSEL, null, null, false, morVedtatt);
+        var mødrekvote = forventetPlanuttak(Rolle.MOR, MØDREKVOTE, null, null, false, morVedtatt);
+        var utsettelse = forventetPlanuttak(Rolle.MOR, null,
+                UtsettelseÅrsak.SØKER_SYKDOM, null, false, morVedtatt);
+        var fellesperiodeMor = forventetPlanuttak(Rolle.MOR, FELLESPERIODE, null, null, false, morVedtatt);
+        perioder.add(new UttakPeriodeDto(fødsel.minusWeeks(3), fødsel.minusDays(3), førFødsel, null, null));
+        if (farStatus == 0) {
+            perioder.add(new UttakPeriodeDto(fødsel, fødsel.plusWeeks(3).minusDays(3), mødrekvote, null, null));
+        } else {
+            perioder.add(new UttakPeriodeDto(fødsel, fødsel.plusWeeks(2).minusDays(3),
+                    forventetPlanuttak(Rolle.MOR, MØDREKVOTE, null, null, true, morVedtatt),
+                    forventetPlanuttak(Rolle.FAR_MEDMOR, FEDREKVOTE, null, null, true, farStatus == 2), null));
+            perioder.add(new UttakPeriodeDto(fødsel.plusWeeks(2), fødsel.plusWeeks(3).minusDays(3), mødrekvote, null, null));
+        }
+        perioder.add(new UttakPeriodeDto(fødsel.plusWeeks(3), fødsel.plusWeeks(4).minusDays(3), utsettelse, null, null));
+        perioder.add(new UttakPeriodeDto(fødsel.plusWeeks(4), fødsel.plusWeeks(16).minusDays(3), mødrekvote, null, null));
+        perioder.add(new UttakPeriodeDto(fødsel.plusWeeks(16), fødsel.plusWeeks(24).minusDays(3), fellesperiodeMor, null, null));
+        if (farStatus != 0) {
+            var fellesperiodeFar = forventetPlanuttak(Rolle.FAR_MEDMOR, FELLESPERIODE, null, ARBEID_OG_UTDANNING, false, farStatus == 2);
+            perioder.add(new UttakPeriodeDto(fødsel.plusWeeks(24), fødsel.plusWeeks(24), null, fellesperiodeFar, null));
+            if (utvidet) {
+                perioder.add(new UttakPeriodeDto(fødsel.plusWeeks(24).plusDays(1), fødsel.plusWeeks(37), null,
+                        forventetPlanuttak(Rolle.FAR_MEDMOR, FEDREKVOTE, null, null, false, farStatus == 2), null));
+                perioder.add(new UttakPeriodeDto(fødsel.plusWeeks(37).plusDays(1), fødsel.plusWeeks(37).plusDays(1), null, fellesperiodeFar, null));
+            }
+        }
+        return perioder;
+    }
+
+    private static UttakDto forventetPlanuttak(Rolle forelder, KontoType konto, UtsettelseÅrsak utsettelse,
+                                              MorsAktivitet aktivitet, boolean samtidig, boolean vedtatt) {
+        return new UttakDto(forelder, konto, utsettelse, null, null, aktivitet,
+                samtidig ? new FellesUttaksplanDto.SamtidigUttak(BigDecimal.valueOf(100)) : null, false,
+                vedtatt ? new VedtattResultat(true, false, utsettelse == null, VedtattResultat.Årsak.ANNET) : null);
     }
 
     private static void verifiserSøknadsuttakIPlan(FellesUttaksplanDto plan,
