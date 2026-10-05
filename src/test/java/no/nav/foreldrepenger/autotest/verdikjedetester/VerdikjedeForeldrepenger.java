@@ -73,7 +73,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -2890,38 +2889,69 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
     private static void verifiserInnsendtFamilieplan(UttaksplanDto plan, List<UttakPeriodeDto> forventet) {
         assertThat(plan.uttaksperioder()).isEmpty();
         assertThat(plan.ønskerJustertUttakVedFødsel()).isFalse();
-        assertThat(plan.perioder()).usingRecursiveComparison().isEqualTo(forventet);
+        assertThat(plan.perioder()).containsExactlyElementsOf(forventet);
         assertThat(plan.perioder()).anyMatch(p -> p.søker() != null).anyMatch(p -> p.annenPart() != null);
     }
 
     private static void ventOgVerifiserFamilieplan(Familie familie, FellesUttaksplanDto forventetMor,
                                                   FellesUttaksplanDto forventetFar, String kontrollpunkt) {
-        var sisteAvvik = new AtomicReference<AssertionError>();
         Vent.på(() -> {
             var morsPlan = familie.mor().innsyn().hentFellesUttaksplan(familie.barn().fødselsdato(), familie.far().fødselsnummer());
             var farsPlan = familie.far().innsyn().hentFellesUttaksplan(familie.barn().fødselsdato(), familie.mor().fødselsnummer());
             try {
-                assertThat(morsPlan).as(kontrollpunkt + ", mor").usingRecursiveComparison()
-                        .ignoringFieldsMatchingRegexes(".*\\.resultat\\.(trekkerMinsterett|trekkerDager|årsak)")
-                        .withComparatorForType(BigDecimal::compareTo, BigDecimal.class).isEqualTo(forventetMor);
-                assertThat(farsPlan).as(kontrollpunkt + ", far").usingRecursiveComparison()
-                        .ignoringFieldsMatchingRegexes(".*\\.resultat\\.(trekkerMinsterett|trekkerDager|årsak)")
-                        .withComparatorForType(BigDecimal::compareTo, BigDecimal.class).isEqualTo(forventetFar);
+                verifiserFamilieplan(morsPlan, forventetMor);
+                verifiserFamilieplan(farsPlan, forventetFar);
                 return true;
             } catch (AssertionError e) {
-                sisteAvvik.set(e);
                 return false;
             }
-        }, () -> kontrollpunkt + ": forventet plan er ikke synlig fra begge innlogginger. "
-                + (sisteAvvik.get() == null ? "" : sisteAvvik.get().getMessage()), 30, 3000);
-        assertThat(familie.mor().innsyn().hentFellesUttaksplan(familie.barn().fødselsdato(), familie.far().fødselsnummer()))
-                .as(kontrollpunkt + ", mor").usingRecursiveComparison()
-                .ignoringFieldsMatchingRegexes(".*\\.resultat\\.(trekkerMinsterett|trekkerDager|årsak)")
-                .withComparatorForType(BigDecimal::compareTo, BigDecimal.class).isEqualTo(forventetMor);
-        assertThat(familie.far().innsyn().hentFellesUttaksplan(familie.barn().fødselsdato(), familie.mor().fødselsnummer()))
-                .as(kontrollpunkt + ", far").usingRecursiveComparison()
-                .ignoringFieldsMatchingRegexes(".*\\.resultat\\.(trekkerMinsterett|trekkerDager|årsak)")
-                .withComparatorForType(BigDecimal::compareTo, BigDecimal.class).isEqualTo(forventetFar);
+        }, () -> kontrollpunkt + ": forventet plan er ikke synlig fra begge innlogginger", 30, 3000);
+    }
+
+    private static void verifiserFamilieplan(FellesUttaksplanDto faktisk, FellesUttaksplanDto forventet) {
+        assertThat(faktisk).isNotNull();
+        assertThat(faktisk.termindato()).isEqualTo(forventet.termindato());
+        assertThat(faktisk.antallBarn()).isEqualTo(forventet.antallBarn());
+        assertThat(faktisk.dekningsgrad()).isEqualTo(forventet.dekningsgrad());
+        assertThat(faktisk.perioder()).hasSize(forventet.perioder().size());
+        for (var i = 0; i < forventet.perioder().size(); i++) {
+            var periode = faktisk.perioder().get(i);
+            var forventetPeriode = forventet.perioder().get(i);
+            assertThat(periode).isNotNull();
+            assertThat(periode.fom()).isEqualTo(forventetPeriode.fom());
+            assertThat(periode.tom()).isEqualTo(forventetPeriode.tom());
+            verifiserPlanuttak(periode.søker(), forventetPeriode.søker());
+            verifiserPlanuttak(periode.annenPart(), forventetPeriode.annenPart());
+            assertThat(periode.annenPartEøs()).isEqualTo(forventetPeriode.annenPartEøs());
+        }
+    }
+
+    private static void verifiserPlanuttak(UttakDto faktisk, UttakDto forventet) {
+        if (forventet == null) {
+            assertThat(faktisk).isNull();
+            return;
+        }
+        assertThat(faktisk).isNotNull();
+        assertThat(faktisk.forelder()).isEqualTo(forventet.forelder());
+        assertThat(faktisk.kontoType()).isEqualTo(forventet.kontoType());
+        assertThat(faktisk.utsettelseÅrsak()).isEqualTo(forventet.utsettelseÅrsak());
+        assertThat(faktisk.overføringÅrsak()).isEqualTo(forventet.overføringÅrsak());
+        assertThat(faktisk.gradering()).isEqualTo(forventet.gradering());
+        assertThat(faktisk.morsAktivitet()).isEqualTo(forventet.morsAktivitet());
+        assertThat(faktisk.flerbarnsdager()).isEqualTo(forventet.flerbarnsdager());
+        if (forventet.samtidigUttak() == null) {
+            assertThat(faktisk.samtidigUttak()).isNull();
+        } else {
+            assertThat(faktisk.samtidigUttak()).isNotNull();
+            assertThat(faktisk.samtidigUttak().value())
+                    .isEqualByComparingTo(forventet.samtidigUttak().value());
+        }
+        if (forventet.resultat() == null) {
+            assertThat(faktisk.resultat()).isNull();
+        } else {
+            assertThat(faktisk.resultat()).isNotNull();
+            assertThat(faktisk.resultat().innvilget()).isEqualTo(forventet.resultat().innvilget());
+        }
     }
 
     private static FellesUttaksplanDto byttPlanperspektiv(FellesUttaksplanDto plan) {
