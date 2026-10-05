@@ -137,12 +137,24 @@ class AdressebeskyttelseOgSkjermetPersonTester {
         assertThat(mor.innsyn().hentAnnenpartsSak(far.fødselsnummer(), termindato)).isNotNull(); // Far er ikke beskyttet
         assertThat(mor.innsyn().hentAnnenpartsSak(far.fødselsnummer(), termindato).perioder()).isNotEmpty(); // Far er ikke beskyttet
 
+        var morsFellesUttaksplan = mor.innsyn().hentFellesUttaksplan(termindato, far.fødselsnummer());
+        assertThat(morsFellesUttaksplan).isNotNull();
+        assertThat(morsFellesUttaksplan.perioder())
+                .anySatisfy(periode -> assertThat(periode.annenPart()).isNotNull());
+
         var farsSakInnsyn = far.innsyn().hentFpSakUtenÅpenBehandling(saksnummerFar);
         assertThat(farsSakInnsyn).isNotNull();
         assertThat(farsSakInnsyn.gjeldendeVedtak().perioder()).isNotEmpty();
         assertThat(farsSakInnsyn.saksnummer().value()).isEqualTo(saksnummerFar.value());
         assertThat(farsSakInnsyn.annenPart()).isNull(); // Mor er beskyttet
         assertThat(far.innsyn().hentAnnenpartsSak(mor.fødselsnummer(), termindato)).isNull(); // Mor er beskyttet
+
+        var farsFellesUttaksplan = far.innsyn().hentFellesUttaksplan(termindato, mor.fødselsnummer());
+        assertThat(farsFellesUttaksplan).isNotNull();
+        assertThat(farsFellesUttaksplan.perioder())
+                .isNotEmpty()
+                .anySatisfy(periode -> assertThat(periode.søker()).isNotNull())
+                .allSatisfy(periode -> assertThat(periode.annenPart()).isNull());
     }
 
     @Test
