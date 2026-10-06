@@ -144,7 +144,9 @@ public class ApiMottak extends DokumentInnsendingHjelper {
         var antallEksistrendeFagsakerPåSøker = antallEksistrendeFagsakerPåSøker(fnr);
         fpsoknadKlient.mellomlagreVedlegg(fnr, søknad);
         fpsoknadKlient.sendSøknad(fnr, søknad);
-        return ventTilFagsakOgBehandlingErOpprettet(fnr, skjæringsTidspunktForNyBehandling, antallEksistrendeFagsakerPåSøker);
+        var saksnummer = ventTilFagsakOgBehandlingErOpprettet(fnr, skjæringsTidspunktForNyBehandling, antallEksistrendeFagsakerPåSøker);
+        no.nav.foreldrepenger.autotest.util.pdfcapture.PdfInnsamler.fangSøknadPdfer(saksnummer);
+        return saksnummer;
     }
 
     @Step("[Sender inn endrignssøknad: {fnr}")
@@ -154,7 +156,9 @@ public class ApiMottak extends DokumentInnsendingHjelper {
         var antallEksistrendeFagsakerPåSøker = antallEksistrendeFagsakerPåSøker(fnr);
         fpsoknadKlient.mellomlagreVedlegg(fnr, søknad);
         fpsoknadKlient.sendSøknad(fnr, søknad);
-        return ventTilFagsakOgBehandlingErOpprettet(fnr, skjæringsTidspunktForNyBehandling, antallEksistrendeFagsakerPåSøker);
+        var saksnummer = ventTilFagsakOgBehandlingErOpprettet(fnr, skjæringsTidspunktForNyBehandling, antallEksistrendeFagsakerPåSøker);
+        no.nav.foreldrepenger.autotest.util.pdfcapture.PdfInnsamler.fangSøknadPdfer(saksnummer);
+        return saksnummer;
     }
 
     @Override
