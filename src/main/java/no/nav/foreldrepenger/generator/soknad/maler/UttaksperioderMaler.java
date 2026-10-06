@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.util.Set;
 
 import no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType;
+import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
 import no.nav.foreldrepenger.kontrakter.felles.kodeverk.MorsAktivitet;
 import no.nav.foreldrepenger.soknad.kontrakt.builder.UttakPeriodeBuilder;
 import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.FellesUttaksplanDto.Aktivitet;
@@ -71,7 +72,8 @@ public final class UttaksperioderMaler {
                                                                     MorsAktivitet morsAktivitet) {
         var gradering = new Gradering(new Arbeidstidprosent(arbeidstidsprosent),
                 new Aktivitet(AktivitetType.ORDINÆRT_ARBEID,
-                        new Arbeidsgiver(arbeidsgiverIdentifikator, ArbeidsgiverType.ORGANISASJON), null));
+                        new Arbeidsgiver(arbeidsgiverIdentifikator, ArbeidsgiverType.ORGANISASJON),
+                        TestOrganisasjoner.navnFor(arbeidsgiverIdentifikator)));
         return periodeMedSøker(fom, tom, UttakPeriodeBuilder.uttak(rolle)
                 .medKontoType(konto)
                 .medGradering(gradering)
