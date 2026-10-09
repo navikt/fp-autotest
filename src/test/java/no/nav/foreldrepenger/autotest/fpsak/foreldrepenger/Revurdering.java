@@ -7,11 +7,13 @@ import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.
 import static no.nav.foreldrepenger.generator.soknad.maler.SøknadEndringMaler.lagEndringssøknad;
 import static no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler.lagSøknadForeldrepengerFødsel;
 import static no.nav.foreldrepenger.generator.soknad.maler.UttakMaler.fordeling;
-import static no.nav.foreldrepenger.generator.soknad.maler.UttakMaler.fordelingEndringssøknadGradering;
+import static no.nav.foreldrepenger.generator.soknad.maler.UttaksperioderMaler.graderingsperiodeArbeidstaker;
 import static no.nav.foreldrepenger.generator.soknad.maler.UttaksperioderMaler.uttaksperiode;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Comparator;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -39,9 +41,9 @@ import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektGenerator;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
+import no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType;
 import no.nav.foreldrepenger.soknad.kontrakt.BrukerRolle;
 import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.FellesUttaksplanDto.Rolle;
-import no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.FamilierelasjonDto;
 
 @Tag("fpsak")
@@ -150,6 +152,8 @@ class Revurdering extends VerdikjedeTestBase {
 
         // Endringssøknad
         var fordeling = fordeling(
+                uttaksperiode(Rolle.MOR, KontoType.FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)),
+                uttaksperiode(Rolle.MOR, KontoType.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(8).minusDays(1)),
                 uttaksperiode(Rolle.MOR, KontoType.FELLESPERIODE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1))
         );
         var søknadE = lagEndringssøknad(søknad.build(), saksnummer, fordeling);
@@ -205,8 +209,13 @@ class Revurdering extends VerdikjedeTestBase {
         var graderingFom = fødselsdato.plusWeeks(20);
         var graderingTom = fødselsdato.plusWeeks(23).minusDays(1);
         var arbeidsgiveridentifikator = arbeidsgiver.arbeidsgiverIdentifikator();
-        var fordelingGradering = fordelingEndringssøknadGradering(Rolle.MOR, KontoType.FELLESPERIODE, graderingFom, graderingTom,
-                arbeidsgiveridentifikator, 40);
+        var fordelingGradering = fordeling(
+                uttaksperiode(Rolle.MOR, KontoType.FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)),
+                uttaksperiode(Rolle.MOR, KontoType.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1)),
+                uttaksperiode(Rolle.MOR, KontoType.FELLESPERIODE, fødselsdato.plusWeeks(15), graderingFom.minusDays(1)),
+                graderingsperiodeArbeidstaker(Rolle.MOR, KontoType.FELLESPERIODE, graderingFom, graderingTom,
+                        arbeidsgiveridentifikator, BigDecimal.valueOf(40))
+        );
         var endretSøknad = lagEndringssøknad(søknad.build(), saksnummer, fordelingGradering);
         var saksnummerE = mor.søk(endretSøknad);
 
@@ -270,6 +279,8 @@ class Revurdering extends VerdikjedeTestBase {
 
         // Sender endringssøknad for å gi fagsaken en ny søknad mottatt dato
         var fordelingEndringssøknad = fordeling(
+                uttaksperiode(Rolle.MOR, KontoType.FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)),
+                uttaksperiode(Rolle.MOR, KontoType.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(13).minusDays(1)),
                 uttaksperiode(Rolle.MOR, KontoType.FELLESPERIODE, fødselsdato.plusWeeks(13), fødselsdato.plusWeeks(14).minusDays(1))
         );
         var søknadE = lagEndringssøknad(søknad.build(), saksnummer, fordelingEndringssøknad)
@@ -333,15 +344,22 @@ class Revurdering extends VerdikjedeTestBase {
         beslutter.bekreftAksjonspunkt(bekreftelse);
 
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
-        assertThat(saksbehandler.hentAvslåtteUttaksperioder())
+        var avslåttePerioder = saksbehandler.hentAvslåtteUttaksperioder();
+        assertThat(avslåttePerioder)
                 .as("Avslåtte uttaksperioder")
                 .hasSizeGreaterThan(1);
 
+        // Som frontenden sendes ikke periodene som er avslått pga søknadsfrist.
+        var førsteInnvilgedeDag = avslåttePerioder.stream()
+                .map(UttakResultatPeriode::getTom)
+                .max(Comparator.naturalOrder())
+                .orElseThrow()
+                .plusDays(1);
         var fordelingEndringssøknad = fordeling(
+                uttaksperiode(Rolle.MOR, KontoType.MØDREKVOTE, førsteInnvilgedeDag, fødselsdato.plusWeeks(13).minusDays(1)),
                 uttaksperiode(Rolle.MOR, KontoType.FELLESPERIODE, fødselsdato.plusWeeks(13), fødselsdato.plusWeeks(12).plusWeeks(2))
         );
-        var søknadE = lagEndringssøknad(søknad.build(), saksnummer, fordelingEndringssøknad)
-                .medMottattdato(fødselsdato.plusWeeks(10));
+        var søknadE = lagEndringssøknad(søknad.build(), saksnummer, fordelingEndringssøknad).medMottattdato(fødselsdato.plusWeeks(18));
         mor.søk(søknadE);
 
         saksbehandler.ventPåOgVelgRevurderingBehandling();
