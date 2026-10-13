@@ -8,6 +8,7 @@ public abstract class KlageFormkravBekreftelse extends AksjonspunktBekreftelse {
     protected boolean erFristOverholdt;
     protected boolean erKonkret;
     protected boolean erSignert;
+    protected boolean erTilbakekreving;
     protected UUID vedtakBehandlingUuid;
 
     public KlageFormkravBekreftelse() {
