@@ -16,6 +16,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import no.nav.foreldrepenger.generator.inntektsmelding.builders.Inntektsmelding;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -202,7 +204,9 @@ class RegresjonPreWLB extends VerdikjedeTestBase {
         var saksnummer = far.søk(søknad);
         var arbeidsgiver = far.arbeidsgiver();
         ventPåInntektsmeldingForespørsel(saksnummer);
-        arbeidsgiver.sendInntektsmeldingerFP(saksnummer, fødselsdato);
+        var inntektsmelding = arbeidsgiver.lagInntektsmeldingFP(fødselsdato)
+                .leggTilEndretInntektÅrsak(Inntektsmelding.Endringsårsaker.Endringsårsak.BONUS);
+        arbeidsgiver.sendInntektsmelding(saksnummer, inntektsmelding);
 
         saksbehandler.hentFagsak(saksnummer);
         var avklarFaktaAnnenForeldreHarRett = saksbehandler

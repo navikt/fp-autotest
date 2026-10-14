@@ -10,6 +10,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpinntektsmelding.Inntektsmelding
 import no.nav.foreldrepenger.autotest.klienter.fpinntektsmelding.dto.api.InntektsmeldingRequest;
 import no.nav.foreldrepenger.autotest.klienter.fpinntektsmelding.dto.arbeidsgiverportal.AktørIdDto;
 import no.nav.foreldrepenger.autotest.klienter.fpinntektsmelding.dto.arbeidsgiverportal.ArbeidsgiverDto;
+import no.nav.foreldrepenger.autotest.klienter.fpinntektsmelding.dto.arbeidsgiverportal.EndringsårsakDto;
 import no.nav.foreldrepenger.autotest.klienter.fpinntektsmelding.dto.arbeidsgiverportal.NaturalytelsetypeDto;
 import no.nav.foreldrepenger.autotest.klienter.fpinntektsmelding.dto.arbeidsgiverportal.SendInntektsmeldingDto;
 import no.nav.foreldrepenger.autotest.klienter.fpinntektsmelding.dto.arbeidsgiverportal.YtelseType;
@@ -39,7 +40,7 @@ public class InntektsmeldingPortalMapper {
     }
 
 
-    public static SendInntektsmeldingDto map(Inntektsmelding im, InntektsmeldingKlient.InntektsmeldingForespørselDto forespørsel) {
+    public static SendInntektsmeldingDto mapImDialog(Inntektsmelding im, InntektsmeldingKlient.InntektsmeldingForespørselDto forespørsel) {
         return new SendInntektsmeldingDto(
                 forespørsel.uuid(),
                 forespørsel.aktørid(),
@@ -51,7 +52,34 @@ public class InntektsmeldingPortalMapper {
                 im.arbeidsforhold().beregnetInntekt(),
                 mapRefusjon(im.refusjon(), forespørsel.startDato()),
                 mapBortfalteNaturalytelser(im.opphørAvNaturalytelseList()),
-                Collections.emptyList());
+                mapEndringerDialog(im));
+    }
+
+    private static List<SendInntektsmeldingDto.EndringsårsakerRequestDto> mapEndringerDialog(Inntektsmelding im) {
+        if (im.endringer() == null) {
+            return Collections.emptyList();
+        }
+        return im.endringer().stream()
+                .map(e -> new SendInntektsmeldingDto.EndringsårsakerRequestDto(mapEndringsårsakDialog(e.årsak()), e.fom(), e.tom(), e.bleKjentFom()))
+                .toList();
+    }
+
+    private static EndringsårsakDto mapEndringsårsakDialog(Inntektsmelding.Endringsårsaker.Endringsårsak årsak) {
+        return switch (årsak) {
+            case PERMITTERING -> EndringsårsakDto.PERMITTERING;
+            case NY_STILLING -> EndringsårsakDto.NY_STILLING;
+            case NY_STILLINGSPROSENT -> EndringsårsakDto.NY_STILLINGSPROSENT;
+            case SYKEFRAVÆR -> EndringsårsakDto.SYKEFRAVÆR;
+            case BONUS -> EndringsårsakDto.BONUS;
+            case FERIETREKK_ELLER_UTBETALING_AV_FERIEPENGER -> EndringsårsakDto.FERIETREKK_ELLER_UTBETALING_AV_FERIEPENGER;
+            case NYANSATT -> EndringsårsakDto.NYANSATT;
+            case MANGELFULL_RAPPORTERING_AORDNING -> EndringsårsakDto.MANGELFULL_RAPPORTERING_AORDNING;
+            case INNTEKT_IKKE_RAPPORTERT_ENDA_AORDNING -> EndringsårsakDto.INNTEKT_IKKE_RAPPORTERT_ENDA_AORDNING;
+            case TARIFFENDRING -> EndringsårsakDto.TARIFFENDRING;
+            case FERIE -> EndringsårsakDto.FERIE;
+            case VARIG_LØNNSENDRING -> EndringsårsakDto.VARIG_LØNNSENDRING;
+            case PERMISJON -> EndringsårsakDto.PERMISJON;
+        };
     }
 
     private static  List<SendInntektsmeldingDto.Refusjon> mapRefusjon(Inntektsmelding.Refusjon refusjon, LocalDate refusjonStartDato) {

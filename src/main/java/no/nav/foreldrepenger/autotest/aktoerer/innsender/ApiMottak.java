@@ -67,7 +67,7 @@ public class ApiMottak extends DokumentInnsendingHjelper {
             fail("Forventer å finne enn forespørsel for AG: %s på sak: %s", inntektsmelding.arbeidsgiver().arbeidsgiverIdentifikator(),
                     saksnummer);
         }
-        var request = InntektsmeldingPortalMapper.map(inntektsmelding, forespørslerFiltrert.orElseThrow());
+        var request = InntektsmeldingPortalMapper.mapImDialog(inntektsmelding, forespørslerFiltrert.orElseThrow());
         return sendInnInntektsmelding(request, fnr, saksnummer);
     }
 

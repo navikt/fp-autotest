@@ -12,6 +12,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import no.nav.foreldrepenger.generator.inntektsmelding.builders.Inntektsmelding;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -146,20 +148,23 @@ class Førstegangsbehandling extends VerdikjedeTestBase {
         var arbeidsgivere = mor.arbeidsgivere();
         var arbeidsgiver1 = arbeidsgivere.toList().getFirst();
         var inntektsmelding1 = arbeidsgiver1.lagInntektsmeldingSVP()
-                .medBeregnetInntekt(20_833);
+                .medBeregnetInntekt(20_833)
+                .leggTilEndretInntektÅrsak(Inntektsmelding.Endringsårsaker.Endringsårsak.BONUS);
         ventPåInntektsmeldingForespørsel(saksnummer);
         arbeidsgiver1.sendInntektsmelding(saksnummer, inntektsmelding1);
 
         var arbeidsgiver2 = arbeidsgivere.toList().get(1);
         var inntektsmelding2 = arbeidsgiver2.lagInntektsmeldingSVP()
                 .medBeregnetInntekt(62_500)
-                .medRefusjonBeløpPerMnd(BigDecimal.valueOf(27_778));
+                .medRefusjonBeløpPerMnd(BigDecimal.valueOf(27_778))
+                .leggTilEndretInntektÅrsak(Inntektsmelding.Endringsårsaker.Endringsårsak.BONUS);
         arbeidsgiver2.sendInntektsmelding(saksnummer, inntektsmelding2);
 
         var arbeidsgiver3 = arbeidsgivere.toList().get(2);
         var inntektsmelding3 = arbeidsgiver3.lagInntektsmeldingSVP()
                 .medBeregnetInntekt(50_000)
-                .medRefusjonBeløpPerMnd(BigDecimal.valueOf(46_667));
+                .medRefusjonBeløpPerMnd(BigDecimal.valueOf(46_667))
+                .leggTilEndretInntektÅrsak(Inntektsmelding.Endringsårsaker.Endringsårsak.BONUS);
         arbeidsgiver3.sendInntektsmelding(saksnummer, inntektsmelding3);
 
         saksbehandler.hentFagsak(saksnummer);
