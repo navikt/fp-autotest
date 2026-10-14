@@ -12,6 +12,8 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.ChronoField;
 
+import no.nav.foreldrepenger.generator.inntektsmelding.builders.Inntektsmelding;
+
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -305,7 +307,9 @@ class TilbakekrevingFP extends FptilbakeTestBase {
         var arbeidsgiver = familie.mor().arbeidsgiver();
         var inntektsmelding = arbeidsgiver.lagInntektsmeldingFP(fpStartdato);
         if (redusert){
-            inntektsmelding.medBeregnetInntekt(Prosent.valueOf(50));
+            inntektsmelding.medBeregnetInntekt(Prosent.valueOf(50))
+                    .leggTilEndretInntektÅrsak(Inntektsmelding.Endringsårsaker.Endringsårsak.BONUS)
+            ;
         }
         arbeidsgiver.sendInntektsmelding(saksnummer, inntektsmelding);
     }

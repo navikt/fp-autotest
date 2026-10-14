@@ -420,7 +420,8 @@ class BeregningVerdikjede extends VerdikjedeTestBase {
         var arbeidsgiverIdentifikator = new Orgnummer(arbeidsgiver.arbeidsgiverIdentifikator());
         var inntektsmelding = arbeidsgiver.lagInntektsmeldingFP(fpStartdato)
                 .medBeregnetInntekt(Prosent.valueOf(50))
-                .medRefusjonBeløpPerMnd(29_000);
+                .medRefusjonBeløpPerMnd(29_000)
+                .leggTilEndretInntektÅrsak(Inntektsmelding.Endringsårsaker.Endringsårsak.BONUS);
 
         ventPåInntektsmeldingForespørsel(saksnummer);
         arbeidsgiver.sendInntektsmelding(saksnummer, inntektsmelding);

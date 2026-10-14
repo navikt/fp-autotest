@@ -193,6 +193,7 @@ class Fodsel extends VerdikjedeTestBase {
         var inntektsmeldinger = arbeidsgiver.lagInntektsmeldingerFP(fpStartdato, true);
         inntektsmeldinger.getFirst()
                 .medBeregnetInntekt(BigDecimal.valueOf(inntektPrMåned - 20_000))
+                .leggTilEndretInntektÅrsak(Inntektsmelding.Endringsårsaker.Endringsårsak.BONUS)
                 .medRefusjonBeløpPerMnd(refusjon);
 
         ventPåInntektsmeldingForespørsel(saksnummer);
