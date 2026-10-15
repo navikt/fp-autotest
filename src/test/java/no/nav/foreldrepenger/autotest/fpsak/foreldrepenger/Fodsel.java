@@ -245,7 +245,8 @@ class Fodsel extends VerdikjedeTestBase {
         var arbeidsgiver = mor.arbeidsgiver();
         var inntektsmelding = arbeidsgiver.lagInntektsmeldingFP(fpStartdato)
                 .medBeregnetInntekt(15_000)
-                .medRefusjonBeløpPerMnd(refusjon);
+                .medRefusjonBeløpPerMnd(refusjon)
+                .leggTilEndretInntektÅrsak(Inntektsmelding.Endringsårsaker.Endringsårsak.BONUS);
         ventPåInntektsmeldingForespørsel(saksnummer);
         arbeidsgiver.sendInntektsmelding(saksnummer, inntektsmelding);
 
