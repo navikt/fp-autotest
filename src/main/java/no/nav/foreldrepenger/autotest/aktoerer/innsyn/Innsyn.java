@@ -9,7 +9,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpoversikt.InnsynKlient;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Fødselsnummer;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Saksnummer;
-import no.nav.foreldrepenger.kontrakter.fpoversikt.AnnenPartSak;
 import no.nav.foreldrepenger.kontrakter.fpoversikt.BehandlingTilstand;
 import no.nav.foreldrepenger.kontrakter.fpoversikt.EsSak;
 import no.nav.foreldrepenger.kontrakter.fpoversikt.FpSak;
@@ -33,10 +32,6 @@ public class Innsyn {
     private Saker hentSaker() {
         LOG.info("Henter saker på bruker {}", fnr.value());
         return innsynKlient.hentSaker(fnr);
-    }
-
-    public AnnenPartSak hentAnnenpartsSak(Fødselsnummer annenpart, LocalDate familiehendelse) {
-        return innsynKlient.hentAnnenpartsSak(fnr, new InnsynKlient.AnnenPartSakIdentifikator(annenpart, null, familiehendelse));
     }
 
     public FellesUttaksplanDto hentFellesUttaksplan(Fødselsnummer barn, Fødselsnummer annenPart) {

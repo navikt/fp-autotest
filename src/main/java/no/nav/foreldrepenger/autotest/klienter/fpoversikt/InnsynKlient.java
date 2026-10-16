@@ -11,14 +11,12 @@ import java.time.LocalDate;
 
 import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Fødselsnummer;
-import no.nav.foreldrepenger.kontrakter.fpoversikt.AnnenPartSak;
 import no.nav.foreldrepenger.kontrakter.fpoversikt.Saker;
 import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.FellesUttaksplanDto;
 
 public class InnsynKlient {
 
     private static final String API_SAKER_PATH = "/api/saker";
-    private static final String API_ANNENPARTS_VEDTAK_PATH = "/api/annenPart";
     private static final String API_UTTAKSPLAN_PATH = "/api/uttaksplan";
 
     public Saker hentSaker(Fødselsnummer fnr) {
@@ -29,16 +27,6 @@ public class InnsynKlient {
                 .timeout(Duration.ofSeconds(10))
                 .GET();
         return send(request.build(), Saker.class);
-    }
-
-    public AnnenPartSak hentAnnenpartsSak(Fødselsnummer fnr, AnnenPartSakIdentifikator identifikator) {
-        var request = requestMedInnloggetBruker(fnr)
-                .uri(fromUri(BaseUriProvider.FPOVERSIKT_BASE)
-                        .path(API_ANNENPARTS_VEDTAK_PATH)
-                        .build())
-                .timeout(Duration.ofSeconds(10))
-                .POST(HttpRequest.BodyPublishers.ofString(toJson(identifikator)));
-        return send(request.build(), AnnenPartSak.class);
     }
 
     public FellesUttaksplanDto hentFellesUttaksplan(Fødselsnummer fnr, FellesUttaksplanRequest uttaksplanRequest) {
@@ -55,10 +43,5 @@ public class InnsynKlient {
     }
 
     public record BarnIdentifikator(Fødselsnummer fødselsnummer, LocalDate familiehendelse) {
-    }
-
-    public record AnnenPartSakIdentifikator(Fødselsnummer annenPartFødselsnummer,
-                                     Fødselsnummer barnFødselsnummer,
-                                     LocalDate familiehendelse) {
     }
 }
