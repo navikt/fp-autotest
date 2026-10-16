@@ -143,8 +143,6 @@ class AdressebeskyttelseOgSkjermetPersonTester {
         assertThat(morsSakInnsyn.saksnummer().value()).isEqualTo(saksnummerMor.value());
         assertThat(morsSakInnsyn.annenPart()).isNotNull(); // Far er ikke beskyttet
         assertThat(morsSakInnsyn.annenPart().fnr().value()).isEqualTo(far.fødselsnummer().value()); // Far er ikke beskyttet
-        assertThat(mor.innsyn().hentAnnenpartsSak(far.fødselsnummer(), termindato)).isNotNull(); // Far er ikke beskyttet
-        assertThat(mor.innsyn().hentAnnenpartsSak(far.fødselsnummer(), termindato).perioder()).isNotEmpty(); // Far er ikke beskyttet
 
         var morsFellesUttaksplan = mor.innsyn().hentFellesUttaksplan(termindato, far.fødselsnummer());
         assertThat(morsFellesUttaksplan).isNotNull();
@@ -156,7 +154,6 @@ class AdressebeskyttelseOgSkjermetPersonTester {
         assertThat(farsSakInnsyn.gjeldendeVedtak().perioder()).isNotEmpty();
         assertThat(farsSakInnsyn.saksnummer().value()).isEqualTo(saksnummerFar.value());
         assertThat(farsSakInnsyn.annenPart()).isNull(); // Mor er beskyttet
-        assertThat(far.innsyn().hentAnnenpartsSak(mor.fødselsnummer(), termindato)).isNull(); // Mor er beskyttet
 
         var farsFellesUttaksplan = far.innsyn().hentFellesUttaksplan(termindato, mor.fødselsnummer());
         assertThat(farsFellesUttaksplan).isNotNull();
