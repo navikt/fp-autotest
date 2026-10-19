@@ -27,12 +27,12 @@
 
         <fp-felles.versjon>7.9.4</fp-felles.versjon>
         <fp-prosesstask.version>5.3.0</fp-prosesstask.version>
-        <fp-kontrakter.version>9.4.39</fp-kontrakter.version>
+        <fp-kontrakter.version>9.4.40</fp-kontrakter.version>
 
         <ftberegning.version>7.2.2</ftberegning.version>
         <fpkalkulus.kontrakt.version>1.2.2</fpkalkulus.kontrakt.version>
 
-        <fpsoknad-kontrakt.version>1.0.12</fpsoknad-kontrakt.version>
+        <fpsoknad-kontrakt.version>1.0.13</fpsoknad-kontrakt.version>
 
         <pdfbox.version>3.0.8</pdfbox.version>
         <allure.version>3.0.0</allure.version>
