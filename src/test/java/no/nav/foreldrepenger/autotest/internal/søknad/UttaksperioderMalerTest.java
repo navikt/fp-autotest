@@ -70,8 +70,6 @@ class UttaksperioderMalerTest {
         assertThat(uttaksplan.path("perioder").size()).isEqualTo(1);
         assertThat(uttaksplan.path("perioder").get(0).path("søker").path("samtidigUttak").decimalValue())
                 .isEqualByComparingTo(BigDecimal.valueOf(100));
-        var gamlePerioder = uttaksplan.path("uttaksperioder");
-        assertThat(gamlePerioder.isMissingNode() || gamlePerioder.isNull()
-                || (gamlePerioder.isArray() && gamlePerioder.size() == 0)).isTrue();
+        assertThat(uttaksplan.has("uttaksperioder")).isFalse();
     }
 }

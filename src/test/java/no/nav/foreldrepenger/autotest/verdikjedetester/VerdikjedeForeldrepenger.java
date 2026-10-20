@@ -2178,7 +2178,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
     @Test
     @DisplayName("Felles uttaksplan fra begge innlogginger før søknad, under behandling og etter vedtak og endring")
-    @Description("Syv kontrollpunkter kontrollerer eget søknadsuttak før vedtak, mens annen parts uttak bare vises fra vedtak. "
+    @Description("Syv kontrollpunkter kontrollerer felles uttaksplan fra lagret søknad og vedtak for begge foreldre. "
             + "Mor har sykdomsutsettelse, far har samtidig uttak ved fødsel og dokumentasjon av mors aktivitet. "
             + "Fars endring skal først vises når nytt vedtak er synlig i oversikt.")
     void fellesUttaksplanGjennomSøknaderVedtakOgEndring() {
@@ -2240,15 +2240,15 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
             assertThat(behov.tom()).isEqualTo(fødselsdato.plusWeeks(4).minusDays(3));
         });
 
-        // 2: Mor ser egen søknad; far ser metadata, men ikke mors ubehandlede søknad.
-        ventOgVerifiserFellesplan(familie, forventetFellesplan(fødselsdato, false, 0, false),
-                new FellesUttaksplanDto(fødselsdato, 1, FellesUttaksplanDto.Dekningsgrad.HUNDRE, List.of()), "2: Mor åpen");
+        // 2: Både mor og far (uten egen sak) ser mors lagrede søknadsplan med begge foreldres perioder.
+        var morsSøknadsplan = forventetFellesplan(fødselsdato, false, false, false);
+        ventOgVerifiserFellesplan(familie, morsSøknadsplan, byttPlanperspektiv(morsSøknadsplan), "2: Mor åpen");
         saksbehandler.bekreftAksjonspunkt(dokumentasjonMor.godkjennSykdom());
         foreslårOgFatterVedtakVenterTilAvsluttetBehandling(saksnummerMor, false, false);
         mor.innsyn().hentFpSakUtenÅpenBehandling(saksnummerMor);
 
-        // 3: Mors vedtak vises for begge, med søker/annenPart relativt innloggingen.
-        var morsVedtak = forventetFellesplan(fødselsdato, true, 0, false);
+        // 3: Mors vedtak og fars søknadsuttak fra mors søknad vises for begge, med søker/annenPart relativt innloggingen.
+        var morsVedtak = forventetFellesplan(fødselsdato, true, false, false);
         ventOgVerifiserFellesplan(familie, morsVedtak, byttPlanperspektiv(morsVedtak), "3: Mors vedtak");
 
         var innsendtFarsPlan = byttPerspektiv(innsendtFellesplan);
@@ -2269,15 +2269,15 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
             assertThat(behov.tom()).isEqualTo(førsteFellesperiodedag);
         });
 
-        // 4: Mor ser fortsatt bare eget vedtak; far ser egen søknad og mors vedtak.
+        // 4: Mor ser eget vedtak og fars søknadsuttak fra sin søknad; far ser egen søknad og mors vedtak.
         ventOgVerifiserFellesplan(familie, morsVedtak,
-                byttPlanperspektiv(forventetFellesplan(fødselsdato, true, 1, false)), "4: Far åpen");
+                byttPlanperspektiv(forventetFellesplan(fødselsdato, true, false, false)), "4: Far åpen");
         saksbehandler.bekreftAksjonspunkt(dokumentasjonFar.godkjenn(fellesperiodeFar));
         foreslårOgFatterVedtakVenterTilAvsluttetBehandling(saksnummerFar, false, false);
         far.innsyn().hentFpSakUtenÅpenBehandling(saksnummerFar);
 
         // 5: Begge vedtak er synlige, uten oppholdsperioder.
-        var beggeVedtak = forventetFellesplan(fødselsdato, true, 2, false);
+        var beggeVedtak = forventetFellesplan(fødselsdato, true, true, false);
         ventOgVerifiserFellesplan(familie, beggeVedtak, byttPlanperspektiv(beggeVedtak), "5: Begge vedtak");
 
         var innsendtEndringsplan = List.of(
@@ -2325,7 +2325,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         far.innsyn().hentFpSakUtenÅpenBehandling(saksnummerFar);
 
         // 7: Begge ser hele den utvidede vedtatte planen.
-        var nyttVedtak = forventetFellesplan(fødselsdato, true, 2, true);
+        var nyttVedtak = forventetFellesplan(fødselsdato, true, true, true);
         ventOgVerifiserFellesplan(familie, nyttVedtak, byttPlanperspektiv(nyttVedtak), "7: Fars nye vedtak");
     }
 
@@ -2601,7 +2601,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var far = familie.far();
 
         var søknadFar = SøknadForeldrepengerMaler.lagSøknadForeldrepengerTermin(termindato, BrukerRolle.FAR)
-                .medUttaksplan(new UttaksplanDto(true, List.of(), byttPerspektiv(fellesplan)))
+                .medUttaksplan(new UttaksplanDto(true, byttPerspektiv(fellesplan)))
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.mor()))
                 .medMottattdato(termindato.minusWeeks(1));
         var saksnummerFar = far.søk(søknadFar);
@@ -2991,7 +2991,6 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
     }
 
     private static void verifiserInnsendtFellesplan(UttaksplanDto plan, List<UttakPeriodeDto> forventet) {
-        assertThat(plan.uttaksperioder()).isEmpty();
         assertThat(plan.ønskerJustertUttakVedFødsel()).isFalse();
         assertThat(plan.perioder()).containsExactlyElementsOf(forventet);
         assertThat(plan.perioder()).anyMatch(p -> p.søker() != null).anyMatch(p -> p.annenPart() != null);
@@ -3065,15 +3064,14 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .toList());
     }
 
-    private static FellesUttaksplanDto forventetFellesplan(LocalDate fødsel, boolean morVedtatt, int farStatus, boolean utvidet) {
+    private static FellesUttaksplanDto forventetFellesplan(LocalDate fødsel, boolean morVedtatt, boolean farVedtatt, boolean utvidet) {
         return new FellesUttaksplanDto(fødsel, 1, FellesUttaksplanDto.Dekningsgrad.HUNDRE,
-                forventedeFamilieperioder(fødsel, morVedtatt, farStatus, utvidet));
+                forventedeFamilieperioder(fødsel, morVedtatt, farVedtatt, utvidet));
     }
 
     // Eksplisitte segmenter for dette scenariet, ikke en normaliseringsalgoritme.
-    // farStatus: 0 = ikke synlig, 1 = søknad, 2 = vedtak.
     private static List<UttakPeriodeDto> forventedeFamilieperioder(LocalDate fødsel, boolean morVedtatt,
-                                                                 int farStatus, boolean utvidet) {
+                                                                 boolean farVedtatt, boolean utvidet) {
         var perioder = new ArrayList<UttakPeriodeDto>();
         var førFødsel = forventetPlanuttak(Rolle.MOR, FORELDREPENGER_FØR_FØDSEL, null, null, false, morVedtatt);
         var mødrekvote = forventetPlanuttak(Rolle.MOR, MØDREKVOTE, null, null, false, morVedtatt);
@@ -3081,25 +3079,19 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 UtsettelseÅrsak.SØKER_SYKDOM, null, false, morVedtatt);
         var fellesperiodeMor = forventetPlanuttak(Rolle.MOR, FELLESPERIODE, null, null, false, morVedtatt);
         perioder.add(new UttakPeriodeDto(fødsel.minusWeeks(3), fødsel.minusDays(3), førFødsel, null, null));
-        if (farStatus == 0) {
-            perioder.add(new UttakPeriodeDto(fødsel, fødsel.plusWeeks(3).minusDays(3), mødrekvote, null, null));
-        } else {
-            perioder.add(new UttakPeriodeDto(fødsel, fødsel.plusWeeks(2).minusDays(3),
-                    forventetPlanuttak(Rolle.MOR, MØDREKVOTE, null, null, true, morVedtatt),
-                    forventetPlanuttak(Rolle.FAR_MEDMOR, FEDREKVOTE, null, null, true, farStatus == 2), null));
-            perioder.add(new UttakPeriodeDto(fødsel.plusWeeks(2), fødsel.plusWeeks(3).minusDays(3), mødrekvote, null, null));
-        }
+        perioder.add(new UttakPeriodeDto(fødsel, fødsel.plusWeeks(2).minusDays(3),
+                forventetPlanuttak(Rolle.MOR, MØDREKVOTE, null, null, true, morVedtatt),
+                forventetPlanuttak(Rolle.FAR_MEDMOR, FEDREKVOTE, null, null, true, farVedtatt), null));
+        perioder.add(new UttakPeriodeDto(fødsel.plusWeeks(2), fødsel.plusWeeks(3).minusDays(3), mødrekvote, null, null));
         perioder.add(new UttakPeriodeDto(fødsel.plusWeeks(3), fødsel.plusWeeks(4).minusDays(3), utsettelse, null, null));
         perioder.add(new UttakPeriodeDto(fødsel.plusWeeks(4), fødsel.plusWeeks(16).minusDays(3), mødrekvote, null, null));
         perioder.add(new UttakPeriodeDto(fødsel.plusWeeks(16), fødsel.plusWeeks(24).minusDays(3), fellesperiodeMor, null, null));
-        if (farStatus != 0) {
-            var fellesperiodeFar = forventetPlanuttak(Rolle.FAR_MEDMOR, FELLESPERIODE, null, ARBEID_OG_UTDANNING, false, farStatus == 2);
-            perioder.add(new UttakPeriodeDto(fødsel.plusWeeks(24), fødsel.plusWeeks(24), null, fellesperiodeFar, null));
-            if (utvidet) {
-                perioder.add(new UttakPeriodeDto(fødsel.plusWeeks(24).plusDays(1), fødsel.plusWeeks(37), null,
-                        forventetPlanuttak(Rolle.FAR_MEDMOR, FEDREKVOTE, null, null, false, farStatus == 2), null));
-                perioder.add(new UttakPeriodeDto(fødsel.plusWeeks(37).plusDays(1), fødsel.plusWeeks(37).plusDays(1), null, fellesperiodeFar, null));
-            }
+        var fellesperiodeFar = forventetPlanuttak(Rolle.FAR_MEDMOR, FELLESPERIODE, null, ARBEID_OG_UTDANNING, false, farVedtatt);
+        perioder.add(new UttakPeriodeDto(fødsel.plusWeeks(24), fødsel.plusWeeks(24), null, fellesperiodeFar, null));
+        if (utvidet) {
+            perioder.add(new UttakPeriodeDto(fødsel.plusWeeks(24).plusDays(1), fødsel.plusWeeks(37), null,
+                    forventetPlanuttak(Rolle.FAR_MEDMOR, FEDREKVOTE, null, null, false, farVedtatt), null));
+            perioder.add(new UttakPeriodeDto(fødsel.plusWeeks(37).plusDays(1), fødsel.plusWeeks(37).plusDays(1), null, fellesperiodeFar, null));
         }
         return perioder;
     }

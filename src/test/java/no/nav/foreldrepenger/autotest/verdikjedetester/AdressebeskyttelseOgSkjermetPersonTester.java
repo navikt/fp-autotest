@@ -14,6 +14,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
@@ -116,8 +117,20 @@ class AdressebeskyttelseOgSkjermetPersonTester {
         LOG.info("Fagsak er beskyttet!");
 
         var far = familie.far();
+        // Responsen angir ikke om annen parts perioder kommer fra søkerens søknad eller annen parts sak.
+        // Far oppgir derfor et annet uttak for mor enn hennes faktiske uttak, uten overlapp med sitt eget.
+        // Da kan vi kontrollere at han ser egne opplysninger, og ikke mors adressebeskyttede vedtaksperioder.
+        var morsPeriodeOppgittAvFar = uttaksperiode(Rolle.MOR, MØDREKVOTE,
+                termindato.plusWeeks(10), termindato.plusWeeks(11).minusDays(1));
+        var forventetAnnenPartsPeriode = new UttakPeriodeDto(morsPeriodeOppgittAvFar.fom(), morsPeriodeOppgittAvFar.tom(),
+                null, morsPeriodeOppgittAvFar.søker(), null);
+        var farsEgnePerioder = byttPerspektiv(uttaksplan).stream()
+                .filter(periode -> periode.søker() != null)
+                .map(periode -> new UttakPeriodeDto(periode.fom(), periode.tom(), periode.søker(), null, null))
+                .toList();
+        var farsOppgittePlan = Stream.concat(farsEgnePerioder.stream(), Stream.of(forventetAnnenPartsPeriode)).toList();
         var søknadFar = SøknadForeldrepengerMaler.lagSøknadForeldrepengerTermin(termindato, BrukerRolle.FAR)
-                .medPerioder(byttPerspektiv(uttaksplan))
+                .medPerioder(farsOppgittePlan)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.mor()));
         var saksnummerFar = far.søk(søknadFar);
 
@@ -159,8 +172,23 @@ class AdressebeskyttelseOgSkjermetPersonTester {
         assertThat(farsFellesUttaksplan).isNotNull();
         assertThat(farsFellesUttaksplan.perioder())
                 .isNotEmpty()
-                .anySatisfy(periode -> assertThat(periode.søker()).isNotNull())
-                .allSatisfy(periode -> assertThat(periode.annenPart()).isNull());
+                .anySatisfy(periode -> assertThat(periode.søker()).isNotNull());
+        assertThat(farsFellesUttaksplan.perioder().stream()
+                .filter(periode -> periode.annenPart() != null)
+                .toList())
+                .containsExactly(forventetAnnenPartsPeriode);
+        var forventedeUttaksdagerForFar = farsEgnePerioder.stream()
+                .flatMap(periode -> periode.fom().datesUntil(periode.tom().plusDays(1)))
+                .filter(dato -> dato.getDayOfWeek().getValue() <= 5)
+                .sorted()
+                .toList();
+        var faktiskeUttaksdagerForFar = farsFellesUttaksplan.perioder().stream()
+                .filter(periode -> periode.søker() != null)
+                .flatMap(periode -> periode.fom().datesUntil(periode.tom().plusDays(1)))
+                .filter(dato -> dato.getDayOfWeek().getValue() <= 5)
+                .sorted()
+                .toList();
+        assertThat(faktiskeUttaksdagerForFar).containsExactlyElementsOf(forventedeUttaksdagerForFar);
     }
 
     @Test
