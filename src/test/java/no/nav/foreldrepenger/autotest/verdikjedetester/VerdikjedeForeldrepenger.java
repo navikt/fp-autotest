@@ -2601,7 +2601,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var far = familie.far();
 
         var søknadFar = SøknadForeldrepengerMaler.lagSøknadForeldrepengerTermin(termindato, BrukerRolle.FAR)
-                .medUttaksplan(new UttaksplanDto(true, List.of(), byttPerspektiv(fellesplan)))
+                .medUttaksplan(new UttaksplanDto(true, byttPerspektiv(fellesplan)))
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.mor()))
                 .medMottattdato(termindato.minusWeeks(1));
         var saksnummerFar = far.søk(søknadFar);
@@ -2991,7 +2991,6 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
     }
 
     private static void verifiserInnsendtFellesplan(UttaksplanDto plan, List<UttakPeriodeDto> forventet) {
-        assertThat(plan.uttaksperioder()).isEmpty();
         assertThat(plan.ønskerJustertUttakVedFødsel()).isFalse();
         assertThat(plan.perioder()).containsExactlyElementsOf(forventet);
         assertThat(plan.perioder()).anyMatch(p -> p.søker() != null).anyMatch(p -> p.annenPart() != null);
