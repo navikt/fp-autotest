@@ -61,7 +61,7 @@ public final class UttakMaler {
     }
 
     public static UttaksplanDto fordeling(List<UttakPeriodeDto> perioder) {
-        return new UttaksplanDto(false, List.of(), perioder);
+        return new UttaksplanDto(false, perioder);
     }
 
     /**
