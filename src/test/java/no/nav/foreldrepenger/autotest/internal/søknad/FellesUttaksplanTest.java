@@ -41,7 +41,7 @@ class FellesUttaksplanTest {
         var førstePeriode = mor("2024-01-01", "2024-01-12", KontoType.MØDREKVOTE);
         var andrePeriode = annenPart("2024-02-05", "2024-02-09", uttak(Rolle.FAR_MEDMOR, KontoType.FEDREKVOTE));
         var perioder = List.of(førstePeriode, andrePeriode);
-        var forventet = new UttaksplanDto(false, List.of(), perioder);
+        var forventet = new UttaksplanDto(false, perioder);
 
         var fraListe = UttakMaler.fordeling(perioder);
         var fraVarargs = UttakMaler.fordeling(førstePeriode, andrePeriode);
@@ -110,7 +110,7 @@ class FellesUttaksplanTest {
                         mor("2024-01-01", "2024-01-26", KontoType.MØDREKVOTE),
                         annenPart("2024-03-04", "2024-03-29", farsUttak)))
                 .build();
-        var eksplisittPlan = new UttaksplanDto(false, List.of(), List.of(
+        var eksplisittPlan = new UttaksplanDto(false, List.of(
                 new UttakPeriodeDto(d("2024-01-15"), d("2024-01-19"), uttak(Rolle.MOR, KontoType.FELLESPERIODE), farsUttak, null),
                 annenPart("2024-02-05", "2024-02-09", farsUttak)));
 
@@ -161,7 +161,7 @@ class FellesUttaksplanTest {
         var eøsUttak = new EøsUttakDto(KontoType.FELLESPERIODE, null);
         var søknad = new ForeldrepengerBuilder().medPerioder(List.of(
                 new UttakPeriodeDto(d("2024-01-01"), d("2024-01-26"), uttak(Rolle.MOR, KontoType.MØDREKVOTE), null, eøsUttak))).build();
-        var eksplisittPlan = new UttaksplanDto(true, List.of(), List.of(
+        var eksplisittPlan = new UttaksplanDto(true, List.of(
                 new UttakPeriodeDto(d("2024-01-15"), d("2024-01-19"), uttak(Rolle.MOR, KontoType.FELLESPERIODE), null, eøsUttak),
                 new UttakPeriodeDto(d("2024-02-05"), d("2024-02-09"), null, null, eøsUttak)));
 
