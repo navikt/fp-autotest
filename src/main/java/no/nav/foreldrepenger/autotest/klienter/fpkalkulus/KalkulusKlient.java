@@ -8,7 +8,7 @@ import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.send;
 import java.net.http.HttpRequest;
 import java.time.Duration;
 
-import io.qameta.allure.Step;
+import io.qameta.allure.Allure;
 import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.BeregningsgrunnlagDto;
 import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
@@ -67,15 +67,16 @@ public class KalkulusKlient {
         return send(request.build(), TilstandResponse.class);
     }
 
-    @Step("Håndter aksjonspunkt")
     public OppdateringRespons håndterBeregning(EnkelHåndterBeregningRequestDto  håndterRequestDto) {
-        håndterRequestDto.håndterBeregningDto().setBegrunnelse("Løst av verdikjeden");
-        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle, KLIENT_ID)
-                .timeout(KALKULUS_TIMEOUT)
-                .uri(fromUri(BaseUriProvider.KALKULUS_BASE)
-                        .path(KALKULUS_AVKLARINGSBEHOV_URL)
-                        .build())
-                .POST(HttpRequest.BodyPublishers.ofString(toJson(håndterRequestDto)));
-        return send(request.build(), OppdateringRespons.class);
+        return Allure.step("Håndter aksjonspunkt", () -> {
+            håndterRequestDto.håndterBeregningDto().setBegrunnelse("Løst av verdikjeden");
+            var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle, KLIENT_ID)
+                    .timeout(KALKULUS_TIMEOUT)
+                    .uri(fromUri(BaseUriProvider.KALKULUS_BASE)
+                            .path(KALKULUS_AVKLARINGSBEHOV_URL)
+                            .build())
+                    .POST(HttpRequest.BodyPublishers.ofString(toJson(håndterRequestDto)));
+            return send(request.build(), OppdateringRespons.class);
+        });
     }
 }

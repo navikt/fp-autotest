@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.UUID;
 
 import io.qameta.allure.Description;
-import io.qameta.allure.Step;
+import io.qameta.allure.Allure;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingKlientFelles;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingerKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingHenlegg;
@@ -94,15 +94,16 @@ public class BehandlingFptilbakeKlient implements BehandlingerKlient {
         behandlingKlientFelles.postBehandlingAksjonspunkt(aksjonspunkter);
     }
 
-    @Step("Oppretter ny tilbakekreving")
     public Behandling opprettTilbakekrevingManuelt(BehandlingOpprett behandlingOpprett) {
-        var request = requestMedInnloggetSaksbehandler(this.saksbehandlerRolle, API_NAME)
-                .uri(fromUri(FPTILBAKE_BASE)
-                        .path(BEHANDLINGER_OPPRETT)
-                        .build())
-                .POST(HttpRequest.BodyPublishers.ofString(toJson(behandlingOpprett)));
+        return Allure.step("Oppretter ny tilbakekreving", () -> {
+            var request = requestMedInnloggetSaksbehandler(this.saksbehandlerRolle, API_NAME)
+                    .uri(fromUri(FPTILBAKE_BASE)
+                            .path(BEHANDLINGER_OPPRETT)
+                            .build())
+                    .POST(HttpRequest.BodyPublishers.ofString(toJson(behandlingOpprett)));
 
-        return behandlingKlientFelles.følgRedirectTilStatusOgReturnerBehandlingNårTilgjenglig(request);
+            return behandlingKlientFelles.følgRedirectTilStatusOgReturnerBehandlingNårTilgjenglig(request);
+        });
     }
 
     public Behandling addVerge(BehandlingIdBasicDto behandlingIdBasicDto) {
@@ -155,8 +156,7 @@ public class BehandlingFptilbakeKlient implements BehandlingerKlient {
     }
 
     @Override
-    @Step("Henter ut alle aksjonspunkter på en gitt behandling fra fptilbake")
     public List<Aksjonspunkt> hentAlleAksjonspunkter(UUID behandlingUuid) {
-        return behandlingKlientFelles.hentAlleAksjonspunkter(behandlingUuid);
+        return Allure.step("Henter ut alle aksjonspunkter på en gitt behandling fra fptilbake", () -> behandlingKlientFelles.hentAlleAksjonspunkter(behandlingUuid));
     }
 }

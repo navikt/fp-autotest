@@ -11,7 +11,7 @@ import java.net.http.HttpRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.qameta.allure.Step;
+import io.qameta.allure.Allure;
 import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
 import no.nav.foreldrepenger.vtp.kontrakter.hendelser.YtelsevedtakDto;
 
@@ -20,13 +20,14 @@ public class YtelsevedtakKlient {
     private static final String YTELSEVEDTAK_PATH = "/hendelser/ytelsevedtak";
     private static final Logger LOG = LoggerFactory.getLogger(YtelsevedtakKlient.class);
 
-    @Step("Sender inn ytelsevedtak")
     public void sendYtelsevedtak(YtelsevedtakDto ytelsevedtakDto) {
-        tilJsonOgPubliserIAllureRapport(ytelsevedtakDto);
-        LOG.info("Sender inn {} vedtak for fnr {} ({} - {})", ytelsevedtakDto.ytelseType(), ytelsevedtakDto.fnr(),
-                ytelsevedtakDto.fom(), ytelsevedtakDto.tom());
-        var request = requestMedBasicHeadere().uri(fromUri(BaseUriProvider.VTP_API_BASE).path(YTELSEVEDTAK_PATH).build())
-                .POST(HttpRequest.BodyPublishers.ofString(toJson(ytelsevedtakDto)));
-        send(request.build());
+        Allure.step("Sender inn ytelsevedtak", () -> {
+            tilJsonOgPubliserIAllureRapport(ytelsevedtakDto);
+            LOG.info("Sender inn {} vedtak for fnr {} ({} - {})", ytelsevedtakDto.ytelseType(), ytelsevedtakDto.fnr(),
+                    ytelsevedtakDto.fom(), ytelsevedtakDto.tom());
+            var request = requestMedBasicHeadere().uri(fromUri(BaseUriProvider.VTP_API_BASE).path(YTELSEVEDTAK_PATH).build())
+                    .POST(HttpRequest.BodyPublishers.ofString(toJson(ytelsevedtakDto)));
+            send(request.build());
+        });
     }
 }

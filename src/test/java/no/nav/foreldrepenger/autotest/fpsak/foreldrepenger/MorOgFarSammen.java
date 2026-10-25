@@ -32,7 +32,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import io.qameta.allure.Description;
-import io.qameta.allure.Step;
+import io.qameta.allure.Allure;
 import no.nav.foreldrepenger.autotest.base.VerdikjedeTestBase;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Avslagsårsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
@@ -834,25 +834,26 @@ class MorOgFarSammen extends VerdikjedeTestBase {
         assertThat(innvilgetUttaksperiode).hasSize(3);
     }
 
-    @Step("Behandle søknad for mor uregistrert")
     private Saksnummer behandleSøknadForMorUregistrert(Familie familie, LocalDate fødselsdato, List<UttakPeriodeDto> uttaksplan) {
-        var saksnummer = sendInnSøknadOgInntektMor(familie, fødselsdato, uttaksplan);
+        return Allure.step("Behandle søknad for mor uregistrert", () -> {
+            var saksnummer = sendInnSøknadOgInntektMor(familie, fødselsdato, uttaksplan);
 
-        saksbehandler.hentFagsak(saksnummer);
+            saksbehandler.hentFagsak(saksnummer);
 
-        var sjekkManglendeFødsel = saksbehandler.hentAksjonspunktbekreftelse(new SjekkManglendeFødselBekreftelse())
-                .bekreftBarnErFødt(1, fødselsdato);
-        saksbehandler.bekreftAksjonspunkt(sjekkManglendeFødsel);
+            var sjekkManglendeFødsel = saksbehandler.hentAksjonspunktbekreftelse(new SjekkManglendeFødselBekreftelse())
+                    .bekreftBarnErFødt(1, fødselsdato);
+            saksbehandler.bekreftAksjonspunkt(sjekkManglendeFødsel);
 
-        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
+            saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
 
 
-        beslutter.hentFagsak(saksnummer);
-        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse());
-        bekreftelse.godkjennAksjonspunkt(saksbehandler.hentAksjonspunkt(AksjonspunktKoder.SJEKK_MANGLENDE_FØDSEL));
-        beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
+            beslutter.hentFagsak(saksnummer);
+            var bekreftelse = beslutter.hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse());
+            bekreftelse.godkjennAksjonspunkt(saksbehandler.hentAksjonspunkt(AksjonspunktKoder.SJEKK_MANGLENDE_FØDSEL));
+            beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        return saksnummer;
+            return saksnummer;
+        });
     }
 
     private Saksnummer behandleSøknadForMorUtenOverlapp(Familie familie, LocalDate fødselsdato, List<UttakPeriodeDto> uttaksplan) {

@@ -11,7 +11,7 @@ import java.net.http.HttpRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.qameta.allure.Step;
+import io.qameta.allure.Allure;
 import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
 import no.nav.foreldrepenger.vtp.kontrakter.hendelser.PersonhendelseDto;
 
@@ -20,15 +20,16 @@ public class PdlLeesahKlient {
     private static final String PDL_LEESAH = "/pdl/leesah";
     private static final Logger LOG = LoggerFactory.getLogger(PdlLeesahKlient.class);
 
-    @Step("Sender inn hendelse")
     public void opprettHendelse(PersonhendelseDto personhendelseDto) {
-        tilJsonOgPubliserIAllureRapport(personhendelseDto);
-        LOG.info("Legger til hendelse {} i PDL", personhendelseDto);
-        var request = requestMedBasicHeadere()
-                .uri(fromUri(BaseUriProvider.VTP_API_BASE)
-                        .path(PDL_LEESAH)
-                        .build())
-                .POST(HttpRequest.BodyPublishers.ofString(toJson(personhendelseDto)));
-        send(request.build());
+        Allure.step("Sender inn hendelse", () -> {
+            tilJsonOgPubliserIAllureRapport(personhendelseDto);
+            LOG.info("Legger til hendelse {} i PDL", personhendelseDto);
+            var request = requestMedBasicHeadere()
+                    .uri(fromUri(BaseUriProvider.VTP_API_BASE)
+                            .path(PDL_LEESAH)
+                            .build())
+                    .POST(HttpRequest.BodyPublishers.ofString(toJson(personhendelseDto)));
+            send(request.build());
+        });
     }
 }

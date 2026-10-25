@@ -36,8 +36,6 @@
 
         <pdfbox.version>3.0.8</pdfbox.version>
         <allure.version>3.0.0</allure.version>
-        <allure.maven.version>3.1.0</allure.maven.version>
-        <aspectj.version>1.9.25.1</aspectj.version>
     </properties>
 
     <dependencyManagement>
@@ -118,29 +116,12 @@
                         -Duser.timezone="Europe/Oslo"
                         -Djdk.httpclient.allowRestrictedHeaders=host
                         -Dfile.encoding=UTF-8
-                        -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
                     </argLine>
                     <includes>
                         <include>${testPackage}</include>
                     </includes>
                     <groups>${includeTestsTags}</groups>
                     <excludedGroups>${excludeTestsTags}</excludedGroups>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.aspectj</groupId>
-                        <artifactId>aspectjweaver</artifactId>
-                        <version>${aspectj.version}</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-            <plugin>
-                <groupId>io.qameta.allure</groupId>
-                <artifactId>allure-maven</artifactId>
-                <version>${allure.maven.version}</version>
-                <configuration>
-                    <reportDirectory>target/allure-report</reportDirectory>
-                    <reportingOutputDirectory>target/allure-report</reportingOutputDirectory>
                 </configuration>
             </plugin>
         </plugins>

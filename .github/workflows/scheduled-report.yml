@@ -18,6 +18,7 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       GITHUB_ACTOR: ${{ github.actor }}
+      ALLURE_VERSION: 3.21.0
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # ratchet:actions/checkout@v7.0.1
         with:
@@ -26,6 +27,9 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: 25
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # ratchet:actions/setup-node@v7.1.0
+        with:
+          node-version: lts/*
       - name: Login GAR
         uses: nais/login@40b72a35a18ddf2ad74b632461139ab838cc2a2f # ratchet:nais/login@v0
         with:
@@ -64,7 +68,7 @@ jobs:
         run: mvn test -e --batch-mode -Djuipter.parallelism=8 -P fpkalkulus
 
       - name: Lager testrapport
-        run: mvn allure:report --batch-mode
+        run: npx --yes "allure@${ALLURE_VERSION}" generate target/allure-results -o target/allure-report
 
       - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # ratchet:actions/configure-pages@v6.0.0
       - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # ratchet:actions/upload-pages-artifact@v5.0.0

@@ -8,7 +8,7 @@ import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.send;
 import java.net.http.HttpRequest;
 import java.util.UUID;
 
-import io.qameta.allure.Step;
+import io.qameta.allure.Allure;
 import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.BeregningResultat;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.Kravgrunnlag;
@@ -27,25 +27,27 @@ public class OkonomiKlient {
         this.saksbehandlerRolle = saksbehandlerRolle;
     }
 
-    @Step
     public void putGrunnlag(Kravgrunnlag kravgrunnlag, int behandlingId) {
-        var request = requestMedInnloggetSaksbehandler(this.saksbehandlerRolle, API_NAME)
-                .uri(fromUri(BaseUriProvider.FPTILBAKE_BASE)
-                        .path(GRUNNLAG_URL)
-                        .queryParam("behandlingId", behandlingId)
-                        .build())
-                .POST(HttpRequest.BodyPublishers.ofString(toJson(kravgrunnlag)));
-        send(request.build());
+        Allure.step("putGrunnlag", () -> {
+            var request = requestMedInnloggetSaksbehandler(this.saksbehandlerRolle, API_NAME)
+                    .uri(fromUri(BaseUriProvider.FPTILBAKE_BASE)
+                            .path(GRUNNLAG_URL)
+                            .queryParam("behandlingId", behandlingId)
+                            .build())
+                    .POST(HttpRequest.BodyPublishers.ofString(toJson(kravgrunnlag)));
+            send(request.build());
+        });
     }
 
-    @Step
     public BeregningResultat hentResultat(UUID uuid){
-        var request = requestMedInnloggetSaksbehandler(this.saksbehandlerRolle, API_NAME)
-                .uri(fromUri(BaseUriProvider.FPTILBAKE_BASE)
-                        .path(BEREGNING_RESULTAT_URL)
-                        .queryParam("uuid", uuid)
-                        .build())
-                .GET();
-        return send(request.build(), BeregningResultat.class);
+        return Allure.step("hentResultat", () -> {
+            var request = requestMedInnloggetSaksbehandler(this.saksbehandlerRolle, API_NAME)
+                    .uri(fromUri(BaseUriProvider.FPTILBAKE_BASE)
+                            .path(BEREGNING_RESULTAT_URL)
+                            .queryParam("uuid", uuid)
+                            .build())
+                    .GET();
+            return send(request.build(), BeregningResultat.class);
+        });
     }
 }
