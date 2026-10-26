@@ -635,7 +635,7 @@
 #### 21. `farBfhrMinsterettOgUttakTest`
 - **DisplayName:** "(none)"
 
-#### 22. `farBfhrMinsterettasdasdaOgUttakTest`
+#### 22. `farSøkerForeldrepengerMedMorsUttakIEøsTest`
 - **DisplayName:** "22: Far søker med mor rett og har tatt ut mødrekvote og deler av fellesperioden i EØS."
 
 ### VerdikjedeSvangerskapspenger.java (verdikjedetester/VerdikjedeSvangerskapspenger.java)

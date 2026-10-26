@@ -25,9 +25,9 @@
     <properties>
         <vtp.versjon>2.2.5</vtp.versjon>
 
-        <fp-felles.versjon>7.9.4</fp-felles.versjon>
+        <fp-felles.versjon>7.9.5</fp-felles.versjon>
         <fp-prosesstask.version>5.3.0</fp-prosesstask.version>
-        <fp-kontrakter.version>9.4.40</fp-kontrakter.version>
+        <fp-kontrakter.version>9.4.41</fp-kontrakter.version>
 
         <ftberegning.version>7.2.2</ftberegning.version>
         <fpkalkulus.kontrakt.version>1.2.2</fpkalkulus.kontrakt.version>
@@ -36,8 +36,6 @@
 
         <pdfbox.version>3.0.8</pdfbox.version>
         <allure.version>3.0.0</allure.version>
-        <allure.maven.version>3.1.0</allure.maven.version>
-        <aspectj.version>1.9.25.1</aspectj.version>
     </properties>
 
     <dependencyManagement>
@@ -118,29 +116,12 @@
                         -Duser.timezone="Europe/Oslo"
                         -Djdk.httpclient.allowRestrictedHeaders=host
                         -Dfile.encoding=UTF-8
-                        -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
                     </argLine>
                     <includes>
                         <include>${testPackage}</include>
                     </includes>
                     <groups>${includeTestsTags}</groups>
                     <excludedGroups>${excludeTestsTags}</excludedGroups>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.aspectj</groupId>
-                        <artifactId>aspectjweaver</artifactId>
-                        <version>${aspectj.version}</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-            <plugin>
-                <groupId>io.qameta.allure</groupId>
-                <artifactId>allure-maven</artifactId>
-                <version>${allure.maven.version}</version>
-                <configuration>
-                    <reportDirectory>target/allure-report</reportDirectory>
-                    <reportingOutputDirectory>target/allure-report</reportingOutputDirectory>
                 </configuration>
             </plugin>
         </plugins>

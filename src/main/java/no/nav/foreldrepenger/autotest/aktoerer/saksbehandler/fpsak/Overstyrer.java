@@ -3,7 +3,7 @@ package no.nav.foreldrepenger.autotest.aktoerer.saksbehandler.fpsak;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.qameta.allure.Step;
+import io.qameta.allure.Allure;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.OverstyrAksjonspunkter;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
@@ -24,10 +24,11 @@ public class Overstyrer extends Saksbehandler {
         overstyr(bekreftelser);
     }
 
-    @Step("Overstyrer aksjonspunkter")
     public void overstyr(List<AksjonspunktBekreftelse> bekreftelser) {
-        OverstyrAksjonspunkter aksjonspunkter = new OverstyrAksjonspunkter(valgtFagsak, valgtBehandling, bekreftelser);
-        behandlingerKlient.overstyr(aksjonspunkter);
-        refreshBehandling();
+        Allure.step("Overstyrer aksjonspunkter", () -> {
+            OverstyrAksjonspunkter aksjonspunkter = new OverstyrAksjonspunkter(valgtFagsak, valgtBehandling, bekreftelser);
+            behandlingerKlient.overstyr(aksjonspunkter);
+            refreshBehandling();
+        });
     }
 }

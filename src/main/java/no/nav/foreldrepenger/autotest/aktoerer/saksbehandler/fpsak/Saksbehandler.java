@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.qameta.allure.Step;
+import io.qameta.allure.Allure;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.AktivitetStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.ArbeidInntektsmeldingAksjonspunktÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.ArbeidsforholdKomplettVurderingType;
@@ -247,42 +247,43 @@ public class Saksbehandler {
      * - Hvis vi ikke gjør dette så kan punkt 3) returnere behandlingen mens den er på kø, uten at prosseseringen er ferdig
      * 3) Venter til enten behandling avsluttet eller det har oppstått et aksjonspunkt
      */
-    @Step("Venter på at fagsak får behandlingstype {behandlingstype.kode} ")
     private void ventPåOgVelgSisteBehandling(BehandlingType behandlingstype,
                                              BehandlingÅrsakType behandlingÅrsakType,
                                              Boolean åpenStatus,
                                              Integer antallBehandlingerSomMatcherType) {
-        LOG.debug("Venter til fagsak {} har behandling av type {} {} ...", valgtFagsak.saksnummer().value(), behandlingstype,
-                Optional.ofNullable(behandlingÅrsakType).map(Objects::toString).orElse(""));
-        Objects.requireNonNull(valgtFagsak);
+        Allure.step("Venter på at fagsak får behandlingstype " + behandlingstype.getKode(), () -> {
+            LOG.debug("Venter til fagsak {} har behandling av type {} {} ...", valgtFagsak.saksnummer().value(), behandlingstype,
+                    Optional.ofNullable(behandlingÅrsakType).map(Objects::toString).orElse(""));
+            Objects.requireNonNull(valgtFagsak);
 
-        // 1) Vi venter til det er opprettet en behandling ved forventet type, årsak, status og antall
-        var behandling = Vent.på(() -> {
-            var matchedeBehandlinger = hentAlleBehandlingerAvTypen(behandlingstype, behandlingÅrsakType, åpenStatus);
-            if (matchedeBehandlinger == null || matchedeBehandlinger.isEmpty()) {
-                return null;
+            // 1) Vi venter til det er opprettet en behandling ved forventet type, årsak, status og antall
+            var behandling = Vent.på(() -> {
+                var matchedeBehandlinger = hentAlleBehandlingerAvTypen(behandlingstype, behandlingÅrsakType, åpenStatus);
+                if (matchedeBehandlinger == null || matchedeBehandlinger.isEmpty()) {
+                    return null;
+                }
+
+                if (antallBehandlingerSomMatcherType == null || antallBehandlingerSomMatcherType == matchedeBehandlinger.size()) {
+                    return matchedeBehandlinger.stream().max(Comparator.comparing(b -> b.opprettet)).orElseThrow();
+                }
+                return null; // Vi har matchede behandlinger, men ikke av forventet antall!
+            }, "Saken har ikke fått behandling av type: " + behandlingstype);
+
+            // 2) Hvis vi venter på en REVURDERING og behandling er køet, men ikke gjennopptatt venter vi til AP 7011 er utført.
+            if (BehandlingType.REVURDERING.equals(behandlingstype) && erBehandlingKøetOgIkkeGjenopptatt(behandling.uuid)) {
+                Vent.på(() -> behandlingerKlient.hentAlleAksjonspunkter(behandling.uuid)
+                        .stream()
+                        .filter(aksjonspunkt -> aksjonspunkt.getDefinisjon().equals(AUTO_KØET_BEHANDLING))
+                        .findFirst()
+                        .orElseThrow()
+                        .getStatus()
+                        .equals("UTFO"), "Køet behandling er ikke gjenopptatt av fpsak!");
             }
 
-            if (antallBehandlingerSomMatcherType == null || antallBehandlingerSomMatcherType == matchedeBehandlinger.size()) {
-                return matchedeBehandlinger.stream().max(Comparator.comparing(b -> b.opprettet)).orElseThrow();
-            }
-            return null; // Vi har matchede behandlinger, men ikke av forventet antall!
-        }, "Saken har ikke fått behandling av type: " + behandlingstype);
-
-        // 2) Hvis vi venter på en REVURDERING og behandling er køet, men ikke gjennopptatt venter vi til AP 7011 er utført.
-        if (BehandlingType.REVURDERING.equals(behandlingstype) && erBehandlingKøetOgIkkeGjenopptatt(behandling.uuid)) {
-            Vent.på(() -> behandlingerKlient.hentAlleAksjonspunkter(behandling.uuid)
-                    .stream()
-                    .filter(aksjonspunkt -> aksjonspunkt.getDefinisjon().equals(AUTO_KØET_BEHANDLING))
-                    .findFirst()
-                    .orElseThrow()
-                    .getStatus()
-                    .equals("UTFO"), "Køet behandling er ikke gjenopptatt av fpsak!");
-        }
-
-        // 3) Venter til enten behandling avsluttet eller det har oppstått et aksjonspunkt
-        venterPåFerdigProssesseringOgOppdaterBehandling(behandling);
-        LOG.debug("Behandling opprettet og oppdatert!");
+            // 3) Venter til enten behandling avsluttet eller det har oppstått et aksjonspunkt
+            venterPåFerdigProssesseringOgOppdaterBehandling(behandling);
+            LOG.debug("Behandling opprettet og oppdatert!");
+        });
     }
 
     private boolean erBehandlingKøetOgIkkeGjenopptatt(UUID behandlingsuuid) {
@@ -415,22 +416,25 @@ public class Saksbehandler {
         }
     }
 
-    @Step("Setter behandling på vent")
     public void settBehandlingPåVent(LocalDate frist, Venteårsak årsak) {
-        behandlingerKlient.settPaVent(new SettBehandlingPaVentDto(valgtBehandling, frist, årsak));
-        ventTilHistorikkinnslag(HistorikkType.BEH_VENT);
+        Allure.step("Setter behandling på vent", () -> {
+            behandlingerKlient.settPaVent(new SettBehandlingPaVentDto(valgtBehandling, frist, årsak));
+            ventTilHistorikkinnslag(HistorikkType.BEH_VENT);
+        });
     }
 
-    @Step("Gjenopptar Behandling")
     public void gjenopptaBehandling() {
-        valgtBehandling = behandlingerKlient.gjenoppta(new BehandlingIdVersjonDto(valgtBehandling));
-        ventTilHistorikkinnslag(HistorikkType.BEH_GJEN, HistorikkType.BEH_MAN_GJEN);
+        Allure.step("Gjenopptar Behandling", () -> {
+            valgtBehandling = behandlingerKlient.gjenoppta(new BehandlingIdVersjonDto(valgtBehandling));
+            ventTilHistorikkinnslag(HistorikkType.BEH_GJEN, HistorikkType.BEH_MAN_GJEN);
+        });
     }
 
-    @Step("Henlegger behandling")
     public void henleggBehandling(BehandlingResultatType årsak) {
-        behandlingerKlient.henlegg(new BehandlingHenlegg(valgtBehandling.uuid, valgtBehandling.versjon, årsak, "Henlagt"));
-        ventTilHistorikkinnslag(HistorikkType.AVBRUTT_BEH);
+        Allure.step("Henlegger behandling", () -> {
+            behandlingerKlient.henlegg(new BehandlingHenlegg(valgtBehandling.uuid, valgtBehandling.versjon, årsak, "Henlagt"));
+            ventTilHistorikkinnslag(HistorikkType.AVBRUTT_BEH);
+        });
     }
 
     /*
@@ -450,17 +454,18 @@ public class Saksbehandler {
         opprettBehandling(behandlingstype, årsak, valgtFagsak);
     }
 
-    @Step("Oppretter {behandlingstype} på fagsak med saksnummer: {fagsak.saksnummer}")
     private void opprettBehandling(BehandlingType behandlingstype, BehandlingÅrsakType årsak, Fagsak fagsak) {
-        if (behandlingstype.equals(BehandlingType.FØRSTEGANGSSØKNAD)) {
-            throw new UnsupportedOperationException("Ikke implementert enda. Gi beskjed om det er ønskelig.");
-        }
+        Allure.step("Oppretter " + behandlingstype + " på fagsak med saksnummer: " + fagsak.saksnummer(), () -> {
+            if (behandlingstype.equals(BehandlingType.FØRSTEGANGSSØKNAD)) {
+                throw new UnsupportedOperationException("Ikke implementert enda. Gi beskjed om det er ønskelig.");
+            }
 
-        LOG.info("Oppretter behandling {} {} på fagsak {} ...", behandlingstype, årsak, fagsak.saksnummer().value());
-        valgtBehandling = behandlingerKlient.opprettBehandlingManuelt(
-                new BehandlingNy(fagsak.saksnummer(), behandlingstype, årsak, false));
-        oppdaterLazyFelterForBehandling();
-        LOG.info("Behandling {}|{} opprettet", behandlingstype, årsak);
+            LOG.info("Oppretter behandling {} {} på fagsak {} ...", behandlingstype, årsak, fagsak.saksnummer().value());
+            valgtBehandling = behandlingerKlient.opprettBehandlingManuelt(
+                    new BehandlingNy(fagsak.saksnummer(), behandlingstype, årsak, false));
+            oppdaterLazyFelterForBehandling();
+            LOG.info("Behandling {}|{} opprettet", behandlingstype, årsak);
+        });
     }
 
     /*

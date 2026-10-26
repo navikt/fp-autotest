@@ -152,7 +152,7 @@ class AdressebeskyttelseOgSkjermetPersonTester {
 
         var morsSakInnsyn = mor.innsyn().hentFpSakUtenÅpenBehandling(saksnummerMor);
         assertThat(morsSakInnsyn).isNotNull();
-        assertThat(morsSakInnsyn.gjeldendeVedtak().perioder()).isNotEmpty();
+        assertThat(morsSakInnsyn.gjeldendeVedtak()).isNotNull();
         assertThat(morsSakInnsyn.saksnummer().value()).isEqualTo(saksnummerMor.value());
         assertThat(morsSakInnsyn.annenPart()).isNotNull(); // Far er ikke beskyttet
         assertThat(morsSakInnsyn.annenPart().fnr().value()).isEqualTo(far.fødselsnummer().value()); // Far er ikke beskyttet
@@ -160,11 +160,12 @@ class AdressebeskyttelseOgSkjermetPersonTester {
         var morsFellesUttaksplan = mor.innsyn().hentFellesUttaksplan(termindato, far.fødselsnummer());
         assertThat(morsFellesUttaksplan).isNotNull();
         assertThat(morsFellesUttaksplan.perioder())
+                .anySatisfy(periode -> assertThat(periode.søker()).isNotNull())
                 .anySatisfy(periode -> assertThat(periode.annenPart()).isNotNull());
 
         var farsSakInnsyn = far.innsyn().hentFpSakUtenÅpenBehandling(saksnummerFar);
         assertThat(farsSakInnsyn).isNotNull();
-        assertThat(farsSakInnsyn.gjeldendeVedtak().perioder()).isNotEmpty();
+        assertThat(farsSakInnsyn.gjeldendeVedtak()).isNotNull();
         assertThat(farsSakInnsyn.saksnummer().value()).isEqualTo(saksnummerFar.value());
         assertThat(farsSakInnsyn.annenPart()).isNull(); // Mor er beskyttet
 

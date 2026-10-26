@@ -32,7 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.qameta.allure.Description;
-import io.qameta.allure.Step;
+import io.qameta.allure.Allure;
 import no.nav.foreldrepenger.autotest.base.VerdikjedeTestBase;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.AktivitetStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
@@ -996,13 +996,14 @@ class Fodsel extends VerdikjedeTestBase {
 
     // TODO må ta inn fordeling som blir laget i søknad for å kunne verifisere rikitg på hva som er i VL!
     //  Denne verifisering kan bare brukes hvis fordeling = fordelingMorHappyCaseLong
-    @Step("Verifiserer utttaksperioder")
     private void verifiserUttak(int antallAktiviteter, List<UttakResultatPeriode> perioder) {
-        assertThat(perioder).hasSize(4);
-        verifiserUttaksperiode(perioder.get(0), KontoType.FORELDREPENGER_FØR_FØDSEL, antallAktiviteter);
-        verifiserUttaksperiode(perioder.get(1), KontoType.MØDREKVOTE, antallAktiviteter);
-        verifiserUttaksperiode(perioder.get(2), KontoType.MØDREKVOTE, antallAktiviteter);
-        verifiserUttaksperiode(perioder.get(3), KontoType.FELLESPERIODE, antallAktiviteter);
+        Allure.step("Verifiserer utttaksperioder", () -> {
+            assertThat(perioder).hasSize(4);
+            verifiserUttaksperiode(perioder.get(0), KontoType.FORELDREPENGER_FØR_FØDSEL, antallAktiviteter);
+            verifiserUttaksperiode(perioder.get(1), KontoType.MØDREKVOTE, antallAktiviteter);
+            verifiserUttaksperiode(perioder.get(2), KontoType.MØDREKVOTE, antallAktiviteter);
+            verifiserUttaksperiode(perioder.get(3), KontoType.FELLESPERIODE, antallAktiviteter);
+        });
     }
 
     private void verifiserUttaksperiode(UttakResultatPeriode uttakResultatPeriode, KontoType stønadskonto,
@@ -1017,31 +1018,32 @@ class Fodsel extends VerdikjedeTestBase {
         }
     }
 
-    @Step("Verifiserer tilkjent ytelse")
     private void verifiserTilkjentYtelse(BeregningsresultatMedUttaksplan beregningResultatForeldrepenger,
             boolean medFullRefusjon) {
-        var perioder = beregningResultatForeldrepenger.getPerioder();
-        assertThat(perioder).isNotEmpty();
-        for (var periode : perioder) {
-            assertThat(periode.getDagsats()).isPositive();
-            var andeler = periode.getAndeler();
-            for (var andel : andeler) {
-                var kode = andel.getAktivitetStatus();
-                if (kode.equals(AktivitetStatus.ARBEIDSTAKER)) {
-                    if (medFullRefusjon) {
-                        assertThat(andel.getTilSøker()).isZero();
-                        assertThat(andel.getRefusjon()).isPositive();
-                    } else {
+        Allure.step("Verifiserer tilkjent ytelse", () -> {
+            var perioder = beregningResultatForeldrepenger.getPerioder();
+            assertThat(perioder).isNotEmpty();
+            for (var periode : perioder) {
+                assertThat(periode.getDagsats()).isPositive();
+                var andeler = periode.getAndeler();
+                for (var andel : andeler) {
+                    var kode = andel.getAktivitetStatus();
+                    if (kode.equals(AktivitetStatus.ARBEIDSTAKER)) {
+                        if (medFullRefusjon) {
+                            assertThat(andel.getTilSøker()).isZero();
+                            assertThat(andel.getRefusjon()).isPositive();
+                        } else {
+                            assertThat(andel.getTilSøker()).isPositive();
+                            assertThat(andel.getRefusjon()).isZero();
+                        }
+                    } else if (kode.equals(AktivitetStatus.FRILANSER) || kode.equals(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE)) {
                         assertThat(andel.getTilSøker()).isPositive();
                         assertThat(andel.getRefusjon()).isZero();
                     }
-                } else if (kode.equals(AktivitetStatus.FRILANSER) || kode.equals(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE)) {
-                    assertThat(andel.getTilSøker()).isPositive();
-                    assertThat(andel.getRefusjon()).isZero();
+                    assertThat(andel.getUttak().isGradering()).isFalse();
+                    assertThat(andel.getUtbetalingsgrad()).isEqualByComparingTo(BigDecimal.valueOf(100));
                 }
-                assertThat(andel.getUttak().isGradering()).isFalse();
-                assertThat(andel.getUtbetalingsgrad()).isEqualByComparingTo(BigDecimal.valueOf(100));
             }
-        }
+        });
     }
 }
