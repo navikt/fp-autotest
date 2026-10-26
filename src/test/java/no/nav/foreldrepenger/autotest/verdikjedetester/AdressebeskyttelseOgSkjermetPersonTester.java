@@ -117,18 +117,17 @@ class AdressebeskyttelseOgSkjermetPersonTester {
         LOG.info("Fagsak er beskyttet!");
 
         var far = familie.far();
-        // Responsen angir ikke om annen parts perioder kommer fra søkerens søknad eller annen parts sak.
-        // Far oppgir derfor et annet uttak for mor enn hennes faktiske uttak, uten overlapp med sitt eget.
-        // Da kan vi kontrollere at han ser egne opplysninger, og ikke mors adressebeskyttede vedtaksperioder.
+        // Far oppgir et annet uttak for mor enn hennes faktiske uttak, uten overlapp med sitt eget.
+        // Begge skal skjermes når mor er adressebeskyttet, også perioden far selv oppga.
         var morsPeriodeOppgittAvFar = uttaksperiode(Rolle.MOR, MØDREKVOTE,
                 termindato.plusWeeks(10), termindato.plusWeeks(11).minusDays(1));
-        var forventetAnnenPartsPeriode = new UttakPeriodeDto(morsPeriodeOppgittAvFar.fom(), morsPeriodeOppgittAvFar.tom(),
+        var oppgittAnnenPartsPeriode = new UttakPeriodeDto(morsPeriodeOppgittAvFar.fom(), morsPeriodeOppgittAvFar.tom(),
                 null, morsPeriodeOppgittAvFar.søker(), null);
         var farsEgnePerioder = byttPerspektiv(uttaksplan).stream()
                 .filter(periode -> periode.søker() != null)
                 .map(periode -> new UttakPeriodeDto(periode.fom(), periode.tom(), periode.søker(), null, null))
                 .toList();
-        var farsOppgittePlan = Stream.concat(farsEgnePerioder.stream(), Stream.of(forventetAnnenPartsPeriode)).toList();
+        var farsOppgittePlan = Stream.concat(farsEgnePerioder.stream(), Stream.of(oppgittAnnenPartsPeriode)).toList();
         var søknadFar = SøknadForeldrepengerMaler.lagSøknadForeldrepengerTermin(termindato, BrukerRolle.FAR)
                 .medPerioder(farsOppgittePlan)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.mor()));
@@ -177,7 +176,7 @@ class AdressebeskyttelseOgSkjermetPersonTester {
         assertThat(farsFellesUttaksplan.perioder().stream()
                 .filter(periode -> periode.annenPart() != null)
                 .toList())
-                .containsExactly(forventetAnnenPartsPeriode);
+                .isEmpty();
         var forventedeUttaksdagerForFar = farsEgnePerioder.stream()
                 .flatMap(periode -> periode.fom().datesUntil(periode.tom().plusDays(1)))
                 .filter(dato -> dato.getDayOfWeek().getValue() <= 5)
