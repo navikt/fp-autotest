@@ -2941,7 +2941,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .containsExactlyElementsOf(komprimerKontotyper(forventedeEøsKontotyper));
         var eøsPerioderFpsak = avklarAnnenforelderEøsPerioder.getPerioder();
         assertThat(eøsPerioder.getFirst().fom()).isEqualTo(eøsPerioderFpsak.getFirst().fom());
-        assertThat(eøsPerioder.getLast().tom()).isEqualTo(helgejustertTilFredag(eøsPerioderFpsak.getLast().tom()));
+        assertThat(eøsPerioder.getLast().tom()).isEqualTo(eøsPerioderFpsak.getLast().tom());
 
         // Revurdering
         // Skal utlede aksjonspunkt på nytt for revuderinger!
