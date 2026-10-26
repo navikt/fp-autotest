@@ -2830,7 +2830,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
             + "Far søker og oppgir mor har rett i EØS, mens saksbehandler avklarer og registerer perioder mor har tatt ut i EØS."
             + "Far får delvis avslag på overlappende uttak, og avslag de siste ukene av fellesperioden pga tom for konto når mor er hensyntatt."
             + "Far får innvilget resten.")
-    void farBfhrMinsterettasdasdaOgUttakTest() {
+    void farSøkerForeldrepengerMedMorsUttakIEøsTest() {
         var familie = FamilieGenerator.ny()
                 .forelder(far().inntekt(InntektGenerator.ny().arbeidMedOpptjeningOver6G().build()).build())
                 .barn(LocalDate.now().minusWeeks(8))
