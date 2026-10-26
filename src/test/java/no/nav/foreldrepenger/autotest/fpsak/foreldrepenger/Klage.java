@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import io.qameta.allure.Description;
-import io.qameta.allure.Step;
+import io.qameta.allure.Allure;
 import no.nav.foreldrepenger.autotest.base.VerdikjedeTestBase;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
@@ -154,24 +154,25 @@ class Klage extends VerdikjedeTestBase {
                 .contains("IKKE_KONKRET");
     }
 
-    @Step("Klage: oppretter førstegangsbehandling")
     private Saksnummer opprettForstegangsbehandlingMor(Mor mor, Familie familie) {
-        var fødselsdato = familie.barn().fødselsdato();
-        var fpStartdato = fødselsdato.minusWeeks(3);
-        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
-                .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
-        var saksnummer = mor.søk(søknad);
+        return Allure.step("Klage: oppretter førstegangsbehandling", () -> {
+            var fødselsdato = familie.barn().fødselsdato();
+            var fpStartdato = fødselsdato.minusWeeks(3);
+            var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
+                    .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
+            var saksnummer = mor.søk(søknad);
 
-        var arbeidsgiver = mor.arbeidsgiver();
-        ventPåInntektsmeldingForespørsel(saksnummer);
-        arbeidsgiver.sendInntektsmeldingerFP(saksnummer, fpStartdato);
+            var arbeidsgiver = mor.arbeidsgiver();
+            ventPåInntektsmeldingForespørsel(saksnummer);
+            arbeidsgiver.sendInntektsmeldingerFP(saksnummer, fpStartdato);
 
-        saksbehandler.hentFagsak(saksnummer);
-        AllureHelper.debugLoggBehandlingsliste(saksbehandler.behandlinger);
-        saksbehandler.ventPåOgVelgFørstegangsbehandling();
-        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
-        AllureHelper.debugLoggBehandlingsliste(saksbehandler.behandlinger);
+            saksbehandler.hentFagsak(saksnummer);
+            AllureHelper.debugLoggBehandlingsliste(saksbehandler.behandlinger);
+            saksbehandler.ventPåOgVelgFørstegangsbehandling();
+            saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
+            AllureHelper.debugLoggBehandlingsliste(saksbehandler.behandlinger);
 
-        return saksnummer;
+            return saksnummer;
+        });
     }
 }

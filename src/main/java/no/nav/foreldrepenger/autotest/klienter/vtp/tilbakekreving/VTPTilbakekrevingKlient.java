@@ -10,7 +10,7 @@ import java.net.http.HttpRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.qameta.allure.Step;
+import io.qameta.allure.Allure;
 import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Saksnummer;
 import no.nav.foreldrepenger.vtp.kontrakter.tilbakekreving.TilbakekrevingKonsistensDto;
@@ -21,16 +21,17 @@ public class VTPTilbakekrevingKlient {
     private static final Logger LOG = LoggerFactory.getLogger(VTPTilbakekrevingKlient.class);
 
 
-    @Step("Oppdaterer VTPs tilbakekrevingsmock med siste saksnummer og behandling")
     public void oppdaterTilbakekrevingKonsistens(Saksnummer saksnummer, int behandlingId) {
-        LOG.info("Oppdaterer VTPs tilbakekrevingsmock med saksnummer {} og behandling {} for konsistens", saksnummer.value(), behandlingId);
+        Allure.step("Oppdaterer VTPs tilbakekrevingsmock med siste saksnummer og behandling", () -> {
+            LOG.info("Oppdaterer VTPs tilbakekrevingsmock med saksnummer {} og behandling {} for konsistens", saksnummer.value(), behandlingId);
 
-        var request = requestMedBasicHeadere()
-                .uri(fromUri(BaseUriProvider.VTP_API_BASE)
-                        .path(TILBAKEKREVING_KONSISTENS)
-                        .build())
-                .POST(HttpRequest.BodyPublishers.ofString(toJson(
-                        new TilbakekrevingKonsistensDto(saksnummer.value(), ""+behandlingId))));
-        send(request.build());
+            var request = requestMedBasicHeadere()
+                    .uri(fromUri(BaseUriProvider.VTP_API_BASE)
+                            .path(TILBAKEKREVING_KONSISTENS)
+                            .build())
+                    .POST(HttpRequest.BodyPublishers.ofString(toJson(
+                            new TilbakekrevingKonsistensDto(saksnummer.value(), ""+behandlingId))));
+            send(request.build());
+        });
     }
 }

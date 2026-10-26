@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import io.qameta.allure.Step;
+import io.qameta.allure.Allure;
 import no.nav.foreldrepenger.autotest.klienter.fpinntektsmelding.InntektsmeldingKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpinntektsmelding.dto.arbeidsgiverportal.SendInntektsmeldingDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsoknad.FpsoknadKlient;
@@ -112,11 +112,12 @@ public class ApiMottak extends DokumentInnsendingHjelper {
 
 
 
-    @Step("Sender inn IM for bruker {fnr}")
     private Saksnummer sendInnInntektsmelding(SendInntektsmeldingDto request, Fødselsnummer fnr, Saksnummer saksnummer) {
-        var antallGamleInntekstmeldinger = antallInntektsmeldingerMottattPåSak(saksnummer);
-        InntektsmeldingKlient.sendInntektsmelding(request, fnr);
-        return ventTilAlleInntekstmeldingeneErMottatt(fnr, saksnummer, 1, antallGamleInntekstmeldinger, "arbeidsgiverportal");
+        return Allure.step("Sender inn IM for bruker " + fnr, () -> {
+            var antallGamleInntekstmeldinger = antallInntektsmeldingerMottattPåSak(saksnummer);
+            InntektsmeldingKlient.sendInntektsmelding(request, fnr);
+            return ventTilAlleInntekstmeldingeneErMottatt(fnr, saksnummer, 1, antallGamleInntekstmeldinger, "arbeidsgiverportal");
+        });
     }
 
     @Override
@@ -137,24 +138,26 @@ public class ApiMottak extends DokumentInnsendingHjelper {
         return sendInnSøknad(fnr, søknad);
     }
 
-    @Step("[Sender inn søknad: {fnr}")
     private Saksnummer sendInnSøknad(Fødselsnummer fnr, SøknadDto søknad) {
-        AllureHelper.tilJsonOgPubliserIAllureRapport(søknad);
-        var skjæringsTidspunktForNyBehandling = LocalDateTime.now();
-        var antallEksistrendeFagsakerPåSøker = antallEksistrendeFagsakerPåSøker(fnr);
-        fpsoknadKlient.mellomlagreVedlegg(fnr, søknad);
-        fpsoknadKlient.sendSøknad(fnr, søknad);
-        return ventTilFagsakOgBehandlingErOpprettet(fnr, skjæringsTidspunktForNyBehandling, antallEksistrendeFagsakerPåSøker);
+        return Allure.step("Sender inn søknad: " + fnr, () -> {
+            AllureHelper.tilJsonOgPubliserIAllureRapport(søknad);
+            var skjæringsTidspunktForNyBehandling = LocalDateTime.now();
+            var antallEksistrendeFagsakerPåSøker = antallEksistrendeFagsakerPåSøker(fnr);
+            fpsoknadKlient.mellomlagreVedlegg(fnr, søknad);
+            fpsoknadKlient.sendSøknad(fnr, søknad);
+            return ventTilFagsakOgBehandlingErOpprettet(fnr, skjæringsTidspunktForNyBehandling, antallEksistrendeFagsakerPåSøker);
+        });
     }
 
-    @Step("[Sender inn endrignssøknad: {fnr}")
     private Saksnummer sendInnSøknad(Fødselsnummer fnr, EndringssøknadForeldrepengerDto søknad) {
-        AllureHelper.tilJsonOgPubliserIAllureRapport(søknad);
-        var skjæringsTidspunktForNyBehandling = LocalDateTime.now();
-        var antallEksistrendeFagsakerPåSøker = antallEksistrendeFagsakerPåSøker(fnr);
-        fpsoknadKlient.mellomlagreVedlegg(fnr, søknad);
-        fpsoknadKlient.sendSøknad(fnr, søknad);
-        return ventTilFagsakOgBehandlingErOpprettet(fnr, skjæringsTidspunktForNyBehandling, antallEksistrendeFagsakerPåSøker);
+        return Allure.step("Sender inn endringssøknad: " + fnr, () -> {
+            AllureHelper.tilJsonOgPubliserIAllureRapport(søknad);
+            var skjæringsTidspunktForNyBehandling = LocalDateTime.now();
+            var antallEksistrendeFagsakerPåSøker = antallEksistrendeFagsakerPåSøker(fnr);
+            fpsoknadKlient.mellomlagreVedlegg(fnr, søknad);
+            fpsoknadKlient.sendSøknad(fnr, søknad);
+            return ventTilFagsakOgBehandlingErOpprettet(fnr, skjæringsTidspunktForNyBehandling, antallEksistrendeFagsakerPåSøker);
+        });
     }
 
     @Override

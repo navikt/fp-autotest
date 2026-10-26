@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.autotest.base;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 
 import no.nav.folketrygdloven.kalkulus.response.beregningsgrunnlag.gui.BeregningsgrunnlagDto;
 import no.nav.foreldrepenger.kalkulus.kontrakt.request.EnkelBeregnRequestDto;
@@ -10,7 +11,7 @@ import no.nav.foreldrepenger.kalkulus.kontrakt.response.beregningsgrunnlag.detal
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInfo;
 
-import io.qameta.allure.Step;
+import io.qameta.allure.Allure;
 import no.nav.foreldrepenger.autotest.klienter.fpkalkulus.KalkulusKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
 import no.nav.foreldrepenger.generator.kalkulus.TestscenarioRepositoryImpl;
@@ -26,40 +27,33 @@ public class KalkulusTestBase {
         testscenarioRepositoryImpl = new TestscenarioRepositoryImpl();
     }
 
-    @Step("Oppretter testscenario {testInfo.testMethod} fra Json fil lokalisert i ftkalkulus-verdikjede")
     protected EnkelBeregnRequestDto opprettTestscenario(TestInfo testInfo) throws IOException {
-        return testscenarioRepositoryImpl.hentScenario(testInfo, null);
+        return Allure.step("Oppretter testscenario " + testInfo.getTestMethod().map(Method::getName).orElse("") + " fra Json fil lokalisert i ftkalkulus-verdikjede", () -> testscenarioRepositoryImpl.hentScenario(testInfo, null));
     }
 
-    @Step("Oppretter testscenario {testInfo.testMethod} fra Json fil lokalisert i ftkalkulus-verdikjede, prefix var {inputPrefix}")
     protected EnkelBeregnRequestDto opprettTestscenario(TestInfo testInfo, String inputPrefix) throws IOException {
-        return testscenarioRepositoryImpl.hentScenario(testInfo, inputPrefix);
+        return Allure.step("Oppretter testscenario " + testInfo.getTestMethod().map(Method::getName).orElse("") + " fra Json fil lokalisert i ftkalkulus-verdikjede, prefix var " + inputPrefix, () -> testscenarioRepositoryImpl.hentScenario(testInfo, inputPrefix));
     }
 
-    @Step("Oppretter testscenario {testInfo.testMethod} fra Json fil lokalisert i ftkalkulus-verdikjede, prefix var {inputPrefix}")
     protected EnkelBeregnRequestDto opprettTestscenario(TestInfo testInfo, String inputPrefix, EnkelBeregnRequestDto originalRequest) throws IOException {
-        return testscenarioRepositoryImpl.hentScenario(testInfo, inputPrefix, originalRequest);
+        return Allure.step("Oppretter testscenario " + testInfo.getTestMethod().map(Method::getName).orElse("") + " fra Json fil lokalisert i ftkalkulus-verdikjede, prefix var " + inputPrefix, () -> testscenarioRepositoryImpl.hentScenario(testInfo, inputPrefix, originalRequest));
     }
 
-    @Step("Validerer resultat for test")
     protected BeregningsgrunnlagGrunnlagDto hentForventetResultat(TestInfo testInfo) throws IOException {
-        return testscenarioRepositoryImpl.hentForventetResultat(testInfo);
+        return Allure.step("Validerer resultat for test", () -> testscenarioRepositoryImpl.hentForventetResultat(testInfo));
     }
 
 
-    @Step("Validerer gui resultat for kofakber for test")
     protected BeregningsgrunnlagDto hentForventetGUIKofakber(TestInfo testInfo) throws IOException {
-        return testscenarioRepositoryImpl.hentForventetGUIResultatKofakber(testInfo);
+        return Allure.step("Validerer gui resultat for kofakber for test", () -> testscenarioRepositoryImpl.hentForventetGUIResultatKofakber(testInfo));
     }
 
-    @Step("Validerer gui resultat for foreslå")
     protected BeregningsgrunnlagDto hentForventetGUIForeslå(TestInfo testInfo) throws IOException {
-        return testscenarioRepositoryImpl.hentForventetGUIResultatForeslå(testInfo);
+        return Allure.step("Validerer gui resultat for foreslå", () -> testscenarioRepositoryImpl.hentForventetGUIResultatForeslå(testInfo));
     }
 
-    @Step("Validerer gui resultat for fordel")
     protected BeregningsgrunnlagDto hentForventetGUIFordel(TestInfo testInfo) throws IOException {
-        return testscenarioRepositoryImpl.hentForventetGUIResultatFordel(testInfo);
+        return Allure.step("Validerer gui resultat for fordel", () -> testscenarioRepositoryImpl.hentForventetGUIResultatFordel(testInfo));
     }
 
 

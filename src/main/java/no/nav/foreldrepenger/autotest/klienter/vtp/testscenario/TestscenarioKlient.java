@@ -13,7 +13,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.qameta.allure.Step;
+import io.qameta.allure.Allure;
 import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
 import no.nav.foreldrepenger.vtp.kontrakter.person.TilordnetIdentDto;
 import no.nav.foreldrepenger.vtp.kontrakter.person.v2.PersonDto;
@@ -23,16 +23,17 @@ public class TestscenarioKlient {
 
     private static final Logger LOG = LoggerFactory.getLogger(TestscenarioKlient.class);
 
-    @Step("Oppretter familie/scenario")
     public List<TilordnetIdentDto> opprettTestscenario(List<PersonDto> personer) {
-        var personerJson = toJson(personer);
-        var request = requestMedBasicHeadere()
-                .uri(fromUri(BaseUriProvider.VTP_API_BASE).path("/testscenarios/v2/personer").build())
-                .POST(HttpRequest.BodyPublishers.ofString(personerJson));
-        var identer = Optional.ofNullable(send(request.build(), new TypeReference<List<TilordnetIdentDto>>() {})).orElseGet(List::of);
-        debugJson(personerJson);
-        LOG.info("Testscenario opprettet for {} personer", personer.size());
-        return identer;
+        return Allure.step("Oppretter familie/scenario", () -> {
+            var personerJson = toJson(personer);
+            var request = requestMedBasicHeadere()
+                    .uri(fromUri(BaseUriProvider.VTP_API_BASE).path("/testscenarios/v2/personer").build())
+                    .POST(HttpRequest.BodyPublishers.ofString(personerJson));
+            var identer = Optional.ofNullable(send(request.build(), new TypeReference<List<TilordnetIdentDto>>() {})).orElseGet(List::of);
+            debugJson(personerJson);
+            LOG.info("Testscenario opprettet for {} personer", personer.size());
+            return identer;
+        });
     }
 
     public List<String> hentAlleIdenterFraAlleScenarier() {

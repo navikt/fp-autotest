@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import io.qameta.allure.Description;
-import io.qameta.allure.Step;
+import io.qameta.allure.Allure;
 import no.nav.foreldrepenger.autotest.base.VerdikjedeTestBase;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.VurderÅrsak;
@@ -174,14 +174,15 @@ class Klage extends VerdikjedeTestBase {
                 .isEqualTo("DELVIS_MEDHOLD_I_KLAGE");
     }
 
-    @Step("Oppretter førstegangsvedtak")
     private void opprettForstegangssoknadVedtak(Saksnummer saksnummer) {
-        // Opprette førstegangssøknad engangsstønad
-        saksbehandler.hentFagsak(saksnummer);
-        assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
-                .as("Behandlingsresultat")
-                .isEqualTo(BehandlingResultatType.INNVILGET);
+        Allure.step("Oppretter førstegangsvedtak", () -> {
+            // Opprette førstegangssøknad engangsstønad
+            saksbehandler.hentFagsak(saksnummer);
+            assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
+                    .as("Behandlingsresultat")
+                    .isEqualTo(BehandlingResultatType.INNVILGET);
 
-        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
+            saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
+        });
     }
 }

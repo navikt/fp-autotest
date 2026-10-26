@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.qameta.allure.Step;
+import io.qameta.allure.Allure;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
@@ -116,27 +116,28 @@ public class TilbakekrevingSaksbehandler {
         ventPåOgVelgSisteBehandling(behandlingstype, null);
     }
 
-    @Step("Venter på at fagsak får behandlingstype {behandlingstype.kode} ")
     private void ventPåOgVelgSisteBehandling(BehandlingType behandlingstype,
                                              Integer antallBehandlingerSomMatcherType) {
-        // 1) Vi venter til det er opprettet en behandling ved forventet type, årsak, status og antall
-        var behandling = Vent.på(() -> {
-            var matchedeBehandlinger =hentAlleBehandlingerAvTypen(behandlingstype);
-            if (matchedeBehandlinger == null || matchedeBehandlinger.isEmpty()) {
-                return null;
-            }
+        Allure.step("Venter på at fagsak får behandlingstype " + behandlingstype.getKode(), () -> {
+            // 1) Vi venter til det er opprettet en behandling ved forventet type, årsak, status og antall
+            var behandling = Vent.på(() -> {
+                var matchedeBehandlinger =hentAlleBehandlingerAvTypen(behandlingstype);
+                if (matchedeBehandlinger == null || matchedeBehandlinger.isEmpty()) {
+                    return null;
+                }
 
-            if (antallBehandlingerSomMatcherType == null || antallBehandlingerSomMatcherType == matchedeBehandlinger.size()) {
-                return matchedeBehandlinger.stream()
-                        .max(Comparator.comparing(b -> b.opprettet))
-                        .orElseThrow();
-            }
-            return null; // Vi har matchede behandlinger, men ikke av forventet antall!
-        }, "Saken har ikke fått behandling av type: " + behandlingstype);
+                if (antallBehandlingerSomMatcherType == null || antallBehandlingerSomMatcherType == matchedeBehandlinger.size()) {
+                    return matchedeBehandlinger.stream()
+                            .max(Comparator.comparing(b -> b.opprettet))
+                            .orElseThrow();
+                }
+                return null; // Vi har matchede behandlinger, men ikke av forventet antall!
+            }, "Saken har ikke fått behandling av type: " + behandlingstype);
 
-        // 3) Venter til enten behandling avsluttet eller det har oppstått et aksjonspunkt
-        venterPåFerdigProssesseringOgOppdaterBehandling(behandling.uuid);
-        LOG.debug("Behandling opprettet og oppdatert!");
+            // 3) Venter til enten behandling avsluttet eller det har oppstått et aksjonspunkt
+            venterPåFerdigProssesseringOgOppdaterBehandling(behandling.uuid);
+            LOG.debug("Behandling opprettet og oppdatert!");
+        });
     }
 
     private Set<Behandling> hentAlleBehandlingerAvTypen(BehandlingType behandlingstype) {
