@@ -118,7 +118,7 @@ class AdressebeskyttelseOgSkjermetPersonTester {
 
         var far = familie.far();
         // Far oppgir et annet uttak for mor enn hennes faktiske uttak, uten overlapp med sitt eget.
-        // Begge skal skjermes når mor er adressebeskyttet, også perioden far selv oppga.
+        // Når mor er adressebeskyttet, ser far perioden han selv oppga for mor, men ikke mors vedtaksperioder.
         var morsPeriodeOppgittAvFar = uttaksperiode(Rolle.MOR, MØDREKVOTE,
                 termindato.plusWeeks(10), termindato.plusWeeks(11).minusDays(1));
         var oppgittAnnenPartsPeriode = new UttakPeriodeDto(morsPeriodeOppgittAvFar.fom(), morsPeriodeOppgittAvFar.tom(),
@@ -176,7 +176,7 @@ class AdressebeskyttelseOgSkjermetPersonTester {
         assertThat(farsFellesUttaksplan.perioder().stream()
                 .filter(periode -> periode.annenPart() != null)
                 .toList())
-                .isEmpty();
+                .containsExactly(oppgittAnnenPartsPeriode);
         var forventedeUttaksdagerForFar = farsEgnePerioder.stream()
                 .flatMap(periode -> periode.fom().datesUntil(periode.tom().plusDays(1)))
                 .filter(dato -> dato.getDayOfWeek().getValue() <= 5)
