@@ -113,8 +113,9 @@ class FellesUttaksplanTest {
         var eksplisittPlan = new UttaksplanDto(false, List.of(
                 new UttakPeriodeDto(d("2024-01-15"), d("2024-01-19"), uttak(Rolle.MOR, KontoType.FELLESPERIODE), farsUttak, null),
                 annenPart("2024-02-05", "2024-02-09", farsUttak)));
+        var endringsdato = d("2024-01-15");
 
-        var endring = SøknadEndringMaler.lagEndringssøknad(søknad, new Saksnummer("123456789"), eksplisittPlan).build();
+        var endring = SøknadEndringMaler.lagEndringssøknad(søknad, new Saksnummer("123456789"), endringsdato, eksplisittPlan).build();
 
         assertThat(endring.uttaksplan()).isEqualTo(eksplisittPlan);
         assertThat(endring.rolle()).isEqualTo(søknad.rolle());
@@ -140,9 +141,11 @@ class FellesUttaksplanTest {
         var andrePlan = List.of(
                 new UttakPeriodeDto(d("2024-01-22"), d("2024-01-26"), uttak(Rolle.FAR_MEDMOR, KontoType.FELLESPERIODE), null, null),
                 annenPart("2024-02-05", "2024-02-09", uttak(Rolle.MOR, KontoType.MØDREKVOTE)));
+        var førsteEndringsdato = d("2024-01-15");
+        var andreEndringsdato = d("2024-01-22");
 
-        var førsteEndring = SøknadEndringMaler.lagEndringssøknad(søknad, saksnummer, førstePlan).build();
-        var andreEndring = SøknadEndringMaler.lagEndringssøknad(førsteEndring, saksnummer, andrePlan).build();
+        var førsteEndring = SøknadEndringMaler.lagEndringssøknad(søknad, saksnummer, førsteEndringsdato, førstePlan).build();
+        var andreEndring = SøknadEndringMaler.lagEndringssøknad(førsteEndring, saksnummer, andreEndringsdato, andrePlan).build();
 
         assertThat(førsteEndring.uttaksplan().perioder()).isEqualTo(førstePlan);
         assertThat(andreEndring.uttaksplan().perioder()).isEqualTo(andrePlan);
@@ -164,8 +167,9 @@ class FellesUttaksplanTest {
         var eksplisittPlan = new UttaksplanDto(true, List.of(
                 new UttakPeriodeDto(d("2024-01-15"), d("2024-01-19"), uttak(Rolle.MOR, KontoType.FELLESPERIODE), null, eøsUttak),
                 new UttakPeriodeDto(d("2024-02-05"), d("2024-02-09"), null, null, eøsUttak)));
+        var endringsdato = d("2024-01-15");
 
-        var endring = SøknadEndringMaler.lagEndringssøknad(søknad, new Saksnummer("123456789"), eksplisittPlan).build();
+        var endring = SøknadEndringMaler.lagEndringssøknad(søknad, new Saksnummer("123456789"), endringsdato, eksplisittPlan).build();
 
         assertThat(endring.uttaksplan()).isEqualTo(eksplisittPlan);
         assertThat(endring.uttaksplan().ønskerJustertUttakVedFødsel()).isTrue();

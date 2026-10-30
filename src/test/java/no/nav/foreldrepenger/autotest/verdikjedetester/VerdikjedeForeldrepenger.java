@@ -880,7 +880,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var fordelingGiFraSegAlt = fordeling(
                 utsettelsesperiode(Rolle.FAR_MEDMOR, UtsettelseÅrsak.FRI, fpStartdatoIfmFødselFar, fpStartdatoIfmFødselFar.plusDays(1)),
                 uttaksperiode(Rolle.FAR_MEDMOR, KontoType.FORELDREPENGER, fødselsdato.plusWeeks(30), fødselsdato.plusWeeks(56).minusDays(1), null, ARBEID));
-        var endringssøknadBuilder = lagEndringssøknad(søknadFar.build(), saksnummerFar, fordelingGiFraSegAlt);
+        var endringsdato = helgejustertTilMandag(fpStartdatoIfmFødselFar);
+        var endringssøknadBuilder = lagEndringssøknad(søknadFar.build(), saksnummerFar, endringsdato, fordelingGiFraSegAlt);
         far.søk(endringssøknadBuilder);
 
         saksbehandler.ventPåOgVelgRevurderingBehandling();
@@ -2276,6 +2277,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var beggeVedtak = forventetFellesplan(fødselsdato, true, true, false);
         ventOgVerifiserFellesplan(familie, beggeVedtak, byttPlanperspektiv(beggeVedtak), "5: Begge vedtak");
 
+        var endringsdato = helgejustertTilMandag(førsteFellesperiodedag.plusDays(1));
         var innsendtEndringsplan = List.of(
                 UttakPeriodeBuilder.periode(fødselsdato.minusWeeks(3), helgejustertTilFredag(fødselsdato.minusDays(1)))
                         .medAnnenPart(UttakPeriodeBuilder.uttak(Rolle.MOR).medKontoType(FORELDREPENGER_FØR_FØDSEL).build())
@@ -2295,7 +2297,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 uttaksperiode(Rolle.FAR_MEDMOR, FEDREKVOTE, førsteFellesperiodedag.plusDays(1), nyFellesperiodedag.minusDays(1)),
                 nyFellesperiodeFar);
         var endringssøknad = lagEndringssøknad(søknadFar.build(), saksnummerFar,
-                fordeling(innsendtEndringsplan))
+                endringsdato, fordeling(innsendtEndringsplan))
                 .medVedlegg(List.of(VedleggMaler.dokumenterMorsAktivitet(innsendtEndringsplan,
                         ARBEID_OG_UTDANNING, InnsendingType.LASTET_OPP)));
         far.søk(endringssøknad);
@@ -2499,6 +2501,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET, HistorikkType.BREV_SENDT);
 
         var utsettelseFar = UttakPeriodeBuilder.uttak(Rolle.FAR_MEDMOR).medUtsettelseÅrsak(FRI).build();
+        // Far erstatter uttaket før fødsel med fri utsettelse fra sin opprinnelige startdato.
+        var endringsdato = helgejustertTilMandag(startdatoForeldrepengerFar);
         var endretFellesplan = List.of(
                 new UttakPeriodeDto(helgejustertTilMandag(termindato.minusWeeks(3)), helgejustertTilFredag(startdatoForeldrepengerFar.minusDays(1)),
                         null, foreldrepengerFørFødsel, null),
@@ -2513,7 +2517,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 new UttakPeriodeDto(helgejustertTilMandag(termindato.plusWeeks(15)), helgejustertTilFredag(termindato.plusWeeks(31).minusDays(1)),
                         null, fellesperiode, null));
         var endringssøknad = lagEndringssøknad(søknadFar.build(), saksnummerFar,
-                fordeling(endretFellesplan));
+                endringsdato, fordeling(endretFellesplan));
         far.søk(endringssøknad);
 
         saksbehandler.hentFagsak(saksnummerFar);
@@ -2840,6 +2844,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var startdatoForeldrepenger = helgejustertFødselsdato.plusWeeks(8);
         var far = familie.far();
         var fellesperiodeFar = uttaksperiode(Rolle.FAR_MEDMOR, FELLESPERIODE, startdatoForeldrepenger.plusWeeks(15), startdatoForeldrepenger.plusWeeks(31).minusDays(1), null, ARBEID);
+        // Mors EØS-uttak er ikke kjent ved førstegangssøknaden. Saksbehandler registrerer det, og det kommer med i endringssøknaden.
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, FAR)
                 .medPerioder(List.of(
                         uttaksperiode(Rolle.FAR_MEDMOR, FEDREKVOTE, startdatoForeldrepenger, startdatoForeldrepenger.plusWeeks(15).minusDays(1)), fellesperiodeFar
@@ -2945,12 +2950,19 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         // Revurdering
         // Skal utlede aksjonspunkt på nytt for revuderinger!
-        var endringUttaksplan = fordeling(
+        // Som frontend: mors EØS-perioder hentes fra felles uttaksplan og sendes med i hele planen.
+        var morsEøsPerioder = eøsPerioder.stream()
+                .map(periode -> new UttakPeriodeDto(periode.fom(), periode.tom(), null, null, periode.annenPartEøs()))
+                .toList();
+        var farsPerioder = List.of(
                 uttaksperiode(Rolle.FAR_MEDMOR, FEDREKVOTE, startdatoForeldrepenger, startdatoForeldrepenger.plusWeeks(2).minusDays(1)),
                 uttaksperiode(Rolle.FAR_MEDMOR, FEDREKVOTE, startdatoForeldrepenger.plusWeeks(2), startdatoForeldrepenger.plusWeeks(15).minusDays(1)),
                 uttaksperiode(Rolle.FAR_MEDMOR, FELLESPERIODE, startdatoForeldrepenger.plusWeeks(15), startdatoForeldrepenger.plusWeeks(27).minusDays(1), null, ARBEID)
         );
-        var endringssøknad = lagEndringssøknad(søknad.build(), saksnummer, endringUttaksplan);
+        var endringUttaksplan = Stream.concat(morsEøsPerioder.stream(), farsPerioder.stream()).toList();
+        // Far forkorter fellesperioden fra uke 31 til uke 27.
+        var endringsdato = helgejustertTilMandag(startdatoForeldrepenger.plusWeeks(27));
+        var endringssøknad = lagEndringssøknad(søknad.build(), saksnummer, endringsdato, endringUttaksplan);
         far.søk(endringssøknad);
 
         saksbehandler.hentFagsak(saksnummer);

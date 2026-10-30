@@ -309,8 +309,9 @@ class ToTetteOgMinsterettTester extends VerdikjedeTestBase {
                 new UttakPeriodeDto(fedrekvoteFar.fom(), fedrekvoteFar.tom(), null, fedrekvoteFar.søker(), null),
                 uttaksperiode(Rolle.MOR, KontoType.MØDREKVOTE, termindatoBarn2.plusWeeks(6), termindatoBarn2.plusWeeks(9).minusDays(1)),
                 uttaksperiode(Rolle.MOR, KontoType.FELLESPERIODE, termindatoBarn2.plusWeeks(9), termindatoBarn2.plusWeeks(14).minusDays(1)));
+        var endringsdato = helgejustertTilMandag(termindatoBarn2.plusWeeks(6));
         var endringssøknadMorBarn1 = lagEndringssøknad(søknadBarn1.build(), saksnummerMorBarn1,
-                fordeling(uttaksplanEndringBarn1));
+                endringsdato, fordeling(uttaksplanEndringBarn1));
         var saksnummerMorBarn1Endring = mor.søk(endringssøknadMorBarn1);
 
         beslutter.hentFagsak(saksnummerMorBarn1Endring);

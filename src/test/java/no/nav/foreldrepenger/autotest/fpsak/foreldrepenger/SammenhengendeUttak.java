@@ -6,6 +6,7 @@ import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.beh
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
 import static no.nav.foreldrepenger.generator.soknad.maler.SøknadEndringMaler.lagEndringssøknad;
+import static no.nav.foreldrepenger.generator.soknad.util.VirkedagUtil.helgejustertTilMandag;
 import static no.nav.foreldrepenger.generator.soknad.maler.UttakMaler.fordeling;
 import static no.nav.foreldrepenger.generator.soknad.maler.UttaksperioderMaler.graderingsperiodeArbeidstaker;
 import static no.nav.foreldrepenger.generator.soknad.maler.UttaksperioderMaler.utsettelsesperiode;
@@ -184,13 +185,14 @@ class SammenhengendeUttak extends VerdikjedeTestBase {
                 .hasSize(4);
 
         var utsettelseFom = fødselsdato.plusWeeks(16);
+        var endringsdato = helgejustertTilMandag(utsettelseFom);
         var fordelingUtsettelseEndring = fordeling(
                 uttaksperiode(Rolle.MOR, KontoType.FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)),
                 uttaksperiode(Rolle.MOR, KontoType.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1)),
                 uttaksperiode(Rolle.MOR, KontoType.FELLESPERIODE, fødselsdato.plusWeeks(15), utsettelseFom.minusDays(1)),
                 utsettelsesperiode(Rolle.MOR, UtsettelseÅrsak.ARBEID, utsettelseFom, utsettelseFom.plusWeeks(2).minusDays(1)),
                 uttaksperiode(Rolle.MOR, KontoType.FELLESPERIODE, utsettelseFom.plusWeeks(2), utsettelseFom.plusWeeks(16).minusDays(1)));
-        var endretSøknad = lagEndringssøknad(søknad.build(), saksnummer, fordelingUtsettelseEndring)
+        var endretSøknad = lagEndringssøknad(søknad.build(), saksnummer, endringsdato, fordelingUtsettelseEndring)
                 .medMottattdato(utsettelseFom.minusWeeks(3));
         var saksnummerE = mor.søk(endretSøknad);
 
@@ -297,11 +299,12 @@ class SammenhengendeUttak extends VerdikjedeTestBase {
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
+        var endringsdato = helgejustertTilMandag(fødselsdato.plusWeeks(6));
         var fordelingEndring = fordeling(
                 uttaksperiode(Rolle.MOR, KontoType.FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)),
                 uttaksperiode(Rolle.MOR, KontoType.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(30).minusDays(1))
         );
-        var søknadE = lagEndringssøknad(søknad.build(), saksnummer, fordelingEndring)
+        var søknadE = lagEndringssøknad(søknad.build(), saksnummer, endringsdato, fordelingEndring)
                 .medMottattdato(fødselsdato.plusWeeks(5));
         var saksnummerE = mor.søk(søknadE);
 
@@ -398,6 +401,7 @@ class SammenhengendeUttak extends VerdikjedeTestBase {
                 .isEmpty();
 
         var utsettelseStart = fødselsdato.plusWeeks(15);
+        var endringsdato = helgejustertTilMandag(utsettelseStart);
         var fordelingEndringssøknad = fordeling(
                 uttaksperiode(Rolle.MOR, KontoType.FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)),
                 uttaksperiode(Rolle.MOR, KontoType.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)),
@@ -406,7 +410,7 @@ class SammenhengendeUttak extends VerdikjedeTestBase {
                 utsettelsesperiode(Rolle.MOR, UtsettelseÅrsak.ARBEID, fødselsdato.plusWeeks(12), utsettelseStart.minusDays(1)),
                 uttaksperiode(Rolle.MOR, KontoType.FELLESPERIODE, utsettelseStart, utsettelseStart.plusWeeks(1).minusDays(1))
         );
-        var søknadE = lagEndringssøknad(søknad.build(), saksnummer, fordelingEndringssøknad)
+        var søknadE = lagEndringssøknad(søknad.build(), saksnummer, endringsdato, fordelingEndringssøknad)
                 .medMottattdato(utsettelseStart.minusWeeks(3));
         mor.søk(søknadE);
 

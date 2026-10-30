@@ -6,6 +6,7 @@ import static no.nav.foreldrepenger.generator.soknad.maler.SøknadEndringMaler.l
 import static no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler.lagSøknadForeldrepengerFødsel;
 import static no.nav.foreldrepenger.generator.soknad.maler.UttakMaler.fordeling;
 import static no.nav.foreldrepenger.generator.soknad.maler.UttaksperioderMaler.uttaksperiode;
+import static no.nav.foreldrepenger.generator.soknad.util.VirkedagUtil.helgejustertTilMandag;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.DayOfWeek;
@@ -80,7 +81,8 @@ class TilbakekrevingFP extends FptilbakeTestBase {
                 uttaksperiode(Rolle.MOR, KontoType.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(8).minusDays(1)),
                 uttaksperiode(Rolle.MOR, KontoType.FELLESPERIODE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1))
         );
-        var søknadE = lagEndringssøknad(søknad.build(), saksnummer, fordeling);
+        var endringsdato = helgejustertTilMandag(fødselsdato.plusWeeks(8));
+        var søknadE = lagEndringssøknad(søknad.build(), saksnummer, endringsdato, fordeling);
         mor.søk(søknadE);
 
         saksbehandler.hentFagsak(saksnummer);
