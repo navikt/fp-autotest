@@ -60,7 +60,6 @@ import static no.nav.foreldrepenger.kontrakter.felles.kodeverk.MorsAktivitet.IKK
 import static no.nav.foreldrepenger.kontrakter.felles.kodeverk.MorsAktivitet.UTDANNING;
 import static no.nav.foreldrepenger.soknad.kontrakt.BrukerRolle.FAR;
 import static no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.FellesUttaksplanDto.OverføringÅrsak.SYKDOM_ANNEN_FORELDER;
-import static no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.FellesUttaksplanDto.UtsettelseÅrsak.FRI;
 import static no.nav.foreldrepenger.vtp.kontrakter.person.v2.ArbeidsavtaleDto.arbeidsavtale;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
@@ -2500,16 +2499,14 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medTekstOmAutomatiskVedtakUtenUndferskrift();
         hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET, HistorikkType.BREV_SENDT);
 
-        var utsettelseFar = UttakPeriodeBuilder.uttak(Rolle.FAR_MEDMOR).medUtsettelseÅrsak(FRI).build();
-        // Far erstatter uttaket før fødsel med fri utsettelse fra sin opprinnelige startdato.
-        var endringsdato = helgejustertTilMandag(startdatoForeldrepengerFar);
+        // Far fjerner det samtidige uttaket før fødsel. Frontend sender ingen fri utsettelse,
+        // fp-soknad legger den inn fra endringsdato fram til fødsel.
+        var endringsdato = helgejustertTilMandag(fomFedrekvote);
         var endretFellesplan = List.of(
-                new UttakPeriodeDto(helgejustertTilMandag(termindato.minusWeeks(3)), helgejustertTilFredag(startdatoForeldrepengerFar.minusDays(1)),
+                new UttakPeriodeDto(helgejustertTilMandag(termindato.minusWeeks(3)), helgejustertTilFredag(termindato.minusDays(1)),
                         null, foreldrepengerFørFødsel, null),
-                new UttakPeriodeDto(helgejustertTilMandag(startdatoForeldrepengerFar), helgejustertTilFredag(termindato.minusDays(1)),
-                        utsettelseFar, foreldrepengerFørFødsel, null),
                 new UttakPeriodeDto(helgejustertTilMandag(termindato), helgejustertTilFredag(fødselsdato.minusDays(1)),
-                        utsettelseFar, mødrekvote, null),
+                        null, mødrekvote, null),
                 new UttakPeriodeDto(helgejustertTilMandag(fødselsdato), helgejustertTilFredag(fødselsdato.plusWeeks(2).minusDays(1)),
                         samtidigFedrekvote, mødrekvote, null),
                 new UttakPeriodeDto(helgejustertTilMandag(fødselsdato.plusWeeks(2)), helgejustertTilFredag(termindato.plusWeeks(15).minusDays(1)),

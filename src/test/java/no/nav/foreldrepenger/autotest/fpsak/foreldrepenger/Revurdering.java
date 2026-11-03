@@ -353,18 +353,17 @@ class Revurdering extends VerdikjedeTestBase {
                 .as("Avslåtte uttaksperioder")
                 .hasSizeGreaterThan(1);
 
-        // Frontenden fjerner avslåtte perioder fra endringsdato og beholder søkerens plan før den.
+        // Mor legger til fellesperiode etter mødrekvoten. Frontend sender hele planen uten avslåtte perioder, og
+        // endringsdato er første dag med ny fellesperiode. De avslåtte periodene skal fortsatt være avslått.
         var førsteInnvilgedeDag = avslåttePerioder.stream()
                 .map(UttakResultatPeriode::getTom)
                 .max(Comparator.naturalOrder())
                 .orElseThrow()
                 .plusDays(1);
-        var endringsdato = helgejustertTilMandag(førsteInnvilgedeDag);
+        var endringsdato = helgejustertTilMandag(fødselsdato.plusWeeks(13));
         var fordelingEndringssøknad = fordeling(
-                uttaksperiode(Rolle.MOR, KontoType.FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)),
-                uttaksperiode(Rolle.MOR, KontoType.MØDREKVOTE, fødselsdato, endringsdato.minusDays(1)),
-                uttaksperiode(Rolle.MOR, KontoType.MØDREKVOTE, endringsdato, fødselsdato.plusWeeks(13).minusDays(1)),
-                uttaksperiode(Rolle.MOR, KontoType.FELLESPERIODE, fødselsdato.plusWeeks(13), fødselsdato.plusWeeks(12).plusWeeks(2))
+                uttaksperiode(Rolle.MOR, KontoType.MØDREKVOTE, helgejustertTilMandag(førsteInnvilgedeDag), fødselsdato.plusWeeks(13).minusDays(1)),
+                uttaksperiode(Rolle.MOR, KontoType.FELLESPERIODE, fødselsdato.plusWeeks(13), fødselsdato.plusWeeks(14).minusDays(1))
         );
         var søknadE = lagEndringssøknad(søknad.build(), saksnummer, endringsdato, fordelingEndringssøknad)
                 .medMottattdato(fødselsdato.plusWeeks(18));
