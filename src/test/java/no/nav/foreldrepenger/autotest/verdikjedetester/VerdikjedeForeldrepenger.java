@@ -2988,6 +2988,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
     private static void ventOgVerifiserFellesplan(Familie familie, FellesUttaksplanDto forventetMor,
                                                   FellesUttaksplanDto forventetFar, String kontrollpunkt) {
+        // Siste avvik tas vare på, slik at timeout-meldingen viser hva som var feil.
+        var sisteAvvik = new AssertionError[1];
         Vent.på(() -> {
             var morsPlan = familie.mor().innsyn().hentFellesUttaksplan(familie.barn().fødselsdato(), familie.far().fødselsnummer());
             var farsPlan = familie.far().innsyn().hentFellesUttaksplan(familie.barn().fødselsdato(), familie.mor().fødselsnummer());
@@ -2996,9 +2998,11 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 verifiserFellesplan(farsPlan, forventetFar);
                 return true;
             } catch (AssertionError e) {
+                sisteAvvik[0] = e;
                 return false;
             }
-        }, () -> kontrollpunkt + ": forventet plan er ikke synlig fra begge innlogginger", 30, 3000);
+        }, () -> kontrollpunkt + ": forventet plan er ikke synlig fra begge innlogginger. Siste avvik: "
+                + (sisteAvvik[0] == null ? "ingen" : sisteAvvik[0].getMessage()), 30, 3000);
     }
 
     private static void verifiserFellesplan(FellesUttaksplanDto faktisk, FellesUttaksplanDto forventet) {

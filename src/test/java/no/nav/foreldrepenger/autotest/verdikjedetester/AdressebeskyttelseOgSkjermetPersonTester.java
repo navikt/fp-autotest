@@ -12,6 +12,10 @@ import static no.nav.foreldrepenger.kontrakter.felles.kodeverk.KontoType.MØDREK
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
+import java.util.concurrent.Callable;
+import java.util.function.Consumer;
+import no.nav.foreldrepenger.autotest.util.vent.Vent;
+import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.FellesUttaksplanDto;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Stream;
@@ -156,11 +160,12 @@ class AdressebeskyttelseOgSkjermetPersonTester {
         assertThat(morsSakInnsyn.annenPart()).isNotNull(); // Far er ikke beskyttet
         assertThat(morsSakInnsyn.annenPart().fnr().value()).isEqualTo(far.fødselsnummer().value()); // Far er ikke beskyttet
 
-        var morsFellesUttaksplan = mor.innsyn().hentFellesUttaksplan(termindato, far.fødselsnummer());
-        assertThat(morsFellesUttaksplan).isNotNull();
-        assertThat(morsFellesUttaksplan.perioder())
-                .anySatisfy(periode -> assertThat(periode.søker()).isNotNull())
-                .anySatisfy(periode -> assertThat(periode.annenPart()).isNotNull());
+        ventPåFellesplan(() -> mor.innsyn().hentFellesUttaksplan(termindato, far.fødselsnummer()), morsFellesUttaksplan -> {
+            assertThat(morsFellesUttaksplan).isNotNull();
+            assertThat(morsFellesUttaksplan.perioder())
+                    .anySatisfy(periode -> assertThat(periode.søker()).isNotNull())
+                    .anySatisfy(periode -> assertThat(periode.annenPart()).isNotNull());
+        }, "Mors felles uttaksplan");
 
         var farsSakInnsyn = far.innsyn().hentFpSakUtenÅpenBehandling(saksnummerFar);
         assertThat(farsSakInnsyn).isNotNull();
@@ -168,27 +173,28 @@ class AdressebeskyttelseOgSkjermetPersonTester {
         assertThat(farsSakInnsyn.saksnummer().value()).isEqualTo(saksnummerFar.value());
         assertThat(farsSakInnsyn.annenPart()).isNull(); // Mor er beskyttet
 
-        var farsFellesUttaksplan = far.innsyn().hentFellesUttaksplan(termindato, mor.fødselsnummer());
-        assertThat(farsFellesUttaksplan).isNotNull();
-        assertThat(farsFellesUttaksplan.perioder())
-                .isNotEmpty()
-                .anySatisfy(periode -> assertThat(periode.søker()).isNotNull());
-        assertThat(farsFellesUttaksplan.perioder().stream()
-                .filter(periode -> periode.annenPart() != null)
-                .toList())
-                .containsExactly(oppgittAnnenPartsPeriode);
-        var forventedeUttaksdagerForFar = farsEgnePerioder.stream()
-                .flatMap(periode -> periode.fom().datesUntil(periode.tom().plusDays(1)))
-                .filter(dato -> dato.getDayOfWeek().getValue() <= 5)
-                .sorted()
-                .toList();
-        var faktiskeUttaksdagerForFar = farsFellesUttaksplan.perioder().stream()
-                .filter(periode -> periode.søker() != null)
-                .flatMap(periode -> periode.fom().datesUntil(periode.tom().plusDays(1)))
-                .filter(dato -> dato.getDayOfWeek().getValue() <= 5)
-                .sorted()
-                .toList();
-        assertThat(faktiskeUttaksdagerForFar).containsExactlyElementsOf(forventedeUttaksdagerForFar);
+        ventPåFellesplan(() -> far.innsyn().hentFellesUttaksplan(termindato, mor.fødselsnummer()), farsFellesUttaksplan -> {
+            assertThat(farsFellesUttaksplan).isNotNull();
+            assertThat(farsFellesUttaksplan.perioder())
+                    .isNotEmpty()
+                    .anySatisfy(periode -> assertThat(periode.søker()).isNotNull());
+            assertThat(farsFellesUttaksplan.perioder().stream()
+                    .filter(periode -> periode.annenPart() != null)
+                    .toList())
+                    .containsExactly(oppgittAnnenPartsPeriode);
+            var forventedeUttaksdagerForFar = farsEgnePerioder.stream()
+                    .flatMap(periode -> periode.fom().datesUntil(periode.tom().plusDays(1)))
+                    .filter(dato -> dato.getDayOfWeek().getValue() <= 5)
+                    .sorted()
+                    .toList();
+            var faktiskeUttaksdagerForFar = farsFellesUttaksplan.perioder().stream()
+                    .filter(periode -> periode.søker() != null)
+                    .flatMap(periode -> periode.fom().datesUntil(periode.tom().plusDays(1)))
+                    .filter(dato -> dato.getDayOfWeek().getValue() <= 5)
+                    .sorted()
+                    .toList();
+            assertThat(faktiskeUttaksdagerForFar).containsExactlyElementsOf(forventedeUttaksdagerForFar);
+        }, "Fars felles uttaksplan");
     }
 
     @Test
@@ -224,5 +230,24 @@ class AdressebeskyttelseOgSkjermetPersonTester {
         var innsynSak = mor.innsyn().hentFpSakUtenÅpenBehandling(saksnummerMor);
         assertThat(innsynSak).isNotNull();
         assertThat(innsynSak.saksnummer().value()).isEqualTo(saksnummerMor.value());
+    }
+
+    /**
+     * fp-oversikt oppdateres asynkront fra fpsak og fp-soknad. Venter til planen oppfyller {@code verifiser}, og viser
+     * siste avvik hvis den ikke gjør det før timeout.
+     */
+    private static void ventPåFellesplan(Callable<FellesUttaksplanDto> hent, Consumer<FellesUttaksplanDto> verifiser,
+                                         String beskrivelse) {
+        var sisteAvvik = new AssertionError[1];
+        Vent.på(() -> {
+            try {
+                verifiser.accept(hent.call());
+                return true;
+            } catch (AssertionError e) {
+                sisteAvvik[0] = e;
+                return false;
+            }
+        }, () -> beskrivelse + " ble ikke som forventet. Siste avvik: "
+                + (sisteAvvik[0] == null ? "ingen" : sisteAvvik[0].getMessage()));
     }
 }
