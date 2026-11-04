@@ -35,7 +35,7 @@
         <fpsoknad-kontrakt.version>1.0.14</fpsoknad-kontrakt.version>
 
         <pdfbox.version>3.0.8</pdfbox.version>
-        <allure.version>3.0.0</allure.version>
+        <allure.version>3.0.1</allure.version>
     </properties>
 
     <dependencyManagement>
