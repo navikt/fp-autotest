@@ -3052,12 +3052,12 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         return new FellesUttaksplanDto(plan.termindato(), plan.antallBarn(), plan.dekningsgrad(), plan.perioder()
                 .stream()
                 .map(p -> new UttakPeriodeDto(p.fom(), p.tom(), p.annenPart(), p.søker(), p.annenPartEøs()))
-                .toList());
+                .toList(), plan.annenPartRedigerbar());
     }
 
     private static FellesUttaksplanDto forventetFellesplan(LocalDate fødsel, boolean morVedtatt, boolean farVedtatt, boolean utvidet) {
         return new FellesUttaksplanDto(fødsel, 1, FellesUttaksplanDto.Dekningsgrad.HUNDRE,
-                forventedeFamilieperioder(fødsel, morVedtatt, farVedtatt, utvidet));
+                forventedeFamilieperioder(fødsel, morVedtatt, farVedtatt, utvidet), true);
     }
 
     // Eksplisitte segmenter for dette scenariet, ikke en normaliseringsalgoritme.
