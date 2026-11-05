@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.generator.soknad.maler;
 
 
+import java.time.LocalDate;
 import java.util.List;
 
 import no.nav.foreldrepenger.kontrakter.felles.typer.Saksnummer;
@@ -21,11 +22,14 @@ public class SøknadEndringMaler {
     }
 
     /**
-     * Endringssøknad med {@code uttaksplanDto} som hele den nye planen. Barn, rolle og annen forelder hentes fra
-     * {@code forrigeSøknad}, som kan være en førstegangssøknad eller en endringssøknad.
+     * Endringssøknad slik frontend sender den: {@code uttaksplanDto} er hele den felles planen, også perioder før
+     * {@code endringsdato} og annen parts perioder. {@code endringsdato} er første dag søkerens plan er endret, og må
+     * være en virkedag. Barn, rolle og annen forelder hentes fra {@code forrigeSøknad}, som kan være en
+     * førstegangssøknad eller en endringssøknad.
      */
     public static EndringssøknadBuilder lagEndringssøknad(SøknadDto forrigeSøknad,
                                                           Saksnummer saksnummer,
+                                                          LocalDate endringsdato,
                                                           UttaksplanDto uttaksplanDto) {
         var builder = switch (forrigeSøknad) {
             case ForeldrepengesøknadDto f ->
@@ -35,13 +39,14 @@ public class SøknadEndringMaler {
             default ->
                     throw new IllegalArgumentException("Kan ikke lage endringssøknad fra " + forrigeSøknad.getClass().getSimpleName());
         };
-        return builder.medUttaksplan(uttaksplanDto);
+        return builder.medUttaksplan(uttaksplanDto).medEndringsdato(endringsdato);
     }
 
     public static EndringssøknadBuilder lagEndringssøknad(SøknadDto forrigeSøknad,
                                                           Saksnummer saksnummer,
+                                                          LocalDate endringsdato,
                                                           List<UttakPeriodeDto> perioder) {
-        return lagEndringssøknad(forrigeSøknad, saksnummer, UttakMaler.fordeling(perioder));
+        return lagEndringssøknad(forrigeSøknad, saksnummer, endringsdato, UttakMaler.fordeling(perioder));
     }
 
     private static EndringssøknadBuilder ny(Saksnummer saksnummer, SøkerDto søkerinfo, BarnDto barn) {

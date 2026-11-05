@@ -110,13 +110,17 @@ class FellesUttaksplanTest {
                         mor("2024-01-01", "2024-01-26", KontoType.MØDREKVOTE),
                         annenPart("2024-03-04", "2024-03-29", farsUttak)))
                 .build();
+        // Hele planen: mors uendrede mødrekvote før endringsdato er med.
         var eksplisittPlan = new UttaksplanDto(false, List.of(
+                mor("2024-01-01", "2024-01-12", KontoType.MØDREKVOTE),
                 new UttakPeriodeDto(d("2024-01-15"), d("2024-01-19"), uttak(Rolle.MOR, KontoType.FELLESPERIODE), farsUttak, null),
                 annenPart("2024-02-05", "2024-02-09", farsUttak)));
+        var endringsdato = d("2024-01-15");
 
-        var endring = SøknadEndringMaler.lagEndringssøknad(søknad, new Saksnummer("123456789"), eksplisittPlan).build();
+        var endring = SøknadEndringMaler.lagEndringssøknad(søknad, new Saksnummer("123456789"), endringsdato, eksplisittPlan).build();
 
         assertThat(endring.uttaksplan()).isEqualTo(eksplisittPlan);
+        assertThat(endring.endringsdato()).isEqualTo(endringsdato);
         assertThat(endring.rolle()).isEqualTo(søknad.rolle());
         assertThat(endring.barn()).isEqualTo(søknad.barn());
         assertThat(endring.annenForelder()).isEqualTo(søknad.annenForelder());
@@ -134,18 +138,26 @@ class FellesUttaksplanTest {
                 .medPerioder(List.of(new UttakPeriodeDto(d("2024-01-01"), d("2024-01-12"), farsUttak, null, null)))
                 .build();
         var saksnummer = new Saksnummer("123456789");
+        // Hele planen: fars uendrede perioder før endringsdato er med.
         var førstePlan = List.of(
+                new UttakPeriodeDto(d("2024-01-01"), d("2024-01-12"), farsUttak, null, null),
                 new UttakPeriodeDto(d("2024-01-15"), d("2024-01-26"), farsUttak, uttak(Rolle.MOR, KontoType.MØDREKVOTE), null),
                 annenPart("2024-03-04", "2024-03-29", uttak(Rolle.MOR, KontoType.FELLESPERIODE)));
         var andrePlan = List.of(
+                new UttakPeriodeDto(d("2024-01-01"), d("2024-01-12"), farsUttak, null, null),
+                new UttakPeriodeDto(d("2024-01-15"), d("2024-01-19"), farsUttak, uttak(Rolle.MOR, KontoType.MØDREKVOTE), null),
                 new UttakPeriodeDto(d("2024-01-22"), d("2024-01-26"), uttak(Rolle.FAR_MEDMOR, KontoType.FELLESPERIODE), null, null),
                 annenPart("2024-02-05", "2024-02-09", uttak(Rolle.MOR, KontoType.MØDREKVOTE)));
+        var førsteEndringsdato = d("2024-01-15");
+        var andreEndringsdato = d("2024-01-22");
 
-        var førsteEndring = SøknadEndringMaler.lagEndringssøknad(søknad, saksnummer, førstePlan).build();
-        var andreEndring = SøknadEndringMaler.lagEndringssøknad(førsteEndring, saksnummer, andrePlan).build();
+        var førsteEndring = SøknadEndringMaler.lagEndringssøknad(søknad, saksnummer, førsteEndringsdato, førstePlan).build();
+        var andreEndring = SøknadEndringMaler.lagEndringssøknad(førsteEndring, saksnummer, andreEndringsdato, andrePlan).build();
 
         assertThat(førsteEndring.uttaksplan().perioder()).isEqualTo(førstePlan);
         assertThat(andreEndring.uttaksplan().perioder()).isEqualTo(andrePlan);
+        assertThat(førsteEndring.endringsdato()).isEqualTo(førsteEndringsdato);
+        assertThat(andreEndring.endringsdato()).isEqualTo(andreEndringsdato);
         assertThat(førsteEndring.rolle()).isEqualTo(søknad.rolle());
         assertThat(førsteEndring.barn()).isEqualTo(søknad.barn());
         assertThat(førsteEndring.annenForelder()).isEqualTo(søknad.annenForelder());
@@ -161,14 +173,18 @@ class FellesUttaksplanTest {
         var eøsUttak = new EøsUttakDto(KontoType.FELLESPERIODE, null);
         var søknad = new ForeldrepengerBuilder().medPerioder(List.of(
                 new UttakPeriodeDto(d("2024-01-01"), d("2024-01-26"), uttak(Rolle.MOR, KontoType.MØDREKVOTE), null, eøsUttak))).build();
+        // Hele planen: mors uendrede mødrekvote før endringsdato er med.
         var eksplisittPlan = new UttaksplanDto(true, List.of(
+                new UttakPeriodeDto(d("2024-01-01"), d("2024-01-12"), uttak(Rolle.MOR, KontoType.MØDREKVOTE), null, eøsUttak),
                 new UttakPeriodeDto(d("2024-01-15"), d("2024-01-19"), uttak(Rolle.MOR, KontoType.FELLESPERIODE), null, eøsUttak),
                 new UttakPeriodeDto(d("2024-02-05"), d("2024-02-09"), null, null, eøsUttak)));
+        var endringsdato = d("2024-01-15");
 
-        var endring = SøknadEndringMaler.lagEndringssøknad(søknad, new Saksnummer("123456789"), eksplisittPlan).build();
+        var endring = SøknadEndringMaler.lagEndringssøknad(søknad, new Saksnummer("123456789"), endringsdato, eksplisittPlan).build();
 
         assertThat(endring.uttaksplan()).isEqualTo(eksplisittPlan);
         assertThat(endring.uttaksplan().ønskerJustertUttakVedFødsel()).isTrue();
+        assertThat(endring.endringsdato()).isEqualTo(endringsdato);
     }
 
     private static UttakPeriodeDto mor(String fom, String tom, KontoType konto) {
