@@ -53,3 +53,4 @@ resources/.DS_Store
 lokal-utvikling/docker-compose-lokal
 lokal-utvikling/update-versions.sh
 lokal-utvikling/.env
+verktoy/.tilstand.json*

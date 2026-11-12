@@ -93,6 +93,14 @@ public class Familie {
                 annenpartIdent.map(TilordnetIdentDto::aktørId).map(AktørId::new).orElse(null), morPerson.get(), identer, innsender);
     }
 
+    public List<PersonDto> parter() {
+        return parter;
+    }
+
+    public List<TilordnetIdentDto> identer() {
+        return List.copyOf(identer.values());
+    }
+
     public Mor mor() {
         if (mor == null) {
             throw new IllegalStateException("Ingen mor i familien");
