@@ -1,6 +1,6 @@
 ---
 name: run-integration-tests
-description: Build, deploy, and run fp-autotest integration tests against a local Docker Compose environment. Use this skill when a developer wants to test local application changes or run specific test suites.
+description: Build, deploy, and run fp-autotest integration tests against a local Docker Compose environment. Use this skill when a developer wants to test local application changes, run specific test suites, or needs a sak that stops at a given aksjonspunkt for manual testing.
 ---
 
 # Run Integration Tests
@@ -29,6 +29,27 @@ mvn test -P <suite> -Dtest="<ClassName>#<methodName>"
 ```bash
 mvn test -P <suite> -Djuipter.parallelism=4
 ```
+
+## Create a Sak That Stops at an Aksjonspunkt
+
+When a developer asks for a sak at a given aksjonspunkt (e.g. "jeg trenger en sak med 5038"):
+
+1. **Find a test.** Look up the code in `AKSJONSPUNKT_MAPPING.md`. Prefer a short, simple test, such as one in `Fodsel` or `Aksjonspunkter`, over a long verdikjede test.
+2. **If the code is not in the mapping**, say so and name the nearest codes that have tests. Do not guess a test: the mapping only lists aksjonspunkter that a test solves explicitly.
+3. **Pick the profile from the test class's `@Tag`s, not from its package.** A profile only runs classes whose tags match its `includeTestsTags` in `pom.xml`. Example: `Aksjonspunkter` is tagged `util` and `foreldrepenger`, so `-P fpsak` runs 0 tests; use `-P foreldrepenger`. If the run reports `Tests run: 0`, check the tags.
+4. **Check that the services are running** (see Prerequisites). Leave them running afterwards: the developer needs the sak.
+5. **Run one test at a time:**
+   ```bash
+   mvn test -P <profile> -Dtest="<ClassName>#<methodName>" -Dstopp.ved=<code>
+   ```
+   The test stops when the saksbehandler is about to solve that aksjonspunkt. Earlier aksjonspunkter are solved on the way. The test is reported as skipped/aborted, not failed.
+6. **Report** the lines the test prints:
+   ```
+   STOPPET ved aksjonspunkt <code>
+   Saksnummer: <n>
+   fpsak-frontend: http://localhost:9000/fagsak/<n>/
+   ```
+   If `STOPPET` is missing, the test never reached the aksjonspunkt: say so, do not report a sak.
 
 ## Building and Testing Local Application Changes
 
