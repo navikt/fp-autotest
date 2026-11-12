@@ -560,6 +560,7 @@ public class Saksbehandler {
     }
 
     public void bekreftAksjonspunktbekreftelserer(List<AksjonspunktBekreftelse> bekreftelser) {
+        bekreftelser.forEach(b -> StoppVedAksjonspunkt.sjekk(b.aksjonspunktKode(), valgtFagsak));
         LOG.info("Løser aksjonspunkt {} ...", bekreftelser);
         debugAksjonspunktbekreftelser(bekreftelser, valgtBehandling.uuid);
         var aksjonspunkter = new BekreftedeAksjonspunkter(valgtBehandling.uuid, valgtBehandling.versjon, bekreftelser);
