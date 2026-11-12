@@ -64,6 +64,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkType
 import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.ProsesstaskFpsakKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.saf.SafKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
+import no.nav.foreldrepenger.autotest.util.StoppVedAksjonspunkt;
 import no.nav.foreldrepenger.autotest.util.vent.Lazy;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Orgnummer;
@@ -518,6 +519,7 @@ public class Saksbehandler {
 
     public <T extends AksjonspunktBekreftelse> T hentAksjonspunktbekreftelse(T bekreftelse) {
         hentAksjonspunkt(bekreftelse.aksjonspunktKode()); //Henter for å kaste exception hvis aksjonspunkt ikke finnes
+        StoppVedAksjonspunkt.sjekk(bekreftelse.aksjonspunktKode(), valgtFagsak);
         bekreftelse.oppdaterMedDataFraBehandling(valgtFagsak, valgtBehandling);
         return bekreftelse;
     }
