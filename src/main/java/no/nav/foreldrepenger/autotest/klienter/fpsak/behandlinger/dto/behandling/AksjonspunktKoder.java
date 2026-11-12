@@ -49,6 +49,8 @@ public class AksjonspunktKoder {
     public static final String MANUELL_VURDERING_AV_KLAGE_NFP = "5035";
     public static final String VURDER_OPPTJENINGSVILKÅRET = "5089";
 
+    public static final String FAKTA_UTTAK_GRADERING_UKJENT_AKTIVITET = "5063";
+
     public static final String AUTOMATISK_MARKERING_AV_UTENLANDSSAK_KODE = "5068";
 
     public static final String VURDER_INNSYN = "5037";
