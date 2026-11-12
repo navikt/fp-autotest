@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.autotest.util;
 
-import org.opentest4j.TestAbortedException;
+import org.junit.jupiter.api.Assumptions;
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 
@@ -26,6 +26,6 @@ public final class StoppVedAksjonspunkt {
                 + "\nSaksnummer: " + saksnummer
                 + "\nfpsak-frontend: " + FRONTEND + saksnummer + "/";
         System.out.println(melding);
-        throw new TestAbortedException(melding);
+        Assumptions.abort(melding);
     }
 }
