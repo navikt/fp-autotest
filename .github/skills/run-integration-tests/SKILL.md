@@ -35,7 +35,7 @@ mvn test -P <suite> -Djuipter.parallelism=4
 When a developer asks for a sak at a given aksjonspunkt (e.g. "jeg trenger en sak med 5038"):
 
 1. **Find a test.** Look up the code in `AKSJONSPUNKT_MAPPING.md`. Prefer a short, simple test, such as one in `Fodsel` or `Aksjonspunkter`, over a long verdikjede test.
-2. **If the code is not in the mapping**, say so and name the nearest codes that have tests. Do not guess a test: the mapping only lists aksjonspunkter that a test solves explicitly.
+2. **If the code is not in the mapping**, say so. Do not guess a test, and do not suggest other codes: neighbouring codes are unrelated. Instead, find out in fp-sak (`navikt/fp-sak`, e.g. `../fp-sak` if checked out) how the aksjonspunkt is created: look up the code in `AksjonspunktDefinisjon` and find where it is utledet. Explain briefly which scenario triggers it, and ask whether the developer wants a new test in fp-autotest for that scenario.
 3. **Pick the profile from the test class's `@Tag`s, not from its package.** A profile only runs classes whose tags match its `includeTestsTags` in `pom.xml`. Example: `Aksjonspunkter` is tagged `util` and `foreldrepenger`, so `-P fpsak` runs 0 tests; use `-P foreldrepenger`. If the run reports `Tests run: 0`, check the tags.
 4. **Check that the services are running** (see Prerequisites). Leave them running afterwards: the developer needs the sak.
 5. **Run one test at a time:**
