@@ -86,11 +86,11 @@ When a developer wants test persons for a søknad they fill out themselves (e.g.
 3. **Check the services** as in step 4 of «Create a Sak That Stops at an Aksjonspunkt».
 4. **Run it.** Without `-Dmanuell.inntektsmelding` it ends once the family exists. With `auto` or `vent` it waits up to 1 hour, so run it in async mode. A new run stops an older one that is still waiting:
    ```bash
-   mvn test -P utvikling -Dtest="<ManuellSoknad|ManuellSoknadMellombels<Scenario>>" -Dmanuell.familiehendelse=<fodsel|termin> -Dmanuell.mor=<arbeid|ingen> -Dmanuell.far=<arbeid|ingen> -Dmanuell.inntektsmelding=<auto|vent>
+   mvn test -P utvikling -Dtest="<ManuellSoknad|ManuellSoknadMellombels<Scenario>>" -Dmanuell.familiehendelse=<fodsel|termin> -Dmanuell.mor=<arbeid|ingen> -Dmanuell.far=<arbeid|ingen> -Dmanuell.inntektsmelding=<auto|vent> -Dmanuell.soker=<mor|far|begge>
    ```
-   A temporary test may drop or add `-Dmanuell.*` properties; use the ones it reads.
+   Set `-Dmanuell.soker` to who applies; with `auto` the test waits only for them. A temporary test may drop or add `-Dmanuell.*` properties; use the ones it reads.
 5. **When the log says `Familie opprettet, se`**, give the developer `cat target/manuell-soknad/familie.txt` instead of the fødselsnummer, which may be masked in your output. The søknad is at http://localhost:9101; log in as the parent who applies.
-6. **With `auto`**, report the saksnummer the test logs. **With `vent`**, when the søknad is sent, ask who gets inntektsmelding (only parents with arbeid), then run `echo <mor|far|begge|ingen> > target/manuell-soknad/inntektsmelding` and report the saksnummer or error it logs.
+6. **With `auto`**, each parent gets inntektsmelding as soon as their own søknad is sent; report each saksnummer the test logs right away, without waiting for the other parent. **With `vent`**, as soon as one søknad is sent, ask who gets inntektsmelding (only parents with arbeid and a sent søknad), then run `echo <mor|far|begge|ingen> > target/manuell-soknad/inntektsmelding` and report the saksnummer or error it logs.
 7. **Delete the temporary test** once the run has ended (family made, and inntektsmelding sent or skipped). Never commit it.
 8. **Leave the services running**, also on session exit and in spite of «Service Lifecycle Management», until the developer asks to stop them.
 

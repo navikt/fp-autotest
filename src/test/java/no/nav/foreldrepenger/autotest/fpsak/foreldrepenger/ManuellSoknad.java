@@ -10,9 +10,9 @@ import java.nio.file.StandardCopyOption;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -37,7 +37,8 @@ import no.nav.foreldrepenger.vtp.kontrakter.person.v2.PersonDto;
 /**
  * Lager mor og far i VTP uten å sende søknad, slik at utvikleren kan fylle ut søknaden selv.
  * Uten {@code -Dmanuell.inntektsmelding} avslutter testen straks familien er laget.
- * Med {@code auto} sendes inntektsmelding for hver forelder med arbeid så snart forespørselen finnes.
+ * Med {@code auto} sendes inntektsmelding for hver forelder med arbeid som søker ({@code -Dmanuell.soker}),
+ * hver for seg så snart forespørselen finnes.
  * Med {@code vent} venter testen på filen {@code target/manuell-soknad/inntektsmelding} med
  * innholdet {@code mor}, {@code far}, {@code begge} eller {@code ingen}, og sender inntektsmelding for de som er valgt.
  */
@@ -56,7 +57,8 @@ class ManuellSoknad extends VerdikjedeTestBase {
     @DisplayName("Mor og far som fyller ut søknaden selv")
     @Description("Oppretter mor og far i VTP uten søknad. Etter at søknaden er sendt manuelt, sendes inntektsmelding "
             + "for valgte foreldre. Styres med -Dmanuell.familiehendelse=fodsel|termin, -Dmanuell.mor=arbeid|ingen, "
-            + "-Dmanuell.far=arbeid|ingen, -Dmanuell.inntektsmelding=auto|vent (standard: ingen inntektsmelding, ingen venting).")
+            + "-Dmanuell.far=arbeid|ingen, -Dmanuell.inntektsmelding=auto|vent (standard: ingen inntektsmelding, ingen venting), "
+            + "-Dmanuell.soker=mor|far|begge (hvem auto venter på, standard begge).")
     void morOgFarFyllerUtSøknadSelv() throws IOException, InterruptedException {
         Files.createDirectories(MAPPE);
         Files.writeString(KJØRING_FIL, kjøringId);
@@ -86,16 +88,20 @@ class ManuellSoknad extends VerdikjedeTestBase {
         Files.move(tmp, FAMILIE_FIL, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
         var inntektsmelding = System.getProperty("manuell.inntektsmelding", "ingen");
         if ("auto".equals(inntektsmelding)) {
-            var medArbeid = new ArrayList<Søker>();
-            if (harArbeid("manuell.mor")) {
-                medArbeid.add(mor);
+            var søker = System.getProperty("manuell.soker", "begge");
+            if (!søker.matches("mor|far|begge")) {
+                throw new IllegalArgumentException("Ugyldig manuell.soker: " + søker);
             }
-            if (harArbeid("manuell.far")) {
-                medArbeid.add(far);
+            var venterPå = new LinkedHashMap<String, Søker>();
+            if (!"far".equals(søker) && harArbeid("manuell.mor")) {
+                venterPå.put("mor", mor);
             }
-            LOG.info("Familie opprettet, se {}. Sender inntektsmelding automatisk når søknaden er sendt",
-                    FAMILIE_FIL.toAbsolutePath());
-            sendInntektsmeldingNårSakFinnes(medArbeid);
+            if (!"mor".equals(søker) && harArbeid("manuell.far")) {
+                venterPå.put("far", far);
+            }
+            LOG.info("Familie opprettet, se {}. Sender inntektsmelding for {} så snart hver søknad er sendt",
+                    FAMILIE_FIL.toAbsolutePath(), venterPå.isEmpty() ? "ingen" : String.join(" og ", venterPå.keySet()));
+            sendInntektsmeldingNårSakFinnes(venterPå);
             return;
         }
         if (!"vent".equals(inntektsmelding)) {
@@ -109,10 +115,10 @@ class ManuellSoknad extends VerdikjedeTestBase {
             return;
         }
         if (valg.get().equals("mor") || valg.get().equals("begge")) {
-            sendInntektsmelding(mor);
+            sendInntektsmelding("mor", mor);
         }
         if (valg.get().equals("far") || valg.get().equals("begge")) {
-            sendInntektsmelding(far);
+            sendInntektsmelding("far", far);
         }
     }
 
@@ -153,29 +159,34 @@ class ManuellSoknad extends VerdikjedeTestBase {
         throw new IllegalStateException("Fikk ikke svar om inntektsmelding innen " + MAKS_VENTETID);
     }
 
-    private void sendInntektsmeldingNårSakFinnes(List<Søker> søkere) throws IOException, InterruptedException {
-        var gjenstår = new ArrayList<>(søkere);
+    private void sendInntektsmeldingNårSakFinnes(Map<String, Søker> søkere) throws IOException, InterruptedException {
+        var gjenstår = new LinkedHashMap<>(søkere);
         var frist = Instant.now().plus(MAKS_VENTETID);
+        var nesteStatus = Instant.now();
         while (!gjenstår.isEmpty() && Instant.now().isBefore(frist)) {
             if (erAvløst()) {
                 return;
             }
-            var iterator = gjenstår.iterator();
+            var iterator = gjenstår.entrySet().iterator();
             while (iterator.hasNext()) {
-                var søker = iterator.next();
-                var saksnummer = nyesteSak(søker);
+                var forelder = iterator.next();
+                var saksnummer = nyesteSak(forelder.getValue());
                 var startdato = saksnummer.flatMap(ManuellSoknad::forespørselStartdato);
                 if (startdato.isPresent()) {
-                    søker.arbeidsgiver().sendInntektsmeldingerFP(saksnummer.get(), startdato.get());
-                    LOG.info("Inntektsmelding sendt for saksnummer {}", saksnummer.get().value());
+                    forelder.getValue().arbeidsgiver().sendInntektsmeldingerFP(saksnummer.get(), startdato.get());
+                    LOG.info("Inntektsmelding sendt for {}, saksnummer {}", forelder.getKey(), saksnummer.get().value());
                     iterator.remove();
                 }
+            }
+            if (!gjenstår.isEmpty() && Instant.now().isAfter(nesteStatus)) {
+                LOG.info("Venter på søknad og forespørsel for {}", String.join(" og ", gjenstår.keySet()));
+                nesteStatus = Instant.now().plus(Duration.ofMinutes(1));
             }
             Thread.sleep(5000);
         }
         if (!gjenstår.isEmpty()) {
-            LOG.info("Fant ingen forespørsel innen {} for {} forelder(e), sender ikke inntektsmelding for dem",
-                    MAKS_VENTETID, gjenstår.size());
+            LOG.info("Fant ingen forespørsel innen {} for {}, sender ikke inntektsmelding",
+                    MAKS_VENTETID, String.join(" og ", gjenstår.keySet()));
         }
     }
 
@@ -199,10 +210,10 @@ class ManuellSoknad extends VerdikjedeTestBase {
         }
     }
 
-    private void sendInntektsmelding(Søker søker) {
-        var saksnummer = nyesteSak(søker)
-                .orElseThrow(() -> new IllegalStateException("Fant ingen sak. Er søknaden sendt inn?"));
-        sendInntektsmelding(søker, saksnummer);
+    private void sendInntektsmelding(String rolle, Søker søker) {
+        nyesteSak(søker).ifPresentOrElse(
+                saksnummer -> sendInntektsmelding(søker, saksnummer),
+                () -> LOG.info("Fant ingen sak for {}, sender ikke inntektsmelding. Er søknaden sendt inn?", rolle));
     }
 
     private void sendInntektsmelding(Søker søker, Saksnummer saksnummer) {
