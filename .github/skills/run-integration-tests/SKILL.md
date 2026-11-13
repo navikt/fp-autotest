@@ -1,6 +1,6 @@
 ---
 name: run-integration-tests
-description: Build, deploy, and run fp-autotest integration tests against a local Docker Compose environment. Use this skill when a developer wants to test local application changes, run specific test suites, or needs a sak that stops at a given aksjonspunkt for manual testing.
+description: Build, deploy, and run fp-autotest integration tests against a local Docker Compose environment. Use this skill when a developer wants to test local application changes, run specific test suites, or needs a sak that stops at a given aksjonspunkt for manual testing, or test persons (mor and far) for a søknad they fill out themselves.
 ---
 
 # Run Integration Tests
@@ -36,6 +36,10 @@ mvn test -P <suite> -Djuipter.parallelism=4
 When a developer asks for a sak at a given aksjonspunkt (e.g. "jeg trenger en sak med 5038"):
 
 1. **Find a test.** Look up the code in `AKSJONSPUNKT_MAPPING.md`. Prefer a short, simple test, such as one in `Fodsel` or `Aksjonspunkter`, over a long verdikjede test.
+
+   **Ask when the choice is open.** The mapping omits the package, and `Fodsel`, `Termin`, `Adopsjon`, `Klage` and `Revurdering` exist under several ytelser. Find each candidate with `grep -rn "void <method>(" src/test/java`, read its `@DisplayName` and body, and keep only tests that reach a stop call for the code (step 5). Compare ytelse, søker, familiehendelse, papir or digital søknad, and the scenario at the stop.
+
+   If they differ on something the developer did not specify, ask before running (`ask_user` when available). Show one numbered list of ytelse and scenario, without test names, for example «Foreldrepenger: mor søker for 2 barn, bare 1 er registrert». Merge equal options and end with «Annet: beskriv scenarioet du trenger»; if picked, go to step 2 from «Explain briefly». Filter after each answer and ask again while differences remain. Pick yourself only when the developer says it does not matter.
 2. **If the code is not in the mapping**, say so. Do not guess a test, and do not suggest other codes: neighbouring codes are unrelated. Instead, find out how the aksjonspunkt is created:
    - The definition is in `navikt/fp-sak`: `behandlingslager/domene/src/main/java/no/nav/foreldrepenger/behandlingslager/behandling/aksjonspunkt/AksjonspunktDefinisjon.java`, with the codes in `AksjonspunktKodeDefinisjon.java` in the same folder. Find the constant for the code, then search for where that constant is utledet.
    - Use a local checkout if there is one: `../fp-sak` from the fp-autotest root, or `fp-sak` next to `fp-autotest` when the session started in a parent folder.
@@ -52,6 +56,8 @@ When a developer asks for a sak at a given aksjonspunkt (e.g. "jeg trenger en sa
    ```bash
    mvn test -P <profile> -Dtest="<ClassName>#<methodName>" -Dstopp.ved=<code>
    ```
+   Use the fully qualified class name when it exists in several packages, e.g. `no.nav.foreldrepenger.autotest.fpsak.engangsstonad.Fodsel`.
+
    The test stops when the saksbehandler is about to solve that aksjonspunkt. Earlier aksjonspunkter are solved on the way. The test is reported as skipped/aborted, not failed.
 
    The stop is triggered in `Saksbehandler` by `hentAksjonspunkt(<code>)` and by `hentAksjonspunktbekreftelse`/`bekreftAksjonspunkt`. A new test written to reach an aksjonspunkt only needs to end with `saksbehandler.hentAksjonspunkt("<code>")`; no bekreftelse class is required. `harAksjonspunkt` does not stop.
@@ -62,6 +68,31 @@ When a developer asks for a sak at a given aksjonspunkt (e.g. "jeg trenger en sa
    fpsak-frontend: http://localhost:9000/fagsak/<n>/
    ```
    If `STOPPET` is missing, the test never reached the aksjonspunkt: say so, do not report a sak.
+
+## Create a Family for a Søknad the Developer Fills Out
+
+When a developer wants test persons for a søknad they fill out themselves (e.g. «lag ein søknad som eg fyller ut»), work out the scenario first. `ManuellSoknad` is the default template, not a limit: it creates mor and far in VTP without a søknad and sends inntektsmelding afterwards. When the scenario needs something it cannot do, write a temporary test based on it.
+
+1. **Ask in one question** (`ask_user` when available) about what the developer did not specify, derived from the scenario rather than from the parameters of `ManuellSoknad`:
+   - who is in the family and who applies: mor and far, mor and medmor, far and far, or one parent alone (aleineomsorg, no annan part)
+   - familiehending: fødsel (how long ago), termin, or adopsjon, and number of barn
+   - inntekt for each parent: arbeid, frilans, sjølvstendig næringsdrivande, or ingen
+   - if anyone has arbeid: inntektsmelding `auto` (sent when the forespørsel exists) or `vent` (developer decides after sending the søknad). Ask about `auto`/`vent` unless the request answers it: «send (inn) inntektsmelding» means `auto` and that both parents have arbeid unless the developer says otherwise; «eg vel sjølv»/«vent med inntektsmelding» means `vent`.
+
+   Read the request first and never ask about anything it already answers.
+
+   Ask a follow-up only when an answer opens new choices. Pick defaults only when the developer says it does not matter.
+2. **Choose the test.** If the answers fit the parameters of `ManuellSoknad` (mor and far, fødsel 2 veker sidan or termin, arbeid or ingen), run it as in step 4. Otherwise copy `src/test/java/no/nav/foreldrepenger/autotest/fpsak/foreldrepenger/ManuellSoknad.java` to `ManuellSoknadMellombels<Scenario>.java` in the same folder (the name is git-ignored), rename the class, and change only what the scenario needs, using `FamilieGenerator`, `PersonGenerator` (`mor()`, `medmor()`, `far()`) and `InntektGenerator`. Keep `@Tag("utvikling")`, the `familie.txt` output and the inntektsmelding handling, and adjust the labels in `familie.txt` to the roles. Tell the developer which file you made.
+3. **Check the services** as in step 4 of «Create a Sak That Stops at an Aksjonspunkt».
+4. **Run it.** Without `-Dmanuell.inntektsmelding` it ends once the family exists. With `auto` or `vent` it waits up to 1 hour, so run it in async mode. A new run stops an older one that is still waiting:
+   ```bash
+   mvn test -P utvikling -Dtest="<ManuellSoknad|ManuellSoknadMellombels<Scenario>>" -Dmanuell.familiehendelse=<fodsel|termin> -Dmanuell.mor=<arbeid|ingen> -Dmanuell.far=<arbeid|ingen> -Dmanuell.inntektsmelding=<auto|vent> -Dmanuell.soker=<mor|far|begge>
+   ```
+   Set `-Dmanuell.soker` to who applies; with `auto` the test waits only for them. A temporary test may drop or add `-Dmanuell.*` properties; use the ones it reads.
+5. **When the log says `Familie opprettet, se`**, which takes at most 2 seconds after the test starts (read the output every 1–2 s, never sleep longer), give the developer `cat target/manuell-soknad/familie.txt` instead of the fødselsnummer, which may be masked in your output. The søknad is at http://localhost:9101; log in as the parent who applies.
+6. **With `auto`**, each parent gets inntektsmelding as soon as their own søknad is sent; report each saksnummer the test logs right away, without waiting for the other parent. **With `vent`**, as soon as one søknad is sent, ask who gets inntektsmelding (only parents with arbeid and a sent søknad), then run `echo <mor|far|begge|ingen> > target/manuell-soknad/inntektsmelding` and report the saksnummer or error it logs.
+7. **Delete the temporary test** once the run has ended (family made, and inntektsmelding sent or skipped). Never commit it.
+8. **Leave the services running**, also on session exit and in spite of «Service Lifecycle Management», until the developer asks to stop them.
 
 ## Building and Testing Local Application Changes
 
