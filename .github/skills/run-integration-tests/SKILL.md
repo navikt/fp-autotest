@@ -37,7 +37,7 @@ When a developer asks for a sak at a given aksjonspunkt (e.g. "jeg trenger en sa
 1. **Find a test.** Look up the code in `AKSJONSPUNKT_MAPPING.md`. Prefer a short, simple test, such as one in `Fodsel` or `Aksjonspunkter`, over a long verdikjede test.
 2. **If the code is not in the mapping**, say so. Do not guess a test, and do not suggest other codes: neighbouring codes are unrelated. Instead, find out in fp-sak (`navikt/fp-sak`, e.g. `../fp-sak` if checked out) how the aksjonspunkt is created: look up the code in `AksjonspunktDefinisjon` and find where it is utledet. Explain briefly which scenario triggers it, and ask whether the developer wants a new test in fp-autotest for that scenario. If yes, add it to `src/test/java/no/nav/foreldrepenger/autotest/fpsak/foreldrepenger/Aksjonspunkter.java`, then add the test to `AKSJONSPUNKT_MAPPING.md`.
 3. **Pick the profile from the test class's `@Tag`s, not from its package.** A profile only runs classes whose tags match its `includeTestsTags` in `pom.xml`. Example: `Aksjonspunkter` is tagged `util` and `foreldrepenger`, so `-P fpsak` runs 0 tests; use `-P foreldrepenger`. If the run reports `Tests run: 0`, check the tags.
-4. **Check that the services are running** (see Prerequisites). Leave them running afterwards: the developer needs the sak.
+4. **Check that the services are running** (`docker ps`). If they are not, start them yourself without asking, using the commands under Prerequisites, and wait until they are up before running the test. Leave them running afterwards: the developer needs the sak.
 5. **Run one test at a time:**
    ```bash
    mvn test -P <profile> -Dtest="<ClassName>#<methodName>" -Dstopp.ved=<code>
