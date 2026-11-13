@@ -46,6 +46,8 @@ When a developer asks for a sak at a given aksjonspunkt (e.g. "jeg trenger en sa
    Explain briefly which scenario triggers it, and ask whether the developer wants a new test in fp-autotest for that scenario. If yes, add it to `src/test/java/no/nav/foreldrepenger/autotest/fpsak/foreldrepenger/Aksjonspunkter.java`, then add the test to `AKSJONSPUNKT_MAPPING.md`.
 3. **Pick the profile from the test class's `@Tag`s, not from its package.** A profile only runs classes whose tags match its `includeTestsTags` in `pom.xml`. Example: `Aksjonspunkter` is tagged `util` and `foreldrepenger`, so `-P fpsak` runs 0 tests; use `-P foreldrepenger`. If the run reports `Tests run: 0`, check the tags.
 4. **Check that the services are running** (`docker ps`). If they are not, start them yourself without asking, using the commands under Prerequisites, and wait until they are up before running the test. Leave them running afterwards: the developer needs the sak.
+
+   If the sandbox denies the Docker check (`operation not permitted` on `~/.docker`, or the Docker socket is blocked), skip the check and go straight to step 5. The test talks to the services over HTTP and needs no Docker access. If the test fails because a service cannot be reached, report that the environment is probably not running and that it has to be started outside the sandbox.
 5. **Run one test at a time:**
    ```bash
    mvn test -P <profile> -Dtest="<ClassName>#<methodName>" -Dstopp.ved=<code>
