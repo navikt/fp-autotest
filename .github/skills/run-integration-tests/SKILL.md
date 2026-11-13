@@ -43,6 +43,8 @@ When a developer asks for a sak at a given aksjonspunkt (e.g. "jeg trenger en sa
    mvn test -P <profile> -Dtest="<ClassName>#<methodName>" -Dstopp.ved=<code>
    ```
    The test stops when the saksbehandler is about to solve that aksjonspunkt. Earlier aksjonspunkter are solved on the way. The test is reported as skipped/aborted, not failed.
+
+   The stop is triggered in `Saksbehandler` by `hentAksjonspunkt(<code>)` and by `hentAksjonspunktbekreftelse`/`bekreftAksjonspunkt`. A new test written to reach an aksjonspunkt only needs to end with `saksbehandler.hentAksjonspunkt("<code>")`; no bekreftelse class is required. `harAksjonspunkt` does not stop.
 6. **Report** the lines the test prints:
    ```
    STOPPET ved aksjonspunkt <code>
