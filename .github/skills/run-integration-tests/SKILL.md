@@ -73,7 +73,7 @@ When a developer wants to test local changes to an application:
 
 2. **Generate a fresh `.env` file** by running the setup script in fp-autotest:
    ```bash
-   cd ~/git/fp-autotest/lokal-utvikling
+   cd lokal-utvikling
    ./setup-lokal-utvikling.sh
    ```
    This creates/regenerates `lokal-utvikling/docker-compose-lokal/.env` with the latest remote image references.
@@ -90,14 +90,14 @@ When a developer wants to test local changes to an application:
 
 4. **Start all services** via docker-compose (all services are needed regardless of which suite you run):
    ```bash
-   cd ~/git/fp-autotest/lokal-utvikling/docker-compose-lokal
+   cd lokal-utvikling/docker-compose-lokal
    docker compose up --detach
    ```
    Wait for all services to be healthy: `docker compose ps`
 
 5. **Run the tests** (from the fp-autotest root):
    ```bash
-   cd ~/git/fp-autotest
+   cd <fp-autotest root>
    mvn test -P <suite> -Dtest=<TestClass>
    ```
 
@@ -134,7 +134,7 @@ All suites support ytelse sub-filtering via JUnit tags: foreldrepenger, engangss
 
 **All services must be running** before executing any test suite. Start the full environment with:
 ```bash
-cd ~/git/fp-autotest/lokal-utvikling
+cd lokal-utvikling
 ./setup-lokal-utvikling.sh
 cd docker-compose-lokal
 docker compose up --detach
@@ -148,7 +148,7 @@ docker compose ps
 
 For IDE debugging (run specific apps outside Docker):
 ```bash
-cd ~/git/fp-autotest/lokal-utvikling
+cd lokal-utvikling
 ./setup-lokal-utvikling.sh fpsak     # run fpsak in IDE, rest in Docker
 cd docker-compose-lokal
 docker compose up --detach --scale fpsak=0
@@ -158,6 +158,8 @@ docker compose up --detach --scale fpsak=0
 
 **Default behavior:** Shut down all services after tests complete unless the user explicitly asks to keep them running for more tests.
 
+**Exception: a sak created with `-Dstopp.ved`.** Never shut down services after such a run, also not on session exit: the sak lives in the running containers, and `docker compose down` removes it. Leave them up until the user asks to shut them down.
+
 ### After running tests
 - If tests **pass** and user has no more tests: shut down services.
 - If tests **fail** and user wants to fix and retry: keep services running.
@@ -165,7 +167,7 @@ docker compose up --detach --scale fpsak=0
 
 ### Shutdown (default after tests complete)
 ```bash
-cd ~/git/fp-autotest/lokal-utvikling/docker-compose-lokal
+cd lokal-utvikling/docker-compose-lokal
 docker compose down
 ```
 
@@ -183,7 +185,7 @@ docker compose up --detach --force-recreate <service-name>
 
 ### On session exit
 When the Copilot session ends or the user is done:
-1. Shut down all services: `docker compose down`
+1. Shut down all services: `docker compose down`, unless a sak was created with `-Dstopp.ved` in this session (see the exception above)
 2. This removes containers but preserves images for next session.
 
 **Ask the user** before shutting down if there is any ambiguity about whether more tests will be run.
