@@ -64,6 +64,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkType
 import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.ProsesstaskFpsakKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.saf.SafKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
+import no.nav.foreldrepenger.autotest.util.StoppVedAksjonspunkt;
 import no.nav.foreldrepenger.autotest.util.vent.Lazy;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Orgnummer;
@@ -517,7 +518,8 @@ public class Saksbehandler {
     }
 
     public <T extends AksjonspunktBekreftelse> T hentAksjonspunktbekreftelse(T bekreftelse) {
-        hentAksjonspunkt(bekreftelse.aksjonspunktKode()); //Henter for å kaste exception hvis aksjonspunkt ikke finnes
+        finnAksjonspunkt(bekreftelse.aksjonspunktKode()); //Henter for å kaste exception hvis aksjonspunkt ikke finnes
+        StoppVedAksjonspunkt.sjekk(bekreftelse.aksjonspunktKode(), valgtFagsak);
         bekreftelse.oppdaterMedDataFraBehandling(valgtFagsak, valgtBehandling);
         return bekreftelse;
     }
@@ -526,6 +528,15 @@ public class Saksbehandler {
      * Henter aksjonspunkt av gitt kode. Tar en refresh i tilfelle nye er blitt utledet etter bekreftelse
      */
     public Aksjonspunkt hentAksjonspunkt(String kode) {
+        var aksjonspunkt = finnAksjonspunkt(kode);
+        StoppVedAksjonspunkt.sjekk(kode, valgtFagsak);
+        return aksjonspunkt;
+    }
+
+    /*
+     * Som hentAksjonspunkt, men uten stopp ved -Dstopp.ved. Brukes der testen bare sjekker om aksjonspunktet finnes.
+     */
+    private Aksjonspunkt finnAksjonspunkt(String kode) {
         var apkt = behandlingerKlient.hentAlleAksjonspunkter(valgtBehandling.uuid);
         return apkt.stream()
                 .filter(ap -> ap.getDefinisjon().equals(kode))
@@ -540,7 +551,7 @@ public class Saksbehandler {
      */
     public boolean harAksjonspunkt(String kode) {
         try {
-            return hentAksjonspunkt(kode) != null;
+            return finnAksjonspunkt(kode) != null;
         } catch (Exception e) {
             return false;
         }
@@ -558,6 +569,7 @@ public class Saksbehandler {
     }
 
     public void bekreftAksjonspunktbekreftelserer(List<AksjonspunktBekreftelse> bekreftelser) {
+        bekreftelser.forEach(b -> StoppVedAksjonspunkt.sjekk(b.aksjonspunktKode(), valgtFagsak));
         LOG.info("Løser aksjonspunkt {} ...", bekreftelser);
         debugAksjonspunktbekreftelser(bekreftelser, valgtBehandling.uuid);
         var aksjonspunkter = new BekreftedeAksjonspunkter(valgtBehandling.uuid, valgtBehandling.versjon, bekreftelser);
