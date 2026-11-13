@@ -4,6 +4,8 @@ This file helps Copilot find, recommend, and execute integration tests for Team 
 
 ## How to Use
 
+Paths below are relative to the fp-autotest repo root. Run commands from that root, also when the session started in a parent folder with several repos.
+
 When a developer asks about integration tests:
 - **Find tests by test suite or benefit** → read [test-conventions.instructions.md](.github/instructions/test-conventions.instructions.md)
 - **Find tests by aksjonspunkt code** → read [AKSJONSPUNKT_MAPPING.md](AKSJONSPUNKT_MAPPING.md)

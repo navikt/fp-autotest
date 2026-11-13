@@ -23,6 +23,7 @@ Centralized integration and verdikjede test repo for Team Foreldrepenger.
 | Find tests by aksjonspunkt | `AKSJONSPUNKT_MAPPING.md` |
 | Browse test catalog | `TEST_CATALOG.md` |
 | Run tests (build, deploy, execute) | skill `run-integration-tests` |
+| Create a sak that stops at an aksjonspunkt (`-Dstopp.ved=<code>`) | skill `run-integration-tests`, section «Create a Sak That Stops at an Aksjonspunkt» |
 | Test code conventions | `.github/instructions/test-conventions.instructions.md` |
 
 ## Project structure

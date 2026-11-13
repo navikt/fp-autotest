@@ -5,11 +5,12 @@ description: Build, deploy, and run fp-autotest integration tests against a loca
 
 # Run Integration Tests
 
+All paths in this skill are relative to the fp-autotest repo root. Run every `mvn` and `docker` command from that root, also when the session started in a parent folder that contains several repos (set the working directory to the fp-autotest checkout instead of assuming the current one).
+
 ## Running Tests
 
 ### Run a full suite
 ```bash
-cd ~/git/fp-autotest
 mvn test -P <suite>
 ```
 Available suites: `fpsak`, `fptilbake`, `fpkalkulus`, `fplos`, `verdikjede`
@@ -35,7 +36,14 @@ mvn test -P <suite> -Djuipter.parallelism=4
 When a developer asks for a sak at a given aksjonspunkt (e.g. "jeg trenger en sak med 5038"):
 
 1. **Find a test.** Look up the code in `AKSJONSPUNKT_MAPPING.md`. Prefer a short, simple test, such as one in `Fodsel` or `Aksjonspunkter`, over a long verdikjede test.
-2. **If the code is not in the mapping**, say so. Do not guess a test, and do not suggest other codes: neighbouring codes are unrelated. Instead, find out in fp-sak (`navikt/fp-sak`, e.g. `../fp-sak` if checked out) how the aksjonspunkt is created: look up the code in `AksjonspunktDefinisjon` and find where it is utledet. Explain briefly which scenario triggers it, and ask whether the developer wants a new test in fp-autotest for that scenario. If yes, add it to `src/test/java/no/nav/foreldrepenger/autotest/fpsak/foreldrepenger/Aksjonspunkter.java`, then add the test to `AKSJONSPUNKT_MAPPING.md`.
+2. **If the code is not in the mapping**, say so. Do not guess a test, and do not suggest other codes: neighbouring codes are unrelated. Instead, find out how the aksjonspunkt is created:
+   - The definition is in `navikt/fp-sak`: `behandlingslager/domene/src/main/java/no/nav/foreldrepenger/behandlingslager/behandling/aksjonspunkt/AksjonspunktDefinisjon.java`, with the codes in `AksjonspunktKodeDefinisjon.java` in the same folder. Find the constant for the code, then search for where that constant is utledet.
+   - Use a local checkout if there is one: `../fp-sak` from the fp-autotest root, or `fp-sak` next to `fp-autotest` when the session started in a parent folder.
+   - Without a local checkout, use GitHub: read the file with `gh api -H "Accept: application/vnd.github.raw" repos/navikt/fp-sak/contents/<path>` (or `https://raw.githubusercontent.com/navikt/fp-sak/master/<path>`), and find usages with `gh search code "<CONSTANT_NAME>" --repo navikt/fp-sak`.
+   - Beregning aksjonspunkter (e.g. 5038, 5046, 5058, 5059) are utledet in `navikt/ft-beregning` / `navikt/fp-kalkulus`, not in fp-sak. There they are avklaringsbehov with string codes, not numbers (5038 is `FASTSETT_BG_AT_FL` in ft-beregning's `AvklaringsbehovDefinisjon`). Find the name via the mapping in fp-sak's `BeregningAksjonspunktResultatMapper`, then search ft-beregning for that name and the `AvklaringsbehovUtleder*` classes.
+   - If neither a local checkout nor GitHub is reachable (no `gh` auth, network denied), say so and ask the developer. Do not guess the scenario.
+
+   Explain briefly which scenario triggers it, and ask whether the developer wants a new test in fp-autotest for that scenario. If yes, add it to `src/test/java/no/nav/foreldrepenger/autotest/fpsak/foreldrepenger/Aksjonspunkter.java`, then add the test to `AKSJONSPUNKT_MAPPING.md`.
 3. **Pick the profile from the test class's `@Tag`s, not from its package.** A profile only runs classes whose tags match its `includeTestsTags` in `pom.xml`. Example: `Aksjonspunkter` is tagged `util` and `foreldrepenger`, so `-P fpsak` runs 0 tests; use `-P foreldrepenger`. If the run reports `Tests run: 0`, check the tags.
 4. **Check that the services are running** (`docker ps`). If they are not, start them yourself without asking, using the commands under Prerequisites, and wait until they are up before running the test. Leave them running afterwards: the developer needs the sak.
 5. **Run one test at a time:**
