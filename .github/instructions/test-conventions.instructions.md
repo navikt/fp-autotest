@@ -24,6 +24,8 @@ applyTo: "src/test/java/**/*.java"
 ## Uttaksplan with Two Parents
 `FellesUttaksplanDto.UttakPeriodeDto(fom, tom, søker, annenPart, annenPartEøs)` is seen from the søker's side, not from mor and far.
 
+When a test has two parents, put both parents' periods in both søknader: own periods on the `søker` side, the other parent's on the `annenPart` side. This is how the søknad frontend (`foreldrepengesoknad`) works today. Build the plan once and give the other parent the same plan via `UttakMaler.byttPerspektiv(uttaksplan)`.
+
 Three fields decide who a period belongs to, and they must agree:
 
 | Field | Values | Meaning |
