@@ -53,3 +53,6 @@ resources/.DS_Store
 lokal-utvikling/docker-compose-lokal
 lokal-utvikling/update-versions.sh
 lokal-utvikling/.env
+
+# Mellombelse søknadstestar laga av agenten frå ManuellSoknad
+ManuellSoknadMellombels*.java
