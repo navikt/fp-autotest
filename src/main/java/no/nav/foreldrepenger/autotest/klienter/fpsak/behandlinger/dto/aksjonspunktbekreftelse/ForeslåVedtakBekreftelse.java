@@ -2,8 +2,6 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspu
 
 public class ForeslåVedtakBekreftelse extends AksjonspunktBekreftelse {
 
-    private String overskrift;
-    private String fritekstBrev;
     private Boolean skalBrukeOverstyrendeFritekstBrev;
 
     @Override

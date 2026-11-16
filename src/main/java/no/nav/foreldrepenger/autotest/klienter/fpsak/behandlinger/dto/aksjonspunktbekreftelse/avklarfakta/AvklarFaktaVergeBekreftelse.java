@@ -10,11 +10,7 @@ public class AvklarFaktaVergeBekreftelse extends AksjonspunktBekreftelse {
     protected String fnr;
     protected LocalDate gyldigFom;
     protected LocalDate gyldigTom;
-    protected String mandatTekst;
     protected String navn;
-    protected Boolean sokerErKontaktPerson;
-    protected Boolean sokerErUnderTvungenForvaltning;
-    protected Boolean vergeErKontaktPerson;
     protected String vergeType;
 
     public AvklarFaktaVergeBekreftelse setVerge(Fødselsnummer fnr) {
@@ -23,7 +19,6 @@ public class AvklarFaktaVergeBekreftelse extends AksjonspunktBekreftelse {
         // Defaults
         gyldigFom = LocalDate.now().minusYears(1);
         gyldigTom = LocalDate.now().plusYears(2);
-        mandatTekst = "Hva er dette";
         navn = "Verge vergesen";
         vergeType = "BARN";
         return this;
@@ -36,36 +31,6 @@ public class AvklarFaktaVergeBekreftelse extends AksjonspunktBekreftelse {
 
     public AvklarFaktaVergeBekreftelse setVergePeriodeSlutt(LocalDate tom) {
         gyldigTom = tom;
-        return this;
-    }
-
-    public AvklarFaktaVergeBekreftelse bekreftSøkerErKontaktperson() {
-        sokerErKontaktPerson = true;
-        return this;
-    }
-
-    public AvklarFaktaVergeBekreftelse bekreftSøkerErIkkeKontaktperson() {
-        sokerErKontaktPerson = false;
-        return this;
-    }
-
-    public AvklarFaktaVergeBekreftelse bekreftSøkerErUnderTvungenForvaltning() {
-        sokerErUnderTvungenForvaltning = true;
-        return this;
-    }
-
-    public AvklarFaktaVergeBekreftelse bekreftSøkerErIkkeUnderTvungenForvaltning() {
-        sokerErUnderTvungenForvaltning = false;
-        return this;
-    }
-
-    public AvklarFaktaVergeBekreftelse bekreftVergeErKontaktPerson() {
-        vergeErKontaktPerson = true;
-        return this;
-    }
-
-    public AvklarFaktaVergeBekreftelse bekreftVergeErIkkeKontaktPerson() {
-        vergeErKontaktPerson = false;
         return this;
     }
 

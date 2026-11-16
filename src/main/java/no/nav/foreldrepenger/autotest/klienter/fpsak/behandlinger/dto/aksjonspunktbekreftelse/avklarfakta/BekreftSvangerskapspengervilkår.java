@@ -4,11 +4,9 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 
 public class BekreftSvangerskapspengervilkår extends AksjonspunktBekreftelse {
 
-    protected String begrunnelse;
-    protected Boolean erVilkårOk;
+    protected String avslagskode;
 
     public BekreftSvangerskapspengervilkår godkjenn() {
-        this.erVilkårOk = true;
         return this;
     }
 

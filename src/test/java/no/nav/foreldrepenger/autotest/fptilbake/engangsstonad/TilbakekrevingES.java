@@ -163,8 +163,6 @@ class TilbakekrevingES extends FptilbakeTestBase {
 
         var avklarFaktaVergeBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(new AvklarFaktaVergeBekreftelse())
-                .bekreftSøkerErKontaktperson()
-                .bekreftSøkerErIkkeUnderTvungenForvaltning()
                 .setVerge(familie.far().fødselsnummer());
         saksbehandler.bekreftAksjonspunkt(avklarFaktaVergeBekreftelse);
 

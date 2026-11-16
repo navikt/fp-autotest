@@ -6,9 +6,7 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Venteårsak;
 
 public class VarselOmRevurderingBekreftelse extends AksjonspunktBekreftelse {
 
-    protected String begrunnelseForVarsel;
-    protected String fritekst;
-    protected String sendVarsel;
+    protected boolean sendVarsel;
     protected LocalDate frist;
     protected String ventearsak;
 
@@ -17,15 +15,14 @@ public class VarselOmRevurderingBekreftelse extends AksjonspunktBekreftelse {
         return this;
     }
 
-    public VarselOmRevurderingBekreftelse bekreftSendVarsel(Venteårsak årsak, String fritekst) {
-        sendVarsel = "" + true;
-        this.fritekst = fritekst;
+    public VarselOmRevurderingBekreftelse bekreftSendVarsel(Venteårsak årsak) {
+        sendVarsel = true;
         ventearsak = årsak.name();
         return this;
     }
 
     public VarselOmRevurderingBekreftelse bekreftIkkeSendVarsel() {
-        sendVarsel = "" + false;
+        sendVarsel = false;
         return this;
     }
 

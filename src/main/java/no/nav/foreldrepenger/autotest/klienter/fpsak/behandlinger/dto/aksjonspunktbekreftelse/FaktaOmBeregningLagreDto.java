@@ -10,8 +10,6 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Inntektskategori;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.ArbeidstakerandelUtenIMMottarYtelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.FaktaOmBeregningTilfelle;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.MottarYtelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Orgnummer;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -21,7 +19,6 @@ public class FaktaOmBeregningLagreDto {
     protected FastsettMaanedsinntektUtenInntektsmelding fastsattUtenInntektsmelding;
     protected List<FaktaOmBeregningTilfelle> faktaOmBeregningTilfeller = new ArrayList<>();
     protected MottarYtelse mottarYtelse;
-    protected FastsettEndretBeregningsgrunnlag fastsettEndringBeregningsgrunnlag;
     protected BesteberegningFødendeKvinneDto besteberegningAndeler;
     protected VurderTidsbegrensetArbeidsforholdDto vurderTidsbegrensetArbeidsforhold;
     protected YtelseForedeling kunYtelseFordeling;
@@ -111,15 +108,6 @@ public class FaktaOmBeregningLagreDto {
             kunYtelseFordeling = new YtelseForedeling();
         }
         kunYtelseFordeling.skalBrukeBesteberegning = skalHaBesteberegning;
-        return this;
-    }
-
-    public FaktaOmBeregningLagreDto leggTilAndelerEndretBg(BeregningsgrunnlagPeriodeDto periode,
-            BeregningsgrunnlagPrStatusOgAndelDto andel, FastsatteVerdier fastsatteVerdier) {
-        if (fastsettEndringBeregningsgrunnlag == null) {
-            fastsettEndringBeregningsgrunnlag = new FastsettEndretBeregningsgrunnlag();
-        }
-        fastsettEndringBeregningsgrunnlag.leggTilAndelTilPeriode(periode, andel, fastsatteVerdier);
         return this;
     }
 

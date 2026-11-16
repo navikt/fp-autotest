@@ -8,7 +8,7 @@ import java.util.List;
 
 public class SjekkManglendeFødselBekreftelse extends AksjonspunktBekreftelse {
 
-    protected List<BekreftetBarnDto> barn = new ArrayList<>();
+    protected List<BekreftetBarnDto> barn;
     protected LocalDate termindato;
 
     public SjekkManglendeFødselBekreftelse() {
@@ -20,6 +20,7 @@ public class SjekkManglendeFødselBekreftelse extends AksjonspunktBekreftelse {
     }
 
     public SjekkManglendeFødselBekreftelse bekreftBarnErFødt(int antallBarn, LocalDate fødselsdato, LocalDate termindato) {
+        barn = new ArrayList<>();
         for (int i = 0; i < antallBarn; i++) {
             barn.add(new BekreftetBarnDto(fødselsdato, null));
         }
@@ -28,6 +29,7 @@ public class SjekkManglendeFødselBekreftelse extends AksjonspunktBekreftelse {
     }
 
     public SjekkManglendeFødselBekreftelse bekreftBarnErIkkeFødt(LocalDate termindato) {
+        barn = null;
         this.termindato = termindato;
         return this;
     }

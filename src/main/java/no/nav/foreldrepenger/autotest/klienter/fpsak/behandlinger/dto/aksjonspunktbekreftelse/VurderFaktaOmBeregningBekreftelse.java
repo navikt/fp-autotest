@@ -8,9 +8,7 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Inntektskategori;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.ArbeidstakerandelUtenIMMottarYtelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.FaktaOmBeregningTilfelle;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.FaktaOmBeregningAndelDto;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Orgnummer;
 
@@ -85,12 +83,6 @@ public class VurderFaktaOmBeregningBekreftelse extends AksjonspunktBekreftelse {
     public VurderFaktaOmBeregningBekreftelse leggTilRefusjonGyldighetVurdering(Orgnummer arbeidsgiverIdentifikator,
                                                                                boolean skalUtvideGyldighet) {
         fakta.leggTilRefusjonGyldighet(arbeidsgiverIdentifikator, skalUtvideGyldighet);
-        return this;
-    }
-
-    public VurderFaktaOmBeregningBekreftelse leggTilAndelerEndretBg(BeregningsgrunnlagPeriodeDto periode,
-            BeregningsgrunnlagPrStatusOgAndelDto andel, FastsatteVerdier fastsatteVerdier) {
-        fakta.leggTilAndelerEndretBg(periode, andel, fastsatteVerdier);
         return this;
     }
 
