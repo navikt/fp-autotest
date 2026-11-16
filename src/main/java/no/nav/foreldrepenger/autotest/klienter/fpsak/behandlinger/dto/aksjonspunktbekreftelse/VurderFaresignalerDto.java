@@ -1,34 +1,28 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse;
 
-import java.util.Objects;
-
+/**
+ * Speiler VurderFaresignalerDto i fp-sak (5095 VURDER_FARESIGNALER).
+ */
 public class VurderFaresignalerDto extends AksjonspunktBekreftelse {
 
-    private Boolean harInnvirketBehandlingen;
-
-    public VurderFaresignalerDto() {
-        super();
+    public enum FaresignalVurdering {
+        INNVIRKNING,
+        INNVILGET_REDUSERT,
+        INNVILGET_UENDRET,
+        AVSLAG_FARESIGNAL,
+        AVSLAG_ANNET,
+        INGEN_INNVIRKNING
     }
 
-    public Boolean getHarInnvirketBehandlingen() {
-        return harInnvirketBehandlingen;
+    protected FaresignalVurdering faresignalVurdering;
+
+    public VurderFaresignalerDto setFaresignalVurdering(FaresignalVurdering faresignalVurdering) {
+        this.faresignalVurdering = faresignalVurdering;
+        return this;
     }
 
-    public void setHarInnvirketBehandlingen(Boolean harInnvirketBehandlingen) {
-        this.harInnvirketBehandlingen = harInnvirketBehandlingen;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        VurderFaresignalerDto that = (VurderFaresignalerDto) o;
-        return Objects.equals(harInnvirketBehandlingen, that.harInnvirketBehandlingen);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(harInnvirketBehandlingen);
+    public FaresignalVurdering getFaresignalVurdering() {
+        return faresignalVurdering;
     }
 
     @Override
@@ -38,8 +32,6 @@ public class VurderFaresignalerDto extends AksjonspunktBekreftelse {
 
     @Override
     public String toString() {
-        return "VurderFaresignalerDto{" +
-                "harInnvirketBehandlingen=" + harInnvirketBehandlingen +
-                "} " + super.toString();
+        return "VurderFaresignalerDto{faresignalVurdering=" + faresignalVurdering + "} " + super.toString();
     }
 }

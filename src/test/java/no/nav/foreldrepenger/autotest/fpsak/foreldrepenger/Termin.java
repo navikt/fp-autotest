@@ -16,7 +16,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -37,53 +36,6 @@ import no.nav.foreldrepenger.vtp.kontrakter.person.v2.FamilierelasjonDto;
 @Tag("fpsak")
 @Tag("foreldrepenger")
 class Termin extends VerdikjedeTestBase {
-
-
-    @Disabled // TODO: Hvordan håndeter im før søknad?
-    @Test
-    @DisplayName("Mor søker med ett arbeidsforhold. Inntektmelding innsendt før søknad")
-    @Description("Mor med ett arbeidsforhold sender inn inntektsmelding før søknad. " +
-            "Forventer at vedtak bli fattet og det blir bare opprettet en behandling")
-    void MorSøkerMedEttArbeidsforholdInntektsmeldingFørSøknad() {
-        var familie = FamilieGenerator.ny()
-                .forelder(mor()
-                        .inntekt(InntektGenerator.ny()
-                                .arbeidsforhold(LocalDate.now().minusYears(4),
-                                        arbeidsavtale(LocalDate.now().minusYears(4), LocalDate.now().minusDays(60)).build(),
-                                        arbeidsavtale(LocalDate.now().minusDays(59)).stillingsprosent(50).build()
-                                )
-                                .build())
-                        .build())
-                .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
-                .build();
-        var mor = familie.mor();
-        var termindato = LocalDate.now().plusWeeks(3);
-        var startDatoForeldrepenger = termindato.minusWeeks(3);
-        var arbeidsgiver = mor.arbeidsgiver();
-        //TODO: Ikke saksnummer? How to?
-        var saksnummer = arbeidsgiver.sendInntektsmeldingerFP(null, startDatoForeldrepenger);
-
-        saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.hentAksjonspunkt(AksjonspunktKoder.AUTO_VENT_PÅ_SØKNAD);
-        var behandlinger = saksbehandler.hentAlleBehandlingerForFagsak(saksnummer);
-        assertThat(behandlinger)
-                .as("Antall behandlinger")
-                .hasSize(1);
-
-        var søknad = lagSøknadForeldrepengerTermin(termindato, MOR)
-                .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
-        mor.søk(søknad, saksnummer);
-
-        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
-
-        assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
-                .as("Behandlingsresultat")
-                .isEqualTo(BehandlingResultatType.INNVILGET);
-        assertThat(saksbehandler.hentAlleBehandlingerForFagsak(saksnummer))
-                .as("Antall behandlinger")
-                .hasSize(1);
-    }
 
     @Test
     @DisplayName("Mor søker sak behandlet før inntektsmelding mottatt")

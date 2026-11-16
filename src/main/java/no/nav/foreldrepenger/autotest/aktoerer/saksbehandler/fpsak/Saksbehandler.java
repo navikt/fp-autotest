@@ -518,8 +518,8 @@ public class Saksbehandler {
     }
 
     public <T extends AksjonspunktBekreftelse> T hentAksjonspunktbekreftelse(T bekreftelse) {
-        finnAksjonspunkt(bekreftelse.aksjonspunktKode()); //Henter for å kaste exception hvis aksjonspunkt ikke finnes
-        StoppVedAksjonspunkt.sjekk(bekreftelse.aksjonspunktKode(), valgtFagsak);
+        var aksjonspunkt = finnAksjonspunkt(bekreftelse.aksjonspunktKode()); //Henter for å kaste exception hvis aksjonspunkt ikke finnes
+        StoppVedAksjonspunkt.sjekk(bekreftelse.aksjonspunktKode(), valgtFagsak, aksjonspunkt.getStatus());
         bekreftelse.oppdaterMedDataFraBehandling(valgtFagsak, valgtBehandling);
         return bekreftelse;
     }
@@ -529,7 +529,7 @@ public class Saksbehandler {
      */
     public Aksjonspunkt hentAksjonspunkt(String kode) {
         var aksjonspunkt = finnAksjonspunkt(kode);
-        StoppVedAksjonspunkt.sjekk(kode, valgtFagsak);
+        StoppVedAksjonspunkt.sjekk(kode, valgtFagsak, aksjonspunkt.getStatus());
         return aksjonspunkt;
     }
 

@@ -113,32 +113,34 @@
 ### Aksjonspunkter.java (fpsak/foreldrepenger/Aksjonspunkter.java)
 **Tags:** util
 
-#### 1. `aksjonspunkt_FOEDSELSSOKNAD_FORELDREPENGER_5040`
-- **DisplayName:** "REGISTRER_PAPIRSØKNAD_FORELDREPENGER"
+#### 1. `aksjonspunkt_REGISTRER_PAPIRSØKNAD_FORELDREPENGER_5040`
+- **DisplayName:** "5040 – REGISTRER_PAPIRSØKNAD_FORELDREPENGER"
 
-#### 2. `aksjonspunkt_ADOPSJONSSOKNAD_FORELDREPENGER_5004`
-- **DisplayName:** "AVKLAR_ADOPSJONSDOKUMENTAJON"
+#### 2. `aksjonspunkt_VURDER_OMSORGSOVERTAKELSEVILKÅRET_5018`
+- **DisplayName:** "5018 – VURDER_OMSORGSOVERTAKELSEVILKÅRET"
 
-#### 3. `aksjonspunkt_ADOPSJONSSOKNAD_ENGANGSSTONAD_5011`
-- **DisplayName:** "MANUELL_VURDERING_AV_OMSORGSVILKÅRET"
-- **Standard APs:** `5015` (FORESLÅ_VEDTAK)
+#### 3. `aksjonspunkt_VURDER_OPPTJENINGSVILKÅRET_5089`
+- **DisplayName:** "5089 – VURDER_OPPTJENINGSVILKÅRET"
 
-#### 4. `aksjonspunkt_FOEDSELSSOKNAD_FORELDREPENGER_5089`
-- **DisplayName:** "VURDER_OPPTJENINGSVILKÅRET"
-
-#### 5. `aksjonspunkt_MOR_FOEDSELSSOKNAD_FORELDREPENGER`
+#### 4. `aksjonspunkt_VURDER_FAKTA_FOR_ATFL_SN_5058`
 - **DisplayName:** "5058 – VURDER_FAKTA_FOR_ATFL_SN"
 
-#### 6. `aksjonspunkt_MOR_FOEDSELSSOKNAD_FORELDREPENGER_`
-- **DisplayName:** "AUTOMATISK_MARKERING_AV_UTENLANDSSAK_KODE"
+#### 5. `aksjonspunkt_AUTOMATISK_MARKERING_AV_UTENLANDSSAK_5068`
+- **DisplayName:** "5068 – AUTOMATISK_MARKERING_AV_UTENLANDSSAK"
 
-#### 7. `aksjonspunkt_MOR_FOEDSELSSOKNAD_FORELDREPENGER_5027`
-- **DisplayName:** "SJEKK_MANGLENDE_FØDSEL"
+#### 6. `aksjonspunkt_SJEKK_MANGLENDE_FØDSEL_5027`
+- **DisplayName:** "5027 – SJEKK_MANGLENDE_FØDSEL"
 
-#### 8. `aksjonspunkt_VURDER_FARESIGNALER_KODE_5095`
-- **DisplayName:** "5095 – VURDER_FARESIGNALER_KODE"
+#### 7. `aksjonspunkt_VURDER_PERMISJON_UTEN_SLUTTDATO_5041`
+- **DisplayName:** "5041 – VURDER_PERMISJON_UTEN_SLUTTDATO"
 
-#### 9. `opprettTilbakekrevingManueltMedForeldelse`
+#### 8. `aksjonspunkt_FASTSETT_BEREGNINGSGRUNNLAG_FOR_SN_NY_I_ARBEIDSLIVET_5049`
+- **DisplayName:** "5049 – FASTSETT_BEREGNINGSGRUNNLAG_FOR_SN_NY_I_ARBEIDSLIVET"
+
+#### 9. `aksjonspunkt_FASTSETT_BEREGNINGSGRUNNLAG_TIDSBEGRENSET_ARBEIDSFORHOLD_5047`
+- **DisplayName:** "5047 – FASTSETT_BEREGNINGSGRUNNLAG_TIDSBEGRENSET_ARBEIDSFORHOLD"
+
+#### 10. `opprettTilbakekrevingManueltMedForeldelse`
 - **DisplayName:** "1b. Oppretter en tilbakekreving manuelt med en feilutbetalingsperiode som er foreldet"
 - **Aksjonspunkter:** `7003`, `5003` (VURDER_FORELDELSE), `5002`, `5004`, `5005`
 
@@ -323,16 +325,13 @@
 ### Termin.java (fpsak/foreldrepenger/Termin.java)
 **Tags:** fpsak, foreldrepenger
 
-#### 1. `MorSøkerMedEttArbeidsforholdInntektsmeldingFørSøknad`
-- **DisplayName:** "Mor søker med ett arbeidsforhold. Inntektmelding innsendt før søknad"
-
-#### 2. `MorSøkerMedEttArbeidsforholdInntektsmeldingPåGjennopptattSøknad`
+#### 1. `MorSøkerMedEttArbeidsforholdInntektsmeldingPåGjennopptattSøknad`
 - **DisplayName:** "Mor søker sak behandlet før inntektsmelding mottatt"
 
-#### 3. `morSøkerTerminEttArbeidsforhold_avvikIGradering`
+#### 2. `morSøkerTerminEttArbeidsforhold_avvikIGradering`
 - **DisplayName:** "Mor søker termin med avvik i gradering"
 
-#### 4. `morSokerTerminUtenFPFFperiode`
+#### 3. `morSokerTerminUtenFPFFperiode`
 - **DisplayName:** "Mor søker termin uten FPFF"
 
 ### ToTetteOgMinsterettTester.java (fpsak/foreldrepenger/ToTetteOgMinsterettTester.java)

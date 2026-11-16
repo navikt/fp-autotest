@@ -40,8 +40,13 @@ public class FaktaOmBeregningLagreDto {
     }
 
     public FaktaOmBeregningLagreDto leggTilVurderTidsbegrenset(Boolean tidsbegrenset) {
-        List<VurderteArbeidsforholdDto> tidsbegrensetAndeler = Collections
-                .singletonList(new VurderteArbeidsforholdDto(2L, tidsbegrenset, false));
+        return leggTilVurderTidsbegrenset(tidsbegrenset, List.of(2L));
+    }
+
+    public FaktaOmBeregningLagreDto leggTilVurderTidsbegrenset(Boolean tidsbegrenset, List<Long> andelsnr) {
+        List<VurderteArbeidsforholdDto> tidsbegrensetAndeler = andelsnr.stream()
+                .map(nr -> new VurderteArbeidsforholdDto(nr, tidsbegrenset, false))
+                .toList();
         this.vurderTidsbegrensetArbeidsforhold = new VurderTidsbegrensetArbeidsforholdDto(tidsbegrensetAndeler);
         return this;
     }
