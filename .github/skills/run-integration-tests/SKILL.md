@@ -69,6 +69,15 @@ When a developer asks for a sak at a given aksjonspunkt (e.g. "jeg trenger en sa
    ```
    If `STOPPET` is missing, the test never reached the aksjonspunkt: say so, do not report a sak.
 
+## The Other Parent's Kvote in a Søknad
+
+A request like «mor legger inn fedrekvote» (or «far legger inn mødrekvote») can mean two things. Ask which one before you write the søknad, unless the request already says:
+
+- **Overføring:** the søker applies for the other parent's kvote herself. Build it with `overføringsperiode(Rolle.<søker>, <OverføringÅrsak>, <konto>, fom, tom)`, and ask for the overføringsårsak too.
+- **The other parent's period:** the søker only shows in her plan that the other parent (annen part) takes the kvote. Put the period in the annenpart field, as in `MorOgFarSammen`: `new UttakPeriodeDto(p.fom(), p.tom(), null, p.søker(), null)`, where `p = uttaksperiode(Rolle.FAR_MEDMOR, FEDREKVOTE, fom, tom)`.
+
+`uttaksperiode(Rolle.FAR_MEDMOR, …)` placed directly in mor's `medPerioder` is neither. It lands in the søker field, so mor applies for the fedrekvote herself without an overføringsårsak, and the uttak gets 5071. Check the result in fpsak-frontend: the period must belong to the parent who should have it.
+
 ## Create a Family for a Søknad the Developer Fills Out
 
 When a developer wants test persons for a søknad they fill out themselves (e.g. «lag ein søknad som eg fyller ut»), work out the scenario first. `ManuellSoknad` is the default template, not a limit: it creates mor and far in VTP without a søknad and sends inntektsmelding afterwards. When the scenario needs something it cannot do, write a temporary test based on it.
