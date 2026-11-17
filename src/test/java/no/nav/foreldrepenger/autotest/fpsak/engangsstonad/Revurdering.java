@@ -70,7 +70,7 @@ class Revurdering extends VerdikjedeTestBase {
 
         VarselOmRevurderingBekreftelse varselOmRevurderingBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(new VarselOmRevurderingBekreftelse());
-        varselOmRevurderingBekreftelse.bekreftSendVarsel(Venteårsak.UTV_FRIST, "Send brev");
+        varselOmRevurderingBekreftelse.bekreftSendVarsel(Venteårsak.UTV_FRIST);
         saksbehandler.bekreftAksjonspunkt(varselOmRevurderingBekreftelse);
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);

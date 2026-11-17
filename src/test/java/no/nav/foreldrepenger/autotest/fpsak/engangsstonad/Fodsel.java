@@ -233,9 +233,7 @@ class Fodsel extends VerdikjedeTestBase {
 
         AvklarFaktaVergeBekreftelse avklarFaktaVergeBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(new AvklarFaktaVergeBekreftelse());
-        avklarFaktaVergeBekreftelse.bekreftSøkerErKontaktperson()
-                .bekreftSøkerErIkkeUnderTvungenForvaltning()
-                .setVerge(familie.far().fødselsnummer());
+        avklarFaktaVergeBekreftelse.setVerge(familie.far().fødselsnummer());
         saksbehandler.bekreftAksjonspunkt(avklarFaktaVergeBekreftelse);
 
         saksbehandler.bekreftAksjonspunkt(new VurderMedlemskapsvilkårForutgåendeBekreftelse());

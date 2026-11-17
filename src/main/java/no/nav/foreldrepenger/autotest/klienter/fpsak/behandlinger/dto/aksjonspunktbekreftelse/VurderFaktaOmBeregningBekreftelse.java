@@ -2,12 +2,13 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspu
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Inntektskategori;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.ArbeidstakerandelUtenIMMottarYtelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.FaktaOmBeregningTilfelle;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.FaktaOmBeregningAndelDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Orgnummer;
 
@@ -15,6 +16,8 @@ import no.nav.foreldrepenger.kontrakter.felles.typer.Orgnummer;
 public class VurderFaktaOmBeregningBekreftelse extends AksjonspunktBekreftelse {
 
     protected FaktaOmBeregningLagreDto fakta = new FaktaOmBeregningLagreDto();
+    @JsonIgnore
+    private List<Long> kortvarigeAndelsnr = List.of();
 
     public VurderFaktaOmBeregningBekreftelse leggTilFaktaOmBeregningTilfeller(FaktaOmBeregningTilfelle kode) {
         fakta.leggTilFaktaOmBeregningTilfeller(kode);
@@ -27,7 +30,11 @@ public class VurderFaktaOmBeregningBekreftelse extends AksjonspunktBekreftelse {
     }
 
     public VurderFaktaOmBeregningBekreftelse leggTilVurderTidsbegrenset(boolean vurderTidsbegrenset) {
-        fakta.leggTilVurderTidsbegrenset(vurderTidsbegrenset);
+        if (kortvarigeAndelsnr.isEmpty()) {
+            fakta.leggTilVurderTidsbegrenset(vurderTidsbegrenset);
+        } else {
+            fakta.leggTilVurderTidsbegrenset(vurderTidsbegrenset, kortvarigeAndelsnr);
+        }
         return this;
     }
 
@@ -79,12 +86,6 @@ public class VurderFaktaOmBeregningBekreftelse extends AksjonspunktBekreftelse {
         return this;
     }
 
-    public VurderFaktaOmBeregningBekreftelse leggTilAndelerEndretBg(BeregningsgrunnlagPeriodeDto periode,
-            BeregningsgrunnlagPrStatusOgAndelDto andel, FastsatteVerdier fastsatteVerdier) {
-        fakta.leggTilAndelerEndretBg(periode, andel, fastsatteVerdier);
-        return this;
-    }
-
     public VurderFaktaOmBeregningBekreftelse fordelEtterBesteBeregningForDagpenger(boolean harDagpengerIOpptjening) {
         if (harDagpengerIOpptjening) {
             leggTilFaktaOmBeregningTilfeller(FaktaOmBeregningTilfelle.FASTSETT_BESTEBEREGNING_FØDENDE_KVINNE);
@@ -111,9 +112,13 @@ public class VurderFaktaOmBeregningBekreftelse extends AksjonspunktBekreftelse {
 
     @Override
     public void oppdaterMedDataFraBehandling(Fagsak fagsak, Behandling behandling) {
-        for (var faktaOmBeregningTilfeller : behandling.getBeregningsgrunnlag().getFaktaOmBeregning().getFaktaOmBeregningTilfeller()) {
+        var faktaOmBeregning = behandling.getBeregningsgrunnlag().getFaktaOmBeregning();
+        for (var faktaOmBeregningTilfeller : faktaOmBeregning.getFaktaOmBeregningTilfeller()) {
             fakta.leggTilFaktaOmBeregningTilfeller(faktaOmBeregningTilfeller);
         }
+        kortvarigeAndelsnr = faktaOmBeregning.getKortvarigeArbeidsforhold().stream()
+                .map(FaktaOmBeregningAndelDto::getAndelsnr)
+                .toList();
     }
 
 }

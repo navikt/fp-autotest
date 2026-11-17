@@ -55,6 +55,7 @@ public class AksjonspunktKoder {
 
     public static final String VURDER_INNSYN = "5037";
     public static final String FASTSETT_BEREGNINGSGRUNNLAG_ARBEIDSTAKER_FRILANS = "5038";
+    public static final String VURDER_PERMISJON_UTEN_SLUTTDATO = "5041";
     public static final String FASTSETT_BEREGNINGSGRUNNLAG_TIDSBEGRENSET_ARBEIDSFORHOLD = "5047";
     public static final String FASTSETT_BEREGNINGSGRUNNLAG_FOR_SN_NY_I_ARBEIDSLIVET = "5049";
     public static final String AVKLAR_BEREGNINGSGRUNNLAG_OG_INNTEKTSKATEGORI_FOR_BRUKER_MED_TILSTØTENDE_YTELSE = "5050";

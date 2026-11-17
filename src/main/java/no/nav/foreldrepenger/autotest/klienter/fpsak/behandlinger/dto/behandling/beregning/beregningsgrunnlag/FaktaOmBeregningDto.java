@@ -11,6 +11,11 @@ public class FaktaOmBeregningDto {
 
     protected List<FaktaOmBeregningTilfelle> faktaOmBeregningTilfeller;
     protected AvklarAktiviteterDto avklarAktiviteter;
+    protected List<FaktaOmBeregningAndelDto> kortvarigeArbeidsforhold;
+
+    public List<FaktaOmBeregningAndelDto> getKortvarigeArbeidsforhold() {
+        return kortvarigeArbeidsforhold == null ? List.of() : kortvarigeArbeidsforhold;
+    }
 
     public List<FaktaOmBeregningTilfelle> getFaktaOmBeregningTilfeller() {
         return faktaOmBeregningTilfeller;

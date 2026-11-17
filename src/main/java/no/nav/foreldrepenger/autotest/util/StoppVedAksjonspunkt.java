@@ -16,6 +16,15 @@ public final class StoppVedAksjonspunkt {
     private StoppVedAksjonspunkt() {
     }
 
+    public static void sjekk(String aksjonspunktKode, Fagsak fagsak, String status) {
+        var stoppVed = System.getProperty("stopp.ved");
+        if (stoppVed != null && stoppVed.equals(aksjonspunktKode) && !"OPPR".equals(status)) {
+            throw new IllegalStateException("Aksjonspunkt " + aksjonspunktKode + " finnes, men er ikke åpent (status " + status
+                    + "). Saken stopper ikke på et åpent aksjonspunkt.");
+        }
+        sjekk(aksjonspunktKode, fagsak);
+    }
+
     public static void sjekk(String aksjonspunktKode, Fagsak fagsak) {
         var stoppVed = System.getProperty("stopp.ved");
         if (stoppVed == null || !stoppVed.equals(aksjonspunktKode)) {

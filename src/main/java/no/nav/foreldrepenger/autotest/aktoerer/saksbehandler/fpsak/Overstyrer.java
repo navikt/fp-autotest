@@ -26,7 +26,7 @@ public class Overstyrer extends Saksbehandler {
 
     public void overstyr(List<AksjonspunktBekreftelse> bekreftelser) {
         Allure.step("Overstyrer aksjonspunkter", () -> {
-            OverstyrAksjonspunkter aksjonspunkter = new OverstyrAksjonspunkter(valgtFagsak, valgtBehandling, bekreftelser);
+            OverstyrAksjonspunkter aksjonspunkter = new OverstyrAksjonspunkter(valgtBehandling, bekreftelser);
             behandlingerKlient.overstyr(aksjonspunkter);
             refreshBehandling();
         });
