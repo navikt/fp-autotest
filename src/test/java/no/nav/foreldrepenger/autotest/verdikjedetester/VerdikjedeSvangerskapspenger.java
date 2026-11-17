@@ -574,10 +574,9 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
 
     private Integer regnUtForventetDagsats(Integer samletMånedsbeløp, Double tilrettelegginsprosent) {
         var årsinntekt = Double.valueOf(samletMånedsbeløp) * 12;
-        var seksG = saksbehandler.valgtBehandling.getBeregningsgrunnlag().getHalvG() * 2 * 6;
-        var utbetalingProsentFaktor = (double) (100 - tilrettelegginsprosent) / 100;
-        if (årsinntekt > seksG) {
-            årsinntekt = seksG;
+        var utbetalingProsentFaktor = (100 - tilrettelegginsprosent) / 100;
+        if (årsinntekt > seksG()) {
+            årsinntekt = seksG();
         }
         return ((int) Math.round((årsinntekt * utbetalingProsentFaktor) / 260));
     }
