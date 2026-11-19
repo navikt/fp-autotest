@@ -1,7 +1,6 @@
 {
     "avklaringsbehov": [],
     "skjaeringstidspunktBeregning": "2019-09-16",
-    "skjæringstidspunkt": "2019-09-16",
     "aktivitetStatus": [
         "AT"
     ],
@@ -58,7 +57,6 @@
         }
     ],
     "sammenligningsgrunnlagPrStatus": [],
-    "halvG": 49929.0,
     "grunnbeløp": 99858.0,
     "faktaOmBeregning": {
         "avklarAktiviteter": {
@@ -114,6 +112,5 @@
             }
         ]
     },
-    "hjemmel": "-",
     "dekningsgrad": 100
 }

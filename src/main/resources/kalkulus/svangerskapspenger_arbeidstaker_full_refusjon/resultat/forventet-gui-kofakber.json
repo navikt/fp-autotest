@@ -1,7 +1,6 @@
 {
     "avklaringsbehov": [],
     "skjaeringstidspunktBeregning": "2020-01-29",
-    "skjæringstidspunkt": "2020-01-29",
     "aktivitetStatus": ["AT"],
     "beregningsgrunnlagPeriode": [{
         "beregningsgrunnlagPeriodeFom": "2020-01-29",
@@ -33,7 +32,6 @@
     }
     ],
     "sammenligningsgrunnlagPrStatus": [],
-    "halvG": 49929.00,
     "grunnbeløp": 99858.00,
     "faktaOmBeregning": {
         "saksopplysninger": {
@@ -74,7 +72,6 @@
         }
         ]
     },
-    "hjemmel": "-",
     "dekningsgrad": 100,
     "erOverstyrtInntekt": false
 }
