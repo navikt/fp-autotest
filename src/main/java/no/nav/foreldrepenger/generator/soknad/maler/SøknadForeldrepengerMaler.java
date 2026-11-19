@@ -47,7 +47,8 @@ public final class SøknadForeldrepengerMaler {
                                                                         BrukerRolle brukerRolle,
                                                                         Boolean ektefellesBarn) {
         return lagSøknadForeldrepenger(omsorgsovertakelsedatoen, brukerRolle)
-                .medBarn(BarnBuilder.adopsjon(omsorgsovertakelsedatoen, ektefellesBarn).build());
+                // Søknaden spør ikke lenger om adopsjon fra utlandet (foreldrepengesoknad #5406), så ankomstdato sendes ikke.
+                .medBarn(BarnBuilder.adopsjon(omsorgsovertakelsedatoen, ektefellesBarn).medAnkomstdato(null).build());
     }
 
 }

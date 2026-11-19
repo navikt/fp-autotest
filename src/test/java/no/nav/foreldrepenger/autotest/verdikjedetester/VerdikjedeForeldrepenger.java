@@ -42,6 +42,7 @@ import static no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepenger
 import static no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler.lagSøknadForeldrepengerTerminFødsel;
 import static no.nav.foreldrepenger.generator.soknad.maler.UttakMaler.byttPerspektiv;
 import static no.nav.foreldrepenger.generator.soknad.maler.UttakMaler.fordeling;
+import static no.nav.foreldrepenger.generator.soknad.maler.UttakMaler.utenAnnenPartsAktivitet;
 import static no.nav.foreldrepenger.generator.soknad.maler.UttaksperiodeType.SAMTIDIGUTTAK;
 import static no.nav.foreldrepenger.generator.soknad.maler.UttaksperioderMaler.graderingsperiodeArbeidstaker;
 import static no.nav.foreldrepenger.generator.soknad.maler.UttaksperioderMaler.overføringsperiode;
@@ -2354,7 +2355,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 uttaksperiode(Rolle.MOR, MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)), morsGradering,
                 UttakPeriodeBuilder.periode(farsGradering.fom(), farsGradering.tom()).medAnnenPart(farsGradering.søker()).build());
         var søknadMor = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR).medAnnenForelder(
-                AnnenforelderMaler.norskMedRettighetNorge(far)).medPerioder(fellesplan);
+                AnnenforelderMaler.norskMedRettighetNorge(far)).medPerioder(utenAnnenPartsAktivitet(fellesplan));
         var saksnummerMor = mor.søk(søknadMor);
         ventPåInntektsmeldingForespørsel(saksnummerMor);
         mor.arbeidsgiver().sendInntektsmeldingerFP(saksnummerMor, fødselsdato.minusWeeks(3));
@@ -2978,7 +2979,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
     }
 
     private static void verifiserInnsendtFellesplan(UttaksplanDto plan, List<UttakPeriodeDto> forventet) {
-        assertThat(plan.ønskerJustertUttakVedFødsel()).isFalse();
+        assertThat(plan.ønskerJustertUttakVedFødsel()).isNull();
         assertThat(plan.perioder()).containsExactlyElementsOf(forventet);
         assertThat(plan.perioder()).anyMatch(p -> p.søker() != null).anyMatch(p -> p.annenPart() != null);
     }

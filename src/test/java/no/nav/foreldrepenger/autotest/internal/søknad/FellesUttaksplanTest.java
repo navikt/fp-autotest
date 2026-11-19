@@ -35,24 +35,24 @@ import no.nav.foreldrepenger.soknad.kontrakt.foreldrepenger.uttaksplan.Uttakspla
 class FellesUttaksplanTest {
 
     @Test
-    @DisplayName("Fordeling med liste og varargs gir samme uttaksplan med justeringsflagg false")
-    @Description("Begge overloadene bevarer periodene og gir forventet DTO med justeringsflagg false.")
+    @DisplayName("Fordeling med liste og varargs gir samme uttaksplan uten justeringsflagg")
+    @Description("Begge overloadene bevarer periodene og gir forventet DTO uten justeringsflagg, slik søknaden gjør når spørsmålet ikke er stilt.")
     void fordelingMedListeOgVarargsGirSammeUttaksplan() {
         var førstePeriode = mor("2024-01-01", "2024-01-12", KontoType.MØDREKVOTE);
         var andrePeriode = annenPart("2024-02-05", "2024-02-09", uttak(Rolle.FAR_MEDMOR, KontoType.FEDREKVOTE));
         var perioder = List.of(førstePeriode, andrePeriode);
-        var forventet = new UttaksplanDto(false, perioder);
+        var forventet = new UttaksplanDto(null, perioder);
 
         var fraListe = UttakMaler.fordeling(perioder);
         var fraVarargs = UttakMaler.fordeling(førstePeriode, andrePeriode);
 
         assertThat(fraListe).isEqualTo(forventet).isEqualTo(fraVarargs);
-        assertThat(fraListe.ønskerJustertUttakVedFødsel()).isFalse();
-        assertThat(fraVarargs.ønskerJustertUttakVedFødsel()).isFalse();
+        assertThat(fraListe.ønskerJustertUttakVedFødsel()).isNull();
+        assertThat(fraVarargs.ønskerJustertUttakVedFødsel()).isNull();
     }
 
     @Test
-    @DisplayName("Perspektivbytte bevarer uttaksdata og bytter søker og annen part")
+    @DisplayName("Perspektivbytte bevarer uttaksdata, bytter søker og annen part og fjerner aktivitet fra annen parts gradering")
     void byttPerspektivBevarerUttaksdata() {
         var morsUttak = UttaksperioderMaler.graderingsperiodeFL(Rolle.MOR, KontoType.MØDREKVOTE, d("2024-01-01"), d("2024-01-12"),
                 BigDecimal.valueOf(50)).søker();
@@ -65,12 +65,19 @@ class FellesUttaksplanTest {
 
         var byttetPlan = UttakMaler.byttPerspektiv(plan);
 
+        var morsUttakSomAnnenPart = UttakMaler.somAnnenPart(morsUttak);
+        assertThat(morsUttakSomAnnenPart.gradering().aktivitet()).isNull();
+        assertThat(morsUttakSomAnnenPart.gradering().arbeidstidprosent()).isEqualTo(morsUttak.gradering().arbeidstidprosent());
         assertThat(byttetPlan).isNotSameAs(plan)
-                .containsExactly(new UttakPeriodeDto(d("2024-01-01"), d("2024-01-12"), farsUttak, morsUttak, null),
-                        new UttakPeriodeDto(d("2024-01-13"), d("2024-01-14"), null, morsUttak, null),
+                .containsExactly(new UttakPeriodeDto(d("2024-01-01"), d("2024-01-12"), farsUttak, morsUttakSomAnnenPart, null),
+                        new UttakPeriodeDto(d("2024-01-13"), d("2024-01-14"), null, morsUttakSomAnnenPart, null),
                         new UttakPeriodeDto(d("2024-02-05"), d("2024-02-09"), farsUttak, null, null));
         assertThat(plan).containsExactlyElementsOf(opprinneligePerioder);
-        assertThat(UttakMaler.byttPerspektiv(byttetPlan)).containsExactlyElementsOf(opprinneligePerioder);
+        // Tilbake igjen er mors uttak uten aktivitet, siden aktiviteten ikke følger med til annen part.
+        assertThat(UttakMaler.byttPerspektiv(byttetPlan)).containsExactly(
+                new UttakPeriodeDto(d("2024-01-01"), d("2024-01-12"), morsUttakSomAnnenPart, farsUttak, null),
+                new UttakPeriodeDto(d("2024-01-13"), d("2024-01-14"), morsUttakSomAnnenPart, null, null),
+                new UttakPeriodeDto(d("2024-02-05"), d("2024-02-09"), null, farsUttak, null));
         plan.clear();
         assertThat(byttetPlan).hasSize(3);
     }
