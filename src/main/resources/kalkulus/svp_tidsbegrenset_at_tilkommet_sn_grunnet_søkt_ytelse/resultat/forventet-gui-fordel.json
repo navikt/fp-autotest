@@ -21,7 +21,6 @@
         }
     ],
     "skjaeringstidspunktBeregning": "2019-09-19",
-    "skjæringstidspunkt": "2019-09-19",
     "aktivitetStatus": [
         "AT"
     ],
@@ -315,7 +314,6 @@
             "differanseBeregnet": 225580.33
         }
     ],
-    "halvG": 49929.0,
     "grunnbeløp": 99858.0,
     "faktaOmBeregning": {
         "kortvarigeArbeidsforhold": [
@@ -401,7 +399,6 @@
             }
         ]
     },
-    "hjemmel": "F_14_7_8_30",
     "faktaOmFordeling": {
         "vurderNyttInntektsforholdDto": {
             "vurderInntektsforholdPerioder": [

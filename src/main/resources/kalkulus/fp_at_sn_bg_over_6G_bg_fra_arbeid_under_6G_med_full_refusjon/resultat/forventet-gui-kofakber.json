@@ -1,7 +1,6 @@
 {
     "avklaringsbehov": [],
     "skjaeringstidspunktBeregning": "2020-01-01",
-    "skjæringstidspunkt": "2020-01-01",
     "aktivitetStatus": [
         "AT_SN"
     ],
@@ -77,7 +76,6 @@
         }
     ],
     "sammenligningsgrunnlagPrStatus": [],
-    "halvG": 49929.0,
     "grunnbeløp": 99858.0,
     "faktaOmBeregning": {
         "avklarAktiviteter": {
@@ -129,6 +127,5 @@
             }
         ]
     },
-    "hjemmel": "-",
     "dekningsgrad": 100
 }

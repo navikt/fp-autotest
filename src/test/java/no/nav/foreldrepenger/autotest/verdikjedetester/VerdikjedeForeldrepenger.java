@@ -65,6 +65,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -1618,10 +1619,12 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse);
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandling(saksnummer, false, false);
-
+        var halvG = saksbehandler.valgtBehandling.getBeregningsgrunnlag()
+                .getGrunnbeløp()
+                .divide(BigDecimal.valueOf(2), RoundingMode.HALF_EVEN);
         assertThat(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getBeregningsgrunnlagPeriode(0).getRedusertPrAar()).as(
                         "Forventer at beregningsgrunnlaget baserer seg på et grunnlag som er mindre enn 1/2 G")
-                .isLessThan(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getHalvG());
+                .isLessThan(halvG.doubleValue());
         assertThat(saksbehandler.vilkårStatus(VilkarTypeKoder.BEREGNINGSGRUNNLAGVILKÅR)).as("Vilkårstatus for beregningsgrunnlag")
                 .isEqualTo("IKKE_OPPFYLT");
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat()).as("Behandlingsresultat")
