@@ -1,6 +1,5 @@
 {
     "skjaeringstidspunktBeregning": "2019-07-01",
-    "skjæringstidspunkt": "2019-07-01",
     "aktivitetStatus": [
         "AT"
     ],
@@ -147,7 +146,6 @@
             "differanseBeregnet": 0.0
         }
     ],
-    "halvG": 49929.0,
     "grunnbeløp": 99858.0,
     "faktaOmBeregning": {
         "avklarAktiviteter": {
@@ -194,7 +192,6 @@
             }
         ]
     },
-    "hjemmel": "F_14_7_8_30",
     "faktaOmFordeling": {
         "fordelBeregningsgrunnlag": {
             "fordelBeregningsgrunnlagPerioder": [

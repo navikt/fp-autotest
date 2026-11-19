@@ -7,7 +7,6 @@
         }
     ],
     "skjaeringstidspunktBeregning": "2020-01-01",
-    "skjæringstidspunkt": "2020-01-01",
     "aktivitetStatus": [
         "AT_FL"
     ],
@@ -74,7 +73,6 @@
         }
     ],
     "sammenligningsgrunnlagPrStatus": [],
-    "halvG": 49929.0,
     "grunnbeløp": 99858.0,
     "faktaOmBeregning": {
         "frilansAndel": {
@@ -174,6 +172,5 @@
         ],
         "vurderMilitaer": {}
     },
-    "hjemmel": "-",
     "dekningsgrad": 100
 }
