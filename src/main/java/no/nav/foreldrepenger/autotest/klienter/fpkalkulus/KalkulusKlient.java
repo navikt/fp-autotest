@@ -23,7 +23,7 @@ import no.nav.foreldrepenger.kalkulus.kontrakt.response.håndtering.OppdateringR
 public class KalkulusKlient {
     private static final String KLIENT_ID = "kalkulus";
     private static final String KALKULUS_DETALJERT_GRUNNLAG_URL = "/grunnlag";
-    private static final String KALKULUS_GUI_GRUNNLAG_URL = "/grunnlag/gui";
+    private static final String KALKULUS_GUI_GRUNNLAG_URL = "/grunnlag/gui/beregningsgrunnlag";
     private static final String KALKULUS_BEREGN_URL = "/beregn";
     private static final String KALKULUS_AVKLARINGSBEHOV_URL = "/avklaringsbehov";
 
