@@ -89,12 +89,14 @@ class AdressebeskyttelseOgSkjermetPersonTester {
                 .build();
         var termindato = LocalDate.now().minusWeeks(2);
         var morsUttak = uttaksperiode(Rolle.MOR, MØDREKVOTE, termindato, termindato.plusWeeks(6).minusDays(1)).søker();
+        var morsSamtidigeUttak = uttaksperiode(Rolle.MOR, MØDREKVOTE, termindato, termindato.plusWeeks(1).minusDays(1), 100,
+                UttaksperiodeType.SAMTIDIGUTTAK).søker();
         var farsSamtidigeUttak = uttaksperiode(Rolle.FAR_MEDMOR, FEDREKVOTE, termindato, termindato.plusWeeks(1).minusDays(1), 100,
                 UttaksperiodeType.SAMTIDIGUTTAK).søker();
         var uttaksplan = List.of(
                 uttaksperiode(Rolle.MOR, FORELDREPENGER_FØR_FØDSEL, termindato.minusWeeks(3), termindato.minusDays(1)),
                 new UttakPeriodeDto(helgejustertTilMandag(termindato), helgejustertTilFredag(termindato.plusWeeks(1).minusDays(1)),
-                        morsUttak, farsSamtidigeUttak, null),
+                        morsSamtidigeUttak, farsSamtidigeUttak, null),
                 new UttakPeriodeDto(helgejustertTilMandag(termindato.plusWeeks(1)), helgejustertTilFredag(termindato.plusWeeks(6).minusDays(1)),
                         morsUttak, null, null),
                 new UttakPeriodeDto(helgejustertTilMandag(termindato.plusWeeks(6)), helgejustertTilFredag(termindato.plusWeeks(9).minusDays(1)),
