@@ -384,11 +384,14 @@ class Fodsel extends VerdikjedeTestBase {
     @Test
     @DisplayName("Far søker fødsel med 1 arbeidsforhold")
     void farSøkerFødselMedEttArbeidsforhold() {
+        // Mor har arbeid, slik at aktivitetskravet i fars fellesperiode (morsAktivitet ARBEID) kan kontrolleres mot registeret.
         var familie = FamilieGenerator.ny()
                 .forelder(far()
                         .inntekt(InntektGenerator.ny().arbeidMedOpptjeningUnder6G().build())
                         .build())
-                .forelder(mor().build())
+                .forelder(mor()
+                        .inntekt(InntektGenerator.ny().arbeidMedOpptjeningUnder6G().build())
+                        .build())
                 .relasjonForeldre(FamilierelasjonDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusWeeks(2))
                 .build();
@@ -401,7 +404,7 @@ class Fodsel extends VerdikjedeTestBase {
         );
         var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.FAR)
                 .medPerioder(perioder)
-                .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
+                .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.mor()));
         var saksnummer = far.søk(søknad);
         var arbeidsgiver = far.arbeidsgiver();
         ventPåInntektsmeldingForespørsel(saksnummer);

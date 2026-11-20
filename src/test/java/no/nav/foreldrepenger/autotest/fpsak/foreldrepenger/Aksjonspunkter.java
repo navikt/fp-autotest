@@ -106,10 +106,11 @@ class Aksjonspunkter extends FptilbakeTestBase {
 
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
+        // Søknaden spør ikke lenger om adopsjon fra utlandet (foreldrepengesoknad #5406), så ankomstdato sendes ikke.
         var adopsjon = BarnBuilder.adopsjon(
                 fødselsdato,
                 false
-        ).build();
+        ).medAnkomstdato(null).build();
         var fordeling = fordeling(
                 uttaksperiode(Rolle.MOR, KontoType.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10))
         );
