@@ -318,10 +318,12 @@ class MorOgFarSammen extends VerdikjedeTestBase {
         var mødrekvoteMor = uttaksperiode(Rolle.MOR, KontoType.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1));
         var samtidigUttakFar = uttaksperiode(Rolle.FAR_MEDMOR, FEDREKVOTE, fpStartdatoFar, fpStartdatoFar.plusWeeks(2).minusDays(1),
                 BigDecimal.valueOf(100));
+        var samtidigUttakMor = uttaksperiode(Rolle.MOR, KontoType.MØDREKVOTE, samtidigUttakFar.fom(), samtidigUttakFar.tom(),
+                BigDecimal.valueOf(100));
         var fedrekvoteFar = uttaksperiode(Rolle.FAR_MEDMOR, FEDREKVOTE, fpStartdatoFar.plusWeeks(8), fpStartdatoFar.plusWeeks(12).minusDays(1));
         var uttaksplan = List.of(
                 uttaksperiode(Rolle.MOR, KontoType.FORELDREPENGER_FØR_FØDSEL, fpstartdatoMor, fødselsdato.minusDays(1)),
-                new UttakPeriodeDto(samtidigUttakFar.fom(), samtidigUttakFar.tom(), mødrekvoteMor.søker(), samtidigUttakFar.søker(), null),
+                new UttakPeriodeDto(samtidigUttakFar.fom(), samtidigUttakFar.tom(), samtidigUttakMor.søker(), samtidigUttakFar.søker(), null),
                 new UttakPeriodeDto(helgejustertTilMandag(fpStartdatoFar.plusWeeks(2)), helgejustertTilFredag(fpStartdatoFar.plusWeeks(8).minusDays(1)),
                         mødrekvoteMor.søker(), null, null),
                 new UttakPeriodeDto(fedrekvoteFar.fom(), mødrekvoteMor.tom(), mødrekvoteMor.søker(), fedrekvoteFar.søker(), null),
@@ -340,8 +342,9 @@ class MorOgFarSammen extends VerdikjedeTestBase {
         debugFritekst("Ferdig med første behandling mor");
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat()).as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);
+        // Mødrekvoten med samtidig uttak de første to ukene blir en egen periode
         assertThat(saksbehandler.valgtBehandling.getUttakResultatPerioder().getPerioderSøker()).as("Antall uttkasperioder for søker")
-                .hasSize(3);
+                .hasSize(4);
         assertThat(saksbehandler.valgtBehandling.getSaldoer().stønadskonti()).as("Antall stønadskontoer i saldo").hasSize(4);
 
         // FAR
@@ -474,9 +477,11 @@ class MorOgFarSammen extends VerdikjedeTestBase {
         var fellesperiodeMor = uttaksperiode(Rolle.MOR, KontoType.FELLESPERIODE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(31).minusDays(1));
         var samtidigUttakFar = uttaksperiode(Rolle.FAR_MEDMOR, FEDREKVOTE, fødselsdato, fødselsdato.plusWeeks(2).minusDays(1),
                 BigDecimal.valueOf(100));
+        var samtidigUttakMor = uttaksperiode(Rolle.MOR, KontoType.MØDREKVOTE, samtidigUttakFar.fom(), samtidigUttakFar.tom(),
+                BigDecimal.valueOf(100));
         var uttaksplan = List.of(
                 periodeFørFødselMor,
-                new UttakPeriodeDto(samtidigUttakFar.fom(), samtidigUttakFar.tom(), mødrekvoteMor.søker(), samtidigUttakFar.søker(), null),
+                new UttakPeriodeDto(samtidigUttakFar.fom(), samtidigUttakFar.tom(), samtidigUttakMor.søker(), samtidigUttakFar.søker(), null),
                 new UttakPeriodeDto(helgejustertTilMandag(fødselsdato.plusWeeks(2)), mødrekvoteMor.tom(), mødrekvoteMor.søker(), null, null),
                 fellesperiodeMor);
         var søknadMor = SøknadForeldrepengerMaler.lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
@@ -520,10 +525,15 @@ class MorOgFarSammen extends VerdikjedeTestBase {
         saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakManueltBekreftelse());
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         var uttak = saksbehandler.valgtBehandling.hentUttaksperioder();
-        assertThat(uttak).hasSize(1);
-        assertThat(uttak.get(0).getPeriodeResultatType()).isEqualTo(PeriodeResultatType.INNVILGET);
-        assertThat(uttak.get(0).getAktiviteter().get(0).getKontoType()).isEqualTo(FEDREKVOTE);
-        assertThat(uttak.get(0).getAktiviteter().get(0).getUtbetalingsgrad()).isEqualTo(BigDecimal.valueOf(100));
+        // Mors samtidige uttak slutter etter to uker, og fpsak deler fars periode der
+        assertThat(uttak).hasSize(2);
+        assertThat(uttak.getFirst().getFom()).isEqualTo(helgejustertTilMandag(utsattUttakFar.fom()));
+        assertThat(uttak.getLast().getTom()).isEqualTo(helgejustertTilFredag(utsattUttakFar.tom()));
+        assertThat(uttak).allSatisfy(periode -> {
+            assertThat(periode.getPeriodeResultatType()).isEqualTo(PeriodeResultatType.INNVILGET);
+            assertThat(periode.getAktiviteter().get(0).getKontoType()).isEqualTo(FEDREKVOTE);
+            assertThat(periode.getAktiviteter().get(0).getUtbetalingsgrad()).isEqualTo(BigDecimal.valueOf(100));
+        });
 
         saksbehandler.hentFagsak(saksnummerMor);
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
