@@ -199,10 +199,11 @@ class ToTetteOgMinsterettTester extends VerdikjedeTestBase {
         var mødrekvoteMor = uttaksperiode(Rolle.MOR, KontoType.MØDREKVOTE, fødselsdatoBarn1, fødselsdatoBarn1.plusWeeks(12).minusDays(1));
         var samtidigUttakFar = uttaksperiode(Rolle.FAR_MEDMOR, KontoType.FEDREKVOTE, fødselsdatoBarn1, fødselsdatoBarn1.plusWeeks(2).minusDays(1),
                 SAMTIDIGUTTAK);
+        var samtidigUttakMor = uttaksperiode(Rolle.MOR, KontoType.MØDREKVOTE, samtidigUttakFar.fom(), samtidigUttakFar.tom(), SAMTIDIGUTTAK);
         var fedrekvoteFar = uttaksperiode(Rolle.FAR_MEDMOR, KontoType.FEDREKVOTE, fødselsdatoBarn1.plusWeeks(36), fødselsdatoBarn1.plusWeeks(46).minusDays(1));
         var uttaksplanBarn1 = List.of(
                 uttaksperiode(Rolle.MOR, KontoType.FORELDREPENGER_FØR_FØDSEL, fpStartdatoBarn1, fødselsdatoBarn1.minusDays(1)),
-                new UttakPeriodeDto(samtidigUttakFar.fom(), samtidigUttakFar.tom(), mødrekvoteMor.søker(), samtidigUttakFar.søker(), null),
+                new UttakPeriodeDto(samtidigUttakFar.fom(), samtidigUttakFar.tom(), samtidigUttakMor.søker(), samtidigUttakFar.søker(), null),
                 new UttakPeriodeDto(helgejustertTilMandag(fødselsdatoBarn1.plusWeeks(2)), mødrekvoteMor.tom(), mødrekvoteMor.søker(), null, null),
                 uttaksperiode(Rolle.MOR, KontoType.FELLESPERIODE, fødselsdatoBarn1.plusWeeks(12), fødselsdatoBarn1.plusWeeks(15).minusDays(1)),
                 new UttakPeriodeDto(fedrekvoteFar.fom(), fedrekvoteFar.tom(), null, fedrekvoteFar.søker(), null));
@@ -303,7 +304,7 @@ class ToTetteOgMinsterettTester extends VerdikjedeTestBase {
         // Har 4 uker igjen av minstretten, men søker om 8 (forventer 4 uker innvilget og de siste 4 ukene avslått)
         var uttaksplanEndringBarn1 = List.of(
                 uttaksperiode(Rolle.MOR, KontoType.FORELDREPENGER_FØR_FØDSEL, fpStartdatoBarn1, fødselsdatoBarn1.minusDays(1)),
-                new UttakPeriodeDto(samtidigUttakFar.fom(), samtidigUttakFar.tom(), mødrekvoteMor.søker(), samtidigUttakFar.søker(), null),
+                new UttakPeriodeDto(samtidigUttakFar.fom(), samtidigUttakFar.tom(), samtidigUttakMor.søker(), samtidigUttakFar.søker(), null),
                 new UttakPeriodeDto(helgejustertTilMandag(fødselsdatoBarn1.plusWeeks(2)), mødrekvoteMor.tom(), mødrekvoteMor.søker(), null, null),
                 uttaksperiode(Rolle.MOR, KontoType.FELLESPERIODE, fødselsdatoBarn1.plusWeeks(12), fødselsdatoBarn1.plusWeeks(15).minusDays(1)),
                 new UttakPeriodeDto(fedrekvoteFar.fom(), fedrekvoteFar.tom(), null, fedrekvoteFar.søker(), null),
