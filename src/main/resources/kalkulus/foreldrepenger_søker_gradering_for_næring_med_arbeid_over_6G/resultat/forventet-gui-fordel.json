@@ -11,7 +11,6 @@
     }
     ],
     "skjaeringstidspunktBeregning": "2019-03-05",
-    "skjæringstidspunkt": "2019-03-05",
     "aktivitetStatus": ["AT_SN"],
     "beregningsgrunnlagPeriode": [{
         "beregningsgrunnlagPeriodeFom": "2019-03-05",
@@ -235,7 +234,6 @@
         "differanseBeregnet": -284420.00
     }
     ],
-    "halvG": 48441.50,
     "grunnbeløp": 96883.00,
     "faktaOmBeregning": {
         "saksopplysninger": {
@@ -301,7 +299,6 @@
         }
         ]
     },
-    "hjemmel": "F_14_7_8_41",
     "faktaOmFordeling": {
         "fordelBeregningsgrunnlag": {
             "fordelBeregningsgrunnlagPerioder": [{
