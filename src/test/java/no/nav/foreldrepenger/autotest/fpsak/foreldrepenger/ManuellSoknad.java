@@ -45,7 +45,8 @@ import no.nav.foreldrepenger.vtp.kontrakter.person.v2.PersonDto;
 @Tag("utvikling")
 class ManuellSoknad extends VerdikjedeTestBase {
 
-    private static final Path MAPPE = Path.of("target", "manuell-soknad");
+    // -Dmanuell.mappe gir hver familie sin egen mappe, slik at flere kjøringer kan vente på inntektsmelding samtidig
+    private static final Path MAPPE = Path.of(System.getProperty("manuell.mappe", "target/manuell-soknad"));
     private static final Path FAMILIE_FIL = MAPPE.resolve("familie.txt");
     private static final Path IM_FIL = MAPPE.resolve("inntektsmelding");
     private static final Path KJØRING_FIL = MAPPE.resolve("kjoring");
