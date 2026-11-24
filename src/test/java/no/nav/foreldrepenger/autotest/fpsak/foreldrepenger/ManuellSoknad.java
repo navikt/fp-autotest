@@ -176,8 +176,7 @@ class ManuellSoknad extends VerdikjedeTestBase {
         var tmp = mappe.resolve("familie.txt.tmp");
         Files.writeString(tmp, "mor=" + mor.fødselsnummer().value() + "\n"
                 + "far=" + far.fødselsnummer().value() + "\n"
-                + hendelse + "\n"
-                + "søknad: http://localhost:9101\n");
+                + hendelse + "\n");
         Files.move(tmp, tom.familieFil(), StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
         return new ManuellFamilie(id, mappe, mor, far);
     }
