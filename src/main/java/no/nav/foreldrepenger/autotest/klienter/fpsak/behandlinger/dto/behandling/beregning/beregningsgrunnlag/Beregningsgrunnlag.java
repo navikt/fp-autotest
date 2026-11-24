@@ -12,13 +12,10 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.AktivitetStatus;
 public class Beregningsgrunnlag {
 
     private LocalDate skjaeringstidspunktBeregning;
-    private LocalDate skjæringstidspunkt;
     private List<AktivitetStatus> aktivitetStatus;
     private List<BeregningsgrunnlagPeriodeDto> beregningsgrunnlagPeriode;
-    private Double halvG;
     private FaktaOmBeregningDto faktaOmBeregning;
     private RefusjonTilVurderingDto refusjonTilVurdering;
-    private List<BeregningsgrunnlagPrStatusOgAndelDto> andelerMedGraderingUtenBG;
     private FaktaOmFordelingDto faktaOmFordeling;
     private BigDecimal grunnbeløp;
 
@@ -57,10 +54,6 @@ public class Beregningsgrunnlag {
 
     public FaktaOmFordelingDto getFaktaOmFordeling() {
         return faktaOmFordeling;
-    }
-
-    public Double getHalvG() {
-        return halvG;
     }
 
     public RefusjonTilVurderingDto getRefusjonTilVurdering() {
