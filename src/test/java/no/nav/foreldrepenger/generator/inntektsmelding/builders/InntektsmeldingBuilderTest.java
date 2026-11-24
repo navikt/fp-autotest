@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.generator.inntektsmelding;
+package no.nav.foreldrepenger.generator.inntektsmelding.builders;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -10,10 +10,6 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-
-import no.nav.foreldrepenger.generator.inntektsmelding.builders.Inntektsmelding;
-import no.nav.foreldrepenger.generator.inntektsmelding.builders.InntektsmeldingBuilder;
-import no.nav.foreldrepenger.generator.inntektsmelding.builders.Prosent;
 
 @Tag("internal")
 class InntektsmeldingBuilderTest {
