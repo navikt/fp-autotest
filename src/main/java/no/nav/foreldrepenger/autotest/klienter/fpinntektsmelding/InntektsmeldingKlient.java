@@ -12,7 +12,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Supplier;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import no.nav.foreldrepenger.autotest.klienter.fpinntektsmelding.dto.api.InntektsmeldingRequest;
@@ -24,12 +26,14 @@ import no.nav.foreldrepenger.autotest.klienter.fpinntektsmelding.dto.arbeidsgive
 import no.nav.foreldrepenger.autotest.klienter.fpinntektsmelding.dto.arbeidsgiverportal.ArbeidsgiverDto;
 import no.nav.foreldrepenger.autotest.klienter.fpinntektsmelding.dto.arbeidsgiverportal.YtelseType;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
+import no.nav.foreldrepenger.autotest.util.vent.Vent;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Fødselsnummer;
 import no.nav.foreldrepenger.kontrakter.felles.typer.Saksnummer;
 
 public class InntektsmeldingKlient {
 
     private static final String FORESPØRSEL_UUID = "/forvaltning/api/foresporsel/list";
+    private static final String FORESPØRSEL_FORVALTNING = "/forvaltning/api/forvaltningForespoersler/hentForSak";
     private static final String FORESPØRSEL_OPPRETT = "/api/imdialog/send-inntektsmelding";
     private static final String API_HENT_FORESPØRSLER = "/v1/forespoersel/forespoersler";
     private static final String API_SEND_INNTEKTSMELDING = "/v1/inntektsmelding/send-inn";
@@ -44,6 +48,23 @@ public class InntektsmeldingKlient {
         var request = requestMedInnloggetSaksbehandler(SaksbehandlerRolle.DRIFTER, FPINNTEKTSMELDING_APP).uri(
                 fromUri(BaseUriProvider.FPINNTEKTSMELDING_BASE).path(FORESPØRSEL_UUID + "/" + saksnummer.value()).build()).GET();
         return send(request.build(), ListForespørslerResponse.class);
+    }
+
+    public static void ventTilArbeidsgiversakErOpprettet(Saksnummer saksnummer, UUID forespørselUuid) {
+        ventTilArbeidsgiversakErOpprettet(forespørselUuid, () -> {
+            var request = requestMedInnloggetSaksbehandler(SaksbehandlerRolle.DRIFTER, FPINNTEKTSMELDING_APP).uri(
+                    fromUri(BaseUriProvider.FPINNTEKTSMELDING_BASE)
+                            .path(FORESPØRSEL_FORVALTNING + "/" + saksnummer.value()).build()).GET();
+            return send(request.build(), new TypeReference<List<ForvaltningForespørselDto>>() {});
+        });
+    }
+
+    static void ventTilArbeidsgiversakErOpprettet(UUID forespørselUuid, Supplier<List<ForvaltningForespørselDto>> hentForespørsler) {
+        Vent.på(() -> {
+            var forespørsler = hentForespørsler.get();
+            return forespørsler != null && forespørsler.stream()
+                    .anyMatch(f -> forespørselUuid.equals(f.uuid()) && f.sendtTilArbeidsgiverportalen());
+        }, "Arbeidsgiversak er ikke opprettet for forespørsel " + forespørselUuid);
     }
 
     public static List<ForespørselDto> søkEtterForespørslerFraApi(String orgnr, String fnr) {
@@ -69,6 +90,10 @@ public class InntektsmeldingKlient {
     }
 
     public record ListForespørslerResponse(List<InntektsmeldingForespørselDto> inntektmeldingForespørsler) {
+    }
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record ForvaltningForespørselDto(UUID uuid, boolean sendtTilArbeidsgiverportalen) {
     }
 
     public record InntektsmeldingForespørselDto(UUID uuid,

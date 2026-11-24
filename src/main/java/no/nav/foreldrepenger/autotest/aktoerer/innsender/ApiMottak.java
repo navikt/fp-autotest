@@ -78,6 +78,7 @@ public class ApiMottak extends DokumentInnsendingHjelper {
             fail("Forventer å finne enn forespørsel for AG: %s", inntektsmelding.arbeidsgiver().arbeidsgiverIdentifikator());
         }
         var request = InntektsmeldingPortalMapper.mapForApi(inntektsmelding, forespørsler.getFirst());
+        InntektsmeldingKlient.ventTilArbeidsgiversakErOpprettet(saksnummer, forespørsler.getFirst().forespoerselId());
         var antallGamleInntekstmeldinger = antallInntektsmeldingerMottattPåSak(saksnummer);
         InntektsmeldingKlient.sendInntektsmeldingTilApi(request, forespørsler.getFirst().orgnr(), new Fødselsnummer(inntektsmelding.arbeidstakerFnr()));
         return ventTilAlleInntekstmeldingeneErMottatt(new Fødselsnummer(inntektsmelding.arbeidstakerFnr()), saksnummer, 1, antallGamleInntekstmeldinger, "api");
@@ -114,6 +115,9 @@ public class ApiMottak extends DokumentInnsendingHjelper {
 
     private Saksnummer sendInnInntektsmelding(SendInntektsmeldingDto request, Fødselsnummer fnr, Saksnummer saksnummer) {
         return Allure.step("Sender inn IM for bruker " + fnr, () -> {
+            if (request.foresporselUuid() != null) {
+                InntektsmeldingKlient.ventTilArbeidsgiversakErOpprettet(saksnummer, request.foresporselUuid());
+            }
             var antallGamleInntekstmeldinger = antallInntektsmeldingerMottattPåSak(saksnummer);
             InntektsmeldingKlient.sendInntektsmelding(request, fnr);
             return ventTilAlleInntekstmeldingeneErMottatt(fnr, saksnummer, 1, antallGamleInntekstmeldinger, "arbeidsgiverportal");
