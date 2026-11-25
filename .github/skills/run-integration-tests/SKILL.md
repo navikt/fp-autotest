@@ -100,7 +100,14 @@ When a developer wants test persons for a søknad they fill out themselves (e.g.
    Set `-Dmanuell.soker` to who applies; with `auto` the test waits only for them. A temporary test may drop or add `-Dmanuell.*` properties; use the ones it reads.
    To run several families at once, give each run its own folder with `-Dmanuell.mappe=<absolute path>`; `familie.txt` and `inntektsmelding` are then in that folder instead of `target/manuell-soknad/`, and runs no longer stop each other.
    To make several families in one run, add `-Dmanuell.antall=<n>` (default 1). Each family then gets its own subfolder `01`, `02`, … of the folder, with its own `familie.txt` and `inntektsmelding`, and the log names the family («Inntektsmelding sendt for mor i familie 03, saksnummer …»). Starting Maven takes about 4 seconds per run, so this is much faster than one run per family.
-5. **When the log says `Familie opprettet, se`**, which takes at most 2 seconds after the test starts (read the output every 1–2 s, never sleep longer), give the developer `cat target/manuell-soknad/familie.txt` instead of the fødselsnummer, which may be masked in your output. The søknad is at http://localhost:9101; log in as the parent who applies.
+5. **When the log says `Familie opprettet, se`**, which takes at most 2 seconds after the test starts (read the output every 1–2 s, never sleep longer), give the developer `cat target/manuell-soknad/familie.txt` instead of the fødselsnummer, which may be masked in your output. Give the developer the URL of the søknad for the ytelse from this table, and say which parent to log in as:
+
+   | Ytelse | URL |
+   |---|---|
+   | Foreldrepenger | http://localhost:9101/foreldrepenger/soknad/ |
+   | Svangerskapspenger | http://localhost:9102/svangerskapspenger/soknad/ |
+   | Engangsstønad | http://localhost:9103/engangsstonad/soknad/ |
+   | Oversikt (Mine foreldrepenger) | http://localhost:9100/foreldrepenger/oversikt/ |
 6. **With `auto`**, each parent gets inntektsmelding as soon as their own søknad is sent; report each saksnummer the test logs right away, without waiting for the other parent. **With `vent`**, as soon as one søknad is sent, ask who gets inntektsmelding (only parents with arbeid and a sent søknad), then run `echo <mor|far|begge|ingen> > target/manuell-soknad/inntektsmelding` and report the saksnummer or error it logs.
 7. **Delete the temporary test** once the run has ended (family made, and inntektsmelding sent or skipped). Never commit it.
 8. **Leave the services running**, also on session exit and in spite of «Service Lifecycle Management», until the developer asks to stop them.
