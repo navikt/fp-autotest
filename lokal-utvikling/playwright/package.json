@@ -1,0 +1,9 @@
+{
+  "name": "fp-autotest-playwright",
+  "private": true,
+  "type": "module",
+  "description": "Lokale Playwright-hjelpere for manuell testing mot fp-autotest-verdikjeden",
+  "dependencies": {
+    "playwright": "^1.65.1"
+  }
+}

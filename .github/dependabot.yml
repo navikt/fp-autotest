@@ -39,3 +39,14 @@ updates:
           - "no.nav.*"
         exclude-patterns:
           - "no.nav.folketrygdloven.*"
+  - package-ecosystem: npm
+    directory: "/lokal-utvikling/playwright"
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 5
+    groups:
+      playwright-deps:
+        patterns:
+          - "*"

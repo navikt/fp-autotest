@@ -56,3 +56,8 @@ lokal-utvikling/.env
 
 # Mellombelse søknadstestar laga av agenten frå ManuellSoknad
 ManuellSoknadMellombels*.java
+
+# Lokal Playwright-testing
+lokal-utvikling/playwright/node_modules/
+lokal-utvikling/playwright/.state/
+lokal-utvikling/playwright/scenarier/lokalt/
