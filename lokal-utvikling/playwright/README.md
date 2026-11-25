@@ -44,6 +44,7 @@ Kjør et scenario med `node run.mjs scenarier/<scenario>.mjs <argumenter>`.
 | `ny-soknad.mjs` | Sender en førstegangssøknad med standardplan. |
 | `soknad-med-plan.mjs` | Sender førstegangssøknad der planen endres før innsending (`SLETT`/`NY`). |
 | `endring-legg-til.mjs` | Sender endringssøknad som legger til en periode i planen. |
+| `endring-legg-til-ferie.mjs` | Legger til en ferieperiode i planen i en endringssøknad. |
 | `endring-slett-periode.mjs` | Sender endringssøknad som sletter en periode eller bytter den ut med ferie. |
 | `behandle.mjs` | Behandler saken og fatter vedtak. |
 | `los-dokumentasjon.mjs` | Løser aksjonspunktet «Kontroller dokumentasjon». |
@@ -83,6 +84,8 @@ wait
 ```
 
 Bruk et eget prefiks per økt (for eksempel `A` i én og `B` i en annen). Steg for samme forelder eller samme sak må alltid kjøres etter hverandre. På macOS kjører skallet ofte `zsh`: unngå variabelnavnet `status` (read-only i `zsh`), og bruk `bash -c '...'` ved parallelle løkker med `&`/`wait` (unngår `BG_NICE` og 1-indekserte arrays).
+
+Sett `OKT=<økt>` for å lagre tilstand isolert i `.state/okter/<økt>/`. Da kolliderer ikke kjøringer mellom økter, og hver økt kan ryddes for seg. Kjør `scripts/stopp-familie.sh <navn>` når en kjøring avsluttes eller avbrytes, slik at bakgrunnsprosessen `ManuellSoknad` stoppes. `scripts/familie.sh` med `auto` eller `vent` returnerer så snart familiene er opprettet. Ikke vent på `BUILD SUCCESS` i loggen, den kommer først etter at alle søknadene er sendt.
 
 ## Viktige fallgruver
 

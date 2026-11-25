@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Lager en familie i VTP med fp-autotest ManuellSoknad og lagrer familie.txt som .state/familie-<navn>.txt.
-# Bruk: [ANTALL=<n>] [FODT_UKER=<uker>] scripts/familie.sh <navn> <fodsel|termin> [auto|vent|ingen] [mor|far|begge]
+# Bruk: [OKT=<økt>] [ANTALL=<n>] [FODT_UKER=<uker>] scripts/familie.sh <navn> <fodsel|termin> [auto|vent|ingen] [mor|far|begge]
 #   auto/vent kjører i bakgrunnen (venter på søknad og sender inntektsmelding). Med vent: echo mor > .state/manuell/<navn>/inntektsmelding
 #   MOR_INNTEKT/FAR_INNTEKT=arbeid+frilans+naering (standard arbeid, eller ingen) styrer inntekt i VTP.
 #   FODT_UKER=<uker> (standard 2) styrer hvor gammelt barnet er ved fodsel.
@@ -10,6 +10,16 @@
 set -euo pipefail
 NAVN=$1; FH=$2; IM=${3:-ingen}; SOKER=${4:-begge}; ANTALL=${ANTALL:-1}
 ROOT=$(cd "$(dirname "$0")/.." && pwd); AT=$(cd "$ROOT/../.." && pwd)
+STATE_ROOT="$ROOT/.state"
+if [[ "${OKT+x}" == x ]]; then
+  if [[ ! "$OKT" =~ ^[A-Za-z0-9._-]+$ ]]; then
+    echo "Ugyldig OKT: $OKT" >&2
+    exit 1
+  fi
+  STATE="$STATE_ROOT/okter/$OKT"
+else
+  STATE="$STATE_ROOT"
+fi
 if [[ ! "$NAVN" =~ ^[A-Za-z0-9._-]+$ ]]; then
   echo "Ugyldig familienavn: $NAVN" >&2
   exit 1
@@ -30,9 +40,9 @@ if [[ "$ANTALL" -gt 1 ]]; then
   for i in $(seq 1 "$ANTALL"); do IDER+=("$(printf "%0${BREDDE}d" "$i")"); done
 fi
 
-STATE="$ROOT/.state"; MAPPE="$STATE/manuell/$NAVN"; LAS="$STATE/manuell/.mvn-lock"
-mkdir -p "$STATE"; LOG="$STATE/familie-$NAVN.log"
-# Varsler (uten å slette) når .state/ har mange eller gamle filer.
+MAPPE="$STATE/manuell/$NAVN"; LAS="$STATE_ROOT/manuell/.mvn-lock"
+mkdir -p "$STATE_ROOT/manuell" "$STATE/manuell"; LOG="$STATE/familie-$NAVN.log"
+# Varsler (uten å slette) når øktens state-mappe har mange eller gamle filer.
 ANTALL_STATE=$(find "$STATE" -type f ! -path '*/.*-lock/*' 2>/dev/null | wc -l | tr -d ' ')
 GAMLE_STATE=$(find "$STATE" -type f -mtime +7 ! -path '*/.*-lock/*' 2>/dev/null | wc -l | tr -d ' ')
 if [[ "$ANTALL_STATE" -gt 200 || "$GAMLE_STATE" -gt 0 ]]; then
@@ -55,7 +65,6 @@ for gammel in "$STATE/$NAVN-"*.json; do
     avvis_gjenbruk
   fi
 done
-mkdir -p "$STATE/manuell"
 if ! mkdir "$MAPPE" 2>/dev/null; then
   avvis_gjenbruk
 fi
@@ -101,7 +110,9 @@ cd "$AT"
 if [ "$IM" = ingen ]; then
   mvn test "${ARGS[@]}" > "$LOG" 2>&1 || true
 else
-  (mvn test "${ARGS[@]}" -Dmanuell.inntektsmelding=$IM -Dmanuell.soker=$SOKER > "$LOG" 2>&1 &)
+  nohup mvn test "${ARGS[@]}" -Dmanuell.inntektsmelding=$IM -Dmanuell.soker=$SOKER </dev/null >"$LOG" 2>&1 &
+  MVN_PID=$!
+  printf '%s\n' "$MVN_PID" > "$MAPPE/mvn.pid"
   # ManuellSoknad skriver alle familie.txt før første «Familie opprettet, se». FamilieGenerator logger
   # «Familie opprettet med mor» før fila finnes, så den linjen teller ikke.
   for _ in $(seq 1 $((90 + ANTALL))); do
@@ -121,6 +132,9 @@ if [[ "$ANTALL" -eq 1 ]]; then
   cp "$MAPPE/familie.txt" "$STATE/familie-$NAVN.txt"
   grep -vE '^(mor|far)=' "$STATE/familie-$NAVN.txt"
   echo "Logg: $LOG (saksnummer: grep 'Inntektsmelding sendt' $LOG)"
+  if [ "$IM" != ingen ]; then
+    echo "Familiene er klare. Ikke vent på BUILD SUCCESS i loggen: Maven-prosessen venter på søknadene i bakgrunnen (PID $MVN_PID). Stopp den med: ${OKT:+OKT=$OKT }scripts/stopp-familie.sh $NAVN"
+  fi
   exit 0
 fi
 
@@ -138,3 +152,6 @@ for id in "${IDER[@]}"; do
   grep -vE '^(mor|far)=' "$STATE/familie-$NAVN-$id.txt" | sed "s/^/$NAVN-$id: /"
 done
 echo "Logg: $LOG (saksnummer: grep 'i familie <id>, saksnummer' $LOG)"
+if [ "$IM" != ingen ]; then
+  echo "Familiene er klare. Ikke vent på BUILD SUCCESS i loggen: Maven-prosessen venter på søknadene i bakgrunnen (PID $MVN_PID). Stopp den med: ${OKT:+OKT=$OKT }scripts/stopp-familie.sh $NAVN"
+fi

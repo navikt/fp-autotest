@@ -5,7 +5,11 @@ import net from 'node:net';
 import path from 'node:path';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
-export const STATE_DIR = path.join(ROOT, '.state');
+const STATE_ROOT = path.join(ROOT, '.state');
+if (process.env.OKT !== undefined && !/^[A-Za-z0-9._-]+$/.test(process.env.OKT)) {
+    throw new Error(`Ugyldig OKT: ${process.env.OKT}`);
+}
+export const STATE_DIR = process.env.OKT !== undefined ? path.join(STATE_ROOT, 'okter', process.env.OKT) : STATE_ROOT;
 export const SHOT_DIR = path.join(STATE_DIR, 'skjermbilder');
 export const VITE_PORTER = { soknad: 9114, oversikt: 9110 };
 
@@ -87,7 +91,7 @@ const APP_KLAR = '#app :is(h1,h2,button,input)';
 // VTP lagrer nonce fra ID-porten i én felles plass, så samtidige innlogginger overskriver hverandre
 // (se «Kjente fallgruver» i README.md). Låsen slipper én innlogging gjennom om gangen på tvers av prosesser,
 // fra skjemaet åpnes til Wonderwall har vekslet koden i callbacken.
-const INNLOGGING_LÅS = path.join(STATE_DIR, '.innlogging-lock');
+const INNLOGGING_LÅS = path.join(STATE_ROOT, '.innlogging-lock');
 
 function låsErForeldet() {
     try {
@@ -108,7 +112,7 @@ function låsErForeldet() {
 }
 
 async function taInnloggingslås() {
-    fs.mkdirSync(STATE_DIR, { recursive: true });
+    fs.mkdirSync(STATE_ROOT, { recursive: true });
     const start = Date.now();
     for (;;) {
         try {
