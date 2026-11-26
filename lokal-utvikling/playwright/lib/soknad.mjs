@@ -226,9 +226,8 @@ export async function fyllUt(p, opt = {}) {
                 if (await første.count()) await første.check();
             }
         }
-        // Spørsmålet om justering vises ikke i listevisningen, så det besvares også før vedPlan.
-        if (u === 'plan') await velg(p, 'ønskerJustertUttakVedFødsel', opt.justerVedFødsel === false ? 'false' : 'true');
         if (u === 'plan' && opt.vedPlan) await opt.vedPlan(p);
+        // Spørsmålet vises for far/medmor ved termin når planen kan justeres rundt fødsel (kan endres av vedPlan).
         if (u === 'plan') await velg(p, 'ønskerJustertUttakVedFødsel', opt.justerVedFødsel === false ? 'false' : 'true');
         await lastOppVedlegg(p);
         const gammelForm = await app(p).locator('form').first().elementHandle().catch(() => null);
