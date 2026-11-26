@@ -27,8 +27,9 @@ public class BrevTestBase {
 
     protected static void validerBrevetInneholderForventedeTekstavsnitt(byte[] pdfBytes, Set<String> tekstavsnitt) {
         try (var document = Loader.loadPDF(pdfBytes)) {
-            // Fjerne linjeskift for å kunne søke på tvers av linjer
-            var pdfTekst = new PDFTextStripper().getText(document).replace("\n", "").replace("\r", "");
+            // Linjeskift (med evt. omkringliggende mellomrom) erstattes med ett mellomrom for å kunne søke på tvers av linjer.
+            // openhtmltopdf legger fra 1.1.111 til et mellomrom på slutten av linjer som avsluttes med <br/>.
+            var pdfTekst = new PDFTextStripper().getText(document).replaceAll("\\s*\\R\\s*", " ");
             var softAssert = new SoftAssertions();
             tekstavsnitt.forEach(skalFinnes -> softAssert.assertThat(pdfTekst.contains(skalFinnes))
                     .as("'%s' finnes ikke".formatted(skalFinnes))
@@ -161,7 +162,7 @@ public class BrevTestBase {
         var refusjon = "Nei";
         if (harRefusjon) {
             refusjon = "Ja";
-            brevAssertionsBuilder.medEgenndefinertAssertion("Refusjonsbeløp dere krever per måned%s kr".formatted(månedslønnFormatert));
+            brevAssertionsBuilder.medEgenndefinertAssertion("Refusjonsbeløp dere krever per måned %s kr".formatted(månedslønnFormatert));
         }
         brevAssertionsBuilder.medEgenndefinertAssertion("Innsendt: %s".formatted(BrevFormateringUtils.formaterDato(LocalDate.now())))
                 .medEgenndefinertAssertion("Inntektsmelding %s".formatted(BrevFormateringUtils.ytelseNavn(typeYtelse)))
@@ -177,7 +178,7 @@ public class BrevTestBase {
                 .medEgenndefinertAssertion("Utbetaling og refusjon")
                 .medEgenndefinertAssertion("Betaler dere den ansatte lønn under fraværet og krever refusjon? %s".formatted(refusjon))
                 .medEgenndefinertAssertion("Naturalytelser")
-                .medEgenndefinertAssertion("Har den ansatte naturalytelser som faller bort ved fraværet?Nei");
+                .medEgenndefinertAssertion("Har den ansatte naturalytelser som faller bort ved fraværet? Nei");
         return brevAssertionsBuilder;
     }
 
