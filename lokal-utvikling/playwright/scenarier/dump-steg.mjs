@@ -16,8 +16,7 @@ export default async ({ som, familie, args }) => {
     if (process.env.VELG) { // f.eks. VELG=dekningsgrad=100: velger og trykker Neste steg før dump
         const [n, v] = process.env.VELG.split('=');
         await p.locator(`input[name="${n}"][value="${v}"]`).check();
-        await p.waitForTimeout(500);
-        if (process.env.NESTE) { await p.getByRole('button', { name: 'Neste steg' }).click(); await p.waitForTimeout(1000); console.log('URL', p.url()); }
+        if (process.env.NESTE) { await S.nesteSteg(p); console.log('URL', p.url()); }
     }
     if (process.env.BILDE) console.log('BILDE', await skjermbilde(p, `${navn}-${hvem}-${steg}`));
     console.log('TEKST', (await tekstlinjer(p.locator('#app'))).join(' / '));

@@ -16,23 +16,80 @@ export const VITE_PORTER = { soknad: 9114, oversikt: 9110 };
 function prøvPort(host, port, timeoutMs) {
     return new Promise((resolve) => {
         const s = net.createConnection({ host, port });
-        const ferdig = (ok) => {
+        const ferdig = (ok, code) => {
             s.destroy();
-            resolve(ok);
+            resolve({ ok, ...(code ? { code } : {}) });
         };
-        s.setTimeout(timeoutMs, () => ferdig(false));
+        s.setTimeout(timeoutMs, () => ferdig(false, 'ETIMEDOUT'));
         s.once('connect', () => ferdig(true));
-        s.once('error', () => ferdig(false));
+        s.once('error', (err) => ferdig(false, err.code));
     });
 }
 
 const portCache = new Map();
+const sandboxVarslet = new Set();
 export async function erPortÅpen(port, timeoutMs = 150) {
     if (portCache.has(port)) return portCache.get(port);
     const [v4, v6] = await Promise.all([prøvPort('127.0.0.1', port, timeoutMs), prøvPort('::1', port, timeoutMs)]);
-    const ok = v4 || v6;
+    if ((v4.code === 'EPERM' || v6.code === 'EPERM') && !sandboxVarslet.has(port)) {
+        sandboxVarslet.add(port);
+        console.error(`SANDBOX BLOKKERT: Tilkobling til localhost:${port} ble avvist (EPERM). Fiks utenfor cplt: cplt config set allow.localhost ${port} (eller sandbox.allow_localhost_any true)`);
+    }
+    const ok = v4.ok || v6.ok;
     portCache.set(port, ok);
     return ok;
+}
+
+const godkjentePorter = new Set();
+export async function sjekkPort(urlEllerPort, navn) {
+    const port = typeof urlEllerPort === 'number' ? urlEllerPort : Number(new URL(urlEllerPort).port);
+    if (godkjentePorter.has(port)) return;
+    const [v4, v6] = await Promise.all([prøvPort('127.0.0.1', port, 300), prøvPort('::1', port, 300)]);
+    if (v4.code === 'EPERM' || v6.code === 'EPERM') {
+        throw new Error(`SANDBOX BLOKKERT: Tilkobling til ${navn} (localhost:${port}) ble avvist (EPERM). Fiks utenfor cplt: cplt config set allow.localhost ${port} (eller sandbox.allow_localhost_any true)`);
+    }
+    if (!v4.ok && !v6.ok) {
+        const code = v4.code ?? v6.code;
+        throw new Error(`TJENESTE NEDE: ${navn} svarer ikke på localhost:${port} (${code ?? 'ingen svar'}). Sjekk at lokal verdikjede kjører (lokal-utvikling/docker-compose-lokal).`);
+    }
+    godkjentePorter.add(port);
+}
+
+function medDokumentFeil(page, oppgave, kontekst) {
+    let avbryt;
+    let avgjort = false;
+    const feilPromise = new Promise((_, reject) => {
+        avbryt = (feil) => {
+            if (avgjort) return;
+            avgjort = true;
+            reject(feil);
+        };
+    });
+    const response = (r) => {
+        if (r.request().resourceType() !== 'document' || ![403, 502, 503, 504].includes(r.status()) || r.url().includes('login.nav.no')) return;
+        const status = r.status();
+        const svarUrl = new URL(r.url());
+        const port = svarUrl.port || (svarUrl.protocol === 'https:' ? '443' : '80');
+        const årsak = status === 403
+            ? `sannsynlig sandbox- eller proxy-blokkering. Fiks utenfor cplt: cplt config set allow.localhost ${port} (eller sandbox.allow_localhost_any true)`
+            : 'tjenesten bak proxyen svarer ikke.';
+        avbryt(new Error(`${kontekst}: HTTP ${status} på ${r.url()}; ${årsak}`));
+    };
+    const requestfailed = (req) => {
+        if (req.resourceType() !== 'document') return;
+        const errorText = req.failure()?.errorText ?? '';
+        if (!/ERR_CONNECTION_REFUSED|ERR_TUNNEL_CONNECTION_FAILED|ERR_PROXY_CONNECTION_FAILED|ERR_ACCESS_DENIED|ERR_BLOCKED_BY_CLIENT/.test(errorText)) return;
+        const årsak = errorText.includes('ERR_CONNECTION_REFUSED')
+            ? 'lokal tjeneste svarer ikke; sjekk at tjenesten kjører.'
+            : 'sannsynlig sandbox- eller proxy-blokkering; sjekk cplt-tilgang til localhost og proxyoppsettet.';
+        avbryt(new Error(`${kontekst}: dokumentforespørselen til ${req.url()} feilet (${errorText}); ${årsak}`));
+    };
+    page.on('response', response);
+    page.on('requestfailed', requestfailed);
+    return Promise.race([Promise.resolve(oppgave), feilPromise]).finally(() => {
+        page.off('response', response);
+        page.off('requestfailed', requestfailed);
+    });
 }
 
 export function startBrowser() {
@@ -137,49 +194,57 @@ async function taInnloggingslås() {
 
 export async function loggInnSelvbetjening(page, app, fnr, { vite = true } = {}) {
     const url = APPER[app] ?? app;
-    const slippLås = await taInnloggingslås();
-    try {
-        await page.goto(url, { waitUntil: 'domcontentloaded' });
-        await page.locator(`input[name=code], ${APP_KLAR}`).first().waitFor({ timeout: 20000 });
-        if (await page.locator('input[name=code]').count()) {
-            await page.fill('input[name=code]', fnr);
-            const callback = page.waitForResponse((r) => r.url().includes('/oauth2/callback'), { timeout: 20000 });
-            await page.click('input[type=submit]');
-            await callback; // Wonderwall har vekslet koden hos VTP, nonce er brukt
-            slippLås();
-            await page.locator(APP_KLAR).first().waitFor({ timeout: 20000 }).catch(async (e) => {
-                // Viser hvor nettleseren havnet etter innloggingen (adresse uten query og sidetekst).
-                const tekst = (await page.locator('body').innerText().catch(() => ''));
-                console.log('INNLOGGING STOPPET', page.url().split('?')[0], '|', tekst.replace(/\s+/g, ' ').slice(0, 400));
-                throw e;
-            });
-        }
-    } finally {
-        slippLås();
-    }
-    if (vite) {
-        const cookies = await page.context().cookies(url);
-        if (!cookies.some((c) => /vite/i.test(c.name))) {
-            await page.goto(`${url}/vite-on`, { waitUntil: 'domcontentloaded' });
+    await sjekkPort(url, app);
+    return medDokumentFeil(page, (async () => {
+        const slippLås = await taInnloggingslås();
+        try {
             await page.goto(url, { waitUntil: 'domcontentloaded' });
-            await page.locator(APP_KLAR).first().waitFor({ timeout: 20000 });
+            await page.locator(`input[name=code], ${APP_KLAR}`).first().waitFor({ timeout: 20000 });
+            if (await page.locator('input[name=code]').count()) {
+                await sjekkPort(8060, 'VTP');
+                await page.fill('input[name=code]', fnr);
+                const callback = page.waitForResponse((r) => r.url().includes('/oauth2/callback'), { timeout: 20000 });
+                await page.click('input[type=submit]');
+                await callback; // Wonderwall har vekslet koden hos VTP, nonce er brukt
+                slippLås();
+                await page.locator(APP_KLAR).first().waitFor({ timeout: 20000 }).catch(async (e) => {
+                    // Viser hvor nettleseren havnet etter innloggingen (adresse uten query og sidetekst).
+                    const tekst = (await page.locator('body').innerText().catch(() => ''));
+                    console.log('INNLOGGING STOPPET', page.url().split('?')[0], '|', tekst.replace(/\s+/g, ' ').slice(0, 400));
+                    throw e;
+                });
+            }
+        } finally {
+            slippLås();
         }
-    }
+        if (vite) {
+            const cookies = await page.context().cookies(url);
+            if (!cookies.some((c) => /vite/i.test(c.name))) {
+                await page.goto(`${url}/vite-on`, { waitUntil: 'domcontentloaded' });
+                await page.goto(url, { waitUntil: 'domcontentloaded' });
+                await page.locator(APP_KLAR).first().waitFor({ timeout: 20000 });
+            }
+        }
+    })(), app);
 }
 
 // fpsak-frontend via Entra ID i VTP.
 export async function loggInnFpsak(page, saksnummer, bruker = 'Sara Saksbehandler') {
-    await page.goto(`http://localhost:9000/fagsak/${saksnummer}/`, { waitUntil: 'domcontentloaded' });
-    const brukerLoc = page.getByText(bruker).first();
-    const klarLoc = page.getByText(/Behandlingsstatus|Velg behandling/).first();
-    await Promise.race([brukerLoc.waitFor({ timeout: 20000 }), klarLoc.waitFor({ timeout: 20000 })]);
-    if (await page.getByText(bruker).count()) {
-        // VTP-siden kan ha et lag over seg mens den laster. Da prøver vi igjen med force.
-        await page.getByText(bruker).click({ timeout: 5000 }).catch(() => page.getByText(bruker).click({ force: true }));
-        await page.waitForURL(/fagsak/);
-    }
-    await klarLoc.waitFor({ timeout: 20000 });
-    await page.waitForLoadState('networkidle');
+    const url = `http://localhost:9000/fagsak/${saksnummer}/`;
+    await sjekkPort('http://localhost:9000', 'fpsak');
+    return medDokumentFeil(page, (async () => {
+        await page.goto(url, { waitUntil: 'domcontentloaded' });
+        const brukerLoc = page.getByText(bruker).first();
+        const klarLoc = page.getByText(/Behandlingsstatus|Velg behandling/).first();
+        await Promise.race([brukerLoc.waitFor({ timeout: 20000 }), klarLoc.waitFor({ timeout: 20000 })]);
+        if (await page.getByText(bruker).count()) {
+            // VTP-siden kan ha et lag over seg mens den laster. Da prøver vi igjen med force.
+            await page.getByText(bruker).click({ timeout: 5000 }).catch(() => page.getByText(bruker).click({ force: true }));
+            await page.waitForURL(/fagsak/);
+        }
+        await klarLoc.waitFor({ timeout: 20000 });
+        await page.locator('.navds-loader, .aksel-loader, [aria-busy="true"]').first().waitFor({ state: 'hidden', timeout: 10000 }).catch(() => {});
+    })(), 'fpsak');
 }
 
 export async function skjermbilde(page, navn) {

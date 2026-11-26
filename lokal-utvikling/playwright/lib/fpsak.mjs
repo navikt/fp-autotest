@@ -11,7 +11,7 @@ async function ventEtterBekreft(p, knapp) {
 export async function lastPåNytt(p) {
     await p.reload({ waitUntil: 'domcontentloaded' });
     await p.getByText(/Behandlingsstatus|Velg behandling/).first().waitFor({ timeout: 15000 });
-    await p.waitForLoadState('networkidle');
+    await p.locator('.navds-loader, .aksel-loader, [aria-busy="true"]').first().waitFor({ state: 'hidden', timeout: 10000 }).catch(() => {});
 }
 
 // Velger behandling av gitt type når saken har flere ('Revurdering' | 'Førstegangsbehandling'). `nr` velger blant
@@ -42,11 +42,25 @@ export async function behandlingFraApi(p, type = 'Revurdering', { nr = 0 } = {})
     const { origin, pathname } = new URL(p.url());
     const sak = pathname.match(/fagsak\/(\d+)/)?.[1];
     if (!sak) throw new Error(`Siden viser ikke en sak: ${pathname}`);
-    const full = await (await p.request.get(`${origin}/fpsak/api/fagsak/full?saksnummer=${sak}`)).json();
+    const hentJson = async (url) => {
+        const resp = await p.request.get(url);
+        if (!resp.ok()) {
+            const status = resp.status();
+            const tekst = (await resp.text().catch(() => '')).slice(0, 200);
+            const årsak = status === 401 || status === 403
+                ? 'manglende innlogging eller proxy-/sandbox-blokkering'
+                : status >= 500
+                  ? 'feil i fpsak-backend'
+                  : 'uventet feil fra fpsak-API-et';
+            throw new Error(`fpsak-API svarte HTTP ${status} for ${url}: ${årsak}. Svar: ${tekst}`);
+        }
+        return resp.json();
+    };
+    const full = await hentJson(`${origin}/fpsak/api/fagsak/full?saksnummer=${sak}`);
     const kode = type === 'Førstegangsbehandling' ? 'BT-002' : 'BT-004';
     const valgt = full.behandlinger.filter((b) => b.type === kode).sort((x, y) => String(y.opprettet).localeCompare(String(x.opprettet)))[nr];
     if (!valgt) return null;
-    const b = await (await p.request.get(`${origin}/fpsak/api/behandling?uuid=${valgt.uuid}`)).json();
+    const b = await hentJson(`${origin}/fpsak/api/behandling?uuid=${valgt.uuid}`);
     return {
         uuid: valgt.uuid,
         status: b.status,
@@ -102,31 +116,101 @@ export async function påVent(p, type = 'Revurdering', opt = {}) {
     return [b.venteårsak ?? 'på vent', b.frist && `til ${b.frist}`].filter(Boolean).join(' ');
 }
 
+function formaterProsessFeil(tekst) {
+    let j;
+    try {
+        j = JSON.parse(tekst);
+        if (typeof j.message === 'string') j = JSON.parse(j.message);
+    } catch {
+        return tekst.slice(0, 800);
+    }
+    const linjer = (j.stacktrace ?? '').split('\n');
+    const årsak = linjer.findLastIndex((l) => l.startsWith('Caused by'));
+    const rammer = linjer.slice(Math.max(årsak, 0)).filter((l) => /^\s*at no\.nav\./.test(l)).slice(0, 6).map((l) => l.trim());
+    return [`${j.exceptionCauseClass}: ${j.exceptionCauseMessage}`, j.feilmelding, ...rammer].filter(Boolean).join('\n    ');
+}
+
 // Poller behandlingen (siden lastes på nytt) til den trenger noe eller er ferdig. Status og aksjonspunkt kommer fra API-et.
 // Gir { status (fra siden), api (behandlingFraApi), grunn, påVent }:
 //   avsluttet | fatte («Fatt vedtak») | godkjenning («Til godkjenning») | aksjonspunkt (åpent, se api.aksjonspunkt) |
 //   vent eller uendret: samme tilstand i `uendret` sjekker (FPSAK_UENDRET, standard 6, ca. 30 s med pause 5 s), 'vent' når
 //   behandlingen er satt på vent (påVent har årsaken). En inntektsmelding fra familie.sh kommer ofte noen sekunder etter søknaden,
 //   så vent gis samme frist. Lokalt går behandling fort: står den stille i 30 s, er det nesten alltid et funn.
-export async function ventPåBehandling(p, type = 'Revurdering', { nr = 0, uendret = Number(process.env.FPSAK_UENDRET ?? 6), pause = 5000 } = {}) {
+export async function ventPåBehandling(p, type = 'Revurdering', { nr = 0, uendret = Number(process.env.FPSAK_UENDRET ?? 6), pause = 1000 } = {}) {
     let forrige;
-    let likt = 0;
-    for (;;) {
-        await velgBehandling(p, type, { nr });
-        const s = await status(p);
-        const api = await behandlingFraApi(p, type, { nr });
-        const vent = api?.påVent ? [api.venteårsak ?? 'på vent', api.frist && `til ${api.frist}`].filter(Boolean).join(' ') : null;
-        if (api?.status === 'AVSLU' || (!api && /Avsluttet/.test(s.behandling ?? ''))) return { status: s, api, grunn: 'avsluttet' };
-        if (!vent && s.kanFatte) return { status: s, api, grunn: 'fatte' };
-        if (!vent && (await p.getByRole('button', { name: 'Til godkjenning' }).count())) return { status: s, api, grunn: 'godkjenning' };
-        if (!vent && api?.aksjonspunkt.length) return { status: s, api, grunn: 'aksjonspunkt' };
-        const nå = JSON.stringify(api ?? s);
-        if (vent && nå !== forrige) console.log('VENTER', vent);
-        likt = nå === forrige ? likt + 1 : 1;
-        forrige = nå;
-        if (likt >= uendret) return vent ? { status: s, api, grunn: 'vent', påVent: vent } : { status: s, api, grunn: 'uendret' };
-        await p.waitForTimeout(pause);
-        await lastPåNytt(p);
+    let uendretSiden;
+    let polletSidenSidelast = false;
+    let første = true;
+    const maksUendretMs = uendret * 5000;
+    let avbryt418;
+    let avbrutt = false;
+    let feilFra418;
+    const feil418 = new Promise((_, reject) => {
+        avbryt418 = (tekst) => {
+            if (avbrutt) return;
+            avbrutt = true;
+            feilFra418 = new Error(`fpsak-prosesstask feilet (HTTP 418 på /behandling/status): ${formaterProsessFeil(tekst)}`);
+            reject(feilFra418);
+        };
+    });
+    const response = async (r) => {
+        if (r.status() === 418 && r.url().includes('/behandling/status')) avbryt418(await r.text().catch(() => ''));
+    };
+    p.on('response', response);
+    try {
+        return await Promise.race([(async () => {
+            for (;;) {
+                if (avbrutt) throw feilFra418;
+                let s;
+                let godkjenning;
+                if (!polletSidenSidelast) {
+                    await velgBehandling(p, type, { nr });
+                    s = await status(p);
+                    godkjenning = await p.getByRole('button', { name: 'Til godkjenning' }).count();
+                }
+                const api = await behandlingFraApi(p, type, { nr });
+                if (avbrutt) throw feilFra418;
+                const vent = api?.påVent ? [api.venteårsak ?? 'på vent', api.frist && `til ${api.frist}`].filter(Boolean).join(' ') : null;
+                // Siden kan allerede stå klar til vedtak fra en tidligere innlasting. Ikke last den på nytt før vi returnerer.
+                if (første && !vent && s.kanFatte) return { status: s, api, grunn: 'fatte' };
+                if (første && !vent && godkjenning) return { status: s, api, grunn: 'godkjenning' };
+                første = false;
+                const synkroniser = async () => {
+                    if (!polletSidenSidelast) return s;
+                    await lastPåNytt(p);
+                    await velgBehandling(p, type, { nr });
+                    return status(p);
+                };
+                if (api?.status === 'AVSLU' || (!api && s && /Avsluttet/.test(s.behandling ?? ''))) return { status: await synkroniser(), api, grunn: 'avsluttet' };
+                if (!vent && api?.aksjonspunkt.length > 0) {
+                    s = await synkroniser();
+                    godkjenning = await p.getByRole('button', { name: 'Til godkjenning' }).count();
+                    if (s.kanFatte) return { status: s, api, grunn: 'fatte' };
+                    if (godkjenning) return { status: s, api, grunn: 'godkjenning' };
+                    return { status: s, api, grunn: 'aksjonspunkt' };
+                }
+                if (!api) {
+                    s = await synkroniser();
+                    godkjenning = await p.getByRole('button', { name: 'Til godkjenning' }).count();
+                    if (/Avsluttet/.test(s.behandling ?? '')) return { status: s, api, grunn: 'avsluttet' };
+                    if (!vent && s.kanFatte) return { status: s, api, grunn: 'fatte' };
+                    if (!vent && godkjenning) return { status: s, api, grunn: 'godkjenning' };
+                }
+                const nå = JSON.stringify(api ?? s);
+                if (vent && nå !== forrige) console.log('VENTER', vent);
+                if (nå !== forrige || uendretSiden === undefined) uendretSiden = Date.now();
+                forrige = nå;
+                if (Date.now() - uendretSiden >= maksUendretMs) {
+                    s = await synkroniser();
+                    return vent ? { status: s, api, grunn: 'vent', påVent: vent } : { status: s, api, grunn: 'uendret' };
+                }
+                await p.waitForTimeout(pause);
+                if (avbrutt) throw feilFra418;
+                polletSidenSidelast = true;
+            }
+        })(), feil418]);
+    } finally {
+        p.off('response', response);
     }
 }
 
@@ -360,8 +444,9 @@ export async function overstyrUttak(p, perioder, begrunnelse = 'Overstyrt i loka
         await p.waitForTimeout(1000);
         console.log(`UTTAK OVERSTYRT ${e.fom}: ${e.oppfylt === false ? 'ikke oppfylt' : 'oppfylt'}, ${treff}`);
     }
-    await p.getByRole('button', { name: 'Bekreft og fortsett' }).first().click();
-    await p.waitForTimeout(5000);
+    const bekreftKnapp = p.getByRole('button', { name: 'Bekreft og fortsett' }).first();
+    await bekreftKnapp.click();
+    await ventEtterBekreft(p, bekreftKnapp);
 }
 
 // Saksbehandler sender til beslutter (kommer etter manuelle aksjonspunkt, f.eks. løsUttakPeriode).
@@ -386,15 +471,22 @@ export async function godkjennVedtak(p) {
 // Behandlingsmeny > Opprett ny behandling > Revurdering. årsak er teksten i «Behandlingsårsak».
 // fpsak oppretter revurderingen asynkront, så vi laster siden på nytt og velger den.
 export async function opprettRevurdering(p, årsak = 'Nye opplysninger om uttak') {
+    const forrigeUuid = (await behandlingFraApi(p, 'Revurdering'))?.uuid;
     await p.getByRole('button', { name: 'Behandlingsmeny', exact: true }).click();
     await p.getByRole('button', { name: 'Opprett ny behandling', exact: true }).click();
     const dialog = p.getByRole('dialog');
     await dialog.getByRole('combobox', { name: 'Behandlingstype' }).selectOption({ label: 'Revurdering' });
     await dialog.getByRole('combobox', { name: 'Behandlingsårsak' }).selectOption({ label: årsak });
     await dialog.getByRole('button', { name: 'OK', exact: true }).click();
-    await p.waitForTimeout(6000);
-    await p.reload({ waitUntil: 'networkidle' });
-    await p.waitForTimeout(1500);
+    const frist = Date.now() + 15000;
+    let ny;
+    do {
+        ny = await behandlingFraApi(p, 'Revurdering');
+        if (ny?.uuid && ny.uuid !== forrigeUuid) break;
+        if (Date.now() < frist) await p.waitForTimeout(500);
+    } while (Date.now() < frist);
+    if (!ny?.uuid || ny.uuid === forrigeUuid) throw new Error('Ny revurdering dukket ikke opp i fpsak-API-et innen 15 sekunder');
+    await lastPåNytt(p);
     await velgBehandling(p, 'Revurdering');
 }
 
@@ -405,18 +497,7 @@ export function fangProsessFeil(p) {
     p.on('response', async (r) => {
         if (r.status() !== 418 || !r.url().includes('/behandling/status')) return;
         const tekst = await r.text().catch(() => '');
-        let j;
-        try {
-            j = JSON.parse(tekst);
-            if (typeof j.message === 'string') j = JSON.parse(j.message);
-        } catch {
-            feil.add(tekst.slice(0, 800));
-            return;
-        }
-        const linjer = (j.stacktrace ?? '').split('\n');
-        const årsak = linjer.findLastIndex((l) => l.startsWith('Caused by'));
-        const rammer = linjer.slice(Math.max(årsak, 0)).filter((l) => /^\s*at no\.nav\./.test(l)).slice(0, 6).map((l) => l.trim());
-        feil.add([`${j.exceptionCauseClass}: ${j.exceptionCauseMessage}`, j.feilmelding, ...rammer].filter(Boolean).join('\n    '));
+        feil.add(formaterProsessFeil(tekst));
     });
     return () => [...feil];
 }
@@ -432,9 +513,15 @@ export async function overstyrStartdato(p, dato, begrunnelse = 'Startdato overst
     await p.getByLabel('Startdato som skal benyttes (fra søknad eller fødsel)').fill(dato);
     await p.keyboard.press('Tab');
     await p.getByRole('textbox', { name: 'Begrunnelse' }).last().fill(begrunnelse);
-    await p.getByRole('button', { name: 'Overstyr', exact: true }).click();
-    await p.waitForTimeout(5000);
-    return (await p.locator('.navds-alert,.aksel-alert,.navds-error-message,.aksel-error-message').allInnerTexts()).map((t) => t.trim()).filter(Boolean);
+    const overstyr = p.getByRole('button', { name: 'Overstyr', exact: true });
+    await overstyr.click();
+    const meldinger = p.locator('.navds-alert,.aksel-alert,.navds-error-message,.aksel-error-message');
+    await Promise.race([
+        overstyr.waitFor({ state: 'hidden', timeout: 10000 }),
+        meldinger.first().waitFor({ state: 'visible', timeout: 10000 }),
+    ]).catch(() => {});
+    await p.locator('.navds-loader, .aksel-loader, [aria-busy="true"]').first().waitFor({ state: 'hidden', timeout: 5000 }).catch(() => {});
+    return (await meldinger.allInnerTexts()).map((t) => t.trim()).filter(Boolean);
 }
 
 // Fakta om uttak: «Rediger fakta om uttak» (overstyring) i en åpen behandling. Viser bare perioder til søkeren i saken.
@@ -512,8 +599,9 @@ export async function overstyrFaktaUttak(p, endringer, begrunnelse = 'Overstyrt 
     const feil = (await panel.locator('.navds-error-summary,.aksel-error-summary').allInnerTexts()).filter(Boolean);
     if (feil.length) throw new Error(`Fakta om uttak: ${feil.join(' | ')}`);
     await panel.getByRole('textbox', { name: 'Begrunn endringene' }).fill(begrunnelse);
-    await panel.getByRole('button', { name: 'Bekreft og fortsett' }).click();
-    await p.waitForTimeout(5000);
+    const bekreftKnapp = panel.getByRole('button', { name: 'Bekreft og fortsett' });
+    await bekreftKnapp.click();
+    await ventEtterBekreft(p, bekreftKnapp);
 }
 
 export async function fattVedtak(p) {

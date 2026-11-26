@@ -229,7 +229,7 @@ class ManuellSoknad extends VerdikjedeTestBase {
                 }
             }
             if (!gjenstår.isEmpty()) {
-                Thread.sleep(2000);
+                Thread.sleep(500);
             }
         }
         if (!gjenstår.isEmpty()) {
@@ -280,7 +280,7 @@ class ManuellSoknad extends VerdikjedeTestBase {
                 LOG.info("Venter på søknad og forespørsel for {}", String.join(" og ", gjenstår.keySet()));
                 nesteStatus = Instant.now().plus(Duration.ofMinutes(1));
             }
-            Thread.sleep(5000);
+            Thread.sleep(1000);
         }
         if (!gjenstår.isEmpty()) {
             LOG.info("Fant ingen forespørsel innen {} for {}, sender ikke inntektsmelding",

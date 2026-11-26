@@ -15,7 +15,6 @@ export default async ({ fpsak, args }) => {
     console.log('FPSAK', JSON.stringify(await F.status(p)));
     console.log('UTTAK', await F.uttak(p));
     console.log('UTTAKSPERIODER', JSON.stringify(await F.uttakPerioder(p)));
-    await p.waitForTimeout(500);
     if (resultatUrl) {
         const dto = await (await p.context().request.get(resultatUrl)).json().catch(() => ({}));
         console.log('FPSAK_ENDRINGSDATO', dto.endringsdato ?? 'mangler');

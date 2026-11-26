@@ -78,6 +78,16 @@ har_familie() {
   fi
 }
 
+forklar_feil() {
+  if grep -Eq 'Operation not permitted|EPERM|Permission denied' "$LOG" 2>/dev/null; then
+    echo "ÅRSAK: Sandbox blokkerte tilkobling eller filtilgang (EPERM/Operation not permitted). Fiks utenfor cplt (f.eks. cplt config set sandbox.allow_localhost_any true)." >&2
+  elif grep -Eq 'Connection refused|ConnectException' "$LOG" 2>/dev/null; then
+    echo "ÅRSAK: Kunne ikke koble til lokal tjeneste (VTP/fpsak). Sjekk at lokal verdikjede kjører." >&2
+  elif grep -Eq 'offline mode|Cannot access .* in offline mode|Could not resolve dependencies' "$LOG" 2>/dev/null; then
+    echo "ÅRSAK: Maven mangler cachede avhengigheter i offline-modus. Prøv igjen med MVN_BUILD=1." >&2
+  fi
+}
+
 LAS_EIET=0
 rydd_opp() {
   if [[ "$LAS_EIET" -eq 1 && -f "$LAS/eier" ]] && [[ "$(cat "$LAS/eier" 2>/dev/null)" == "$NAVN" ]]; then
@@ -100,32 +110,41 @@ while ! mkdir "$LAS" 2>/dev/null; do
     echo "VENTER PÅ LÅS (holdes av $HOLDER)"
     VENTET=1
   fi
-  sleep 2
+  sleep 0.5
 done
 LAS_EIET=1
 printf '%s\n' "$NAVN" > "$LAS/eier"
 
 ARGS=(-P utvikling -Dtest=ManuellSoknad -Dmanuell.familiehendelse=$FH -Dmanuell.mor=${MOR_INNTEKT:-arbeid} -Dmanuell.far=${FAR_INNTEKT:-arbeid} -Dmanuell.fodt.uker.siden=${FODT_UKER:-2} "-Dmanuell.mappe=$MAPPE" -Dmanuell.antall=$ANTALL)
 cd "$AT"
-if [ "$IM" = ingen ]; then
-  mvn test "${ARGS[@]}" > "$LOG" 2>&1 || true
+KLASSE=target/test-classes/no/nav/foreldrepenger/autotest/fpsak/foreldrepenger/ManuellSoknad.class
+KILDE=src/test/java/no/nav/foreldrepenger/autotest/fpsak/foreldrepenger/ManuellSoknad.java
+if [[ "${MVN_BUILD:-0}" != 1 && -f "$KLASSE" && "$KLASSE" -nt pom.xml && "$KLASSE" -nt "$KILDE" ]]; then
+  MVN=(mvn -o surefire:test)
 else
-  nohup mvn test "${ARGS[@]}" -Dmanuell.inntektsmelding=$IM -Dmanuell.soker=$SOKER </dev/null >"$LOG" 2>&1 &
+  MVN=(mvn test)
+fi
+if [ "$IM" = ingen ]; then
+  "${MVN[@]}" "${ARGS[@]}" > "$LOG" 2>&1 || true
+else
+  nohup "${MVN[@]}" "${ARGS[@]}" -Dmanuell.inntektsmelding=$IM -Dmanuell.soker=$SOKER </dev/null >"$LOG" 2>&1 &
   MVN_PID=$!
   printf '%s\n' "$MVN_PID" > "$MAPPE/mvn.pid"
   # ManuellSoknad skriver alle familie.txt før første «Familie opprettet, se». FamilieGenerator logger
   # «Familie opprettet med mor» før fila finnes, så den linjen teller ikke.
-  for _ in $(seq 1 $((90 + ANTALL))); do
+  for _ in $(seq 1 $(((90 + ANTALL) * 10))); do
     if grep -qE "Familie opprettet, se|BUILD FAILURE|BUILD SUCCESS" "$LOG" 2>/dev/null; then
       break
     fi
-    sleep 2
+    if ! kill -0 "$MVN_PID" 2>/dev/null; then break; fi
+    sleep 0.2
   done
 fi
 
 if [[ "$ANTALL" -eq 1 ]]; then
   if [[ ! -f "$MAPPE/familie.txt" ]]; then
     echo "Familien ble ikke laget. Se $LOG" >&2
+    forklar_feil
     tail -20 "$LOG" >&2
     exit 1
   fi
@@ -144,6 +163,7 @@ for id in "${IDER[@]}"; do
 done
 if [[ ${#MANGLER[@]} -gt 0 ]]; then
   echo "Familiene ble ikke laget: ${MANGLER[*]}. Se $LOG" >&2
+  forklar_feil
   tail -20 "$LOG" >&2
   exit 1
 fi

@@ -25,9 +25,8 @@ export default async ({ som, fpsak, familie, args }) => {
     console.log('OPPSUMMERING', await S.oppsummeringPlan(p));
     if (faktiskSend !== 'send') return;
     await S.sendInn(p);
-    await new Promise((r) => setTimeout(r, 4000));
     const fs = await fpsak(saksnummer);
-    await F.velgBehandling(fs, 'Revurdering');
-    console.log('FPSAK', JSON.stringify(await F.status(fs)));
-    console.log('UTTAK', await F.uttak(fs));
+    const r = await F.ventPåBehandling(fs, 'Revurdering');
+    console.log('FPSAK', JSON.stringify(r.status));
+    console.log('UTTAK', JSON.stringify((await F.uttakFraApi(fs, 'Revurdering')).søker));
 };

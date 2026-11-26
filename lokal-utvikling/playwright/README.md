@@ -72,6 +72,19 @@ export default async ({ som, familie, args }) => {
 
 Kjør det med `node run.mjs scenarier/lokalt/<scenario>.mjs <familie>`.
 
+### Venting og mønstre i scenarier
+
+Unngå hardkodede pauser (`waitForTimeout`, `setTimeout`) og `waitForLoadState('networkidle')` i nye scenarier. Faste pauser gjør kjøringene unødvendig trege og feiler når maskinen er under last.
+
+Bruk i stedet:
+
+- **UI-endringer i søknad og oversikt**: stol på Playwrights innebygde auto-waiting på `click`/`fill`/`check`, eller vent på det konkrete elementet som dukker opp eller forsvinner (`locator.waitFor()`, `state: 'hidden'` på dialoger og `.navds-loader, .aksel-loader, [aria-busy="true"]`).
+- **Valgfrie felt og knapper**: sjekk `if (await loc.count())` før `.check()`/`.click()` med `.catch()`. Uten `.count()`-sjekk venter Playwright i hele standard-timeouten (10 sekunder) i stillhet når elementet ikke finnes.
+- **Oppdatere siden i fpsak**: bruk `F.lastPåNytt(p)` fremfor `p.reload()`.
+- **Vente på prosessering i fpsak** (etter innsending av søknad, endring eller aksjonspunkt): bruk `F.ventPåBehandling(p, 'Revurdering')` (eller `'Førstegangsbehandling'`), som poller fpsak-API-et i stedet for faste pauser og full sidelast.
+- **Lese uttak fra fpsak**: bruk `F.uttakFraApi(p)` fremfor `F.uttak(p)` når du ikke trenger å teste selve uttakspanelet i UI.
+- **Saker med flere behandlinger**: kall `F.velgBehandling(p, 'Revurdering')` (eller `'Førstegangsbehandling'`) før du klikker faner i fpsak, ellers blir siden stående på «Velg behandling» og timer ut etter 10 sekunder.
+
 ## Flere familier i én økt
 
 Standard er å kjøre én familie av gangen. Skal du kjøre flere uavhengige familier, kan du lage dem i én Maven-kjøring med `ANTALL=<n>` og kjøre dem parallelt (høyst 5 samtidig):
@@ -95,6 +108,8 @@ Sett `OKT=<økt>` for å lagre tilstand isolert i `.state/okter/<økt>/`. Da kol
 - Ikke styr samme forelder i samme app eller samme sak i fpsak fra flere kjøringer samtidig. Kjør stegene etter hverandre.
 - Manuelle aksjonspunkt sender saken til godkjenning. En beslutter må godkjenne vedtaket.
 - Termindatoen kan ikke være mer enn 21 dager tilbake i søknaden.
+- Ved sletting eller endring av perioder på termin- eller fødselsdato i planen, ta med bindestrek i radstarten (for eksempel `'24. des. 26 -'`), ellers treffer velgeren hendelsesraden («Termin»/«Fødsel») i stedet for perioden.
+- `scripts/familie.sh` kjører offline `surefire:test` når `ManuellSoknad.class` er nyere enn `ManuellSoknad.java` og `pom.xml`. Hvis du har endret andre Java-klasser i `fp-autotest`, kjør med `MVN_BUILD=1 scripts/familie.sh ...` for full kompilering.
 - Fødselsnumrene fra `scripts/familie.sh` er syntetiske testdata og kan skrives ut ved feilsøking.
 - Skjermbilder lagres i `.state/skjermbilder/` og bør bare tas ved feil eller for å avklare noe.
 - Oppgi om Vite-serveren eller Docker-imaget ble brukt når du rapporterer testresultater.

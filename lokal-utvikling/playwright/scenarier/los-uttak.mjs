@@ -13,14 +13,12 @@ export default async ({ fpsak, args }) => {
     console.log(sak, 'FØR  ', JSON.stringify(s));
     if (s.aksjonspunkt.some((a) => a.startsWith('Ikke gyldig grunn'))) {
         await F.løsUttakPeriode(p, { konto, oppfylt, årsak: new RegExp(årsak), utbetalingsgrad: oppfylt ? '100' : undefined });
-        await p.reload({ waitUntil: 'networkidle' });
-        await p.waitForTimeout(2000);
+        await F.lastPåNytt(p);
     }
     if (await p.getByRole('button', { name: 'Til godkjenning' }).count()) await F.tilGodkjenning(p);
     const b = await fpsak(sak, { bruker: 'Birger Beslutter' });
     await F.velgBehandling(b, 'Revurdering');
     if (await b.getByRole('tab', { name: 'Godkjenning' }).count()) await F.godkjennVedtak(b);
-    await b.reload({ waitUntil: 'networkidle' });
-    await b.waitForTimeout(1500);
+    await F.lastPåNytt(b);
     console.log(sak, 'ETTER', JSON.stringify(await F.status(b)));
 };

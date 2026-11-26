@@ -47,17 +47,19 @@ export async function slettUtkast(p) {
     const påNytt = p.getByRole('button', { name: 'Start på nytt' });
     if (await påNytt.count()) {
         await påNytt.click();
-        await p.waitForTimeout(1200);
+        await p.locator('input[name=harForståttRettigheterOgPlikter]').waitFor({ timeout: 10000 }).catch(() => {});
         console.log('Opplysninger endret: startet på nytt');
         return true;
     }
     await p.getByRole('button', { name: 'Slett søknaden' }).click();
-    await p.waitForTimeout(800);
-    const bekreft = p.getByRole('dialog').getByRole('button', { name: /Slett/ });
+    const dialog = p.getByRole('dialog');
+    await dialog.waitFor({ timeout: 5000 }).catch(() => {});
+    const bekreft = dialog.getByRole('button', { name: /Slett/ });
+    await bekreft.first().waitFor({ timeout: 5000 }).catch(() => {});
     if (await bekreft.count()) await bekreft.first().click();
-    await p.waitForTimeout(1200);
-    await p.reload({ waitUntil: 'networkidle' });
-    await p.waitForTimeout(1000);
+    await dialog.waitFor({ state: 'hidden', timeout: 10000 }).catch(() => {});
+    await p.reload({ waitUntil: 'domcontentloaded' });
+    await p.locator('input[name=harForståttRettigheterOgPlikter]').waitFor({ timeout: 15000 }).catch(() => {});
     console.log('Utkast slettet');
     return true;
 }
@@ -105,20 +107,18 @@ export async function fyllUt(p, opt = {}) {
         await velg(p, 'rolle', opt.rolle === 'far' ? 'far' : 'mor');
         if (u === 'barnet' && opt.situasjon === 'adopsjon') {
             await velg(p, 'adopsjonAvEktefellesBarn', opt.stebarn ? 'true' : 'false');
-            await p.waitForTimeout(400);
             const omsorg = p.getByLabel(/Når overtar du omsorgen|Når overtok du omsorgen/);
+            await omsorg.first().waitFor({ timeout: 2000 }).catch(() => {});
             if ((await omsorg.count()) && !(await omsorg.first().inputValue())) {
                 await omsorg.first().fill(opt.omsorgsovertakelse);
                 await p.keyboard.press('Tab');
-                await p.waitForTimeout(400);
             }
             await velg(p, 'antallBarn', '1');
-            await p.waitForTimeout(300);
             const født = p.getByLabel('Når ble barnet født?');
+            await født.waitFor({ timeout: 2000 }).catch(() => {});
             if ((await født.count()) && !(await født.first().inputValue())) {
                 await født.first().fill(opt.adoptertFødt ?? datoTilbake({ år: 1 }));
                 await p.keyboard.press('Tab');
-                await p.waitForTimeout(300);
             }
             await velg(p, 'adoptertIUtlandet', opt.ankomstdato ? 'true' : 'false');
             const ankomst = p.getByLabel(/ankom|ankomst/i);
@@ -158,20 +158,20 @@ export async function fyllUt(p, opt = {}) {
             if ((await start.count()) && !(await start.inputValue())) {
                 await start.fill(opt.næringStart ?? datoTilbake({ år: 5 }));
                 await p.keyboard.press('Tab');
-                await p.waitForTimeout(600);
             }
             await velg(p, 'pågående', 'true');
             const inntekt = p.locator('input[name=næringsinntekt]');
             if ((await inntekt.count()) && !(await inntekt.inputValue())) await inntekt.fill('500000');
             await velg(p, 'harBlittYrkesaktivILøpetAvDeTreSisteFerdigliknedeÅrene', 'false');
-            await p.waitForTimeout(400);
+            await p.locator('input[name=hattVarigEndringAvNæringsinntektSiste4Kalenderår]').first().waitFor({ timeout: 2000 }).catch(() => {});
             await velg(p, 'hattVarigEndringAvNæringsinntektSiste4Kalenderår', opt.varigEndring ? 'true' : 'false', { overstyr: !!opt.varigEndring });
             if (opt.varigEndring) {
                 await p.locator('input[name=hattVarigEndringAvNæringsinntektSiste4Kalenderår][value=true]').check();
-                await p.waitForTimeout(400);
                 const ve = typeof opt.varigEndring === 'object' ? opt.varigEndring : {};
                 // Datovelgeren har ikke name-attributt, så feltene finnes via ledeteksten.
-                await p.getByLabel('Hva var datoen for endringen?').fill(ve.dato ?? datoTilbake({ måneder: 6 }));
+                const dato = p.getByLabel('Hva var datoen for endringen?');
+                await dato.waitFor({ timeout: 2000 }).catch(() => {});
+                await dato.fill(ve.dato ?? datoTilbake({ måneder: 6 }));
                 await p.keyboard.press('Tab');
                 await p.getByLabel('Hva var næringsinntekten din etter endringen?').fill(String(ve.inntekt ?? 600000));
                 await p.getByLabel('Hva har endret seg i virksomheten eller arbeidssituasjonen din?').fill(ve.beskrivelse ?? 'Økt omsetning');
@@ -183,7 +183,7 @@ export async function fyllUt(p, opt = {}) {
                 // Krysses av før fnr fylles inn, ellers er landvelgeren ikke aktiv.
                 const boks = p.getByLabel('Fødselsnummeret er ikke fra Norge');
                 if ((await boks.count()) && !(await boks.isChecked())) await boks.check();
-                await p.waitForTimeout(400);
+                await p.getByRole('combobox', { name: 'Hvor bor den andre forelderen?' }).waitFor({ timeout: 2000 }).catch(() => {});
             }
             const fnr = p.locator('input[name=fnr]');
             if (opt.annenPart && (await fnr.count())) {
@@ -193,23 +193,22 @@ export async function fyllUt(p, opt = {}) {
                 }
                 if (!(await fnr.inputValue())) await fnr.fill(opt.annenPart.fnr);
                 await p.keyboard.press('Tab');
-                await p.waitForTimeout(800);
+                await p.locator('input[name=erAleneOmOmsorg]').first().waitFor({ timeout: 5000 }).catch(() => {});
             }
             if (af.utenlandsk) {
                 await p.getByRole('combobox', { name: 'Hvor bor den andre forelderen?' }).selectOption({ label: af.utenlandsk.land ?? 'Sverige' });
             }
             await velg(p, 'erAleneOmOmsorg', af.aleneomsorg ? 'true' : 'false', { overstyr: true });
-            await p.waitForTimeout(300);
             if (!af.aleneomsorg) {
+                await p.locator('input[name=harRettPåForeldrepengerINorge]').first().waitFor({ timeout: 2000 }).catch(() => {});
                 const harRett = af.harRett ?? true;
                 await velg(p, 'harRettPåForeldrepengerINorge', String(harRett), { overstyr: true });
-                await p.waitForTimeout(300);
                 if (!harRett) {
+                    await p.locator('input[name=harOppholdtSegIEØS]').first().waitFor({ timeout: 2000 }).catch(() => {});
                     await velg(p, 'harOppholdtSegIEØS', String(!!af.eøs), { overstyr: true });
-                    await p.waitForTimeout(300);
+                    await p.locator(`input[name=${af.eøs ? 'harRettPåForeldrepengerIEØS' : 'erMorUfør'}]`).first().waitFor({ timeout: 2000 }).catch(() => {});
                     if (af.eøs) await velg(p, 'harRettPåForeldrepengerIEØS', String(af.eøs.rett ?? true), { overstyr: true });
                     else await velg(p, 'erMorUfør', String(!!af.ufør), { overstyr: true });
-                    await p.waitForTimeout(300);
                 }
                 await velg(p, 'erInformertOmSøknaden', 'true');
             }
@@ -344,7 +343,7 @@ export async function leggTilPeriode(p, { fom, tom, forelder = 'MOR', konto = 'F
     // Har bare én forelder rett, spør ikke skjemaet hvem perioden gjelder.
     const forelderValg = p.locator(`input[name=forelder][value=${forelder}]`);
     if (await p.locator('input[name=forelder]').count()) await forelderValg.check();
-    await p.waitForTimeout(300);
+    await p.locator('input[name^=kontoType]').first().waitFor({ timeout: 2000 }).catch(() => {});
     if (forelder === 'BEGGE') {
         for (const [navn, verdi] of [['kontoTypeMor', kontoMor], ['kontoTypeFarMedmor', kontoFar]]) {
             const valg = p.locator(`input[name=${navn}][value=${verdi}]`);
@@ -358,17 +357,23 @@ export async function leggTilPeriode(p, { fom, tom, forelder = 'MOR', konto = 'F
         }
     } else {
         const kontoNavn = forelder === 'FAR_MEDMOR' ? 'kontoTypeFarMedmor' : 'kontoTypeMor';
-        await p.locator(`input[name=${kontoNavn}][value=${konto}]`).check().catch(() => {});
+        const kontoValg = p.locator(`input[name=${kontoNavn}][value=${konto}]`);
+        if (await kontoValg.count()) await kontoValg.first().check().catch(() => {});
     }
-    await p.waitForTimeout(300);
+    if (overføringsårsak) await p.locator('input[name=overføringsårsak]').first().waitFor({ timeout: 2000 }).catch(() => {});
     if (overføringsårsak) await p.locator(`input[name=overføringsårsak][value=${overføringsårsak}]`).check();
     // Verdi (f.eks. ARBEID) eller tekst.
-    if (morsAktivitet) await p.getByLabel('Hva skal mor gjøre i denne perioden?').selectOption(morsAktivitet);
+    if (morsAktivitet) {
+        const aktivitet = p.getByLabel('Hva skal mor gjøre i denne perioden?');
+        await aktivitet.waitFor({ timeout: 2000 }).catch(() => {});
+        await aktivitet.selectOption(morsAktivitet);
+    }
     const arbeid = p.locator(`input[type=radio][name^=skal][name*=ombinere][value=${gradering ? 'true' : 'false'}]`);
     for (let i = 0; i < (await arbeid.count()); i++) await arbeid.nth(i).check();
     if (gradering) {
-        await p.waitForTimeout(400);
-        await p.getByLabel(/Hvor mange prosent skal .* jobbe/).first().fill(String(gradering.prosent ?? 50));
+        const prosentFelt = p.getByLabel(/Hvor mange prosent skal .* jobbe/).first();
+        await prosentFelt.waitFor({ timeout: 2000 }).catch(() => {});
+        await prosentFelt.fill(String(gradering.prosent ?? 50));
         const hvor = gradering.arbeid ? p.locator(`input[name=hvorSkalDuJobbe][value="${gradering.arbeid}"]`) : p.locator('input[name=hvorSkalDuJobbe]').first();
         await hvor.check();
     }
@@ -414,7 +419,10 @@ export async function leggTilOpphold(p, { fom, tom, flytt = false }) {
 export async function leggTilFerie(p, { fom, tom, forelder, flytt = true }) {
     await åpneLeggTil(p, fom, tom);
     await p.getByLabel('Legge til ferie').check();
-    if (forelder) await p.locator(`input[name=forelder][value=${forelder}]`).check().catch(() => {});
+    if (forelder) {
+        const forelderValg = p.locator(`input[name=forelder][value=${forelder}]`);
+        if (await forelderValg.count()) await forelderValg.first().check().catch(() => {});
+    }
     await ferdig(p);
     await flyttResten(p, flytt);
 }
@@ -424,23 +432,36 @@ export async function leggTilFerie(p, { fom, tom, forelder, flytt = true }) {
 export async function slettPeriode(p, fra, { velg } = {}) {
     await visListe(p);
     await p.getByRole('button', { name: new RegExp(`^${fra.replace(/\./g, '\\.')}`) }).first().click();
-    await p.waitForTimeout(800);
-    await p.getByRole('button', { name: 'Slett', exact: true }).first().click();
-    await p.waitForTimeout(1200);
+    const slett = p.getByRole('button', { name: 'Slett', exact: true }).first();
+    await slett.waitFor({ timeout: 3000 }).catch(() => {});
+    await slett.click();
     // Sletting tilbake i tid må bekreftes i en dialog («Er du sikker på at du skal slette foreldrepenger tilbake i tid?»).
     const tilbakeITid = p.getByRole('dialog').filter({ hasText: 'tilbake i tid' });
-    if (await tilbakeITid.count()) {
-        await tilbakeITid.getByRole('button', { name: 'Slett', exact: true }).click();
-        await p.waitForTimeout(1200);
-    }
     const slettValgte = p.getByRole('button', { name: 'Slett valgte perioder' });
+    await Promise.race([
+        tilbakeITid.waitFor({ timeout: 3000 }),
+        slettValgte.waitFor({ timeout: 3000 }),
+        slett.waitFor({ state: 'hidden', timeout: 3000 }),
+        app(p).locator('[class*=error-message]').first().waitFor({ timeout: 3000 }),
+    ]).catch(() => {});
+    if (await tilbakeITid.count()) {
+        const bekreft = tilbakeITid.getByRole('button', { name: 'Slett', exact: true });
+        await bekreft.click();
+        await Promise.race([
+            tilbakeITid.waitFor({ state: 'hidden', timeout: 5000 }),
+            app(p).locator('[class*=error-message]').first().waitFor({ timeout: 5000 }),
+        ]).catch(() => {});
+    }
     if (!(await slettValgte.count())) return;
     const valg = p.locator('input[type=checkbox]');
     const navn = await valg.evaluateAll((e) => e.map((x) => x.labels?.[0]?.innerText ?? ''));
     if (!velg) throw new Error(`Raden ${fra} har flere perioder, send med velg: ${navn.join(' | ')}`);
     for (let i = 0; i < navn.length; i++) if (velg.test(navn[i])) await valg.nth(i).check();
     await slettValgte.first().click();
-    await p.waitForTimeout(1200);
+    await Promise.race([
+        slettValgte.first().waitFor({ state: 'hidden', timeout: 5000 }),
+        app(p).locator('[class*=error-message]').first().waitFor({ timeout: 5000 }),
+    ]).catch(() => {});
 }
 
 export async function nesteSteg(p) {
@@ -463,27 +484,33 @@ export async function erstattMedFerie(p, fra, { fom, tom, forelder }) {
 export async function endrePeriode(p, fra, { fom, tom, flytt = false }) {
     await visListe(p);
     await p.getByRole('button', { name: new RegExp(`^${fra.replace(/\./g, '\\.')}`) }).first().click();
-    await p.waitForTimeout(600);
-    await p.getByRole('button', { name: 'Endre', exact: true }).first().click();
-    await p.waitForTimeout(600);
-    await p.getByLabel('Fra og med dato').first().fill(fom);
+    const endre = p.getByRole('button', { name: 'Endre', exact: true }).first();
+    await endre.waitFor({ timeout: 3000 }).catch(() => {});
+    await endre.click();
+    const fraFelt = p.getByLabel('Fra og med dato').first();
+    await fraFelt.waitFor({ timeout: 3000 }).catch(() => {});
+    await fraFelt.fill(fom);
     await p.getByLabel('Til og med dato').first().fill(tom);
     await p.keyboard.press('Tab');
-    await p.waitForTimeout(400);
-    await p.getByLabel('Periode med foreldrepenger').check().catch(() => {});
-    await p.waitForTimeout(400);
+    const medFp = p.getByLabel('Periode med foreldrepenger');
+    if (await medFp.count()) await medFp.first().check().catch(() => {});
     const knapp = p.getByRole('button', { name: /Ferdig, legg til/ });
     await knapp.click();
-    await p.waitForTimeout(1000);
-    if (await knapp.count()) {
+    await Promise.race([
+        knapp.waitFor({ state: 'hidden', timeout: 5000 }),
+        app(p).locator('[class*=error-message]').first().waitFor({ timeout: 5000 }),
+    ]).catch(() => {});
+    if (await knapp.isVisible().catch(() => false)) {
         const feil = await p.locator('#app [class*=error-message]').allInnerTexts();
         throw new Error(`«Endre» på raden ${fra} ble ikke lagret: ${feil.join(' | ')}`);
     }
     const valg = p.getByLabel(flytt ? 'Endre og flytt resten av planen' : 'Endre uten å flytte resten av planen');
+    await valg.waitFor({ timeout: 2000 }).catch(() => {});
     if (await valg.count()) {
         await valg.check();
-        await p.getByRole('button', { name: 'Legg til', exact: true }).click();
-        await p.waitForTimeout(1000);
+        const leggTil = p.getByRole('button', { name: 'Legg til', exact: true });
+        await leggTil.click();
+        await valg.waitFor({ state: 'hidden', timeout: 3000 }).catch(() => {});
     }
 }
 
@@ -491,14 +518,19 @@ export async function endrePeriode(p, fra, { fom, tom, flytt = false }) {
 export async function endreTilFerie(p, fra) {
     await visListe(p);
     await p.getByRole('button', { name: new RegExp(`^${fra.replace(/\./g, '\\.')}`) }).first().click();
-    await p.waitForTimeout(800);
-    await p.getByRole('button', { name: 'Endre', exact: true }).first().click();
-    await p.waitForTimeout(800);
-    if (!(await p.locator('input[name=hvaVilDuGjøre][value=LEGG_TIL_FERIE]').count()))
+    const endre = p.getByRole('button', { name: 'Endre', exact: true }).first();
+    await endre.waitFor({ timeout: 3000 }).catch(() => {});
+    await endre.click();
+    const ferie = p.locator('input[name=hvaVilDuGjøre][value=LEGG_TIL_FERIE]');
+    await ferie.waitFor({ timeout: 3000 }).catch(() => {});
+    if (!(await ferie.count()))
         throw new Error(`«Endre» på raden ${fra} har ikke valget ferie (f.eks. samtidig uttak). Bruk erstattMedFerie.`);
-    await p.locator('input[name=hvaVilDuGjøre][value=LEGG_TIL_FERIE]').check();
-    await p.waitForTimeout(300);
-    await p.getByRole('button', { name: /Ferdig|Oppdater|Lagre/ }).first().click();
-    await p.waitForTimeout(1000);
+    await ferie.check();
+    const lagre = p.getByRole('button', { name: /Ferdig|Oppdater|Lagre/ }).first();
+    await lagre.click();
+    await Promise.race([
+        lagre.waitFor({ state: 'hidden', timeout: 5000 }),
+        app(p).locator('[class*=error-message]').first().waitFor({ timeout: 5000 }),
+    ]).catch(() => {});
     await flyttResten(p, false);
 }

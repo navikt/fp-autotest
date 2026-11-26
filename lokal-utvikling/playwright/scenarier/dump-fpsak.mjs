@@ -11,7 +11,7 @@ export default async ({ fpsak, args }) => {
     for (const k of (process.env.KLIKK ?? '').split(',').filter(Boolean)) {
         const knapp = p.getByRole('button', { name: k, exact: true }).or(p.getByRole('link', { name: k, exact: true })).or(p.getByRole('menuitem', { name: k, exact: true }));
         await knapp.first().click();
-        await p.waitForTimeout(1500);
+        await p.locator('.navds-loader, .aksel-loader, [aria-busy="true"]').first().waitFor({ state: 'hidden', timeout: 5000 }).catch(() => {});
     }
     if (process.env.SETT) await fyllFelt(p, process.env.SETT);
     const rot = (await p.getByRole('dialog').count()) ? p.getByRole('dialog').last() : p.locator('body');

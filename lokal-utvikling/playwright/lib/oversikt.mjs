@@ -7,10 +7,15 @@ export async function forside(p) {
 
 // Åpner første sak (eller saken med saksnummer) og returnerer status og plan.
 export async function sak(p, saksnummer) {
-    if (saksnummer) await p.goto(`${new URL(p.url()).origin}/foreldrepenger/oversikt/sak/${saksnummer}`, { waitUntil: 'networkidle' });
-    else await p.locator('a').filter({ hasText: 'Foreldrepenger' }).first().click();
-    await p.waitForLoadState('networkidle');
-    await p.waitForTimeout(3000);
+    if (saksnummer) await p.goto(`${new URL(p.url()).origin}/foreldrepenger/oversikt/sak/${saksnummer}`, { waitUntil: 'domcontentloaded' });
+    else {
+        await p.locator('a').filter({ hasText: 'Foreldrepenger' }).first().click();
+        await p.waitForURL(/\/sak\//, { timeout: 15000 }).catch(() => {});
+    }
+    const innhold = p.locator('#app,#maincontent,main').first();
+    await innhold.getByText('Din sak').first().waitFor({ timeout: 15000 }).catch(() => {});
+    await innhold.getByText(/lagt til i planen|uker igjen|dager igjen|Du har ingen/).first().waitFor({ timeout: 5000 }).catch(() => {});
+    await p.locator('.navds-loader, .aksel-loader, [aria-busy="true"]').first().waitFor({ state: 'hidden', timeout: 10000 }).catch(() => {});
     const t = await tekstlinjer(p.locator('#app,#maincontent,main').first());
     const fra = t.findIndex((s) => s === 'Din plan' || s === 'Dette har du søkt om');
     const til = t.findIndex((s, i) => i > fra && /lagt til i planen|Snarveier/.test(s));
