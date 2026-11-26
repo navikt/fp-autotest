@@ -4,7 +4,7 @@
 //   const p = await fpsak(411)                       -> fpsak-frontend for saken
 import path from 'node:path';
 import fs from 'node:fs';
-import { åpne, startBrowser, erPortÅpen, erSynlig, VITE_PORTER, loggInnSelvbetjening, loggInnFpsak } from './lib/browser.mjs';
+import { åpne, startBrowser, erPortÅpen, erSynlig, VITE_PORTER, loggInnSelvbetjening, loggInnFpsak, STATE_DIR } from './lib/browser.mjs';
 import { familie } from './lib/familie.mjs';
 
 const [fil, ...args] = process.argv.slice(2);
@@ -12,6 +12,14 @@ if (!fil) {
     console.error('Bruk: node run.mjs scenarier/<fil>.mjs [argumenter]');
     process.exit(1);
 }
+fs.mkdirSync(STATE_DIR, { recursive: true });
+fs.utimesSync(STATE_DIR, new Date(), new Date());
+const markør = path.join(STATE_DIR, `kjorer-${process.pid}.pid`);
+fs.writeFileSync(markør, `${process.pid}\n`);
+process.on('exit', () => fs.rmSync(markør, { force: true }));
+// scripts/familie.sh sletter ikke økter som har en levende kjorer-<pid>.pid.
+process.once('SIGINT', () => process.exit(130));
+process.once('SIGTERM', () => process.exit(143));
 const åpne_ = [];
 const loggetModus = new Set();
 let deltBrowser;

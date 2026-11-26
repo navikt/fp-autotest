@@ -1,26 +1,25 @@
 #!/usr/bin/env bash
-# Lager en familie i VTP med fp-autotest ManuellSoknad og lagrer familie.txt som .state/familie-<navn>.txt.
+# Lager en familie i VTP med fp-autotest ManuellSoknad og lagrer data i en økt.
 # Bruk: [OKT=<økt>] [ANTALL=<n>] [FODT_UKER=<uker>] scripts/familie.sh <navn> <fodsel|termin> [auto|vent|ingen] [mor|far|begge]
-#   auto/vent kjører i bakgrunnen (venter på søknad og sender inntektsmelding). Med vent: echo mor > .state/manuell/<navn>/inntektsmelding
+#   OKT er valgfri og settes til familienavnet. MAKS_OKTER begrenser øktene (standard 10).
+#   auto/vent kjører i bakgrunnen (venter på søknad og sender inntektsmelding). Med vent: echo mor > .state/okter/<økt>/manuell/<navn>/inntektsmelding
 #   MOR_INNTEKT/FAR_INNTEKT=arbeid+frilans+naering (standard arbeid, eller ingen) styrer inntekt i VTP.
 #   FODT_UKER=<uker> (standard 2) styrer hvor gammelt barnet er ved fodsel.
 #   ANTALL=<n> (standard 1) lager n familier i én Maven-kjøring. De heter <navn>-01, <navn>-02, ... og deler loggen
-#   .state/familie-<navn>.log. Med vent: echo mor > .state/manuell/<navn>/<id>/inntektsmelding
+#   .state/okter/<økt>/familie-<navn>.log. Med vent: echo mor > .state/okter/<økt>/manuell/<navn>/<id>/inntektsmelding
 #   Flere familier kan lages samtidig. Maven-oppstarten går én om gangen via låsen, og navnet må være nytt.
 set -euo pipefail
+source "$(dirname "$0")/felles.sh"
 NAVN=$1; FH=$2; IM=${3:-ingen}; SOKER=${4:-begge}; ANTALL=${ANTALL:-1}
 ROOT=$(cd "$(dirname "$0")/.." && pwd); AT=$(cd "$ROOT/../.." && pwd)
 STATE_ROOT="$ROOT/.state"
-if [[ "${OKT+x}" == x ]]; then
-  if [[ ! "$OKT" =~ ^[A-Za-z0-9._-]+$ ]]; then
-    echo "Ugyldig OKT: $OKT" >&2
-    exit 1
-  fi
-  STATE="$STATE_ROOT/okter/$OKT"
-else
-  STATE="$STATE_ROOT"
+OKT=${OKT:-$NAVN}
+if ! gyldig_navn "$OKT"; then
+  echo "Ugyldig OKT: $OKT" >&2
+  exit 1
 fi
-if [[ ! "$NAVN" =~ ^[A-Za-z0-9._-]+$ ]]; then
+STATE="$STATE_ROOT/okter/$OKT"
+if ! gyldig_navn "$NAVN"; then
   echo "Ugyldig familienavn: $NAVN" >&2
   exit 1
 fi
@@ -40,16 +39,10 @@ if [[ "$ANTALL" -gt 1 ]]; then
   for i in $(seq 1 "$ANTALL"); do IDER+=("$(printf "%0${BREDDE}d" "$i")"); done
 fi
 
-MAPPE="$STATE/manuell/$NAVN"; LAS="$STATE_ROOT/manuell/.mvn-lock"
-mkdir -p "$STATE_ROOT/manuell" "$STATE/manuell"; LOG="$STATE/familie-$NAVN.log"
-# Varsler (uten å slette) når øktens state-mappe har mange eller gamle filer.
-ANTALL_STATE=$(find "$STATE" -type f ! -path '*/.*-lock/*' 2>/dev/null | wc -l | tr -d ' ')
-GAMLE_STATE=$(find "$STATE" -type f -mtime +7 ! -path '*/.*-lock/*' 2>/dev/null | wc -l | tr -d ' ')
-if [[ "$ANTALL_STATE" -gt 200 || "$GAMLE_STATE" -gt 0 ]]; then
-  echo "MERK: .state/ har $ANTALL_STATE filer ($GAMLE_STATE eldre enn 7 dager). Spør bruker før opprydding (rm -rf $STATE)." >&2
-fi
+MAPPE="$STATE/manuell/$NAVN"; LAS="$STATE_ROOT/okter/.mvn-lock"
+mkdir -p "$STATE_ROOT/okter" "$STATE/manuell"; LOG="$STATE/familie-$NAVN.log"
 avvis_gjenbruk() {
-  echo "Familien $NAVN finnes fra før. Velg et nytt navn (gammel innlogging i .state/$NAVN-*.json ville ellers blitt brukt)." >&2
+  echo "Familien $NAVN finnes fra før. Velg et nytt navn (gammel innlogging i .state/okter/$OKT/$NAVN-*.json ville ellers blitt brukt)." >&2
   exit 1
 }
 if [[ -e "$STATE/familie-$NAVN.txt" ]]; then
@@ -72,9 +65,17 @@ fi
 # Finnes minst én familie.txt? Med ANTALL>1 ligger de i undermappene, og Maven kan fortsatt skrive der i bakgrunnen.
 har_familie() {
   if [[ "$ANTALL" -eq 1 ]]; then
-    [[ -f "$MAPPE/familie.txt" ]]
+    if [[ -f "$MAPPE/familie.txt" ]]; then
+      return 0
+    else
+      return 1
+    fi
   else
-    compgen -G "$MAPPE/*/familie.txt" > /dev/null
+    if compgen -G "$MAPPE/*/familie.txt" > /dev/null; then
+      return 0
+    else
+      return 1
+    fi
   fi
 }
 
@@ -114,6 +115,8 @@ while ! mkdir "$LAS" 2>/dev/null; do
 done
 LAS_EIET=1
 printf '%s\n' "$NAVN" > "$LAS/eier"
+touch "$STATE"
+rydd_gamle_okter "$STATE_ROOT" "$STATE"
 
 ARGS=(-P utvikling -Dtest=ManuellSoknad -Dmanuell.familiehendelse=$FH -Dmanuell.mor=${MOR_INNTEKT:-arbeid} -Dmanuell.far=${FAR_INNTEKT:-arbeid} -Dmanuell.fodt.uker.siden=${FODT_UKER:-2} "-Dmanuell.mappe=$MAPPE" -Dmanuell.antall=$ANTALL)
 cd "$AT"
@@ -150,9 +153,10 @@ if [[ "$ANTALL" -eq 1 ]]; then
   fi
   cp "$MAPPE/familie.txt" "$STATE/familie-$NAVN.txt"
   grep -vE '^(mor|far)=' "$STATE/familie-$NAVN.txt"
+  echo "Økt: OKT=$OKT (bruk den i alle kommandoene for denne familien)"
   echo "Logg: $LOG (saksnummer: grep 'Inntektsmelding sendt' $LOG)"
   if [ "$IM" != ingen ]; then
-    echo "Familiene er klare. Ikke vent på BUILD SUCCESS i loggen: Maven-prosessen venter på søknadene i bakgrunnen (PID $MVN_PID). Stopp den med: ${OKT:+OKT=$OKT }scripts/stopp-familie.sh $NAVN"
+    echo "Familiene er klare. Ikke vent på BUILD SUCCESS i loggen: Maven-prosessen venter på søknadene i bakgrunnen (PID $MVN_PID). Stopp den med: OKT=$OKT scripts/stopp-familie.sh $NAVN"
   fi
   exit 0
 fi
@@ -172,6 +176,7 @@ for id in "${IDER[@]}"; do
   grep -vE '^(mor|far)=' "$STATE/familie-$NAVN-$id.txt" | sed "s/^/$NAVN-$id: /"
 done
 echo "Logg: $LOG (saksnummer: grep 'i familie <id>, saksnummer' $LOG)"
+echo "Økt: OKT=$OKT (bruk den i alle kommandoene for denne familien)"
 if [ "$IM" != ingen ]; then
-  echo "Familiene er klare. Ikke vent på BUILD SUCCESS i loggen: Maven-prosessen venter på søknadene i bakgrunnen (PID $MVN_PID). Stopp den med: ${OKT:+OKT=$OKT }scripts/stopp-familie.sh $NAVN"
+  echo "Familiene er klare. Ikke vent på BUILD SUCCESS i loggen: Maven-prosessen venter på søknadene i bakgrunnen (PID $MVN_PID). Stopp den med: OKT=$OKT scripts/stopp-familie.sh $NAVN"
 fi

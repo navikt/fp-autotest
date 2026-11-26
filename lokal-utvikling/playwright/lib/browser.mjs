@@ -6,10 +6,24 @@ import path from 'node:path';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const STATE_ROOT = path.join(ROOT, '.state');
-if (process.env.OKT !== undefined && !/^[A-Za-z0-9._-]+$/.test(process.env.OKT)) {
-    throw new Error(`Ugyldig OKT: ${process.env.OKT}`);
+if (process.env.OKT === undefined || process.env.OKT === '') {
+    const okterDir = path.join(STATE_ROOT, 'okter');
+    const okter = fs.existsSync(okterDir)
+        ? fs.readdirSync(okterDir, { withFileTypes: true })
+            .filter((entry) => entry.isDirectory() && !entry.name.startsWith('.'))
+            .map((entry) => ({ name: entry.name, mtime: fs.statSync(path.join(okterDir, entry.name)).mtimeMs }))
+            .sort((a, b) => b.mtime - a.mtime)
+            .map((entry) => entry.name)
+        : [];
+    console.error(`Mangler OKT. Kjør med OKT=<økt>. Økter: ${okter.length ? okter.join(',') : '(ingen)'}`);
+    process.exit(1);
 }
-export const STATE_DIR = process.env.OKT !== undefined ? path.join(STATE_ROOT, 'okter', process.env.OKT) : STATE_ROOT;
+// Ikke punktum først: OKT=. eller OKT=.. ville pekt på .state/ eller .state/okter/.
+if (!/^[A-Za-z0-9_-][A-Za-z0-9._-]*$/.test(process.env.OKT)) {
+    console.error(`Ugyldig OKT: ${process.env.OKT}`);
+    process.exit(1);
+}
+export const STATE_DIR = path.join(STATE_ROOT, 'okter', process.env.OKT);
 export const VITE_PORTER = { soknad: 9114, oversikt: 9110 };
 
 export function erSynlig() {

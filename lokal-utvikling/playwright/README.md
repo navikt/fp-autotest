@@ -23,13 +23,23 @@ Kjør kommandoene fra `lokal-utvikling/playwright`:
 
 ```bash
 scripts/familie.sh B1 termin auto mor
-node run.mjs scenarier/ny-soknad.mjs B1 mor
-node run.mjs scenarier/behandle.mjs <sak>
-node run.mjs scenarier/sjekk-sak.mjs B1 mor <sak>
-scripts/fodselshendelse.sh B1 <åååå-mm-dd>
+OKT=B1 node run.mjs scenarier/ny-soknad.mjs B1 mor
+OKT=B1 node run.mjs scenarier/behandle.mjs <sak>
+OKT=B1 node run.mjs scenarier/sjekk-sak.mjs B1 mor <sak>
+OKT=B1 scripts/fodselshendelse.sh B1 <åååå-mm-dd>
 ```
 
-`familie.sh` lager en testfamilie med et unikt navn. Bruk saksnummeret fra innsendingen der kommandoene viser `<sak>`. `fodselshendelse.sh` sender en fødselshendelse for familien.
+`familie.sh` lager en testfamilie med et unikt navn og en økt med samme navn. Bruk saksnummeret fra innsendingen der kommandoene viser `<sak>`. `fodselshendelse.sh` sender en fødselshendelse for familien.
+
+## Økter
+
+All tilstand (familiefiler, innlogginger, logger) ligger i `.state/okter/<økt>/`. Ingenting skrives direkte i `.state/`.
+
+- `scripts/familie.sh` lager økta. Uten `OKT` får økta familienavnet. Skriptet skriver ut `OKT=<økt>` til slutt.
+- `run.mjs`, `fodselshendelse.sh` og `stopp-familie.sh` krever `OKT`. Uten den stopper de og lister øktene som finnes.
+- `familie.sh` beholder høyst 10 økter (`MAKS_OKTER=<n>` endrer taket). Når en ny økt lages, slettes de som er brukt minst nylig.
+- En økt i bruk slettes aldri. Det gjelder økter med en Maven-prosess i bakgrunnen (`mvn.pid`) eller en `run.mjs` som kjører (`kjorer-<pid>.pid`). Er alle i bruk, varsler `familie.sh` og lar dem stå.
+- Flere økter kan kjøre parallelt. Maven-oppstarten går én om gangen via låsen i `.state/okter/.mvn-lock`.
 
 ## Vite eller Docker
 
@@ -42,8 +52,8 @@ Standard kjøremodus er headless. Sett `VIS=1` eller `HEADED=1` for å åpne net
 Ved suksess holdes vinduet åpent i 10 sekunder før det lukkes automatisk (kan overstyres med `SLUTTPAUSE=<sek>`), med mindre du setter `HOLD=1`. Ved feil holdes vinduet åpent til du lukker det. Sett `HOLD=0` for å lukke vinduet umiddelbart ved både suksess og feil.
 
 ```bash
-VIS=1 node run.mjs scenarier/ny-soknad.mjs B1 mor
-VIS=1 HOLD=1 node run.mjs scenarier/sjekk-sak.mjs B1 mor <sak>
+OKT=B1 VIS=1 node run.mjs scenarier/ny-soknad.mjs B1 mor
+OKT=B1 VIS=1 HOLD=1 node run.mjs scenarier/sjekk-sak.mjs B1 mor <sak>
 ```
 
 **Ved én sak (for agenter)**: Når brukeren ber om å teste én enkelt sak og ikke har oppgitt om nettleseren skal vises, spør brukeren før oppstart om kjøringen skal gå med synlig nettleser (`VIS=1`) eller headless.
@@ -58,7 +68,7 @@ VIS=1 HOLD=1 node run.mjs scenarier/sjekk-sak.mjs B1 mor <sak>
 
 ## Standardscenarier
 
-Kjør et scenario med `node run.mjs scenarier/<scenario>.mjs <argumenter>`.
+Kjør et scenario med `OKT=<økt> node run.mjs scenarier/<scenario>.mjs <argumenter>`.
 
 | Scenario | Bruk |
 |---|---|
@@ -91,7 +101,7 @@ export default async ({ som, familie, args }) => {
 };
 ```
 
-Kjør det med `node run.mjs scenarier/lokalt/<scenario>.mjs <familie>`.
+Kjør det med `OKT=<økt> node run.mjs scenarier/lokalt/<scenario>.mjs <familie>`.
 
 ### Venting og mønstre i scenarier
 
@@ -113,20 +123,20 @@ Standard er å kjøre én familie av gangen. Skal du kjøre flere uavhengige fam
 
 ```bash
 ANTALL=2 scripts/familie.sh A termin auto mor
-node run.mjs scenarier/ny-soknad.mjs A-01 mor > .state/A-01.out 2>&1 &
-node run.mjs scenarier/ny-soknad.mjs A-02 mor > .state/A-02.out 2>&1 &
+OKT=A node run.mjs scenarier/ny-soknad.mjs A-01 mor > .state/okter/A/A-01.out 2>&1 &
+OKT=A node run.mjs scenarier/ny-soknad.mjs A-02 mor > .state/okter/A/A-02.out 2>&1 &
 wait
 ```
 
-Bruk et eget prefiks per økt (for eksempel `A` i én og `B` i en annen). Steg for samme forelder eller samme sak må alltid kjøres etter hverandre. På macOS kjører skallet ofte `zsh`: unngå variabelnavnet `status` (read-only i `zsh`), og bruk `bash -c '...'` ved parallelle løkker med `&`/`wait` (unngår `BG_NICE` og 1-indekserte arrays).
+Familiene fra ett `familie.sh`-kall deler økt (her `A`). Bruk `ANTALL` fremfor mange separate kall, ellers fyller du opp taket på 10 økter raskt. Steg for samme forelder eller samme sak må alltid kjøres etter hverandre. På macOS kjører skallet ofte `zsh`: unngå variabelnavnet `status` (read-only i `zsh`), og bruk `bash -c '...'` ved parallelle løkker med `&`/`wait` (unngår `BG_NICE` og 1-indekserte arrays).
 
-Sett `OKT=<økt>` for å lagre tilstand isolert i `.state/okter/<økt>/`. Da kolliderer ikke kjøringer mellom økter, og hver økt kan ryddes for seg. Kjør `scripts/stopp-familie.sh <navn>` når en kjøring avsluttes eller avbrytes, slik at bakgrunnsprosessen `ManuellSoknad` stoppes. `scripts/familie.sh` med `auto` eller `vent` returnerer så snart familiene er opprettet. Ikke vent på `BUILD SUCCESS` i loggen, den kommer først etter at alle søknadene er sendt.
+Kjør `OKT=<økt> scripts/stopp-familie.sh <navn>` når en kjøring avsluttes eller avbrytes, slik at bakgrunnsprosessen `ManuellSoknad` stoppes. `scripts/familie.sh` med `auto` eller `vent` returnerer så snart familiene er opprettet. Ikke vent på `BUILD SUCCESS` i loggen, den kommer først etter at alle søknadene er sendt.
 
 ## Viktige fallgruver
 
 - En handling får opptil 10 sekunder, en navigering opptil 20 sekunder. Et scenario stopper etter 150 sekunder som standard.
 - Bruk et unikt familienavn for hver test. Gamle tilstandsfiler kan ellers koble kjøringen til feil familie.
-- `scripts/familie.sh` varsler (uten å slette) når `.state/` har over 200 filer eller filer eldre enn 7 dager. Spør alltid brukeren før `.state/` slettes (`rm -rf .state`).
+- Ikke slett `.state/` eller økter for hånd. `scripts/familie.sh` rydder selv, se [Økter](#økter).
 - Ikke styr samme forelder i samme app eller samme sak i fpsak fra flere kjøringer samtidig. Kjør stegene etter hverandre.
 - Manuelle aksjonspunkt sender saken til godkjenning. En beslutter må godkjenne vedtaket.
 - Termindatoen kan ikke være mer enn 21 dager tilbake i søknaden.
