@@ -46,6 +46,8 @@ VIS=1 node run.mjs scenarier/ny-soknad.mjs B1 mor
 VIS=1 HOLD=1 node run.mjs scenarier/sjekk-sak.mjs B1 mor <sak>
 ```
 
+**Ved én sak (for agenter)**: Når brukeren ber om å teste én enkelt sak og ikke har oppgitt om nettleseren skal vises, spør brukeren før oppstart om kjøringen skal gå med synlig nettleser (`VIS=1`) eller headless.
+
 **Ved feil i frontend (for agenter)**: Hvis en headless-kjøring avdekker valideringsfeil, uventede eller rare tekster, `SIDEFEIL` eller uventet UI-tilstand, spør brukeren om nettleseren skal åpnes med `VIS=1` for det feilende caset. Kjør det feilende scenarioet på nytt med `VIS=1` (eller bruk `VIS=1 HOLD=1` på f.eks. `sjekk-sak.mjs` eller `sjekk-fpsak.mjs`) for å undersøke feilen.
 
 **Parallell kjøring**: Kjør alltid headless ved parallelle kjøringer. Ikke bruk `VIS=1` i parallell. Hvis et case feiler i en parallell kjøring, spør brukeren om det ene feilende caset skal åpnes alene med `VIS=1`.
