@@ -4,7 +4,7 @@
 //   const p = await fpsak(411)                       -> fpsak-frontend for saken
 import path from 'node:path';
 import fs from 'node:fs';
-import { åpne, startBrowser, erPortÅpen, VITE_PORTER, loggInnSelvbetjening, loggInnFpsak } from './lib/browser.mjs';
+import { åpne, startBrowser, erPortÅpen, erSynlig, VITE_PORTER, loggInnSelvbetjening, loggInnFpsak } from './lib/browser.mjs';
 import { familie } from './lib/familie.mjs';
 
 const [fil, ...args] = process.argv.slice(2);
@@ -50,15 +50,50 @@ const fpsak = async (saksnummer, opt = {}) => {
 const scenarioFil = path.resolve(fil);
 const scenarioPath = fs.existsSync(scenarioFil) ? scenarioFil : path.resolve(import.meta.dirname, fil);
 const scenario = (await import(scenarioPath)).default;
-// Kjøringer som henger, stopper seg selv (kill er ikke tillatt i cplt). TIDSGRENSE i sekunder, standard 150.
+// Kjøringer som henger, stopper seg selv (kill er ikke tillatt i cplt). TIDSGRENSE i sekunder, standard 150 (300 med synlig nettleser).
+const tidsgrenseSek = Number(process.env.TIDSGRENSE ?? (erSynlig() ? 300 : 150));
 const tidsgrense = setTimeout(() => {
-    console.error(`TIDSGRENSE: scenarioet brukte mer enn ${process.env.TIDSGRENSE ?? 150} s`);
+    console.error(`TIDSGRENSE: scenarioet brukte mer enn ${tidsgrenseSek} s`);
     process.exit(2);
-}, 1000 * Number(process.env.TIDSGRENSE ?? 150));
+}, 1000 * tidsgrenseSek);
+let feil;
+let skalHolde;
 try {
     await scenario({ som, fpsak, familie, args });
+} catch (e) {
+    feil = e;
 } finally {
+    clearTimeout(tidsgrense);
+    for (const s of åpne_) await s.lagreState().catch(() => {});
+    const ventPåLukking = () => {
+        const åpneSider = åpne_.map((s) => s.page).filter((p) => !p.isClosed());
+        if (!deltBrowser.isConnected() || !åpneSider.length) return Promise.resolve();
+        return Promise.race([
+            new Promise((resolve) => deltBrowser.once('disconnected', resolve)),
+            Promise.all(åpneSider.map((p) => new Promise((resolve) => p.once('close', resolve)))),
+        ]);
+    };
+    skalHolde = erSynlig() && deltBrowser && process.env.HOLD !== '0' && (process.env.HOLD === '1' || Boolean(feil));
+    if (skalHolde) {
+        if (feil) console.error(feil);
+        console.log('NETTLESER ÅPEN: lukk vinduet når du er ferdig.');
+        await ventPåLukking();
+    } else if (erSynlig() && deltBrowser && process.env.HOLD !== '0') {
+        const pauseSek = Number(process.env.SLUTTPAUSE ?? 10);
+        if (pauseSek > 0) {
+            console.log(`NETTLESER ÅPEN i ${pauseSek} s (eller til du lukker vinduet).`);
+            let pauseTimer;
+            await Promise.race([
+                ventPåLukking(),
+                new Promise((resolve) => { pauseTimer = setTimeout(resolve, pauseSek * 1000); }),
+            ]);
+            clearTimeout(pauseTimer);
+        }
+    }
     for (const s of åpne_) await s.lukk().catch(() => {});
     if (deltBrowser) await deltBrowser.close().catch(() => {});
-    clearTimeout(tidsgrense);
+}
+if (feil) {
+    if (skalHolde) process.exitCode = 1;
+    else throw feil;
 }

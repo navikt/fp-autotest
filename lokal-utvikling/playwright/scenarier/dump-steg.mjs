@@ -1,8 +1,8 @@
 // Dumper teksten og feltene på ett steg i søknaden for far/mor/medfar.
 // node run.mjs scenarier/dump-steg.mjs <familie> <mor|far|medfar> <steg> [nytt]
-// SITUASJON=adopsjon velger situasjon på første steg, BARN=nytt velger «nytt barn» på forsiden. BILDE=1 tar skjermbilde før dump. SETT='navn=verdi,klikk:Knappetekst,...' fyller ut felt og klikker knapper før dump, VELG og NESTE se under.
+// SITUASJON=adopsjon velger situasjon på første steg, BARN=nytt velger «nytt barn» på forsiden. SETT='navn=verdi,klikk:Knappetekst,...' fyller ut felt og klikker knapper før dump, VELG og NESTE se under.
 import * as S from '../lib/soknad.mjs';
-import { tekstlinjer, fyllFelt, skjermbilde } from '../lib/browser.mjs';
+import { tekstlinjer, fyllFelt } from '../lib/browser.mjs';
 
 export default async ({ som, familie, args }) => {
     const [navn, hvem, steg, nytt] = args;
@@ -18,7 +18,6 @@ export default async ({ som, familie, args }) => {
         await p.locator(`input[name="${n}"][value="${v}"]`).check();
         if (process.env.NESTE) { await S.nesteSteg(p); console.log('URL', p.url()); }
     }
-    if (process.env.BILDE) console.log('BILDE', await skjermbilde(p, `${navn}-${hvem}-${steg}`));
     console.log('TEKST', (await tekstlinjer(p.locator('#app'))).join(' / '));
     // Varsler og modaler i Aksel-portaler ligger utenfor #app og kan ligge over siden.
     const portal = (await p.locator('[data-aksel-portal]').allInnerTexts()).map((s) => s.trim()).filter(Boolean);

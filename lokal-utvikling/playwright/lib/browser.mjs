@@ -10,8 +10,11 @@ if (process.env.OKT !== undefined && !/^[A-Za-z0-9._-]+$/.test(process.env.OKT))
     throw new Error(`Ugyldig OKT: ${process.env.OKT}`);
 }
 export const STATE_DIR = process.env.OKT !== undefined ? path.join(STATE_ROOT, 'okter', process.env.OKT) : STATE_ROOT;
-export const SHOT_DIR = path.join(STATE_DIR, 'skjermbilder');
 export const VITE_PORTER = { soknad: 9114, oversikt: 9110 };
+
+export function erSynlig() {
+    return (process.env.VIS && process.env.VIS !== '0') || (process.env.HEADED && process.env.HEADED !== '0') ? true : false;
+}
 
 function prøvPort(host, port, timeoutMs) {
     return new Promise((resolve) => {
@@ -92,8 +95,16 @@ function medDokumentFeil(page, oppgave, kontekst) {
     });
 }
 
-export function startBrowser() {
-    return chromium.launch({ executablePath: process.env.CHROMIUM || undefined });
+export function startBrowser({ vis = erSynlig(), slowMo } = {}) {
+    const delay = slowMo ?? (vis ? Number(process.env.SLOWMO ?? 2000) : 0);
+    return chromium.launch({
+        executablePath: process.env.CHROMIUM || undefined,
+        headless: !vis,
+        ...(delay ? { slowMo: delay } : {}),
+    }).catch((err) => {
+        if (vis) throw new Error(`Synlig nettleser kunne ikke startes (manglende display eller sandbox-begrensning): ${err.message}`);
+        throw err;
+    });
 }
 
 export async function åpne({ state, browser: delt } = {}) {
@@ -101,10 +112,11 @@ export async function åpne({ state, browser: delt } = {}) {
     const browser = delt ?? (await startBrowser());
     const statePath = state ? path.join(STATE_DIR, `${state}.json`) : undefined;
     const ctx = await browser.newContext({
-        viewport: { width: 1300, height: 1000 },
+        viewport: erSynlig() ? null : { width: 1300, height: 1000 },
         storageState: statePath && fs.existsSync(statePath) ? statePath : undefined,
     });
     const page = await ctx.newPage();
+    if (erSynlig()) await page.bringToFront().catch(() => {});
     page.setDefaultTimeout(10000); // ingen handling skal vente mer enn 10 s lokalt
     page.setDefaultNavigationTimeout(20000);
     // Ufangede feil i siden (f.eks. kast i onSubmit) vises ellers ikke, og ser ut som om knappen ikke virker.
@@ -118,21 +130,23 @@ export async function åpne({ state, browser: delt } = {}) {
             console.log('NAV', r.request().method(), r.status(), r.url().split('?')[0], loc ? `-> ${loc}` : '');
         }
     });
-    const lukk = async () => {
-        if (statePath) {
-            const tmp = `${statePath}.${process.pid}.tmp`;
-            try {
-                await ctx.storageState({ path: tmp });
-                // Rename gjør skrivingen atomisk når flere kjøringer deler fpsak.json.
-                fs.renameSync(tmp, statePath);
-            } finally {
-                fs.rmSync(tmp, { force: true });
-            }
+    const lagreState = async () => {
+        if (!statePath) return;
+        const tmp = `${statePath}.${process.pid}.tmp`;
+        try {
+            await ctx.storageState({ path: tmp });
+            // Rename gjør skrivingen atomisk når flere kjøringer deler fpsak.json.
+            fs.renameSync(tmp, statePath);
+        } finally {
+            fs.rmSync(tmp, { force: true });
         }
-        await ctx.close();
-        if (!delt) await browser.close();
     };
-    return { browser, ctx, page, lukk };
+    const lukk = async () => {
+        await lagreState().catch(() => {});
+        await ctx.close().catch(() => {});
+        if (!delt) await browser.close().catch(() => {});
+    };
+    return { browser, ctx, page, lagreState, lukk };
 }
 
 // Selvbetjening via wonderwall (ID-porten i VTP). vite: port til lokal vite-server skal brukes (cookie via /vite-on).
@@ -225,6 +239,10 @@ export async function loggInnSelvbetjening(page, app, fnr, { vite = true } = {})
                 await page.locator(APP_KLAR).first().waitFor({ timeout: 20000 });
             }
         }
+        const cookieNei = page.locator('#consent-banner-dialog').getByRole('button', { name: 'Nei', exact: true });
+        if (await cookieNei.isVisible().catch(() => false)) {
+            await cookieNei.click().catch(() => {});
+        }
     })(), app);
 }
 
@@ -245,14 +263,6 @@ export async function loggInnFpsak(page, saksnummer, bruker = 'Sara Saksbehandle
         await klarLoc.waitFor({ timeout: 20000 });
         await page.locator('.navds-loader, .aksel-loader, [aria-busy="true"]').first().waitFor({ state: 'hidden', timeout: 10000 }).catch(() => {});
     })(), 'fpsak');
-}
-
-export async function skjermbilde(page, navn) {
-    fs.mkdirSync(SHOT_DIR, { recursive: true });
-    const fil = path.join(SHOT_DIR, `${navn}.png`);
-    await page.screenshot({ path: fil, fullPage: true });
-    console.log('SKJERMBILDE', fil);
-    return fil;
 }
 
 export const tekstlinjer = async (loc) =>

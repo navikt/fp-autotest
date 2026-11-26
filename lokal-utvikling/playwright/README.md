@@ -35,6 +35,23 @@ scripts/fodselshendelse.sh B1 <åååå-mm-dd>
 
 Uten innstilling velger `run.mjs` automatisk modus. Den sjekker om Vite-serverne svarer på port 9114 for søknad og port 9110 for oversikt. Sett `VITE=0` for å bruke Docker-imaget eller `VITE=1` for å bruke Vite. Vite-modus krever at serverne kjører.
 
+## Synlig nettleser (VIS=1)
+
+Standard kjøremodus er headless. Sett `VIS=1` eller `HEADED=1` for å åpne nettleseren synlig. Da legges det på 2 sekunder forsinkelse per Playwright-handling (`SLOWMO=2000`). Du kan overstyre forsinkelsen med `SLOWMO=<ms>`.
+
+Ved suksess holdes vinduet åpent i 10 sekunder før det lukkes automatisk (kan overstyres med `SLUTTPAUSE=<sek>`), med mindre du setter `HOLD=1`. Ved feil holdes vinduet åpent til du lukker det. Sett `HOLD=0` for å lukke vinduet umiddelbart ved både suksess og feil.
+
+```bash
+VIS=1 node run.mjs scenarier/ny-soknad.mjs B1 mor
+VIS=1 HOLD=1 node run.mjs scenarier/sjekk-sak.mjs B1 mor <sak>
+```
+
+**Ved feil i frontend (for agenter)**: Hvis en headless-kjøring avdekker valideringsfeil, uventede eller rare tekster, `SIDEFEIL` eller uventet UI-tilstand, spør brukeren om nettleseren skal åpnes med `VIS=1` for det feilende caset. Kjør det feilende scenarioet på nytt med `VIS=1` (eller bruk `VIS=1 HOLD=1` på f.eks. `sjekk-sak.mjs` eller `sjekk-fpsak.mjs`) for å undersøke feilen.
+
+**Parallell kjøring**: Kjør alltid headless ved parallelle kjøringer. Ikke bruk `VIS=1` i parallell. Hvis et case feiler i en parallell kjøring, spør brukeren om det ene feilende caset skal åpnes alene med `VIS=1`.
+
+**Hvis synlig nettleser blokkeres (sandbox / manglende display)**: Hvis `VIS=1` feiler ved oppstart av Chromium på grunn av sandbox eller manglende display, skal agenten si tydelig fra til brukeren, gjengi feilmeldingen og oppgi kommandoen brukeren kan kjøre selv utenfor sandboxen. Ikke fall stille tilbake til headless.
+
 ## Standardscenarier
 
 Kjør et scenario med `node run.mjs scenarier/<scenario>.mjs <argumenter>`.
@@ -111,5 +128,4 @@ Sett `OKT=<økt>` for å lagre tilstand isolert i `.state/okter/<økt>/`. Da kol
 - Ved sletting eller endring av perioder på termin- eller fødselsdato i planen, ta med bindestrek i radstarten (for eksempel `'24. des. 26 -'`), ellers treffer velgeren hendelsesraden («Termin»/«Fødsel») i stedet for perioden.
 - `scripts/familie.sh` kjører offline `surefire:test` når `ManuellSoknad.class` er nyere enn `ManuellSoknad.java` og `pom.xml`. Hvis du har endret andre Java-klasser i `fp-autotest`, kjør med `MVN_BUILD=1 scripts/familie.sh ...` for full kompilering.
 - Fødselsnumrene fra `scripts/familie.sh` er syntetiske testdata og kan skrives ut ved feilsøking.
-- Skjermbilder lagres i `.state/skjermbilder/` og bør bare tas ved feil eller for å avklare noe.
 - Oppgi om Vite-serveren eller Docker-imaget ble brukt når du rapporterer testresultater.
