@@ -54,6 +54,8 @@ VIS=1 HOLD=1 node run.mjs scenarier/sjekk-sak.mjs B1 mor <sak>
 
 **Hvis synlig nettleser blokkeres (sandbox / manglende display)**: Hvis `VIS=1` feiler ved oppstart av Chromium på grunn av sandbox eller manglende display, skal agenten si tydelig fra til brukeren, gjengi feilmeldingen og oppgi kommandoen brukeren kan kjøre selv utenfor sandboxen. Ikke fall stille tilbake til headless.
 
+**Status underveis (for agenter)**: Gi brukeren korte tilbakemeldinger når noe tar tid, for eksempel hvis nye scenariofiler må skrives, testfamilier settes opp, eller flere steg kjøres etter hverandre.
+
 ## Standardscenarier
 
 Kjør et scenario med `node run.mjs scenarier/<scenario>.mjs <argumenter>`.
