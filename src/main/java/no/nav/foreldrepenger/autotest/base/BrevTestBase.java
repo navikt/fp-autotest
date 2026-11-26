@@ -27,17 +27,21 @@ public class BrevTestBase {
 
     protected static void validerBrevetInneholderForventedeTekstavsnitt(byte[] pdfBytes, Set<String> tekstavsnitt) {
         try (var document = Loader.loadPDF(pdfBytes)) {
-            // Linjeskift (med evt. omkringliggende mellomrom) erstattes med ett mellomrom for å kunne søke på tvers av linjer.
-            // openhtmltopdf legger fra 1.1.111 til et mellomrom på slutten av linjer som avsluttes med <br/>.
-            var pdfTekst = new PDFTextStripper().getText(document).replaceAll("\\s*\\R\\s*", " ");
+            // Sammenligner uten whitespace for å kunne søke på tvers av linjer uavhengig av hvordan linjene brytes
+            // (mellomrom ved <br/> fra openhtmltopdf 1.1.111, bindestrek/lenker uten mellomrom ved linjebrudd).
+            var pdfTekst = utenWhitespace(new PDFTextStripper().getText(document));
             var softAssert = new SoftAssertions();
-            tekstavsnitt.forEach(skalFinnes -> softAssert.assertThat(pdfTekst.contains(skalFinnes))
+            tekstavsnitt.forEach(skalFinnes -> softAssert.assertThat(pdfTekst.contains(utenWhitespace(skalFinnes)))
                     .as("'%s' finnes ikke".formatted(skalFinnes))
                     .isTrue());
             softAssert.assertAll();
         } catch (IOException e) {
             Fail.fail("Kunne ikke lese PDFen", e);
         }
+    }
+
+    private static String utenWhitespace(String tekst) {
+        return tekst.replaceAll("\\s", "");
     }
 
     protected static BrevAssertionBuilder engangsstønadInnvilgetAssertionsBuilder(Fødselsnummer fnr, Saksnummer saksnummer) {
