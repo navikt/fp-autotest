@@ -28,6 +28,6 @@ export default async ({ som, familie, args }) => {
         },
     });
     if (steg === 'oppsummering') console.log('OPPSUMMERING', await S.oppsummeringPlan(p));
-    if (steg === 'oppsummering' || steg === 'kvitttering') return;
+    if (steg === 'oppsummering' || steg === 'kvittering') return;
     console.log('STOPPET PÅ', steg);
 };

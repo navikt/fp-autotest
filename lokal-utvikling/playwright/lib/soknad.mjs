@@ -17,7 +17,7 @@ async function ventPåStegEndring(p, forrige, gammelForm) {
     ]).catch(() => {});
     if (steg(p) !== forrige) {
         if (gammelForm) await p.waitForFunction((el) => !el.isConnected, gammelForm, { timeout: 5000 }).catch(() => {});
-        if (steg(p) === 'kvitttering') return;
+        if (steg(p) === 'kvittering') return;
         await app(p).locator('form :is(input, button[type=submit]), button:has-text("Neste steg"), button:has-text("Send søknaden")').first().waitFor({ state: 'visible', timeout: 10000 }).catch(() => {});
         await app(p).locator('.navds-loader, .aksel-loader').first().waitFor({ state: 'hidden', timeout: 5000 }).catch(() => {});
     }
@@ -97,7 +97,7 @@ export async function fyllUt(p, opt = {}) {
         const linjer = await tekstlinjer(app(p));
         console.log(`--- ${u} | ${linjer.filter((s) => logg.test(s)).join(' || ')}`);
         if (u === opt.stoppVed) return u;
-        if (u === 'kvitttering') return u;
+        if (u === 'kvittering') return u;
         if (u === 'oppsummering') {
             if (!opt.send) return u;
             await sendInn(p);
