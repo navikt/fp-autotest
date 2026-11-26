@@ -270,19 +270,133 @@ export async function sendInn(p) {
 
 // ---- Planen (steg «plan») ----
 
+function brukKalender(visning) {
+    return (visning ?? process.env.VISNING ?? 'kalender') !== 'liste';
+}
+
+function parseDato(s) {
+    const m1 = /^(\d{1,2})\.(\d{1,2})\.(\d{4})$/.exec(s.trim());
+    if (m1) return new Date(Date.UTC(+m1[3], +m1[2] - 1, +m1[1]));
+    const m2 = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(s.trim());
+    if (m2) return new Date(Date.UTC(+m2[1], +m2[2] - 1, +m2[3]));
+    throw new Error(`Ukjent datoformat: ${s} (forventet dd.mm.åååå eller åååå-mm-dd)`);
+}
+
+function tilUkedag(d, retning) {
+    const kopi = new Date(d.getTime());
+    const dag = kopi.getUTCDay(); // 0 = søn, 6 = lør
+    if (dag === 6) kopi.setUTCDate(kopi.getUTCDate() + (retning > 0 ? 2 : -1));
+    else if (dag === 0) kopi.setUTCDate(kopi.getUTCDate() + (retning > 0 ? 1 : -2));
+    return kopi;
+}
+
+export async function visKalender(p) {
+    const fane = p.getByRole('tab', { name: 'Kalender' });
+    if ((await fane.count()) && (await fane.getAttribute('aria-selected')) !== 'true') {
+        await fane.click();
+    }
+    await p.locator('[data-month-key]').first().waitFor({ timeout: 3000 }).catch(() => {});
+}
+
 export async function visListe(p) {
     // En popover i kalenderen (f.eks. varsel om dager som ikke ligger i planen) kan ligge over «Liste» når musa står
     // over en dag. Flytt musa bort og lukk popoveren først.
     await p.mouse.move(0, 0);
     await p.keyboard.press('Escape');
-    await p.getByText('Liste', { exact: true }).click();
+    const fane = p.getByRole('tab', { name: 'Liste' });
+    if (await fane.count()) await fane.click();
+    else await p.getByText('Liste', { exact: true }).click();
     await p.getByRole('button', { name: 'Legg til periode' }).waitFor({ timeout: 3000 }).catch(() => {});
 }
 
+async function finnMånedIKalender(p, år, måned) {
+    const mål = p.locator(`[data-testid="year:${år};month:${måned}"]`);
+    if (await mål.count()) return mål;
+    const startRedigering = p.getByRole('button', { name: 'Start redigering' });
+    if (await startRedigering.isVisible().catch(() => false)) {
+        await startRedigering.click();
+    }
+    for (let i = 0; i < 12 && !(await mål.count()); i++) {
+        const nøkler = await p.locator('[data-month-key]').evaluateAll((els) => els.map((e) => e.getAttribute('data-month-key')));
+        if (!nøkler.length) break;
+        const [førsteÅr, førsteMnd] = nøkler[0].split('-').map(Number);
+        const erFør = år < førsteÅr || (år === førsteÅr && måned < førsteMnd);
+        const knapper = p.getByRole('button', { name: 'Vis flere måneder' });
+        const antall = await knapper.count();
+        if (!antall) break;
+        const knapp = erFør ? knapper.first() : knapper.last();
+        await knapp.click();
+        await p.waitForTimeout(100);
+    }
+    if (!(await mål.count())) throw new Error(`Fant ikke måned ${år}-${måned + 1} i kalenderen`);
+    return mål;
+}
+
+export async function velgDatoerIKalender(p, fom, tom) {
+    await visKalender(p);
+    // Nullstill eventuelt tidligere valg i kalenderen.
+    const valgtChip = p.getByRole('button', { name: /valgt/i });
+    if (await valgtChip.first().isVisible().catch(() => false)) {
+        await valgtChip.first().click().catch(() => {});
+    }
+    // Sørg for at «Periode (fra - til)» er valgt dersom redigeringsmodus allerede er aktiv.
+    const periodeRadio = p.getByLabel('Periode (fra - til)');
+    if (await periodeRadio.isVisible().catch(() => false)) {
+        if (!(await periodeRadio.isChecked().catch(() => true))) await periodeRadio.check();
+    }
+    const d1 = tilUkedag(parseDato(fom), 1);
+    const d2 = tilUkedag(parseDato(tom), -1);
+    const m1 = await finnMånedIKalender(p, d1.getUTCFullYear(), d1.getUTCMonth());
+    await m1.locator(`[data-testid^="day:${d1.getUTCDate()};"]`).click();
+    if (d1.getTime() !== d2.getTime()) {
+        const m2 = await finnMånedIKalender(p, d2.getUTCFullYear(), d2.getUTCMonth());
+        await m2.locator(`[data-testid^="day:${d2.getUTCDate()};"]`).click();
+    }
+    await p.getByRole('heading', { name: 'Hva vil du endre til?' }).waitFor({ timeout: 3000 });
+}
+
+// Velger én eller flere enkeltdager i kalenderen (f.eks. ['12.07.2027', '14.07.2027', '16.07.2027']).
+export async function velgEnkeltdagerIKalender(p, datoer) {
+    await visKalender(p);
+    const startRedigering = p.getByRole('button', { name: 'Start redigering' });
+    if (await startRedigering.isVisible().catch(() => false)) await startRedigering.click();
+    const enkeltdager = p.getByLabel('Enkeltdager');
+    await enkeltdager.waitFor({ timeout: 3000 });
+    await enkeltdager.check();
+    for (const s of datoer) {
+        const d = tilUkedag(parseDato(s), 1);
+        const m = await finnMånedIKalender(p, d.getUTCFullYear(), d.getUTCMonth());
+        await m.locator(`[data-testid^="day:${d.getUTCDate()};"]`).click();
+    }
+    await p.getByRole('heading', { name: 'Hva vil du endre til?' }).waitFor({ timeout: 3000 });
+}
+
+// Leser data-periode-color for én dato i kalenderen (f.eks. 'BLUE', 'BLUESTRIPED', 'BLUEOUTLINE', 'LIGHTGREENBLUE', 'GREEN', 'NONE').
+export async function kalenderDagFarge(p, dato) {
+    await visKalender(p);
+    const d = tilUkedag(parseDato(dato), 1);
+    const m = await finnMånedIKalender(p, d.getUTCFullYear(), d.getUTCMonth());
+    return m.locator(`[data-testid^="day:${d.getUTCDate()};"]`).getAttribute('data-periode-color');
+}
+
+// Klikker «Fjern alt» og bekrefter i dialogen.
+export async function fjernAlt(p) {
+    const knapp = p.getByRole('button', { name: 'Fjern alt' }).first();
+    await knapp.click();
+    const modal = p.locator('#FjernAltIUttaksplanModal');
+    await modal.waitFor({ timeout: 3000 });
+    await modal.locator('button[data-variant="primary"], button').last().click();
+    await modal.waitFor({ state: 'hidden', timeout: 5000 }).catch(() => {});
+}
+
 export async function planSomTekst(p) {
+    const kalenderFane = p.getByRole('tab', { name: 'Kalender' });
+    const varKalender = (await kalenderFane.count()) && (await kalenderFane.getAttribute('aria-selected')) === 'true';
     await visListe(p);
     const t = await tekstlinjer(app(p));
-    return t.slice(t.findIndex((s) => s === 'Liste') + 1, t.findIndex((s) => s === 'Angre')).join(' / ');
+    const tekst = t.slice(t.findIndex((s) => s === 'Liste') + 1, t.findIndex((s) => s === 'Angre')).join(' / ');
+    if (varKalender) await visKalender(p);
+    return tekst;
 }
 
 export async function planInfo(p) {
@@ -292,6 +406,7 @@ export async function planInfo(p) {
 // Valget vises bare når perioden overlapper og kan flyttes. «Periode uten foreldrepenger», pause og utsettelse tilbyr ikke flytting.
 async function flyttResten(p, flytt = true) {
     const valg = p.getByLabel(flytt ? 'Endre og flytt resten av planen' : 'Endre uten å flytte resten av planen');
+    await valg.waitFor({ timeout: 1500 }).catch(() => {});
     if (flytt && !(await valg.count())) console.log('ADVARSEL: «Endre og flytt resten av planen» ble ikke vist, resten av planen er ikke flyttet');
     if (await valg.count()) {
         await valg.check();
@@ -300,15 +415,16 @@ async function flyttResten(p, flytt = true) {
     }
 }
 
-// Klikker «Ferdig, legg til». Står skjemaet fortsatt åpent, kastes valideringsfeilene.
-async function ferdig(p) {
-    const knapp = p.getByRole('button', { name: /Ferdig, legg til/ });
+// Klikker «Ferdig, legg til» (liste) eller «Fortsett»/«Legg til» (kalender). Står skjemaet fortsatt åpent, kastes valideringsfeilene.
+async function ferdig(p, knappNavn = /Ferdig, legg til/) {
+    const knapp = p.getByRole('button', { name: knappNavn }).first();
     await knapp.click();
     await Promise.race([
         knapp.waitFor({ state: 'hidden', timeout: 3000 }),
+        p.getByLabel('Endre og flytt resten av planen').waitFor({ timeout: 3000 }),
         app(p).locator('[class*=error-message]').first().waitFor({ timeout: 3000 }),
     ]).catch(() => {});
-    if (await knapp.count()) {
+    if ((await knapp.isVisible().catch(() => false)) && !(await p.getByLabel('Endre og flytt resten av planen').count())) {
         // Aksel 8 bruker aksel-error-message, eldre versjoner navds-error-message.
         const felt = (await app(p).locator('[class*=error-message]').allInnerTexts()).filter(Boolean);
         const tekst = (await tekstlinjer(app(p))).filter((s) => /^(Du må|Dere kan|Bare en)/.test(s));
@@ -332,9 +448,17 @@ async function åpneLeggTil(p, fom, tom) {
 // visValg: true skriver ut forelder-valgene (verdi og tekst) før valget gjøres.
 // gradering: { prosent, arbeid } der arbeid er orgnr, 'SELVSTENDIG_NÆRINGSDRIVENDE' eller 'FRILANS' (standard første valg).
 // morsAktivitet: teksten i listen «Hva skal mor gjøre i denne perioden?», f.eks. 'Arbeid'. overføringsårsak: f.eks. 'SYKDOM_ANNEN_FORELDER'.
-export async function leggTilPeriode(p, { fom, tom, forelder = 'MOR', konto = 'FELLESPERIODE', kontoMor = 'MØDREKVOTE', kontoFar = 'FEDREKVOTE', flytt = true, prosent = { mor: 100, far: 100 }, visValg = false, gradering, morsAktivitet, overføringsårsak }) {
-    await åpneLeggTil(p, fom, tom);
-    await p.getByLabel('Legge til periode med foreldrepenger').check();
+// visning: 'kalender' (standard) eller 'liste' (eller VISNING=liste).
+export async function leggTilPeriode(p, { fom, tom, forelder = 'MOR', konto = 'FELLESPERIODE', kontoMor = 'MØDREKVOTE', kontoFar = 'FEDREKVOTE', flytt = true, prosent = { mor: 100, far: 100 }, visValg = false, gradering, morsAktivitet, overføringsårsak, visning }) {
+    const kalender = brukKalender(visning);
+    if (kalender) {
+        await velgDatoerIKalender(p, fom, tom);
+        await p.getByRole('button', { name: /^(Ny periode|Endre)$/ }).first().click();
+        await p.locator('input[name=forelder], input[name^=kontoType]').first().waitFor({ timeout: 3000 }).catch(() => {});
+    } else {
+        await åpneLeggTil(p, fom, tom);
+        await p.getByLabel('Legge til periode med foreldrepenger').check();
+    }
     if (visValg) {
         const valg = await p.locator('input[name=forelder]').evaluateAll((e) => e.map((x) => `${x.value}=${x.labels?.[0]?.innerText ?? ''}`));
         console.log('FORELDERVALG', valg.join(' | '));
@@ -357,6 +481,7 @@ export async function leggTilPeriode(p, { fom, tom, forelder = 'MOR', konto = 'F
     } else {
         const kontoNavn = forelder === 'FAR_MEDMOR' ? 'kontoTypeFarMedmor' : 'kontoTypeMor';
         const kontoValg = p.locator(`input[name=${kontoNavn}][value=${konto}]`);
+        await kontoValg.first().waitFor({ timeout: 2000 }).catch(() => {});
         if (await kontoValg.count()) await kontoValg.first().check().catch(() => {});
     }
     if (overføringsårsak) await p.locator('input[name=overføringsårsak]').first().waitFor({ timeout: 2000 }).catch(() => {});
@@ -367,16 +492,38 @@ export async function leggTilPeriode(p, { fom, tom, forelder = 'MOR', konto = 'F
         await aktivitet.waitFor({ timeout: 2000 }).catch(() => {});
         await aktivitet.selectOption(morsAktivitet);
     }
-    const arbeid = p.locator(`input[type=radio][name^=skal][name*=ombinere][value=${gradering ? 'true' : 'false'}]`);
-    for (let i = 0; i < (await arbeid.count()); i++) await arbeid.nth(i).check();
-    if (gradering) {
-        const prosentFelt = p.getByLabel(/Hvor mange prosent skal .* jobbe/).first();
-        await prosentFelt.waitFor({ timeout: 2000 }).catch(() => {});
-        await prosentFelt.fill(String(gradering.prosent ?? 50));
-        const hvor = gradering.arbeid ? p.locator(`input[name=hvorSkalDuJobbe][value="${gradering.arbeid}"]`) : p.locator('input[name=hvorSkalDuJobbe]').first();
-        await hvor.check();
+    if (forelder === 'BEGGE') {
+        const gradMor = gradering ? (gradering.mor ?? (prosent.mor < 100 ? gradering : null)) : null;
+        const gradFar = gradering ? (gradering.far ?? (prosent.far < 100 ? gradering : null)) : null;
+        for (const [navn, grad, feltLabel] of [
+            ['skalDuKombinereArbeidOgUttakMor', gradMor, /Hvor mange prosent skal mor jobbe/],
+            ['skalDuKombinereArbeidOgUttakFarMedmor', gradFar, /Hvor mange prosent skal (far|medmor) jobbe/],
+        ]) {
+            const radio = p.locator(`input[type=radio][name=${navn}][value=${grad ? 'true' : 'false'}]`);
+            if (await radio.count()) await radio.check();
+            if (grad) {
+                const felt = p.getByLabel(feltLabel).first();
+                await felt.waitFor({ timeout: 2000 }).catch(() => {});
+                if (await felt.count()) await felt.fill(String(grad.prosent ?? 50));
+            }
+        }
+        if (gradMor || gradFar) {
+            const g = gradMor || gradFar;
+            const hvor = g.arbeid ? p.locator(`input[name=hvorSkalDuJobbe][value="${g.arbeid}"]`) : p.locator('input[name=hvorSkalDuJobbe]').first();
+            if (await hvor.count()) await hvor.check();
+        }
+    } else {
+        const arbeid = p.locator(`input[type=radio][name^=skal][name*=ombinere][value=${gradering ? 'true' : 'false'}]`);
+        for (let i = 0; i < (await arbeid.count()); i++) await arbeid.nth(i).check();
+        if (gradering) {
+            const prosentFelt = p.getByLabel(/Hvor mange prosent skal .* jobbe/).first();
+            await prosentFelt.waitFor({ timeout: 2000 }).catch(() => {});
+            await prosentFelt.fill(String(gradering.prosent ?? 50));
+            const hvor = gradering.arbeid ? p.locator(`input[name=hvorSkalDuJobbe][value="${gradering.arbeid}"]`) : p.locator('input[name=hvorSkalDuJobbe]').first();
+            if (await hvor.count()) await hvor.check();
+        }
     }
-    await ferdig(p);
+    await ferdig(p, kalender ? /^(Fortsett|Legg til)$/ : /Ferdig, legg til/);
     await flyttResten(p, flytt);
 }
 
@@ -389,21 +536,37 @@ export async function leggTilValg(p, { fom, tom }) {
 }
 
 // Utsettelse («Utsettelse», bare i de første seks ukene for mor). årsak er teksten i listen: 'Sykdom', 'Innlagt' eller 'Barnet er innlagt'.
-export async function leggTilUtsettelse(p, { fom, tom, årsak = 'Sykdom', flytt = false }) {
-    await åpneLeggTil(p, fom, tom);
-    await p.getByLabel('Utsettelse', { exact: true }).check();
-    await p.getByLabel('Velg hvorfor du skal utsette').selectOption({ label: årsak });
-    await ferdig(p);
+export async function leggTilUtsettelse(p, { fom, tom, årsak = 'Sykdom', flytt = false, visning }) {
+    const kalender = brukKalender(visning);
+    if (kalender) {
+        await velgDatoerIKalender(p, fom, tom);
+        await p.getByRole('button', { name: /Utsettelse/ }).first().click();
+        await p.getByLabel('Velg hvorfor du skal utsette').selectOption({ label: årsak });
+        await ferdig(p, /^Legg til$/);
+    } else {
+        await åpneLeggTil(p, fom, tom);
+        await p.getByLabel('Utsettelse', { exact: true }).check();
+        await p.getByLabel('Velg hvorfor du skal utsette').selectOption({ label: årsak });
+        await ferdig(p);
+    }
     await flyttResten(p, flytt);
 }
 
 // Pause («Pause»): valget far får etter de første seks ukene når bare han har rett. Krever mors aktivitet (tekst i listen).
-export async function leggTilPause(p, { fom, tom, morsAktivitet = 'Arbeid', flytt = false }) {
-    await åpneLeggTil(p, fom, tom);
-    await p.getByLabel('Pause', { exact: true }).check();
-    // Ledeteksten er en annen enn ved uttak («Hva skal mor gjøre i denne perioden?»).
-    await p.getByLabel('Hva gjør mor i denne perioden?').selectOption({ label: morsAktivitet });
-    await ferdig(p);
+export async function leggTilPause(p, { fom, tom, morsAktivitet = 'Arbeid', flytt = false, visning }) {
+    const kalender = brukKalender(visning);
+    if (kalender) {
+        await velgDatoerIKalender(p, fom, tom);
+        await p.getByRole('button', { name: 'Legg til pause' }).first().click();
+        await p.getByLabel('Hva gjør mor i denne perioden?').selectOption({ label: morsAktivitet });
+        await ferdig(p, /^Legg til$/);
+    } else {
+        await åpneLeggTil(p, fom, tom);
+        await p.getByLabel('Pause', { exact: true }).check();
+        // Ledeteksten er en annen enn ved uttak («Hva skal mor gjøre i denne perioden?»).
+        await p.getByLabel('Hva gjør mor i denne perioden?').selectOption({ label: morsAktivitet });
+        await ferdig(p);
+    }
     await flyttResten(p, flytt);
 }
 
@@ -415,7 +578,13 @@ export async function leggTilOpphold(p, { fom, tom, flytt = false }) {
     await flyttResten(p, flytt);
 }
 
-export async function leggTilFerie(p, { fom, tom, forelder, flytt = true }) {
+export async function leggTilFerie(p, { fom, tom, forelder, flytt = true, visning }) {
+    if (brukKalender(visning)) {
+        await velgDatoerIKalender(p, fom, tom);
+        await p.getByRole('button', { name: /^(Legg til ferie|Endre til ferie)$/ }).first().click();
+        await flyttResten(p, flytt);
+        return;
+    }
     await åpneLeggTil(p, fom, tom);
     await p.getByLabel('Legge til ferie').check();
     if (forelder) {
@@ -426,9 +595,46 @@ export async function leggTilFerie(p, { fom, tom, forelder, flytt = true }) {
     await flyttResten(p, flytt);
 }
 
-// Sletter perioden hvis radtekst starter med `fra` (f.eks. '24. nov. 26').
-// Har raden flere delperioder, spør appen hvilke som skal slettes. `velg` (regex) krysser av de som passer.
-export async function slettPeriode(p, fra, { velg } = {}) {
+// Sletter dager i kalenderen ved å markere [fom, tom] og klikke søppelbøtteknappen («Slett dager fra periode»).
+// Har valget flere eksisterende perioder, slettes de som matcher `velg` (regex), eller alle hvis `velg` ikke er oppgitt.
+export async function slettDagerIKalender(p, fom, tom = fom, { velg } = {}) {
+    await velgDatoerIKalender(p, fom, tom);
+    const rader = p.locator('[data-testid^="eksisterende-periode-"]');
+    await rader.first().waitFor({ timeout: 3000 });
+    for (let guard = 0; guard < 10; guard++) {
+        const antall = await rader.count();
+        if (!antall) break;
+        let klikket = false;
+        for (let i = 0; i < antall; i++) {
+            const rad = rader.nth(i);
+            const tekst = await rad.innerText().catch(() => '');
+            if (velg && !velg.test(tekst)) continue;
+            const slettKnapp = rad.getByRole('button', { name: 'Slett dager fra periode' });
+            if (!(await slettKnapp.count())) continue;
+            await slettKnapp.click();
+            const tilbakeITid = p.getByRole('dialog').filter({ hasText: 'tilbake i tid' });
+            await Promise.race([
+                tilbakeITid.waitFor({ timeout: 1500 }),
+                rad.waitFor({ state: 'detached', timeout: 1500 }),
+            ]).catch(() => {});
+            if (await tilbakeITid.count()) {
+                await tilbakeITid.getByRole('button', { name: 'Slett', exact: true }).click();
+                await tilbakeITid.waitFor({ state: 'hidden', timeout: 5000 }).catch(() => {});
+            }
+            klikket = true;
+            break;
+        }
+        if (!klikket) break;
+    }
+}
+
+// Sletter periode. Hvis `tom` oppgis eller `fra` er dato ('dd.mm.åååå' / 'åååå-mm-dd'), slettes direkte i kalenderen.
+// Ellers slettes raden i listevisningen hvis radtekst starter med `fra` (f.eks. '24. nov. 26').
+export async function slettPeriode(p, fra, { tom, velg, visning } = {}) {
+    const erDato = /^(\d{1,2}\.\d{1,2}\.\d{4}|\d{4}-\d{1,2}-\d{1,2})$/.test(String(fra).trim());
+    if (brukKalender(visning) && (tom || erDato)) {
+        return slettDagerIKalender(p, fra, tom ?? fra, { velg });
+    }
     await visListe(p);
     await p.getByRole('button', { name: new RegExp(`^${fra.replace(/\./g, '\\.')}`) }).first().click();
     const slett = p.getByRole('button', { name: 'Slett', exact: true }).first();

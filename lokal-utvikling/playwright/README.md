@@ -99,6 +99,7 @@ Unngå hardkodede pauser (`waitForTimeout`, `setTimeout`) og `waitForLoadState('
 
 Bruk i stedet:
 
+- **Kalender som standardvisning**: Hjelperne i `lib/soknad.mjs` (`leggTilPeriode`, `leggTilFerie`, `leggTilUtsettelse`, `leggTilPause`, samt `slettPeriode` når dato oppgis) bruker kalendervisningen som standard (slik de fleste brukere gjør i produksjon). For direkte kalenderoperasjoner finnes også `velgDatoerIKalender()`, `velgEnkeltdagerIKalender()`, `slettDagerIKalender()`, `fjernAlt()` og `kalenderDagFarge()`. Sett `VISNING=liste` (eller `{ visning: 'liste' }`) hvis du spesifikt vil teste listevisningen. `planSomTekst()` bytter tilbake til kalendervisningen etter utlesing.
 - **UI-endringer i søknad og oversikt**: stol på Playwrights innebygde auto-waiting på `click`/`fill`/`check`, eller vent på det konkrete elementet som dukker opp eller forsvinner (`locator.waitFor()`, `state: 'hidden'` på dialoger og `.navds-loader, .aksel-loader, [aria-busy="true"]`).
 - **Valgfrie felt og knapper**: sjekk `if (await loc.count())` før `.check()`/`.click()` med `.catch()`. Uten `.count()`-sjekk venter Playwright i hele standard-timeouten (10 sekunder) i stillhet når elementet ikke finnes.
 - **Oppdatere siden i fpsak**: bruk `F.lastPåNytt(p)` fremfor `p.reload()`.
