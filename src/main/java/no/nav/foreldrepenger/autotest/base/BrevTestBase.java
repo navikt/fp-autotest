@@ -27,16 +27,21 @@ public class BrevTestBase {
 
     protected static void validerBrevetInneholderForventedeTekstavsnitt(byte[] pdfBytes, Set<String> tekstavsnitt) {
         try (var document = Loader.loadPDF(pdfBytes)) {
-            // Fjerne linjeskift for å kunne søke på tvers av linjer
-            var pdfTekst = new PDFTextStripper().getText(document).replace("\n", "").replace("\r", "");
+            // Sammenligner uten whitespace for å kunne søke på tvers av linjer uavhengig av hvordan linjene brytes
+            // (mellomrom ved <br/> fra openhtmltopdf 1.1.111, bindestrek/lenker uten mellomrom ved linjebrudd).
+            var pdfTekst = utenWhitespace(new PDFTextStripper().getText(document));
             var softAssert = new SoftAssertions();
-            tekstavsnitt.forEach(skalFinnes -> softAssert.assertThat(pdfTekst.contains(skalFinnes))
+            tekstavsnitt.forEach(skalFinnes -> softAssert.assertThat(pdfTekst.contains(utenWhitespace(skalFinnes)))
                     .as("'%s' finnes ikke".formatted(skalFinnes))
                     .isTrue());
             softAssert.assertAll();
         } catch (IOException e) {
             Fail.fail("Kunne ikke lese PDFen", e);
         }
+    }
+
+    private static String utenWhitespace(String tekst) {
+        return tekst.replaceAll("\\s", "");
     }
 
     protected static BrevAssertionBuilder engangsstønadInnvilgetAssertionsBuilder(Fødselsnummer fnr, Saksnummer saksnummer) {
@@ -161,7 +166,7 @@ public class BrevTestBase {
         var refusjon = "Nei";
         if (harRefusjon) {
             refusjon = "Ja";
-            brevAssertionsBuilder.medEgenndefinertAssertion("Refusjonsbeløp dere krever per måned%s kr".formatted(månedslønnFormatert));
+            brevAssertionsBuilder.medEgenndefinertAssertion("Refusjonsbeløp dere krever per måned %s kr".formatted(månedslønnFormatert));
         }
         brevAssertionsBuilder.medEgenndefinertAssertion("Innsendt: %s".formatted(BrevFormateringUtils.formaterDato(LocalDate.now())))
                 .medEgenndefinertAssertion("Inntektsmelding %s".formatted(BrevFormateringUtils.ytelseNavn(typeYtelse)))
@@ -177,7 +182,7 @@ public class BrevTestBase {
                 .medEgenndefinertAssertion("Utbetaling og refusjon")
                 .medEgenndefinertAssertion("Betaler dere den ansatte lønn under fraværet og krever refusjon? %s".formatted(refusjon))
                 .medEgenndefinertAssertion("Naturalytelser")
-                .medEgenndefinertAssertion("Har den ansatte naturalytelser som faller bort ved fraværet?Nei");
+                .medEgenndefinertAssertion("Har den ansatte naturalytelser som faller bort ved fraværet? Nei");
         return brevAssertionsBuilder;
     }
 
